@@ -94,7 +94,7 @@ def test_schema_info():
     }
 
 
-def test_set_pattern_properties():
+def test_setattr_pattern_properties():
     """
     Regression test for `photmjsr` not being validated because it is a patternProperty
     """
@@ -107,3 +107,19 @@ def test_set_pattern_properties():
         mdl.phot_table.F062.photmjsr = 3.14
 
     mdl.phot_table.F062.photmjsr = 3.14 * (u.MJy / u.sr)
+
+
+def test_setitem_pattern_properties():
+    """
+    Regression test for setting `photmjsr` via `__setitem__` API
+    """
+    mdl = factories.create_wfi_img_photom_ref()
+
+    with pytest.raises(asdf.ValidationError):
+        mdl["phot_table"]["F062"]["photmjsr"] = 3.14
+
+    with pytest.raises(asdf.ValidationError):
+        mdl["phot_table"]["F062"] = 3.14
+
+    with pytest.raises(asdf.ValidationError):
+        mdl["phot_table"] = 3.14
