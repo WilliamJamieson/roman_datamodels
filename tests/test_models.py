@@ -771,10 +771,9 @@ def test_model_validate_without_save():
     img = utils.mk_level1_science_raw()
     m = datamodels.ImageModel(img)
 
-    # invalidate pointing without using the
-    # data model/node api to avoid a validation
-    # failure here
-    m.meta["pointing"] = {}
+    # Pointing is required by the schema so the
+    # model will not validate if it is missing.
+    del m.meta["pointing"]
 
     with pytest.raises(ValidationError):
         m.validate()

@@ -224,14 +224,24 @@ class DNode(UserDict):
         return self._x_schema
 
     def __asdf_traverse__(self):
-        return dict(self)
+        return self._data
 
     def __setitem__(self, key, value):
         value = self._convert_to_scalar(key, value)
         if isinstance(value, dict):
             for sub_key, sub_value in value.items():
                 value[sub_key] = self._convert_to_scalar(sub_key, sub_value)
-        super().__setitem__(key, value)
+
+        if key in self._data:
+            setattr(self, key, value)
+        else:
+            super().__setitem__(key, value)
+
+    def __getitem__(self, key):
+        if key in self._data:
+            return getattr(self, key)
+        else:
+            return super().__getitem__(key)
 
 
 class LNode(UserList):
