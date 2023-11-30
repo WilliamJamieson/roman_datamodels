@@ -21,6 +21,8 @@ dependencies = [
     'rad >=0.18.0',
     # 'rad @ git+https://github.com/spacetelescope/rad.git',
     'asdf-standard >=1.0.3',
+    'pydantic >=2.5',
+    'StrEnum >=0.4, python<3.11',
 ]
 dynamic = ['version']
 
