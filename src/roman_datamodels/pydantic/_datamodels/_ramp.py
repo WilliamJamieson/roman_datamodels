@@ -11,9 +11,6 @@ from ._common import Common
 __all__ = ["RampModel"]
 
 
-# TODO: Update unit adaptor to handle multiple units
-
-
 class RampModel(BaseRomanDataModel):
     meta: Annotated[
         Common,
@@ -24,7 +21,7 @@ class RampModel(BaseRomanDataModel):
         ),
     ]
     data: Annotated[
-        AstropyQuantity[np.float32, u.DN, 3],
+        AstropyQuantity[np.float32, (u.DN, u.electron), 3],
         Field(
             json_schema_extra={
                 "title": "Science data, including the border reference pixels.",
@@ -48,7 +45,7 @@ class RampModel(BaseRomanDataModel):
         ),
     ]
     err: Annotated[
-        AstropyQuantity[np.float32, u.DN, 3],
+        AstropyQuantity[np.float32, (u.DN, u.electron), 3],
         Field(
             json_schema_extra={
                 "title": "Error array containing the square root of the exposure-level combined variance",

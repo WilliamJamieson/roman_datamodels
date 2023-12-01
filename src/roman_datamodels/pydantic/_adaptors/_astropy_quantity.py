@@ -7,22 +7,24 @@ from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema
 from pydantic_numpy.helper.annotation import NpArrayPydanticAnnotation
 
-from roman_datamodels.pydantic._adaptors._astropy_unit import Unit, _AstropyUnitPydanticAnnotation
+from ._adaptor_tags import asdf_tags
+from ._astropy_unit import Units, _AstropyUnitPydanticAnnotation
+from ._ndarray import _AsdfNdArrayPydanticAnnotation
 
 __all__ = ["AstropyQuantity"]
 
 
-class _AstropyQuantityPydanticAnnotation(NpArrayPydanticAnnotation, _AstropyUnitPydanticAnnotation):
+class _AstropyQuantityPydanticAnnotation(_AsdfNdArrayPydanticAnnotation, _AstropyUnitPydanticAnnotation):
     @classmethod
     def factory(
-        cls, *, dtype: DTypeLike, unit: Optional[Unit] = None, dimensions: Optional[int] = None, strict_data_typing: bool = False
+        cls, *, dtype: DTypeLike, unit: Units = None, dimensions: Optional[int] = None, strict_data_typing: bool = False
     ) -> type:
-        symbol = cls._get_unit_symbol(unit)
+        symbols = cls._get_unit_symbols(unit)
         ndarray_type = super().factory(data_type=dtype, dimensions=dimensions, strict_data_typing=strict_data_typing)
         return type(
-            f"_{ndarray_type.__name__}_{symbol}",
+            f"_{ndarray_type.__name__}_{'_'.join(symbols)}",
             (cls,),
-            {"symbol": symbol, "data_type": dtype, "dimensions": dimensions, "strict_data_typing": strict_data_typing},
+            {"symbols": symbols, "data_type": dtype, "dimensions": dimensions, "strict_data_typing": strict_data_typing},
         )
 
     @classmethod
@@ -41,7 +43,7 @@ class _AstropyQuantityPydanticAnnotation(NpArrayPydanticAnnotation, _AstropyUnit
             }
         )
 
-        def validate_from_json(value: tuple) -> Any:
+        def validate_from_json(value: tuple) -> u.Quantity:
             return u.Quantity(value["value"], value["unit"], dtype=value["value"].dtype)
 
         from_json_schema = core_schema.chain_schema(
@@ -51,7 +53,7 @@ class _AstropyQuantityPydanticAnnotation(NpArrayPydanticAnnotation, _AstropyUnit
             ]
         )
 
-        def validate_from_python(value: u.Quantity) -> dict:
+        def validate_from_python(value: u.Quantity) -> dict[str, Any]:
             return {
                 "value": value.value,
                 "unit": value.unit,
@@ -72,12 +74,10 @@ class _AstropyQuantityPydanticAnnotation(NpArrayPydanticAnnotation, _AstropyUnit
             ]
         )
 
-        serializer_schema = core_schema.plain_serializer_function_ser_schema(validate_from_python)
-
         return core_schema.json_or_python_schema(
             json_schema=from_json_schema,
             python_schema=from_python_schema,
-            serialization=serializer_schema,
+            serialization=core_schema.plain_serializer_function_ser_schema(lambda value: value),
         )
 
     @classmethod
@@ -86,43 +86,34 @@ class _AstropyQuantityPydanticAnnotation(NpArrayPydanticAnnotation, _AstropyUnit
         _core_schema: core_schema.CoreSchema,
         handler: GetJsonSchemaHandler,
     ) -> JsonSchemaValue:
-        ndarray_ref = f"Np{'N' if cls.dimensions is None else cls.dimensions}dArray{cls.data_type.__name__.capitalize()}"
-        unit_ref = f"unit_{cls.symbol}"
+        schema = {
+            "title": None,
+            "tag": asdf_tags.ASTROPY_QUANTITY.value,
+        }
+        if cls.symbols is None and cls.data_type is None and cls.dimensions is None:
+            return schema
 
-        ndarray_schema = core_schema.model_fields_schema(
-            {
-                "ndim": core_schema.model_field(core_schema.literal_schema([cls.dimensions])),
-                "datatype": core_schema.model_field(core_schema.literal_schema([cls.data_type.__name__])),
-            },
-            ref=ndarray_ref,
-        )
+        properties_schema = {}
 
-        unit_schema = cls._unit_schema()
-        unit_schema["ref"] = unit_ref
+        if cls.symbols is not None:
+            properties_schema["unit"] = super(NpArrayPydanticAnnotation, cls).__get_pydantic_json_schema__(_core_schema, handler)
 
-        json_schema = core_schema.definitions_schema(
-            core_schema.model_fields_schema(
-                {
-                    "value": core_schema.model_field(core_schema.definition_reference_schema(ndarray_ref)),
-                    "unit": core_schema.model_field(core_schema.definition_reference_schema(unit_ref)),
-                }
-            ),
-            [
-                ndarray_schema,
-                unit_schema,
-            ],
-        )
-        return handler(json_schema)
+        if cls.data_type is not None or cls.dimensions is not None:
+            properties_schema["value"] = super().__get_pydantic_json_schema__(_core_schema, handler)
+
+        schema["properties"] = properties_schema
+
+        return schema
 
 
 class _AstropyQuantity:
     @staticmethod
-    def __getitem__(factory: tuple[DTypeLike, Unit, Optional[int], Optional[bool]]) -> type:
+    def __getitem__(factory: tuple[DTypeLike, Units, Optional[int], Optional[bool]]) -> type:
         if len(factory) < 1:
             raise TypeError("AstropyQuantity requires a dtype.")
 
         dtype: DTypeLike = factory[0]
-        unit: Optional[Unit] = factory[1] if len(factory) > 1 else None
+        unit: Units = factory[1] if len(factory) > 1 else None
         dimensions: Optional[int] = factory[2] if len(factory) > 2 else None
         strict_data_typing: bool = factory[3] if len(factory) > 3 else False
 
