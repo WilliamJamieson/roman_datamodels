@@ -22,7 +22,6 @@ dependencies = [
     # 'rad @ git+https://github.com/spacetelescope/rad.git',
     'asdf-standard >=1.0.3',
     'pydantic >=2.5',
-    'pydantic_numpy >=4.1.0',
     'StrEnum >=0.4; python_version <"3.11"',
 ]
 dynamic = ['version']
@@ -53,6 +52,7 @@ docs = [
 
 [project.entry-points]
 'asdf.extensions' = { roman_datamodels = 'roman_datamodels.stnode._integration:get_extensions' }
+# 'asdf.extensions' = { roman_pydantic_datamodels = 'roman_datamodels.pydantic._extension:get_extensions' }
 
 [build-system]
 requires = ["setuptools >=61", "setuptools_scm[toml] >=3.4", "wheel"]

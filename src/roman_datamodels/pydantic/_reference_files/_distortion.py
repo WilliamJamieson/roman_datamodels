@@ -18,7 +18,7 @@ class DistortionRefMeta(RefOpticalElement, RefCommon):
     reftype: Annotated[
         Literal[reftype.DISTORTION],
         Field(
-            default_factory=default_constant_factory(reftype.DISTORTION),
+            default_factory=default_constant_factory(reftype.DISTORTION.value),
             title="Reference file type",
         ),
     ]
@@ -32,7 +32,7 @@ class DistortionRefMeta(RefOpticalElement, RefCommon):
     output_units: Annotated[
         AstropyUnit[u.arcsec],
         Field(
-            default_factory=default_constant_factory(u.pixel),
+            default_factory=default_constant_factory(u.arcsec),
             title="Output units of V2/V3 coordinates after the model is applied.",
         ),
     ]

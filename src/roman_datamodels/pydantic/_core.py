@@ -77,6 +77,33 @@ class BaseRomanModel(BaseDataModel):
         json_schema_extra=_asdf_schema_modify,
     )
 
+    def to_asdf_tree(self) -> dict[str, Any]:
+        tree = dict(self)
+
+        for field_name, obj in tree.items():
+            if isinstance(obj, BaseRomanModel) and not isinstance(obj, BaseRomanTaggedModel):
+                tree[field_name] = obj.to_asdf_tree()
+
+            if isinstance(obj, dict):
+                for entry, dict_obj in obj.items():
+                    if isinstance(dict_obj, BaseRomanModel) and not isinstance(dict_obj, BaseRomanTaggedModel):
+                        obj[entry] = dict_obj.to_asdf_tree()
+
+            if isinstance(obj, list):
+                for idx, list_obj in enumerate(obj):
+                    if isinstance(list_obj, BaseRomanModel) and not isinstance(list_obj, BaseRomanTaggedModel):
+                        obj[idx] = list_obj.to_asdf_tree()
+
+        return tree
+
+    @classmethod
+    def tagged_model_fields(cls) -> list[Any]:
+        return [
+            field
+            for field in cls.model_fields.values()
+            if isclass(field.annotation) and issubclass(field.annotation, BaseRomanTaggedModel)
+        ]
+
 
 class BaseRomanURIModel(BaseRomanModel):
     _uri: ClassVar[asdf_uri | None] = None

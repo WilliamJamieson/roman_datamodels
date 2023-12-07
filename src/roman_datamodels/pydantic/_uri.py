@@ -7,18 +7,24 @@ else:
     from enum import StrEnum
 
 
-__all__ = ["asdf_uri", "asdf_tag_uri", "asdf_schema"]
+__all__ = ["asdf_uri", "asdf_tag_uri", "asdf_extra_uri"]
 
 
 class version(StrEnum):
     VERSION = "1.0.0"
+    BASE = "asdf://stsci.edu/datamodels/roman/pydantic"
+
+
+def _with_base(uri: str) -> str:
+    """Add the base to the URI."""
+    return f"{version.BASE.value}/{uri}"
 
 
 @unique
 class base_uri(StrEnum):
     # fmt: off
-    SCHEMA = "asdf://stsci.edu/datamodels/roman/schemas"
-    TAG    = "asdf://stsci.edu/datamodels/roman/tags"
+    SCHEMA = _with_base("schemas")
+    TAG    = _with_base("tags")
     # fmt: on
 
 
@@ -165,9 +171,10 @@ class asdf_tag_uri(StrEnum):
     # fmt: on
 
 
-class asdf_schema(StrEnum):
+class asdf_extra_uri(StrEnum):
     """Extra asdf meta schema uris"""
 
     # fmt: off
-    SCHEMA = "asdf://stsci.edu/datamodels/roman/schemas/rad_schema-1.0.0"
+    SCHEMA    = _with_version(_with_base("schemas/rad_schema"))
+    EXTENSION = _with_version(_with_base("extensions/rad_extension"))
     # fmt: on

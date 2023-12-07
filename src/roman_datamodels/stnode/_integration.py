@@ -8,6 +8,8 @@ def get_extensions():
     -------
     List[`asdf.extension.Extension`]
     """
+    from roman_datamodels.pydantic._extension import RomanPydanticExtension
+
     from ._converters import NODE_EXTENSIONS
 
-    return NODE_EXTENSIONS
+    return [*NODE_EXTENSIONS, RomanPydanticExtension()]
