@@ -1,41 +1,47 @@
-from typing import Annotated, Literal
+from typing import Annotated, ClassVar, Literal
 
 import numpy as np
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from .._adaptors import NdArray
+from .._config import create_shape_config
 from .._core import BaseRomanRefModel
+from .._defaults import default_constant_factory, default_model_factory, default_ndarray_factory
 from .._enums import reftype
+from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, RefOpticalElement
 
 __all__ = ["MaskRefModel"]
+
+_SHAPE, mask_ref_shape_context = create_shape_config((4096, 4096))
 
 
 class MaskRefMeta(RefOpticalElement, RefCommon):
     reftype: Annotated[
         Literal[reftype.MASK],
         Field(
-            json_schema_extra={
-                "title": "Reference file type",
-            },
+            default_factory=default_constant_factory(reftype.MASK.value),
+            title="Reference file type",
         ),
     ]
 
 
 class MaskRefModel(BaseRomanRefModel):
+    _uri: ClassVar = asdf_uri.MASK.value
+    _tag_uri: ClassVar = asdf_tag_uri.MASK.value
+
+    model_config = ConfigDict(title="DQ Mask reference schema")
+
     meta: Annotated[
         MaskRefMeta,
         Field(
-            json_schema_extra={
-                "title": "Flat reference metadata",
-            },
+            default_factory=default_model_factory(MaskRefMeta),
         ),
     ]
     dq: Annotated[
         NdArray[np.uint32, 2],
         Field(
-            json_schema_extra={
-                "title": "Data quality mask array",
-            },
+            default_factory=default_ndarray_factory(_SHAPE, np.uint32),
+            title="Data quality mask array",
         ),
     ]

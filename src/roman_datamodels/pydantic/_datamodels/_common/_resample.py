@@ -1,51 +1,55 @@
-from typing import Annotated
+from typing import Annotated, ClassVar
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
-from ..._core import BaseDataModel, Number
+from ..._core import BaseRomanTaggedModel, Number
+from ..._defaults import default_constant_factory, default_num_value
 from ..._enums import weight_type
+from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Resample"]
 
 
-class Resample(BaseDataModel):
+class Resample(BaseRomanTaggedModel):
+    _uri: ClassVar = asdf_uri.RESAMPLE.value
+    _tag_uri: ClassVar = asdf_tag_uri.RESAMPLE.value
+
+    model_config = ConfigDict(
+        title="Resample information",
+    )
+
     pixel_scale_ratio: Annotated[
         Number,
         Field(
-            json_schema_extra={
-                "title": "Pixel Scale Ratio of resample to input scale",
-            },
+            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            title="Pixel Scale Ratio of resample to input scale",
         ),
     ]
     pixfrac: Annotated[
         Number,
         Field(
-            json_schema_extra={
-                "title": "Fraction of pixel to use for pixel convolution",
-            },
+            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            title="Fraction of pixel to use for pixel convolution",
         ),
     ]
     pointings: Annotated[
         int,
         Field(
-            json_schema_extra={
-                "title": "Number of pointings in the resample",
-            },
+            default_factory=default_constant_factory(default_num_value.NONUM.value * -1),
+            title="Number of pointings in the resample",
         ),
     ]
     product_exposure_time: Annotated[
         Number,
         Field(
-            json_schema_extra={
-                "title": "Total exposure time for resample product",
-            },
+            default_factory=default_constant_factory(default_num_value.NONUM.value * -1),
+            title="Total exposure time for resample product",
         ),
     ]
     weight_type: Annotated[
         weight_type,
         Field(
-            json_schema_extra={
-                "title": "Drizzle weight type for resample",
-            },
+            default_factory=default_constant_factory(weight_type.exptime.value),
+            title="Drizzle weight type for resample",
         ),
     ]

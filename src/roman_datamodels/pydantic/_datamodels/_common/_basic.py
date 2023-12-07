@@ -1,203 +1,200 @@
-from typing import Annotated
+from typing import Annotated, ClassVar
 
-from pydantic import Field
+from astropy.time import Time
+from pydantic import ConfigDict, Field
 
 from ..._adaptors import AstropyTime
-from ..._core import BaseDataModel
+from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
+from ..._core import BaseRomanURIModel
+from ..._defaults import default_constant_factory, default_str_value
 from ..._enums import origin, telescope
+from ..._uri import asdf_uri
 
 __all__ = ["Basic"]
 
 
-CalibrationSoftwareVersion = Annotated[
-    str,
-    Field(
-        json_schema_extra={
-            "title": "Calibration software version number",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "nvarchar(120)",
-                "destination": [
-                    "ScienceCommon.calibration_software_version",
-                    "GuideWindow.calibration_software_version",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
-FileDate = Annotated[
-    AstropyTime,
-    Field(
-        json_schema_extra={
-            "title": "Date this file was created (UTC)",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "datetime2",
-                "destination": [
-                    "ScienceCommon.filedate",
-                    "GuideWindow.filedate",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
-Filename = Annotated[
-    str,
-    Field(
-        json_schema_extra={
-            "title": "Name of the file",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "nvarchar(120)",
-                "destination": [
-                    "ScienceCommon.filename",
-                    "GuideWindow.filename",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
-ModelType = Annotated[
-    str,
-    Field(
-        json_schema_extra={
-            "title": "Type of data model",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "nvarchar(50)",
-                "destination": [
-                    "ScienceCommon.model_type",
-                    "GuideWindow.model_type",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
-Origin = Annotated[
-    origin,
-    Field(
-        json_schema_extra={
-            "title": "Organization responsible for creating file",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "nvarchar(15)",
-                "destination": [
-                    "ScienceCommon.origin",
-                    "GuideWindow.origin",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
-PrdSoftwareVersion = Annotated[
-    str,
-    Field(
-        json_schema_extra={
-            "title": "S&OC PRD version number used in data processing",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "nvarchar(120)",
-                "destination": [
-                    "ScienceCommon.prd_software_version",
-                    "GuideWindow.prd_software_version",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
-SdfSoftwareVersion = Annotated[
-    str,
-    Field(
-        json_schema_extra={
-            "title": "SDF software version number",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "nvarchar(120)",
-                "destination": [
-                    "ScienceCommon.sdf_software_version",
-                    "GuideWindow.sdf_software_version",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
-Telescope = Annotated[
-    telescope,
-    Field(
-        json_schema_extra={
-            "title": "Telescope used to acquire the data",
-            "sdf": {
-                "special_processing": "VALUE_REQUIRED",
-                "source": {
-                    "origin": "TBD",
-                },
-            },
-            "archive_catalog": {
-                "datatype": "nvarchar(5)",
-                "destination": [
-                    "ScienceCommon.telescope",
-                    "GuideWindow.telescope",
-                ],
-            },
-            "flowStyle": "block",
-        },
-    ),
-]
+class Basic(BaseRomanURIModel):
+    _uri: ClassVar = asdf_uri.BASIC.value
 
+    model_config = ConfigDict(
+        title="Common metadata keywords",
+    )
 
-class Basic(BaseDataModel):
-    calibration_software_version: CalibrationSoftwareVersion
-    filename: Filename
-    file_date: FileDate
-    mdl_type: ModelType  # TODO: resolve the name issue
-    origin: Origin
-    prd_software_version: PrdSoftwareVersion
-    sdf_software_version: SdfSoftwareVersion
-    telescope: Telescope
-
-    # This might resolve the name issue, but it could create problems
-    # model_config = ConfigDict(
-    #     protected_namespaces = ()
-    # )
+    calibration_software_version: Annotated[
+        str,
+        Field(
+            default_factory=default_constant_factory("9.9.0"),
+            title="Calibration software version number",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
+                        "ScienceCommon.calibration_software_version",
+                        "GuideWindow.calibration_software_version",
+                    ],
+                ),
+            ),
+        ),
+    ]
+    file_date: Annotated[
+        AstropyTime,
+        Field(
+            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            title="Date this file was created (UTC)",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="datetime2",
+                    destination=[
+                        "ScienceCommon.filedate",
+                        "GuideWindow.filedate",
+                    ],
+                ),
+            ),
+        ),
+    ]
+    filename: Annotated[
+        str,
+        Field(
+            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            title="Name of the file",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
+                        "ScienceCommon.filename",
+                        "GuideWindow.filename",
+                    ],
+                ),
+            ),
+        ),
+    ]
+    # this is aliased to model_type, (model_* is protected by default)
+    mdl_type: Annotated[
+        str,
+        Field(
+            alias="model_type",
+            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            title="Type of data model",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(50)",
+                    destination=[
+                        "ScienceCommon.model_type",
+                        "GuideWindow.model_type",
+                    ],
+                ),
+            ),
+        ),
+    ]
+    origin: Annotated[
+        origin,
+        Field(
+            default_factory=default_constant_factory(origin.STSCI.value),
+            title="Organization responsible for creating file",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(15)",
+                    destination=[
+                        "ScienceCommon.origin",
+                        "GuideWindow.origin",
+                    ],
+                ),
+            ),
+        ),
+    ]
+    prd_software_version: Annotated[
+        str,
+        Field(
+            default_factory=default_constant_factory("8.8.8"),
+            title="S&OC PRD version number used in data processing",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
+                        "ScienceCommon.prd_software_version",
+                        "GuideWindow.prd_software_version",
+                    ],
+                ),
+            ),
+        ),
+    ]
+    sdf_software_version: Annotated[
+        str,
+        Field(
+            default_factory=default_constant_factory("7.7.7"),
+            title="SDF software version number",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
+                        "ScienceCommon.sdf_software_version",
+                        "GuideWindow.sdf_software_version",
+                    ],
+                ),
+            ),
+        ),
+    ]
+    telescope: Annotated[
+        telescope,
+        Field(
+            default_factory=default_constant_factory(telescope.ROMAN.value),
+            title="Telescope used to acquire the data",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(5)",
+                    destination=[
+                        "ScienceCommon.telescope",
+                        "GuideWindow.telescope",
+                    ],
+                ),
+            ),
+        ),
+    ]

@@ -1,89 +1,86 @@
-from typing import Annotated
+from typing import Annotated, ClassVar
 
-from pydantic import Field
+from astropy.time import Time
+from pydantic import ConfigDict, Field
 
 from ..._adaptors import AstropyTime
-from ..._core import BaseDataModel
+from ..._core import BaseRomanModel, BaseRomanURIModel
 from ..._datamodels import common
+from ..._defaults import default_constant_factory, default_model_factory
 from ..._enums import instrument, origin, pedigree, telescope
+from ..._uri import asdf_uri
 
 __all__ = ["RefCommon"]
 
 
-class Instrument(BaseDataModel):
+class Instrument(BaseRomanModel):
     name: Annotated[
         instrument,
         Field(
-            json_schema_extra={
-                "title": "Name of the instrument",
-            },
+            default_factory=default_constant_factory(instrument.WFI.value),
+            title="Instrument used to acquire the data",
         ),
     ]
-    detector: common.WfiMode
+    detector: common.WfiDetector
 
 
-class RefCommon(BaseDataModel):
+class RefCommon(BaseRomanURIModel):
+    _uri: ClassVar = asdf_uri.REF_COMMON.value
+
+    model_config = ConfigDict(title="Common reference metadata properties")
+
     reftype: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Reference File Type",
-            },
+            default_factory=default_constant_factory("test reftype"),
+            title="Reference File Type",
         ),
     ]
     pedigree: Annotated[
         pedigree,
         Field(
-            json_schema_extra={
-                "title": "The pedigree of the reference file",
-            },
+            default_factory=default_constant_factory(pedigree.GROUND.value),
+            title="The pedigree of the reference file",
         ),
     ]
     description: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Description of the reference file",
-            },
+            default_factory=default_constant_factory("test description"),
+            title="Description of the reference file",
         ),
     ]
     author: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Author of the reference file",
-            },
+            default_factory=default_constant_factory("test author"),
+            title="Author of the reference file",
         ),
     ]
     useafter: Annotated[
         AstropyTime,
         Field(
-            json_schema_extra={
-                "title": "Use after date of the reference file",
-            },
+            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            title="Use after date of the reference file",
         ),
     ]
     telescope: Annotated[
         telescope,
         Field(
-            json_schema_extra={
-                "title": "Telescope that reference file is used to calibrate",
-            },
+            default_factory=default_constant_factory(telescope.ROMAN.value),
+            title="Telescope that reference file is used to calibrate",
         ),
     ]
     origin: Annotated[
         origin,
         Field(
-            json_schema_extra={
-                "title": "Organization responsible for creating file",
-            },
+            default_factory=default_constant_factory(origin.STSCI.value),
+            title="Organization responsible for creating file",
         ),
     ]
     instrument: Annotated[
         Instrument,
         Field(
-            json_schema_extra={
-                "title": "Instrument that reference file is used to calibrate",
-            },
+            default_factory=default_model_factory(Instrument),
         ),
     ]

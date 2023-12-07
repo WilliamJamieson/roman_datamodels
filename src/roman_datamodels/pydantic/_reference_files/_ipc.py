@@ -1,44 +1,63 @@
-from typing import Annotated, Literal
+from typing import Annotated, Callable, ClassVar, Literal
 
 import numpy as np
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from .._adaptors import NdArray
+from .._config import create_shape_config
 from .._core import BaseRomanRefModel
+from .._defaults import default_constant_factory, default_model_factory, default_ndarray_factory
 from .._enums import reftype
+from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, RefOpticalElement
 
 __all__ = ["IpcRefModel"]
+
+
+_SHAPE, ipc_ref_shape_context = create_shape_config((4096, 4096))
+
+
+def _default_data_factory() -> Callable[[], np.ndarray]:
+    ndarray_factory = default_ndarray_factory(_SHAPE, np.float32)
+
+    def _data_factory() -> np.ndarray:
+        ndarray = ndarray_factory()
+        n_rows, n_cols = ndarray.shape
+        ndarray[int(np.floor(n_rows / 2)), int(np.floor(n_cols / 2))] = 1.0
+        return ndarray
+
+    return _data_factory
 
 
 class IpcRefMeta(RefOpticalElement, RefCommon):
     reftype: Annotated[
         Literal[reftype.IPC],
         Field(
-            json_schema_extra={
-                "title": "Reference file type",
-            },
+            default_factory=default_constant_factory(reftype.IPC.value),
+            title="Reference file type",
         ),
     ]
 
 
 class IpcRefModel(BaseRomanRefModel):
+    _uri: ClassVar = asdf_uri.IPC.value
+    _tag_uri: ClassVar = asdf_tag_uri.IPC.value
+
+    model_config = ConfigDict(
+        title="IPC reference schema",
+    )
+
     meta: Annotated[
         IpcRefMeta,
         Field(
-            json_schema_extra={
-                "title": "IPC reference metadata",
-            },
+            default_factory=default_model_factory(IpcRefMeta),
         ),
     ]
     data: Annotated[
         NdArray[np.float32, 2],
         Field(
-            json_schema_extra={
-                "title": "Interpixel capacitance correction kernel array",
-                "description": (
-                    "Reference kernel used for convolving with data in order to correct " "for interpixel capacitance"
-                ),
-            },
+            default_factory=_default_data_factory(),
+            title="Interpixel capacitance correction kernel array",
+            description="Reference kernel used for convolving with data in order to correct " "for interpixel capacitance",
         ),
     ]

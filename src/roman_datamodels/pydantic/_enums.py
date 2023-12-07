@@ -193,7 +193,7 @@ class pointing_engdb_quality(StrEnum):
 
 class exptype(StrEnum):
     SCIENCE = "SCIENCE"
-    CALIBRATED = "CALIBRATED"
+    CALIBRATION = "CALIBRATION"
     ENGINEERING = "ENGINEERING"
 
 

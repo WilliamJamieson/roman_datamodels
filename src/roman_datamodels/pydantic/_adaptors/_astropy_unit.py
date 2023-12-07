@@ -4,7 +4,7 @@ from typing import Annotated, Any, ClassVar, Optional, Union
 import astropy.units as u
 from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
-from pydantic_core import SchemaValidator, core_schema
+from pydantic_core import core_schema
 
 from ._adaptor_tags import asdf_tags
 
@@ -23,13 +23,8 @@ Unit = Union[
 ]
 Units = Optional[Union[Unit, list[Unit], tuple[Unit, ...]]]
 
-astropy_unit_schema = core_schema.str_schema(pattern="[\x00-\x7f]*")
 
-
-def _get_unit_symbol(unit: Union[Unit, str]) -> str:
-    if isinstance(unit, str):
-        return unit
-
+def _get_unit_symbol(unit: Unit) -> str:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=u.UnitsWarning)
 
@@ -39,34 +34,55 @@ def _get_unit_symbol(unit: Union[Unit, str]) -> str:
             return unit.to_string()
 
 
+def _validate_unit(
+    unit: Unit,
+    validator: core_schema.ValidatorFunctionWrapHandler,
+) -> Unit:
+    symbol = _get_unit_symbol(unit)
+    validator(input_value=symbol)
+
+    return unit
+
+
+astropy_unit_schema = core_schema.no_info_wrap_validator_function(
+    function=_validate_unit, schema=core_schema.str_schema(pattern="[\x00-\x7f]*")
+)
+
+
 class _AstropyUnitPydanticAnnotation:
-    symbols: ClassVar[Optional[list[str]]] = None
+    units: ClassVar[Optional[list[Unit]]] = None
 
     @classmethod
-    def _get_unit_symbol(cls, unit: Unit) -> str:
-        symbol = None if unit is None else _get_unit_symbol(unit)
-        v = SchemaValidator(core_schema.nullable_schema(astropy_unit_schema))
-        v.validate_python(symbol)
-
-        return symbol
-
-    @classmethod
-    def _get_unit_symbols(cls, unit=Units) -> Optional[list[str]]:
+    def _get_units(cls, unit: Units) -> Optional[list[str]]:
         if unit is None:
             return
-        else:
-            if not isinstance(unit, (list, tuple)):
-                unit = [unit]
-            return [cls._get_unit_symbol(_unit) for _unit in unit]
+
+        if not isinstance(unit, (list, tuple)):
+            unit = [unit]
+
+        units = set(unit)
+        if None in units:
+            units.remove(None)
+            units.add(u.dimensionless_unscaled)
+
+        return list(units)
+
+    @classmethod
+    def _get_unit_name(cls, units: Optional[Units]) -> str:
+        return "" if units is None else "_".join([_get_unit_symbol(unit) for unit in units])
 
     @classmethod
     def factory(cls, *, unit: Units = None) -> type:
-        symbols = cls._get_unit_symbols(unit)
-        return type(cls.__name__ if symbols is None else f"{cls.__name__}_{'_'.join(symbols)}", (cls,), {"symbols": symbols})
+        units = cls._get_units(unit)
+        return type(
+            cls.__name__ if units is None else f"{cls.__name__}_{cls._get_unit_name(units)}",
+            (cls,),
+            {"units": units},
+        )
 
     @classmethod
-    def _unit_schema(cls) -> core_schema.CoreSchema:
-        return astropy_unit_schema if cls.symbols is None else core_schema.literal_schema(cls.symbols)
+    def _units_schema(cls) -> core_schema.CoreSchema:
+        return astropy_unit_schema if cls.units is None else core_schema.literal_schema(cls.units)
 
     @classmethod
     def __get_pydantic_core_schema__(
@@ -74,36 +90,17 @@ class _AstropyUnitPydanticAnnotation:
         _source_type: Any,
         _handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
-        def validate_from_json(value: tuple) -> Unit:
-            return u.Unit(value[0], parse_strict="silent")
-
-        from_json_schema = core_schema.chain_schema(
-            [
-                cls._unit_schema(),
-                core_schema.no_info_plain_validator_function(validate_from_json),
-            ]
-        )
-
-        from_python_schema = core_schema.union_schema(
-            [
-                core_schema.chain_schema(
-                    [
-                        core_schema.is_instance_schema(Unit),
-                        core_schema.no_info_before_validator_function(
-                            function=_get_unit_symbol,
-                            schema=cls._unit_schema(),
-                        ),
-                        from_json_schema,
-                    ]
-                ),
-                from_json_schema,
-            ]
-        )
+        units_schema = cls._units_schema()
 
         return core_schema.json_or_python_schema(
-            json_schema=from_json_schema,
-            python_schema=from_python_schema,
-            serialization=core_schema.plain_serializer_function_ser_schema(lambda value: value),
+            python_schema=core_schema.chain_schema(
+                [
+                    core_schema.is_instance_schema(Unit),
+                    units_schema,
+                ],
+            ),
+            json_schema=units_schema,
+            serialization=core_schema.plain_serializer_function_ser_schema(_get_unit_symbol, when_used="json"),
         )
 
     @classmethod
@@ -116,15 +113,10 @@ class _AstropyUnitPydanticAnnotation:
             "title": None,
             "tag": asdf_tags.ASTROPY_UNIT.value,
         }
-        if cls.symbols is None:
+        if cls.units is None:
             return schema
 
-        if len(cls.symbols) == 1:
-            return {**schema, "enum": cls.symbols}
-
-        schema = {**schema, **handler(cls._unit_schema())}
-        del schema["type"]
-        return schema
+        return {**schema, "enum": sorted(_get_unit_symbol(unit) for unit in cls.units)}
 
 
 class _AstropyUnit:

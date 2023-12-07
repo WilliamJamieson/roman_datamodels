@@ -1,213 +1,250 @@
-from typing import Annotated
+from typing import Annotated, ClassVar
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
-from ..._core import BaseDataModel
+from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
+from ..._core import BaseRomanModel, BaseRomanTaggedModel
+from ..._defaults import default_constant_factory, default_model_factory, default_str_value
+from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["RefFile"]
 
 
-class Crds(BaseDataModel):
+class Crds(BaseRomanModel):
+    _optional_fields: ClassVar = ("sw_version", "context_used")
+
     sw_version: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Version of CRDS file selection software used",
-                "sdf": {
-                    "special_processing": "VALUE_REQUIRED",
-                    "source": {
-                        "origin": "TBD",
-                    },
-                },
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            title="Version of CRDS file selection software used",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.crds_software_version",
                         "GuideWindow.crds_software_version",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     context_used: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "CRDS context (.pmap) used to select ref files",
-                "sdf": {
-                    "special_processing": "VALUE_REQUIRED",
-                    "source": {
-                        "origin": "TBD",
-                    },
-                },
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            title="CRDS context (.pmap) used to select ref files",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.crds_context_used",
                         "GuideWindow.crds_context_used",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
 
 
-class RefFile(BaseDataModel):
+class RefFile(BaseRomanTaggedModel):
+    _uri: ClassVar = asdf_uri.REF_FILE.value
+    _tag_uri: ClassVar = asdf_tag_uri.REF_FILE.value
+
+    _optional_fields: ClassVar = (
+        "crds",
+        "dark",
+        "distortion",
+        "mask",
+        "flat",
+        "gain",
+        "readnoise",
+        "linearity",
+        "photom",
+        "area",
+        "saturation",
+    )
+
+    model_config = ConfigDict(
+        title="Reference file information",
+    )
+
     crds: Annotated[
         Crds,
         Field(
-            json_schema_extra={
-                "title": "CRDS Parameters",
-            },
+            default_factory=default_model_factory(Crds),
+            title="CRDS Parameters",
         ),
     ]
     dark: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Dark reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Dark reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_dark",
                         "GuideWindow.r_dark",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     distortion: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Distortion reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Distortion reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_distortion",
                         "GuideWindow.r_distortion",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     mask: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Mask reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Mask reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_mask",
                         "GuideWindow.r_mask",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     flat: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Flat reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Flat reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_flat",
                         "GuideWindow.r_flat",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     gain: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Gain reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Gain reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_gain",
                         "GuideWindow.r_gain",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     readnoise: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Readnoise reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Readnoise reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_readnoise",
                         "GuideWindow.r_readnoise",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     linearity: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "linearity reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="linearity reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_linearity",
                         "GuideWindow.r_linearity",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     photom: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Photometry reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Photometry reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_photom",
                         "GuideWindow.r_photom",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     area: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Area reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Area reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_area",
                         "GuideWindow.r_area",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     saturation: Annotated[
         str,
         Field(
-            json_schema_extra={
-                "title": "Saturation reference file location",
-                "archive_catalog": {
-                    "datatype": "nvarchar(120)",
-                    "destination": [
+            default_factory=default_constant_factory(default_str_value.NA.value),
+            title="Saturation reference file location",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(120)",
+                    destination=[
                         "ScienceCommon.r_saturation",
                         "GuideWindow.r_saturation",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]

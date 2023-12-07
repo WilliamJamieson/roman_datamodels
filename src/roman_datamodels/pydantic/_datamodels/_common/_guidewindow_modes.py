@@ -10,8 +10,6 @@ __all__ = ["GuidewindowModes"]
 GuidewindowModes = Annotated[
     guidewindow_modes,
     Field(
-        json_schema_extra={
-            "title": "Guide window mode",
-        },
+        title="Guide window mode",
     ),
 ]

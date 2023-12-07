@@ -1,74 +1,85 @@
-from typing import Annotated
+from typing import Annotated, ClassVar
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
-from ..._core import BaseDataModel
+from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
+from ..._core import BaseRomanTaggedModel
+from ..._defaults import default_constant_factory
 from ..._enums import instrument
+from ..._uri import asdf_tag_uri, asdf_uri
 from ._wfi_detector import WfiDetector
 from ._wfi_optical_element import WfiOpticalElement
 
 __all__ = ["WfiMode"]
 
 
-class WfiMode(BaseDataModel):
+class WfiMode(BaseRomanTaggedModel):
+    _uri: ClassVar = asdf_uri.WFI_MODE.value
+    _tag_uri: ClassVar = asdf_tag_uri.WFI_MODE.value
+
+    model_config = ConfigDict(
+        title="WFI observing configuration",
+    )
+
     name: Annotated[
         instrument,
         Field(
-            json_schema_extra={
-                "title": "Instrument used to acquire the data",
-                "sdf": {
-                    "special_processing": "VALUE_REQUIRED",
-                    "source": {
-                        "origin": "TBD",
-                    },
-                },
-                "archive_catalog": {
-                    "datatype": "nvarchar(5)",
-                    "destination": [
+            default_factory=default_constant_factory(instrument.WFI.value),
+            title="Instrument used to acquire the data",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(5)",
+                    destination=[
                         "ScienceCommon.instrument_name",
                         "GuideWindow.instrument_name",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     detector: Annotated[
         WfiDetector,
         Field(
-            json_schema_extra={
-                "sdf": {
-                    "special_processing": "VALUE_REQUIRED",
-                    "source": {
-                        "origin": "TBD",
-                    },
-                },
-                "archive_catalog": {
-                    "datatype": "nvarchar(10)",
-                    "destination": [
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(10)",
+                    destination=[
                         "ScienceCommon.detector",
                         "GuideWindow.detector",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     optical_element: Annotated[
         WfiOpticalElement,
         Field(
-            json_schema_extra={
-                "sdf": {
-                    "special_processing": "VALUE_REQUIRED",
-                    "source": {
-                        "origin": "TBD",
-                    },
-                },
-                "archive_catalog": {
-                    "datatype": "nvarchar(10)",
-                    "destination": [
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="TBD",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(10)",
+                    destination=[
                         "ScienceCommon.optical_element",
                         "GuideWindow.optical_element",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]

@@ -10,6 +10,7 @@ from ._pixelarea import PixelareaRefModel
 from ._readnoise import ReadnoiseRefModel
 from ._refpix import RefpixRefModel
 from ._saturation import SaturationRefModel
+from ._superbias import SuperbiasRefModel
 from ._wfi_img_photom import WfiImgPhotomRefModel
 
 __all__ = [
@@ -25,5 +26,6 @@ __all__ = [
     "ReadnoiseRefModel",
     "RefpixRefModel",
     "SaturationRefModel",
+    "SuperbiasRefModel",
     "WfiImgPhotomRefModel",
 ]

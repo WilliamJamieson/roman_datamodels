@@ -1,32 +1,36 @@
-from typing import Annotated, Literal, Optional
+from typing import Annotated, ClassVar, Literal, Optional
 
 import astropy.units as u
 import numpy as np
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from .._adaptors import AstropyQuantity, NdArray
-from .._core import BaseDataModel, BaseRomanRefModel
+from .._config import create_shape_config
+from .._core import BaseRomanModel, BaseRomanRefModel
+from .._defaults import default_constant_factory, default_model_factory, default_ndarray_factory, default_num_value
 from .._enums import reftype
+from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, RefOpticalElement
 
 __all__ = ["PixelareaRefModel"]
 
 
-class Photometry(BaseDataModel):
+_SHAPE, pixelarea_ref_shape_context = create_shape_config((4096, 4096))
+
+
+class Photometry(BaseRomanModel):
     pixelarea_steradians: Annotated[
-        Optional[AstropyQuantity[np.float64, u.steradian]],
+        Optional[AstropyQuantity[np.float64, 0, u.steradian]],
         Field(
-            json_schema_extra={
-                "title": "Nominal pixel area in steradians",
-            },
+            default_factory=default_constant_factory(float(default_num_value.NONUM.value) * u.steradian),
+            title="Nominal pixel area in steradians",
         ),
     ]
-    pixelarea_steradians: Annotated[
-        Optional[AstropyQuantity[np.float64, u.arcsec**2]],
+    pixelarea_arcsecsq: Annotated[
+        Optional[AstropyQuantity[np.float64, 0, u.arcsec**2]],
         Field(
-            json_schema_extra={
-                "title": "Nominal pixel area in arcsec^2",
-            },
+            default_factory=default_constant_factory(float(default_num_value.NONUM.value) * (u.arcsec**2)),
+            title="Nominal pixel area in arcsec^2",
         ),
     ]
 
@@ -35,35 +39,36 @@ class PixelareaRefMeta(RefOpticalElement, RefCommon):
     reftype: Annotated[
         Literal[reftype.PIXELAREA],
         Field(
-            json_schema_extra={
-                "title": "Reference file type",
-            },
+            default_factory=default_constant_factory(reftype.PIXELAREA.value),
+            title="Reference file type",
         ),
     ]
     photometry: Annotated[
         Photometry,
         Field(
-            json_schema_extra={
-                "title": "Photometry information",
-            },
+            default_factory=default_model_factory(Photometry),
         ),
     ]
 
 
 class PixelareaRefModel(BaseRomanRefModel):
+    _uri: ClassVar = asdf_uri.PIXELAREA.value
+    _tag_uri: ClassVar = asdf_tag_uri.PIXELAREA.value
+
+    model_config = ConfigDict(
+        title="Pixel area reference schema",
+    )
+
     meta: Annotated[
         PixelareaRefMeta,
         Field(
-            json_schema_extra={
-                "title": "Pixelarea reference metadata",
-            },
+            default_factory=default_model_factory(PixelareaRefMeta),
         ),
     ]
     data: Annotated[
         NdArray[np.float32, 2],
         Field(
-            json_schema_extra={
-                "title": "Pixel area array",
-            },
+            default_factory=default_ndarray_factory(_SHAPE, np.float32),
+            title="Pixel area array",
         ),
     ]

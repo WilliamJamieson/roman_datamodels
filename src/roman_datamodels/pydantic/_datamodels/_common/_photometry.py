@@ -1,97 +1,117 @@
-from typing import Annotated, Optional
+from typing import Annotated, ClassVar, Optional
 
 import astropy.units as u
 import numpy as np
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from ..._adaptors import AstropyQuantity
-from ..._core import BaseDataModel
+from ..._archive import Archive, ArchiveCatalog
+from ..._config import create_shape_config
+from ..._core import BaseRomanTaggedModel
+from ..._defaults import default_num_value, default_quantity_factory
+from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Photometry"]
 
 
-class Photometry(BaseDataModel):
+_SHAPE, photometry_shape_context = create_shape_config((), default_num_value.NONUM.value)
+
+
+class Photometry(BaseRomanTaggedModel):
+    _uri: ClassVar = asdf_uri.PHOTOMETRY.value
+    _tag_uri: ClassVar = asdf_tag_uri.PHOTOMETRY.value
+
+    model_config = ConfigDict(
+        title="Photometry information",
+    )
+
     conversion_megajanskys: Annotated[
-        Optional[AstropyQuantity[np.float64, u.MJy / u.sr, 0]],
+        Optional[AstropyQuantity[np.float64, 0, u.MJy / u.sr]],
         Field(
-            json_schema_extra={
-                "title": "Flux density (MJy/steradian) producing 1 cps",
-                "archive_catalog": {
-                    "datatype": "float",
-                    "destination": [
+            default_factory=default_quantity_factory(_SHAPE, np.float64, u.MJy / u.sr),
+            title="Flux density (MJy/steradian) producing 1 cps",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="float",
+                    destination=[
                         "ScienceCommon.conversion_megajanskys",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     conversion_microjanskys: Annotated[
-        Optional[AstropyQuantity[np.float64, u.uJy / (u.arcsec**2), 0]],
+        Optional[AstropyQuantity[np.float64, 0, u.uJy / (u.arcsec**2)]],
         Field(
-            json_schema_extra={
-                "title": "Flux density (uJy/arcsec2) producing 1 cps",
-                "archive_catalog": {
-                    "datatype": "float",
-                    "destination": [
+            default_factory=default_quantity_factory(_SHAPE, np.float64, u.uJy / (u.arcsec**2)),
+            title="Flux density (uJy/arcsec2) producing 1 cps",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="float",
+                    destination=[
                         "ScienceCommon.conversion_microjanskys",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     pixelarea_steradians: Annotated[
-        Optional[AstropyQuantity[np.float64, u.sr, 0]],
+        Optional[AstropyQuantity[np.float64, 0, u.sr]],
         Field(
-            json_schema_extra={
-                "title": "Nominal pixel area in steradians",
-                "archive_catalog": {
-                    "datatype": "float",
-                    "destination": [
+            default_factory=default_quantity_factory(_SHAPE, np.float64, u.sr),
+            title="Nominal pixel area in steradians",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="float",
+                    destination=[
                         "ScienceCommon.pixelarea_steradians",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     pixelarea_arcsecsq: Annotated[
-        Optional[AstropyQuantity[np.float64, u.arcsec**2, 0]],
+        Optional[AstropyQuantity[np.float64, 0, u.arcsec**2]],
         Field(
-            json_schema_extra={
-                "title": "Nominal pixel area in arcsec^2",
-                "archive_catalog": {
-                    "datatype": "float",
-                    "destination": [
+            default_factory=default_quantity_factory(_SHAPE, np.float64, u.arcsec**2),
+            title="Nominal pixel area in arcsec^2",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="float",
+                    destination=[
                         "ScienceCommon.pixelarea_arcsecsq",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     conversion_megajanskys_uncertainty: Annotated[
-        Optional[AstropyQuantity[np.float64, u.MJy / u.sr, 0]],
+        Optional[AstropyQuantity[np.float64, 0, u.MJy / u.sr]],
         Field(
-            json_schema_extra={
-                "title": "Uncertainty in flux density conversion to MJy/steradians",
-                "archive_catalog": {
-                    "datatype": "float",
-                    "destination": [
+            default_factory=default_quantity_factory(_SHAPE, np.float64, u.MJy / u.sr),
+            title="Uncertainty in flux density conversion to MJy/steradians",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="float",
+                    destination=[
                         "ScienceCommon.conversion_megajanskys_uncertainty",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     conversion_microjanskys_uncertainty: Annotated[
-        Optional[AstropyQuantity[np.float64, u.uJy / (u.arcsec**2), 0]],
+        Optional[AstropyQuantity[np.float64, 0, u.uJy / (u.arcsec**2)]],
         Field(
-            json_schema_extra={
-                "title": "Uncertainty in flux density conversion to uJy/arcsec2",
-                "archive_catalog": {
-                    "datatype": "float",
-                    "destination": [
+            default_factory=default_quantity_factory(_SHAPE, np.float64, u.uJy / (u.arcsec**2)),
+            title="Uncertainty in flux density conversion to uJy/arcsec2",
+            json_schema_extra=Archive(
+                archive_catalog=ArchiveCatalog(
+                    datatype="float",
+                    destination=[
                         "ScienceCommon.conversion_microjanskys_uncertainty",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]

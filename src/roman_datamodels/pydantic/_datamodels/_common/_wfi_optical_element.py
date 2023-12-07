@@ -2,18 +2,16 @@ from typing import Annotated
 
 from pydantic import Field
 
-from ..._core import BaseDataModel
+from ..._defaults import default_constant_factory
 from ..._enums import optical_element
 
 __all__ = ["WfiOpticalElement"]
 
 
-class WfiOpticalElement(BaseDataModel):
-    optical_element: Annotated[
-        optical_element,
-        Field(
-            json_schema_extra={
-                "title": "name of the filter element used",
-            },
-        ),
-    ]
+WfiOpticalElement = Annotated[
+    optical_element,
+    Field(
+        default_factory=default_constant_factory(optical_element.F158.value),
+        title="name of the filter element used",
+    ),
+]

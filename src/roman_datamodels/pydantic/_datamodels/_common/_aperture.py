@@ -1,53 +1,63 @@
-from typing import Annotated
+from typing import Annotated, ClassVar
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
-from ..._core import BaseDataModel, Number
+from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
+from ..._core import BaseRomanTaggedModel, Number
+from ..._defaults import default_constant_factory
 from ..._enums import aperture
+from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Aperture"]
 
 
-class Aperture(BaseDataModel):
+class Aperture(BaseRomanTaggedModel):
+    _uri: ClassVar = asdf_uri.APERTURE.value
+    _tag_uri: ClassVar = asdf_tag_uri.APERTURE.value
+
+    model_config = ConfigDict(
+        title="Aperture Information",
+    )
+
     name: Annotated[
         aperture,
         Field(
-            json_schema_extra={
-                "title": "PRD science aperture used",
-                "sdf": {
-                    "special_processing": "VALUE_REQUIRED",
-                    "source": {
-                        "origin": "PSS:aperture.AperName",
-                    },
-                },
-                "archive_catalog": {
-                    "datatype": "nvarchar(40)",
-                    "destination": [
+            default_factory=default_constant_factory(aperture.WFI_06_FULL.value),
+            title="PRD science aperture used",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(
+                        origin="PSS:aperture.AperName",
+                    ),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="nvarchar(40)",
+                    destination=[
                         "ScienceCommon.aperture_name",
                         "GuideWindow.aperture_name",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
     position_angle: Annotated[
         Number,
         Field(
-            json_schema_extra={
-                "title": "[deg] Position angle of aperture used",
-                "sdf": {
-                    "special_processing": "VALUE_REQUIRED",
-                    "source": {
-                        "origin": "TBD",  # v3_position_angle in baseline_prime_visits or spacecraft_parameters
-                    },
-                },
-                "archive_catalog": {
-                    "datatype": "float",
-                    "destination": [
+            default_factory=default_constant_factory(30.0),
+            title="[deg] Position angle of aperture used",
+            json_schema_extra=Archive(
+                sdf=Sdf(
+                    special_processing="VALUE_REQUIRED",
+                    source=SdfOrigin(origin="TBD"),
+                ),
+                archive_catalog=ArchiveCatalog(
+                    datatype="float",
+                    destination=[
                         "ScienceCommon.position_angle",
                         "GuideWindow.position_angle",
                     ],
-                },
-            },
+                ),
+            ),
         ),
     ]
