@@ -16,9 +16,8 @@ from .._defaults import (
     default_quantity_factory,
     default_str_value,
 )
-from .._enums import guidewindow_modes
 from .._uri import asdf_tag_uri, asdf_uri
-from ._common import Common, GuidewindowModes
+from ._common import Common, GuidewindowModes, guidewindow_modes
 
 __all__ = ["GuidewindowModel"]
 
@@ -27,15 +26,6 @@ _SHAPE, guidewindow_shape_context = create_shape_config((2, 8, 16, 32, 32))
 
 
 class GuidewindowMeta(Common):
-    model_config = ConfigDict(
-        # Cannot produce a serialization schema if multiple types under this
-        # are allowed to have the same enum.
-        # In this case guide_star and gw_mode have the same enum.
-        # This is only used as a convenient way to define the required values.
-        # This can be done manually in the json_schema_extra.
-        json_schema_mode_override="validation",
-    )
-
     gw_start_time: Annotated[
         AstropyTime,
         Field(

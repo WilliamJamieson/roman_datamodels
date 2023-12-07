@@ -1,23 +1,21 @@
 from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
-from pydantic.config import JsonDict
 
 from ..._archive import Archive, ArchiveCatalog
 from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory
-from ..._enums import calibration_status
+from ..._enums import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["CalStep"]
 
 
-def _asdf_schema_modify(json_schema: JsonDict, cls: "CalStep") -> None:
-    # Apply the currently defined schema modifications
-    BaseRomanTaggedModel.model_config["json_schema_extra"](json_schema, cls)
-
-    # Add the required values
-    json_schema["required"] = list(cls.model_fields.keys())
+class calibration_status(StrEnum):
+    NA = "N/A"
+    COMPLETE = "COMPLETE"
+    SKIPPED = "SKIPPED"
+    INCOMPLETE = "INCOMPLETE"
 
 
 class CalStep(BaseRomanTaggedModel):
@@ -26,13 +24,6 @@ class CalStep(BaseRomanTaggedModel):
 
     model_config = ConfigDict(
         title="Calibration Status",
-        # Cannot produce a serialization schema if multiple types under this
-        # are allowed to have the same enum.
-        # In this case, all the calibration steps use the same enum.
-        # This is only used as a convenient way to define the required values.
-        # This can be done manually in the json_schema_extra.
-        json_schema_mode_override="validation",
-        json_schema_extra=_asdf_schema_modify,
     )
 
     assign_wcs: Annotated[

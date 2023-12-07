@@ -8,9 +8,8 @@ from .._adaptors import AstropyQuantity, NdArray
 from .._config import create_shape_config
 from .._core import BaseRomanModel, BaseRomanRefModel
 from .._defaults import default_constant_factory, default_model_factory, default_ndarray_factory, default_num_value
-from .._enums import reftype
 from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, RefOpticalElement
+from ._ref_common import RefCommon, RefOpticalElement, reftype
 
 __all__ = ["PixelareaRefModel"]
 

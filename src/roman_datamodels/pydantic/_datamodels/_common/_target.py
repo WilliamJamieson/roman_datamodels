@@ -5,10 +5,22 @@ from pydantic import ConfigDict, Field
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel, Number
 from ..._defaults import default_constant_factory, default_num_value, default_str_value
-from ..._enums import source_type, target_type
+from ..._enums import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Target"]
+
+
+class target_type(StrEnum):
+    FIXED = "FIXED"
+    MOVING = "MOVING"
+    GENERIC = "GENERIC"
+
+
+class source_type(StrEnum):
+    POINT = "POINT"
+    EXTENDED = "EXTENDED"
+    UNKNOWN = "UNKNOWN"
 
 
 class Target(BaseRomanTaggedModel):

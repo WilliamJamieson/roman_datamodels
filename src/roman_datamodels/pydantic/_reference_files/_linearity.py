@@ -8,9 +8,8 @@ from .._adaptors import AstropyUnit, NdArray
 from .._config import create_shape_config
 from .._core import BaseRomanRefModel
 from .._defaults import default_constant_factory, default_model_factory, default_ndarray_factory
-from .._enums import reftype
 from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon
+from ._ref_common import RefCommon, reftype
 
 __all__ = ["LinearityRefModel"]
 

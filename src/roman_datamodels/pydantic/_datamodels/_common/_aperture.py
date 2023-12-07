@@ -5,10 +5,34 @@ from pydantic import ConfigDict, Field
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel, Number
 from ..._defaults import default_constant_factory
-from ..._enums import aperture
+from ..._enums import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Aperture"]
+
+
+class aperture(StrEnum):
+    WFI_01_FULL = "WFI_01_FULL"
+    WFI_02_FULL = "WFI_02_FULL"
+    WFI_03_FULL = "WFI_03_FULL"
+    WFI_04_FULL = "WFI_04_FULL"
+    WFI_05_FULL = "WFI_05_FULL"
+    WFI_06_FULL = "WFI_06_FULL"
+    WFI_07_FULL = "WFI_07_FULL"
+    WFI_08_FULL = "WFI_08_FULL"
+    WFI_09_FULL = "WFI_09_FULL"
+    WFI_10_FULL = "WFI_10_FULL"
+    WFI_11_FULL = "WFI_11_FULL"
+    WFI_12_FULL = "WFI_12_FULL"
+    WFI_13_FULL = "WFI_13_FULL"
+    WFI_14_FULL = "WFI_14_FULL"
+    WFI_15_FULL = "WFI_15_FULL"
+    WFI_16_FULL = "WFI_16_FULL"
+    WFI_17_FULL = "WFI_17_FULL"
+    WFI_18_FULL = "WFI_18_FULL"
+    BORESIGHT = "BORESIGHT"
+    CGI_CEN = "CGI_CEN"
+    WFI_CEN = "WFI_CEN"
 
 
 class Aperture(BaseRomanTaggedModel):

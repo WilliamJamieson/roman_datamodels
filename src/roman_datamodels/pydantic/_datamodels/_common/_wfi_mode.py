@@ -5,12 +5,16 @@ from pydantic import ConfigDict, Field
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory
-from ..._enums import instrument
+from ..._enums import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 from ._wfi_detector import WfiDetector
 from ._wfi_optical_element import WfiOpticalElement
 
-__all__ = ["WfiMode"]
+__all__ = ["WfiMode", "instrument"]
+
+
+class instrument(StrEnum):
+    WFI = "WFI"
 
 
 class WfiMode(BaseRomanTaggedModel):

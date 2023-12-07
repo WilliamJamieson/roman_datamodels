@@ -5,9 +5,8 @@ from pydantic import ConfigDict, Field
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel, Number
 from ..._defaults import default_constant_factory, default_num_value, default_str_value
-from ..._enums import guidewindow_modes
 from ..._uri import asdf_tag_uri, asdf_uri
-from ._guidewindow_modes import GuidewindowModes
+from ._guidewindow_modes import GuidewindowModes, guidewindow_modes
 
 __all__ = ["Guidestar"]
 

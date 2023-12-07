@@ -15,9 +15,8 @@ from .._defaults import (
     default_quantity_factory,
     default_str_value,
 )
-from .._enums import reftype
 from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, RefExposureType, RefOpticalElement
+from ._ref_common import RefCommon, RefExposureType, RefOpticalElement, reftype
 
 __all__ = ["DarkRefModel"]
 

@@ -7,9 +7,8 @@ from pydantic import ConfigDict, Field
 from .._adaptors import AstropyUnit
 from .._core import BaseRomanRefModel
 from .._defaults import default_constant_factory, default_model_factory
-from .._enums import reftype
 from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, RefOpticalElement
+from ._ref_common import RefCommon, RefOpticalElement, reftype
 
 __all__ = ["DistortionRefModel"]
 

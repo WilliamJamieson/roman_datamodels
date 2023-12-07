@@ -7,17 +7,41 @@ from ..._adaptors import AstropyTime
 from ..._core import BaseRomanModel, BaseRomanURIModel
 from ..._datamodels import common
 from ..._defaults import default_constant_factory, default_model_factory
-from ..._enums import instrument, origin, pedigree, telescope
+from ..._enums import StrEnum
 from ..._uri import asdf_uri
 
-__all__ = ["RefCommon"]
+__all__ = ["RefCommon", "reftype"]
+
+
+class reftype(StrEnum):
+    DARK = "DARK"
+    DISTORTION = "DISTORTION"
+    FLAT = "FLAT"
+    GAIN = "GAIN"
+    INVERSELINEARITY = "INVERSELINEARITY"
+    IPC = "IPC"
+    LINEARITY = "LINEARITY"
+    MASK = "MASK"
+    PIXELAREA = "PIXELAREA"
+    READNOISE = "READNOISE"
+    REFPIX = "REFPIX"
+    SATURATION = "SATURATION"
+    BIAS = "BIAS"
+    PHOTOM = "PHOTOM"
+
+
+class pedigree(StrEnum):
+    GROUND = "GROUND"
+    MODEL = "MODEL"
+    DUMMY = "DUMMY"
+    SIMULATION = "SIMULATION"
 
 
 class Instrument(BaseRomanModel):
     name: Annotated[
-        instrument,
+        common.instrument,
         Field(
-            default_factory=default_constant_factory(instrument.WFI.value),
+            default_factory=default_constant_factory(common.instrument.WFI.value),
             title="Instrument used to acquire the data",
         ),
     ]
@@ -30,9 +54,9 @@ class RefCommon(BaseRomanURIModel):
     model_config = ConfigDict(title="Common reference metadata properties")
 
     reftype: Annotated[
-        str,
+        reftype,
         Field(
-            default_factory=default_constant_factory("test reftype"),
+            default_factory=default_constant_factory(reftype.DARK.value),
             title="Reference File Type",
         ),
     ]
@@ -65,16 +89,16 @@ class RefCommon(BaseRomanURIModel):
         ),
     ]
     telescope: Annotated[
-        telescope,
+        common.telescope,
         Field(
-            default_factory=default_constant_factory(telescope.ROMAN.value),
+            default_factory=default_constant_factory(common.telescope.ROMAN.value),
             title="Telescope that reference file is used to calibrate",
         ),
     ]
     origin: Annotated[
-        origin,
+        common.origin,
         Field(
-            default_factory=default_constant_factory(origin.STSCI.value),
+            default_factory=default_constant_factory(common.origin.STSCI.value),
             title="Organization responsible for creating file",
         ),
     ]

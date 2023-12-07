@@ -5,10 +5,14 @@ from pydantic import ConfigDict, Field
 from ..._archive import Archive, ArchiveCatalog
 from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory
-from ..._enums import coordinates
+from ..._enums import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Coordinates"]
+
+
+class coordinates(StrEnum):
+    ICRS = "ICRS"
 
 
 class Coordinates(BaseRomanTaggedModel):
