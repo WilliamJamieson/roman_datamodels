@@ -7,7 +7,7 @@ from ..._adaptors import AstropyTime
 from ..._core import BaseRomanModel, BaseRomanURIModel
 from ..._datamodels import common
 from ..._defaults import default_constant_factory, default_model_factory
-from ..._enums import StrEnum
+from ..._strenum import StrEnum
 from ..._uri import asdf_uri
 
 __all__ = ["RefCommon", "reftype"]

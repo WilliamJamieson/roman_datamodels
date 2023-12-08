@@ -4,7 +4,7 @@ from pydantic import ConfigDict, Field
 
 from .._core import BaseRomanDataModel, BaseRomanModel, Number
 from .._defaults import default_constant_factory
-from .._enums import StrEnum
+from .._strenum import StrEnum
 from .._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["AssociationsModel"]

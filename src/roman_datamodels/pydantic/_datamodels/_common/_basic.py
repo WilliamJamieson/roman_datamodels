@@ -7,7 +7,7 @@ from ..._adaptors import AstropyTime
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanURIModel
 from ..._defaults import default_constant_factory, default_str_value
-from ..._enums import StrEnum
+from ..._strenum import StrEnum
 from ..._uri import asdf_uri
 
 __all__ = ["Basic", "telescope", "origin"]

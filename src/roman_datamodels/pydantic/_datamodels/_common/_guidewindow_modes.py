@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from ..._enums import StrEnum
+from ..._strenum import StrEnum
 
 __all__ = ["GuidewindowModes", "guidewindow_modes"]
 
