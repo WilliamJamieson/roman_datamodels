@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import contextmanager
 from inspect import isclass
 from typing import Any, ClassVar, Union
 
@@ -50,6 +51,7 @@ class BaseDataModel(BaseModel):
         use_enum_values=True,
         # Validate values when they are set
         validate_assignment=True,
+        revalidate_instances="always",
         extra="allow",
     )
 
@@ -58,6 +60,18 @@ class BaseDataModel(BaseModel):
 
     def __setitem__(self, key: str, value: Any) -> None:
         setattr(self, key, value)
+
+    @contextmanager
+    def pause_validation(self, revalidate_on_exit: bool = True) -> None:
+        self.model_config["validate_assignment"] = False
+
+        try:
+            yield
+        finally:
+            self.model_config["validate_assignment"] = True
+
+            if revalidate_on_exit:
+                self.model_validate(self)
 
 
 class BaseRomanModel(BaseDataModel):
