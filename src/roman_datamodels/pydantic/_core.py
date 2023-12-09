@@ -8,7 +8,6 @@ from pydantic import BaseModel, ConfigDict
 from pydantic.config import JsonDict
 
 from ._archive import Archive
-from ._registry import DATA_MODELS, REF_MODELS, TAGGED_MODELS, URI_MODELS
 from ._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["BaseDataModel", "BaseRomanRefModel", "BaseRomanDataModel", "Number"]
@@ -122,63 +121,14 @@ class BaseRomanModel(BaseDataModel):
 class BaseRomanURIModel(BaseRomanModel):
     _uri: ClassVar[asdf_uri | None] = None
 
-    def __init_subclass__(cls, **kwargs: Any):
-        super().__init_subclass__(**kwargs)
-
-        # Don't register the base classes
-        if cls.__name__.startswith("Base") or cls.__name__.startswith("Test"):
-            return
-
-        # Don't register subclasses if they don't have a new uri
-        if cls._uri is not None and cls._uri == cls.__base__._uri:
-            return
-
-        # Register the URI
-        if cls._uri in URI_MODELS or cls._uri is None:
-            raise ValueError(f"URI {cls._uri} already registered")
-
-        URI_MODELS[cls._uri] = cls
-
 
 class BaseRomanTaggedModel(BaseRomanURIModel):
     _tag_uri: ClassVar[asdf_tag_uri | None] = None
 
-    def __init_subclass__(cls, **kwargs: Any):
-        super().__init_subclass__(**kwargs)
-
-        # Don't register the base classes
-        if cls.__name__.startswith("Base") or cls.__name__.startswith("Test"):
-            return
-
-        if cls._tag_uri in TAGGED_MODELS:
-            raise ValueError(f"TAG {cls._tag_uri} already registered")
-
-        TAGGED_MODELS[cls._tag_uri] = cls
-
 
 class BaseRomanDataModel(BaseRomanTaggedModel):
-    def __init_subclass__(cls, **kwargs: Any):
-        super().__init_subclass__(**kwargs)
-
-        # Don't register the base classes
-        if cls.__name__.startswith("Base") or cls.__name__.startswith("Test"):
-            return
-
-        if cls.__name__ in DATA_MODELS:
-            raise ValueError(f"{cls.__name__} is already registered as a data model")
-
-        DATA_MODELS[cls.__name__] = cls
+    ...
 
 
 class BaseRomanRefModel(BaseRomanTaggedModel):
-    def __init_subclass__(cls, **kwargs: Any):
-        super().__init_subclass__(**kwargs)
-
-        # Don't register the base classes
-        if cls.__name__.startswith("Base") or cls.__name__.startswith("Test"):
-            return
-
-        if cls.__name__ in REF_MODELS:
-            raise ValueError(f"{cls.__name__} already registered as a reference model")
-
-        REF_MODELS[cls.__name__] = cls
+    ...
