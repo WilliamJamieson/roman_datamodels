@@ -54,14 +54,8 @@ class BaseDataModel(BaseModel):
         extra="allow",
     )
 
-    def __getitem__(self, item: str) -> Any:
-        return getattr(self, item)
-
-    def __setitem__(self, key: str, value: Any) -> None:
-        setattr(self, key, value)
-
     @contextmanager
-    def pause_validation(self, revalidate_on_exit: bool = True) -> None:
+    def pause_validation(self, *, revalidate_on_exit: bool = True) -> None:
         self.model_config["validate_assignment"] = False
 
         try:
@@ -71,6 +65,12 @@ class BaseDataModel(BaseModel):
 
             if revalidate_on_exit:
                 self.model_validate(self)
+
+    def __getitem__(self, item: str) -> Any:
+        return getattr(self, item)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        setattr(self, key, value)
 
 
 class BaseRomanModel(BaseDataModel):
