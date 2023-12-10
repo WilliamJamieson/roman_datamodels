@@ -2,7 +2,7 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory, default_num_value
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
@@ -24,14 +24,14 @@ class Resample(BaseRomanTaggedModel):
     )
 
     pixel_scale_ratio: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Pixel Scale Ratio of resample to input scale",
         ),
     ]
     pixfrac: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Fraction of pixel to use for pixel convolution",
@@ -45,7 +45,7 @@ class Resample(BaseRomanTaggedModel):
         ),
     ]
     product_exposure_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value * -1),
             title="Total exposure time for resample product",

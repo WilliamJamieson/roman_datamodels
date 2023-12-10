@@ -3,7 +3,7 @@ from typing import Annotated, ClassVar
 from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanURIModel, Number
+from ..._core import BaseRomanURIModel
 from ..._defaults import default_constant_factory, default_num_value
 from ..._uri import asdf_uri
 
@@ -18,7 +18,7 @@ class VelocityAberration(BaseRomanURIModel):
     )
 
     ra_offset: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Velocity aberration right ascension offset",
@@ -40,7 +40,7 @@ class VelocityAberration(BaseRomanURIModel):
         ),
     ]
     dec_offset: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Velocity aberration declination offset",
@@ -62,7 +62,7 @@ class VelocityAberration(BaseRomanURIModel):
         ),
     ]
     scale_factor: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Velocity aberration scale factor",

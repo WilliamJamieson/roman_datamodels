@@ -8,7 +8,7 @@ from pydantic import ConfigDict, Field
 from .._adaptors import AstropyQuantity, AstropyTime
 from .._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from .._config import create_shape_config
-from .._core import BaseRomanDataModel, Number
+from .._core import BaseRomanDataModel
 from .._defaults import (
     default_constant_factory,
     default_model_factory,
@@ -69,7 +69,7 @@ class GuidewindowMeta(Common):
         ),
     ]
     gw_frame_readout_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="The readout time for the guide window frame",
@@ -153,7 +153,7 @@ class GuidewindowMeta(Common):
         ),
     ]
     pedestal_resultant_exp_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Total exposure time for the guide window pedestal frames",
@@ -175,7 +175,7 @@ class GuidewindowMeta(Common):
         ),
     ]
     signal_resultant_exp_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Total exposure time for the guide window resultant frames",

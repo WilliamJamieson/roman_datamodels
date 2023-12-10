@@ -3,7 +3,7 @@ from typing import Annotated, ClassVar
 from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory, default_num_value, default_str_value
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
@@ -98,7 +98,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     ra: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Target RA at mid time of exposure",
@@ -120,7 +120,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     dec: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Target Dec at mid time of exposure",
@@ -142,7 +142,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     ra_uncertainty: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Target RA uncertainty",
@@ -164,7 +164,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     dec_uncertainty: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Target Dec uncertainty",
@@ -186,7 +186,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     proper_motion_ra: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Target proper motion in RA",
@@ -208,7 +208,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     proper_motion_dec: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Target proper motion in Dec",
@@ -252,7 +252,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     proposer_ra: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Proposer's target RA",
@@ -275,7 +275,7 @@ class Target(BaseRomanTaggedModel):
         ),
     ]
     proposer_dec: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Proposer's target Dec",

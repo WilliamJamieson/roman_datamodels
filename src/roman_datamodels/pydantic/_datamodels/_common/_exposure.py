@@ -5,7 +5,7 @@ from pydantic import ConfigDict, Field
 
 from ..._adaptors import AstropyTime
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory, default_num_value, default_str_value
 from ..._uri import asdf_tag_uri, asdf_uri
 from ._exposure_type import ExposureType
@@ -136,7 +136,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     start_time_mjd: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[d] exposure start time in MJD",
@@ -163,7 +163,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     mid_time_mjd: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[d] exposure mid time in MJD",
@@ -190,7 +190,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     end_time_mjd: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[d] exposure end time in MJD",
@@ -217,7 +217,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     start_time_tdb: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[d] TDB time of exposure start in MJD",
@@ -245,7 +245,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     mid_time_tdb: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[d] TDB time of exposure mid in MJD",
@@ -273,7 +273,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     end_time_tdb: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[d] TDB time of exposure end in MJD",
@@ -396,7 +396,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     gain_factor: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Gain scale factor",
@@ -418,7 +418,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     integration_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[s] Effective integration time",
@@ -441,7 +441,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     elapsed_exposure_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[s] Total elapsed exposure time",
@@ -513,7 +513,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     frame_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[s] Time between frames",
@@ -538,7 +538,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     group_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[s] Time between groups",
@@ -564,7 +564,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     exposure_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[s] exposure time",
@@ -590,7 +590,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     effective_exposure_time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[s] Effective exposure time",
@@ -613,7 +613,7 @@ class Exposure(BaseRomanTaggedModel):
         ),
     ]
     duration: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[s] Total duration of exposure",

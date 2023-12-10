@@ -3,7 +3,7 @@ from typing import Annotated, ClassVar
 from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory, default_num_value, default_str_value
 from ..._uri import asdf_tag_uri, asdf_uri
 from ._guidewindow_modes import GuidewindowModes, guidewindow_modes
@@ -111,7 +111,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_ra: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] guide star right ascension",
@@ -133,7 +133,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_dec: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] guide star declination",
@@ -155,7 +155,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_ura: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] guide star right ascension uncertainty",
@@ -177,7 +177,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_udec: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] guide star declination uncertainty",
@@ -199,7 +199,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_mag: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="guide star magnitude in detector",
@@ -221,7 +221,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_umag: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="guide star magnitude uncertainty",
@@ -243,7 +243,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     data_start: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="MJD start time of guider data within this file",
@@ -265,7 +265,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     data_end: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="MJD end time of guider data within this file",
@@ -287,7 +287,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_ctd_x: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[arcsec] guide star centroid x position in guider ideal frame",
@@ -309,7 +309,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_ctd_y: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[arcsec] guide star centroid y position in guider ideal frame",
@@ -331,7 +331,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_ctd_ux: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="uncertainty in the x position of the centroid",
@@ -353,7 +353,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_ctd_uy: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="uncertainty in the y position of the centroid",
@@ -397,7 +397,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_mura: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[mas/yr] Guide star ICRS right ascension proper motion",
@@ -419,7 +419,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_mudec: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[mas/yr] Guide star ICRS declination proper motion",
@@ -441,7 +441,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_para: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="Guide star annual parallax",
@@ -463,7 +463,7 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gs_pattern_error: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="RMS of guide star position",

@@ -3,7 +3,7 @@ from typing import Annotated, ClassVar
 from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory, default_num_value, default_str_value
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
@@ -25,7 +25,7 @@ class Ephemeris(BaseRomanTaggedModel):
     )
 
     earth_angle: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[radians] Earth Angle",
@@ -47,7 +47,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     moon_angle: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[radians] Moon Angle",
@@ -91,7 +91,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     sun_angle: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[radians] Sun Angle",
@@ -135,7 +135,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     time: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="UTC time of position and velocity vectors in ephemeris (MJD)",
@@ -157,7 +157,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     spatial_x: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[km] X spatial coordinate of Roman",
@@ -179,7 +179,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     spatial_y: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[km] Y spatial coordinate of Roman",
@@ -201,7 +201,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     spatial_z: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[km] Z spatial coordinate of Roman",
@@ -223,7 +223,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     velocity_x: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[km/s] X component of Roman velocity",
@@ -245,7 +245,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     velocity_y: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[km/s] Y component of Roman velocity",
@@ -267,7 +267,7 @@ class Ephemeris(BaseRomanTaggedModel):
         ),
     ]
     velocity_z: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[km/s] Z component of Roman velocity",

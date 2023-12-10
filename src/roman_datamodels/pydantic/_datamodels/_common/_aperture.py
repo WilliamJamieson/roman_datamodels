@@ -3,7 +3,7 @@ from typing import Annotated, ClassVar
 from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
@@ -66,7 +66,7 @@ class Aperture(BaseRomanTaggedModel):
         ),
     ]
     position_angle: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(30.0),
             title="[deg] Position angle of aperture used",

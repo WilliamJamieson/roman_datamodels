@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from inspect import isclass
-from typing import Any, ClassVar, Union
+from typing import Any, ClassVar
 
 from pydantic import BaseModel, ConfigDict
 from pydantic.config import JsonDict
@@ -10,9 +10,7 @@ from pydantic.config import JsonDict
 from ._archive import Archive
 from ._uri import asdf_tag_uri, asdf_uri
 
-__all__ = ["BaseDataModel", "BaseRomanRefModel", "BaseRomanDataModel", "Number"]
-
-Number = Union[int, float]
+__all__ = ["BaseDataModel", "BaseRomanRefModel", "BaseRomanDataModel"]
 
 
 def _asdf_schema_modify(json_schema: JsonDict, cls: BaseRomanModel) -> None:

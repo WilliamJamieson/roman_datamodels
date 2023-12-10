@@ -3,7 +3,7 @@ from typing import Annotated, ClassVar
 from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory, default_num_value
 from ..._uri import asdf_tag_uri, asdf_uri
 
@@ -19,7 +19,7 @@ class Pointing(BaseRomanTaggedModel):
     )
 
     ra_v1: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] RA of telescope V1 axis",
@@ -41,7 +41,7 @@ class Pointing(BaseRomanTaggedModel):
         ),
     ]
     dec_v1: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] Dec of telescope V1 axis",
@@ -63,7 +63,7 @@ class Pointing(BaseRomanTaggedModel):
         ),
     ]
     pa_v3: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] Position angle of telescope V3 axis",

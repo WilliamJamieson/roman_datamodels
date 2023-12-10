@@ -2,7 +2,7 @@ from typing import Annotated, Callable, ClassVar, Optional
 
 from pydantic import ConfigDict, Field
 
-from .._core import BaseRomanDataModel, BaseRomanModel, Number
+from .._core import BaseRomanDataModel, BaseRomanModel
 from .._defaults import default_constant_factory
 from .._strenum import StrEnum
 from .._uri import asdf_tag_uri, asdf_uri
@@ -18,7 +18,7 @@ class exptype(StrEnum):
 
 class Member(BaseRomanModel):
     expname: Annotated[str, Field()]
-    exposerr: Annotated[Optional[Number], Field()]
+    exposerr: Annotated[Optional[float], Field()]
     exptype: Annotated[exptype, Field()]
 
 

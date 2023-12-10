@@ -3,7 +3,7 @@ from typing import Annotated, ClassVar
 from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel, Number
+from ..._core import BaseRomanTaggedModel
 from ..._defaults import default_constant_factory, default_num_value, default_str_value
 from ..._uri import asdf_tag_uri, asdf_uri
 
@@ -19,7 +19,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     )
 
     v2_ref: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[arcsec] Telescope v2 coordinate of the reference point",
@@ -41,7 +41,7 @@ class Wcsinfo(BaseRomanTaggedModel):
         ),
     ]
     v3_ref: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[arcsec] Telescope v3 coordinate of the reference point",
@@ -85,7 +85,7 @@ class Wcsinfo(BaseRomanTaggedModel):
         ),
     ]
     v3yangle: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] Angle from V3 axis to Ideal y axis",
@@ -107,7 +107,7 @@ class Wcsinfo(BaseRomanTaggedModel):
         ),
     ]
     ra_ref: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] Right ascension of the reference point",
@@ -129,7 +129,7 @@ class Wcsinfo(BaseRomanTaggedModel):
         ),
     ]
     dec_ref: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] Declination of the reference point",
@@ -151,7 +151,7 @@ class Wcsinfo(BaseRomanTaggedModel):
         ),
     ]
     roll_ref: Annotated[
-        Number,
+        float,
         Field(
             default_factory=default_constant_factory(default_num_value.NONUM.value),
             title="[deg] V3 roll angle at the ref point (N over E)",
