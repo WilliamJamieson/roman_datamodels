@@ -2,15 +2,16 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._core import BaseRomanModel, BaseRomanURIModel
+from ..._core import BaseRomanURIModel
 from ..._datamodels import common
 from ..._defaults import default_model_factory
 from ..._uri import asdf_uri
+from . import _ref_common as ref_common
 
 __all__ = ["RefOpticalElement"]
 
 
-class Instrument(BaseRomanModel):
+class Instrument(ref_common.Instrument):
     optical_element: common.WfiOpticalElement
 
 
