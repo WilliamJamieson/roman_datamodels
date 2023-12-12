@@ -1,7 +1,7 @@
 import pytest
 
 from roman_datamodels.pydantic._core import BaseRomanRefModel, BaseRomanStepModel, BaseRomanTaggedModel, BaseRomanURIModel
-from roman_datamodels.pydantic._registry import DATA_MODELS, REF_MODELS, TAGGED_MODELS, URI_MODELS
+from roman_datamodels.pydantic._registry import REF_MODELS, STEP_MODELS, TAGGED_MODELS, URI_MODELS
 from roman_datamodels.pydantic._uri import asdf_tag_uri, asdf_uri, base_uri
 
 
@@ -27,7 +27,7 @@ def test_all_tags_registered():
     assert set(asdf_tag_uri) == set(TAGGED_MODELS.keys())
 
 
-@pytest.mark.parametrize("model", DATA_MODELS.values())
+@pytest.mark.parametrize("model", STEP_MODELS.values())
 def test_data_models(model):
     assert issubclass(model, BaseRomanStepModel)
 
@@ -51,9 +51,9 @@ def test_ref_models(model):
     assert model._tag_uri in TAGGED_MODELS
     assert model is TAGGED_MODELS[model._tag_uri]
 
-    assert model.__name__ not in DATA_MODELS
-    assert model not in DATA_MODELS.values()
+    assert model.__name__ not in STEP_MODELS
+    assert model not in STEP_MODELS.values()
 
 
 def test_datamodels_distinct_from_refmodels():
-    assert set(DATA_MODELS.keys()).isdisjoint(set(REF_MODELS.keys()))
+    assert set(STEP_MODELS.keys()).isdisjoint(set(REF_MODELS.keys()))

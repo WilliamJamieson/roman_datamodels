@@ -1,37 +1,35 @@
-from typing import Annotated, ClassVar, Literal, NamedTuple
+from __future__ import annotations
+
+from typing import Annotated, Any, ClassVar, Literal
 
 import astropy.units as u
 import numpy as np
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
 from .._adaptors import AstropyUnit, NdArray
-from .._config import create_shape_config
 from .._core import BaseRomanRefModel
-from .._defaults import default_constant_factory, default_model_factory, default_ndarray_factory
+from .._defaults import (
+    check_shape,
+    default_constant_factory,
+    default_model_factory,
+    default_ndarray_factory,
+    fill_shape,
+    ndarray_factory,
+)
 from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, reftype
+from ._ref_common import RefCommon, ref_type
 
 __all__ = ["InverselinearityRefModel"]
 
 
-class InverselinearityShapeData(NamedTuple):
-    frames: int
-    n_rows: int
-    n_cols: int
-
-    @property
-    def detector(self) -> tuple[int, int]:
-        return (self.n_rows, self.n_cols)
-
-
-_SHAPE, inverselinearity_ref_shape_context = create_shape_config(InverselinearityShapeData(2, 4096, 4096))
+_SHAPE = (2, 4096, 4096)
 
 
 class InverselinearityRefMeta(RefCommon):
     reftype: Annotated[
-        Literal[reftype.INVERSELINEARITY],
+        Literal[ref_type.INVERSELINEARITY],
         Field(
-            default_factory=default_constant_factory(reftype.INVERSELINEARITY.value),
+            default_factory=default_constant_factory(ref_type.INVERSELINEARITY.value),
             title="Reference file type",
         ),
     ]
@@ -55,6 +53,8 @@ class InverselinearityRefModel(BaseRomanRefModel):
     _uri: ClassVar = asdf_uri.INVERSELINEARITY.value
     _tag_uri: ClassVar = asdf_tag_uri.INVERSELINEARITY.value
 
+    _testing_default: ClassVar = {"shape": (2, 8, 8)}
+
     model_config = ConfigDict(
         title="Inverse linearity correction reference schema",
     )
@@ -68,7 +68,7 @@ class InverselinearityRefModel(BaseRomanRefModel):
     coeffs: Annotated[
         NdArray[np.float32, 3],
         Field(
-            default_factory=default_ndarray_factory(_SHAPE, np.float32),
+            default_factory=default_ndarray_factory(np.float32, _SHAPE),
             title="Inverse linearly coefficients",
             description=(
                 "Contains the coefficients of a polynomial to add classic non-linearity "
@@ -80,7 +80,51 @@ class InverselinearityRefModel(BaseRomanRefModel):
     dq: Annotated[
         NdArray[np.uint32, 2],
         Field(
-            default_factory=default_ndarray_factory(_SHAPE, np.uint32, "detector"),
+            default_factory=default_ndarray_factory(np.uint32, _SHAPE[1:]),
             title="2-D data quality array for all planes",
         ),
     ]
+
+    def _check_shape(self, shape: tuple[int] | None) -> None:
+        _n_shape = shape[0]
+        _shape = shape[1:]
+
+        check_shape("coeffs", _shape, n_shape=_n_shape, value=self.coeffs)
+        check_shape("dq", _shape, value=self.dq)
+
+    @model_validator(mode="after")
+    def _handle_data_shape(self) -> InverselinearityRefModel:
+        """Ensure that all the data shapes are consistent with that of data."""
+
+        if len(self.coeffs.shape) != 3:
+            raise ValueError(f"Expected 3-D data, got {self.coeffs.shape}")
+
+        self._check_shape(self.coeffs.shape)
+
+        return self
+
+    @model_validator(mode="before")
+    @classmethod
+    def _handle_input_shape(cls, data: Any, info: ValidationInfo) -> Any:
+        """Handle shaping the default input data"""
+        context = info.context
+
+        if context:
+            if not set(context.keys()).issubset({"shape"}):
+                raise ValueError(f"Only 'shape' is allowed in context, got {list(context.keys())}")
+
+            shape = context.get("shape", None)
+            if shape and len(shape) != 3:
+                raise ValueError(f"Expected 3-D shape, got {shape}")
+
+            _shape = shape[1:] if shape else None
+            _n_shape = shape[0] if shape else None
+
+            if isinstance(data, InverselinearityRefModel):
+                data._check_shapes(shape)
+
+            elif isinstance(data, dict):
+                fill_shape(data, "coeffs", _shape, n_shape=_n_shape, factory=ndarray_factory(np.float32))
+                fill_shape(data, "dq", _shape, factory=ndarray_factory(np.uint32))
+
+        return data

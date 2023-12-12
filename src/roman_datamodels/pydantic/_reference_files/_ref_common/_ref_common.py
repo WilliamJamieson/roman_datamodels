@@ -10,10 +10,10 @@ from ..._defaults import default_constant_factory, default_model_factory
 from ..._strenum import StrEnum
 from ..._uri import asdf_uri
 
-__all__ = ["RefCommon", "reftype"]
+__all__ = ["RefCommon", "ref_type"]
 
 
-class reftype(StrEnum):
+class ref_type(StrEnum):
     DARK = "DARK"
     DISTORTION = "DISTORTION"
     FLAT = "FLAT"
@@ -54,9 +54,9 @@ class RefCommon(BaseRomanURIModel):
     model_config = ConfigDict(title="Common reference metadata properties")
 
     reftype: Annotated[
-        reftype,
+        ref_type,
         Field(
-            default_factory=default_constant_factory(reftype.DARK.value),
+            default_factory=default_constant_factory(ref_type.DARK.value),
             title="Reference File Type",
         ),
     ]

@@ -4,7 +4,7 @@ from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_value, default_str_value
+from ..._defaults import default_num_factory, default_str_factory
 from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Program"]
@@ -21,7 +21,7 @@ class Program(BaseRomanTaggedModel):
     title: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Proposal title",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -43,7 +43,7 @@ class Program(BaseRomanTaggedModel):
     pi_name: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Principle Investigator name",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -65,7 +65,7 @@ class Program(BaseRomanTaggedModel):
     category: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Program category",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -87,7 +87,7 @@ class Program(BaseRomanTaggedModel):
     subcategory: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Program subcategory",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -109,7 +109,7 @@ class Program(BaseRomanTaggedModel):
     science_category: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Science category assigned during TAC process",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -131,7 +131,7 @@ class Program(BaseRomanTaggedModel):
     continuation_id: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Continuation of previous Program",
             json_schema_extra=Archive(
                 sdf=Sdf(

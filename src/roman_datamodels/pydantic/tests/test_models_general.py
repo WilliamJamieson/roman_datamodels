@@ -3,6 +3,7 @@ import json
 import pytest
 from pydantic import ConfigDict, ValidationError
 
+from roman_datamodels.pydantic._core import BaseRomanDataModel
 from roman_datamodels.pydantic._registry import URI_MODELS
 
 
@@ -35,7 +36,10 @@ def test_datamodels_defaults_validate(cls):
         )
 
     # Create model to see that it validates
-    TestModel()
+    if issubclass(cls, BaseRomanDataModel):
+        TestModel.maker(testing=True)
+    else:
+        TestModel()
 
 
 @pytest.mark.parametrize("cls", URI_MODELS.values())
@@ -47,7 +51,7 @@ def test_dump_model_json(cls):
 @pytest.mark.parametrize("cls", URI_MODELS.values())
 def test_model_paused_validation_revalidate(cls):
     """Test that the model's paused validation works."""
-    model = cls()
+    model = cls.maker(testing=True) if issubclass(cls, BaseRomanDataModel) else cls()
 
     for field_name in cls.model_fields:
         print(field_name)
@@ -65,7 +69,7 @@ def test_model_paused_validation_revalidate(cls):
 @pytest.mark.parametrize("cls", URI_MODELS.values())
 def test_model_paused_validation_no_revalidate(cls):
     """Test that the model's paused validation works."""
-    model = cls()
+    model = cls.maker(testing=True) if issubclass(cls, BaseRomanDataModel) else cls()
 
     for field_name in cls.model_fields:
         with model.pause_validation(revalidate_on_exit=False):
@@ -76,7 +80,7 @@ def test_model_paused_validation_no_revalidate(cls):
 @pytest.mark.parametrize("cls", URI_MODELS.values())
 def test_model_dict_access(cls):
     """Test that the model's dict access works, ie using model["field_name"]"""
-    model = cls()
+    model = cls.maker(testing=True) if issubclass(cls, BaseRomanDataModel) else cls()
 
     for field_name in cls.model_fields:
         assert model[field_name] is getattr(model, field_name)
@@ -85,7 +89,7 @@ def test_model_dict_access(cls):
 @pytest.mark.parametrize("cls", URI_MODELS.values())
 def test_model_dict_set(cls):
     """Test the model's dict set works, ie using model["field_name"] = value"""
-    model = cls()
+    model = cls.maker(testing=True) if issubclass(cls, BaseRomanDataModel) else cls()
 
     # Just to avoid validation issues
     with model.pause_validation(revalidate_on_exit=False):
@@ -98,7 +102,7 @@ def test_model_dict_set(cls):
 @pytest.mark.parametrize("cls", URI_MODELS.values())
 def test_model_set_arbitrary_field(cls):
     """Test that we can set arbitrary fields on the model. ie ones not defined in the model"""
-    model = cls()
+    model = cls.maker(testing=True) if issubclass(cls, BaseRomanDataModel) else cls()
 
     # `foo` is not a field of the model
     assert "foo" not in model.model_fields

@@ -1,20 +1,25 @@
-from typing import Annotated, ClassVar
+from __future__ import annotations
+
+from typing import Annotated, Any, ClassVar
 
 import astropy.units as u
 import numpy as np
 from astropy.time import Time
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
 from .._adaptors import AstropyQuantity, AstropyTime
 from .._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from .._config import create_shape_config
 from .._core import BaseRomanStepModel
 from .._defaults import (
+    check_shape,
     default_constant_factory,
     default_model_factory,
+    default_num_factory,
     default_num_value,
     default_quantity_factory,
-    default_str_value,
+    default_str_factory,
+    fill_shape,
+    quantity_factory,
 )
 from .._uri import asdf_tag_uri, asdf_uri
 from ._common import Common, GuidewindowModes, guidewindow_modes
@@ -22,7 +27,7 @@ from ._common import Common, GuidewindowModes, guidewindow_modes
 __all__ = ["GuidewindowModel"]
 
 
-_SHAPE, guidewindow_shape_context = create_shape_config((2, 8, 16, 32, 32))
+_SHAPE = (2, 8, 16, 32, 32)
 
 
 class GuidewindowMeta(Common):
@@ -71,7 +76,7 @@ class GuidewindowMeta(Common):
     gw_frame_readout_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="The readout time for the guide window frame",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -155,7 +160,7 @@ class GuidewindowMeta(Common):
     pedestal_resultant_exp_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Total exposure time for the guide window pedestal frames",
             description=("The cumulative exposure time for all the guide window " "pedestal frames"),
             json_schema_extra=Archive(
@@ -177,7 +182,7 @@ class GuidewindowMeta(Common):
     signal_resultant_exp_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Total exposure time for the guide window resultant frames",
             description=("The cumulative exposure time for all the guide window " "resultant frames"),
             json_schema_extra=Archive(
@@ -199,7 +204,7 @@ class GuidewindowMeta(Common):
     gw_acq_number: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title='Guide Window ID "Q"',
             description=("A single digit representing the guide star acquisition " "number within the visit"),
             json_schema_extra=Archive(
@@ -221,7 +226,7 @@ class GuidewindowMeta(Common):
     gw_science_file_source: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="The science data associated with this guide window",
             description=(
                 "The science data file that is associated with this guide window, "
@@ -266,7 +271,7 @@ class GuidewindowMeta(Common):
     gw_window_xstart: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Guide window x start position on the detector",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -287,7 +292,7 @@ class GuidewindowMeta(Common):
     gw_window_ystart: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Guide window y start position on the detector",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -395,6 +400,8 @@ class GuidewindowModel(BaseRomanStepModel):
     _uri: ClassVar = asdf_uri.GUIDEWINDOW.value
     _tag_uri: ClassVar = asdf_tag_uri.GUIDEWINDOW.value
 
+    _testing_default: ClassVar = {"shape": (2, 3, 4, 5, 6)}
+
     model_config = ConfigDict(
         title="Guide window information",
     )
@@ -408,7 +415,7 @@ class GuidewindowModel(BaseRomanStepModel):
     pedestal_frames: Annotated[
         AstropyQuantity[np.uint16, 5, u.DN],
         Field(
-            default_factory=default_quantity_factory(_SHAPE, np.uint16, u.DN),
+            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Pedestal frames",
             description=(
                 "Reconstituted and oriented pedestal frame GW images. "
@@ -420,7 +427,7 @@ class GuidewindowModel(BaseRomanStepModel):
     signal_frames: Annotated[
         AstropyQuantity[np.uint16, 5, u.DN],
         Field(
-            default_factory=default_quantity_factory(_SHAPE, np.uint16, u.DN),
+            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Signal frames",
             description=(
                 "Reconstituted and oriented signal frames. Dimensions: num_frames, "
@@ -432,7 +439,7 @@ class GuidewindowModel(BaseRomanStepModel):
     amp33: Annotated[
         AstropyQuantity[np.uint16, 5, u.DN],
         Field(
-            default_factory=default_quantity_factory(_SHAPE, np.uint16, u.DN),
+            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Signal frames",
             description=(
                 "Amp 33 reference pixel data. Dimensions: num_frames, "
@@ -441,3 +448,43 @@ class GuidewindowModel(BaseRomanStepModel):
             ),
         ),
     ]
+
+    def _check_shapes(self, shape: tuple[int] | None):
+        check_shape("pedestal_frames", shape, value=self.pedestal_frames)
+        check_shape("signal_frames", shape, value=self.signal_frames)
+        check_shape("amp33", shape, value=self.amp33)
+
+    @model_validator(mode="after")
+    def _handle_data_shape(self) -> GuidewindowModel:
+        """Ensure that all the data shapes are consistent with that of data."""
+
+        if len(self.pedestal_frames.shape) != 5:
+            raise ValueError(f"Expected 5-D data, got {self.pedestal_frames.shape}")
+
+        self._check_shapes(self.pedestal_frames.shape)
+
+        return self
+
+    @model_validator(mode="before")
+    @classmethod
+    def _handle_input_shape(cls, data: Any, info: ValidationInfo) -> Any:
+        """Handle shaping the default input data"""
+        context = info.context
+
+        if context:
+            if not set(context.keys()).issubset({"shape"}):
+                raise ValueError(f"Only 'shape' is allowed in context, got {list(context.keys())}")
+
+            shape = context.get("shape", None)
+            if shape and len(shape) != 5:
+                raise ValueError(f"Expected 5-D shape, got {shape}")
+
+            if isinstance(data, GuidewindowModel):
+                data._check_shapes(shape)
+
+            elif isinstance(data, dict):
+                fill_shape(data, "pedestal_frames", shape, factory=quantity_factory(u.DN, np.uint16))
+                fill_shape(data, "signal_frames", shape, factory=quantity_factory(u.DN, np.uint16))
+                fill_shape(data, "amp33", shape, factory=quantity_factory(u.DN, np.uint16))
+
+        return data

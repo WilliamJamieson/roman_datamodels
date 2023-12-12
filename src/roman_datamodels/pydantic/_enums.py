@@ -20,7 +20,7 @@ from ._datamodels._common._visit import engineering_quality, pointing_engdb_qual
 from ._datamodels._common._wfi_detector import detector
 from ._datamodels._common._wfi_mode import instrument
 from ._datamodels._common._wfi_optical_element import optical_element
-from ._reference_files._ref_common._ref_common import pedigree, reftype
+from ._reference_files._ref_common._ref_common import pedigree, ref_type
 
 __all__ = [
     "exptype",
@@ -42,5 +42,5 @@ __all__ = [
     "optical_element",
     "instrument",
     "pedigree",
-    "reftype",
+    "ref_type",
 ]

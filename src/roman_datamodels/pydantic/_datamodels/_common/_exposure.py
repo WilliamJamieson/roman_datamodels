@@ -6,7 +6,7 @@ from pydantic import ConfigDict, Field
 from ..._adaptors import AstropyTime
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_value, default_str_value
+from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
 from ..._uri import asdf_tag_uri, asdf_uri
 from ._exposure_type import ExposureType
 
@@ -26,7 +26,7 @@ class Exposure(BaseRomanTaggedModel):
     id: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Exposure id number within visit",
             description="The exposure number for a given visit id",
             json_schema_extra=Archive(
@@ -138,7 +138,7 @@ class Exposure(BaseRomanTaggedModel):
     start_time_mjd: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[d] exposure start time in MJD",
             description=(
                 "This records the time at the start of the exposure using the "
@@ -165,7 +165,7 @@ class Exposure(BaseRomanTaggedModel):
     mid_time_mjd: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[d] exposure mid time in MJD",
             description=(
                 "This records the time at the midpoint of the exposure using the "
@@ -192,7 +192,7 @@ class Exposure(BaseRomanTaggedModel):
     end_time_mjd: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[d] exposure end time in MJD",
             description=(
                 "This records the time at the end of the exposure using the "
@@ -219,7 +219,7 @@ class Exposure(BaseRomanTaggedModel):
     start_time_tdb: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[d] TDB time of exposure start in MJD",
             description=(
                 "This records the time at the start of the exposure using "
@@ -247,7 +247,7 @@ class Exposure(BaseRomanTaggedModel):
     mid_time_tdb: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[d] TDB time of exposure mid in MJD",
             description=(
                 "This records the time at the midpoint of the exposure using "
@@ -275,7 +275,7 @@ class Exposure(BaseRomanTaggedModel):
     end_time_tdb: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[d] TDB time of exposure end in MJD",
             description=(
                 "This records the time at the end of the exposure using "
@@ -376,7 +376,7 @@ class Exposure(BaseRomanTaggedModel):
     sca_number: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Sensor Chip Assembly number",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -398,7 +398,7 @@ class Exposure(BaseRomanTaggedModel):
     gain_factor: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Gain scale factor",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -420,7 +420,7 @@ class Exposure(BaseRomanTaggedModel):
     integration_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[s] Effective integration time",
             description="The effective time that the sensor has been exposed to the sky.",
             json_schema_extra=Archive(
@@ -443,7 +443,7 @@ class Exposure(BaseRomanTaggedModel):
     elapsed_exposure_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[s] Total elapsed exposure time",
             description=(
                 "The time between the start of the first Reset/Read Science Frame of an Exposure "
@@ -469,7 +469,7 @@ class Exposure(BaseRomanTaggedModel):
     frame_divisor: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Divisor applied to frame-averaged groups",
             description=("This is the number of reads per resultant. Its use depends upon the definition " "in the MA table."),
             json_schema_extra=Archive(
@@ -515,7 +515,7 @@ class Exposure(BaseRomanTaggedModel):
     frame_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[s] Time between frames",
             description=(
                 "The time between the end of one read and the start of the next read. This " "depends on the MA table being used."
@@ -540,7 +540,7 @@ class Exposure(BaseRomanTaggedModel):
     group_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[s] Time between groups",
             description=(
                 "The time that is the sum of the reads that are used to construct a resultant. "
@@ -566,7 +566,7 @@ class Exposure(BaseRomanTaggedModel):
     exposure_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[s] exposure time",
             description=(
                 "The time between the start of the first Reset/Read Science Frame of an Exposure "
@@ -592,7 +592,7 @@ class Exposure(BaseRomanTaggedModel):
     effective_exposure_time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[s] Effective exposure time",
             description="The time that the detector is collecting photons that are used in the resultants.",
             json_schema_extra=Archive(
@@ -615,7 +615,7 @@ class Exposure(BaseRomanTaggedModel):
     duration: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[s] Total duration of exposure",
             description=(
                 "The time that the detector is dedicated to an exposure. This includes any overhead "
@@ -641,7 +641,7 @@ class Exposure(BaseRomanTaggedModel):
     ma_table_name: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Identifier for the multi-accumulation table used",
             description=("The name of the MA table used for the exposure as defined by the " "PRD (Project Reference Database)"),
             json_schema_extra=Archive(
@@ -664,7 +664,7 @@ class Exposure(BaseRomanTaggedModel):
     ma_table_number: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Numerical identifier for the multi-accumulation table used",
             description=(
                 "The number of the MA table used for the exposure as defined by the "

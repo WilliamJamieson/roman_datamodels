@@ -4,7 +4,7 @@ from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_value, default_str_value
+from ..._defaults import default_num_factory, default_str_factory
 from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["Wcsinfo"]
@@ -21,7 +21,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     v2_ref: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[arcsec] Telescope v2 coordinate of the reference point",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -43,7 +43,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     v3_ref: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[arcsec] Telescope v3 coordinate of the reference point",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -65,7 +65,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     vparity: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Relative sense of rotation between Ideal xy and V2V3",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -87,7 +87,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     v3yangle: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[deg] Angle from V3 axis to Ideal y axis",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -109,7 +109,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     ra_ref: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[deg] Right ascension of the reference point",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -131,7 +131,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     dec_ref: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[deg] Declination of the reference point",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -153,7 +153,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     roll_ref: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[deg] V3 roll angle at the ref point (N over E)",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -175,7 +175,7 @@ class Wcsinfo(BaseRomanTaggedModel):
     s_region: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="spatial extent of the observation",
             json_schema_extra=Archive(
                 sdf=Sdf(

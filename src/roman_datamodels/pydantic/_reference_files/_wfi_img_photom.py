@@ -8,16 +8,16 @@ from .._adaptors import AstropyQuantity
 from .._core import BaseRomanModel, BaseRomanRefModel
 from .._defaults import default_constant_factory, default_model_factory, default_num_value
 from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, reftype
+from ._ref_common import RefCommon, ref_type
 
 __all__ = ["WfiImgPhotomRefModel"]
 
 
 class WfiImgPhotomRefMeta(RefCommon):
     reftype: Annotated[
-        Literal[reftype.PHOTOM],
+        Literal[ref_type.PHOTOM],
         Field(
-            default_factory=default_constant_factory(reftype.PHOTOM.value),
+            default_factory=default_constant_factory(ref_type.PHOTOM.value),
             title="Reference file type",
         ),
     ]

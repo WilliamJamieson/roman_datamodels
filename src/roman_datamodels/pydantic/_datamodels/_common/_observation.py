@@ -4,7 +4,7 @@ from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_value, default_str_value
+from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
@@ -29,7 +29,7 @@ class Observation(BaseRomanTaggedModel):
     obs_id: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Observation identifier",
             description=(
                 "Programmatic observation identifier. The format is 'PPPPPCCAAASSSOOOVVVggsaaeeee' where "
@@ -60,7 +60,7 @@ class Observation(BaseRomanTaggedModel):
     visit_id: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Visit identifier",
             description=(
                 "A unique identifier for a visit. The format is 'PPPPPCCAAASSSOOOVVV' where 'PPPPP' is the "
@@ -87,7 +87,7 @@ class Observation(BaseRomanTaggedModel):
     program: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(str(default_num_value.NONUM.value)),
+            default_factory=default_str_factory,
             title="Program Number",
             description="Program number, defined range is 1..18445; included in obs_id and visit_id as 'PPPPP'.",
             json_schema_extra=Archive(
@@ -110,7 +110,7 @@ class Observation(BaseRomanTaggedModel):
     execution_plan: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Execution Plan Number",
             description="Execution plan within the program, defined range is 1..99; included in obs_id and visit_id as 'CC'.",
             json_schema_extra=Archive(
@@ -134,7 +134,7 @@ class Observation(BaseRomanTaggedModel):
         int,
         Field(
             alias="pass",
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Pass Number",
             description="Pass number within execution plan, defined range is 1..999; included in obs_id and visit_id as 'AA'.",
             json_schema_extra=Archive(
@@ -157,7 +157,7 @@ class Observation(BaseRomanTaggedModel):
     segment: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Segment Number",
             description="Segment Number within pass, defined range is 1..999; included in obs_id and visit_id as 'SSS'.",
             json_schema_extra=Archive(
@@ -180,7 +180,7 @@ class Observation(BaseRomanTaggedModel):
     observation: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Observation Number",
             description="Observation number within the segment, defined range is 1..999; included in obs_id and visit_id as 'OOO'.",
             json_schema_extra=Archive(
@@ -203,7 +203,7 @@ class Observation(BaseRomanTaggedModel):
     visit: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Visit Number",
             description="Visit number within the observation, defined range of values is 1..999; included in obs_id and visit_id as 'VVV'.",
             json_schema_extra=Archive(
@@ -226,7 +226,7 @@ class Observation(BaseRomanTaggedModel):
     visit_file_group: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Sequence Group",
             description="Sequence group within the visit file, defined range of values is 1..99; included in obs_id as 'gg'.",
             json_schema_extra=Archive(
@@ -249,7 +249,7 @@ class Observation(BaseRomanTaggedModel):
     visit_file_sequence: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Visit File Sequence",
             description="Visit file sequence within the group, defined range of values is 1..5; included inobs_id as 's'.",
             json_schema_extra=Archive(
@@ -272,7 +272,7 @@ class Observation(BaseRomanTaggedModel):
     visit_file_activity: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Visit File Activity",
             description="Visit file activity within the sequence, defined range of values is 1..ZZ; included in obs_id as 'aa'.",
             json_schema_extra=Archive(
@@ -295,7 +295,7 @@ class Observation(BaseRomanTaggedModel):
     exposure: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Exposure within the visit",
             description=("Exposure within the visit, defined range of values is 1..9999; included in obs_id as " "'eeee'."),
             json_schema_extra=Archive(
@@ -318,7 +318,7 @@ class Observation(BaseRomanTaggedModel):
     template: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Observation template used",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -340,7 +340,7 @@ class Observation(BaseRomanTaggedModel):
     observation_label: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Proposer label for the observation",
             json_schema_extra=Archive(
                 sdf=Sdf(

@@ -6,7 +6,7 @@ from pydantic import ConfigDict, Field
 from ..._adaptors import AstropyTime
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanURIModel
-from ..._defaults import default_constant_factory, default_str_value
+from ..._defaults import default_constant_factory, default_str_factory
 from ..._strenum import StrEnum
 from ..._uri import asdf_uri
 
@@ -77,7 +77,7 @@ class Basic(BaseRomanURIModel):
     filename: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Name of the file",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -101,7 +101,7 @@ class Basic(BaseRomanURIModel):
         str,
         Field(
             alias="model_type",
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Type of data model",
             json_schema_extra=Archive(
                 sdf=Sdf(

@@ -119,9 +119,12 @@ class BaseRomanDataModel(BaseRomanTaggedModel):
     _testing_default: ClassVar[dict[str, Any] | None] = None
 
     @classmethod
-    def make_default(cls, data: Any = None, *, testing: bool = False, filepath=None, **context: Any) -> BaseRomanDataModel:
+    def maker(cls, data: Any = None, *, testing: bool = False, filepath=None, **context: Any) -> BaseRomanDataModel:
         """Maker utility to create a default model constrained to some additional parameters."""
         data = data or {}
+
+        if context and testing:
+            raise ValueError("Cannot use context and testing together")
 
         if not context and testing:
             context = {} if cls._testing_default is None else cls._testing_default

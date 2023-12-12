@@ -8,16 +8,16 @@ from .._adaptors import AstropyUnit
 from .._core import BaseRomanRefModel
 from .._defaults import default_constant_factory, default_model_factory
 from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, RefOpticalElement, reftype
+from ._ref_common import RefCommon, RefOpticalElement, ref_type
 
 __all__ = ["DistortionRefModel"]
 
 
 class DistortionRefMeta(RefOpticalElement, RefCommon):
     reftype: Annotated[
-        Literal[reftype.DISTORTION],
+        Literal[ref_type.DISTORTION],
         Field(
-            default_factory=default_constant_factory(reftype.DISTORTION.value),
+            default_factory=default_constant_factory(ref_type.DISTORTION.value),
             title="Reference file type",
         ),
     ]

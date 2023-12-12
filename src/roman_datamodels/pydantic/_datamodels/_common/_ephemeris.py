@@ -4,7 +4,7 @@ from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_value, default_str_value
+from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
@@ -27,7 +27,7 @@ class Ephemeris(BaseRomanTaggedModel):
     earth_angle: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[radians] Earth Angle",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -49,7 +49,7 @@ class Ephemeris(BaseRomanTaggedModel):
     moon_angle: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[radians] Moon Angle",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -71,7 +71,7 @@ class Ephemeris(BaseRomanTaggedModel):
     ephemeris_reference_frame: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Ephemeris reference frame",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -93,7 +93,7 @@ class Ephemeris(BaseRomanTaggedModel):
     sun_angle: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[radians] Sun Angle",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -137,7 +137,7 @@ class Ephemeris(BaseRomanTaggedModel):
     time: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="UTC time of position and velocity vectors in ephemeris (MJD)",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -159,7 +159,7 @@ class Ephemeris(BaseRomanTaggedModel):
     spatial_x: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[km] X spatial coordinate of Roman",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -181,7 +181,7 @@ class Ephemeris(BaseRomanTaggedModel):
     spatial_y: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[km] Y spatial coordinate of Roman",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -203,7 +203,7 @@ class Ephemeris(BaseRomanTaggedModel):
     spatial_z: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[km] Z spatial coordinate of Roman",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -225,7 +225,7 @@ class Ephemeris(BaseRomanTaggedModel):
     velocity_x: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[km/s] X component of Roman velocity",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -247,7 +247,7 @@ class Ephemeris(BaseRomanTaggedModel):
     velocity_y: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[km/s] Y component of Roman velocity",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -269,7 +269,7 @@ class Ephemeris(BaseRomanTaggedModel):
     velocity_z: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="[km/s] Z component of Roman velocity",
             json_schema_extra=Archive(
                 sdf=Sdf(

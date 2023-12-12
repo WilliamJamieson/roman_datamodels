@@ -4,7 +4,7 @@ from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_value, default_str_value
+from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
@@ -34,7 +34,7 @@ class Target(BaseRomanTaggedModel):
     proposer_name: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Proposer's name for the target",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -56,7 +56,7 @@ class Target(BaseRomanTaggedModel):
     catalog_name: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Standard astronomical catalog name for target",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -100,7 +100,7 @@ class Target(BaseRomanTaggedModel):
     ra: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Target RA at mid time of exposure",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -122,7 +122,7 @@ class Target(BaseRomanTaggedModel):
     dec: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Target Dec at mid time of exposure",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -144,7 +144,7 @@ class Target(BaseRomanTaggedModel):
     ra_uncertainty: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Target RA uncertainty",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -166,7 +166,7 @@ class Target(BaseRomanTaggedModel):
     dec_uncertainty: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Target Dec uncertainty",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -188,7 +188,7 @@ class Target(BaseRomanTaggedModel):
     proper_motion_ra: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Target proper motion in RA",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -210,7 +210,7 @@ class Target(BaseRomanTaggedModel):
     proper_motion_dec: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Target proper motion in Dec",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -232,7 +232,7 @@ class Target(BaseRomanTaggedModel):
     proper_motion_epoch: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Target proper motion epoch",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -254,7 +254,7 @@ class Target(BaseRomanTaggedModel):
     proposer_ra: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Proposer's target RA",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -277,7 +277,7 @@ class Target(BaseRomanTaggedModel):
     proposer_dec: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Proposer's target Dec",
             json_schema_extra=Archive(
                 sdf=Sdf(

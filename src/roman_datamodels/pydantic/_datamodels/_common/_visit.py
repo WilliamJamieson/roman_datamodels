@@ -6,7 +6,7 @@ from pydantic import ConfigDict, Field
 from ..._adaptors import AstropyTime
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_value, default_str_value
+from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
 from ..._strenum import StrEnum
 from ..._uri import asdf_tag_uri, asdf_uri
 
@@ -34,7 +34,7 @@ class Visit(BaseRomanTaggedModel):
     engineering_quality: Annotated[
         engineering_quality,
         Field(
-            default=engineering_quality.OK.value,
+            default_factory=default_constant_factory(engineering_quality.OK.value),
             title="Engineering data quality indicator from EngDB",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -78,7 +78,7 @@ class Visit(BaseRomanTaggedModel):
     type: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Visit type",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -144,7 +144,7 @@ class Visit(BaseRomanTaggedModel):
     status: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Status of a visit",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -166,7 +166,7 @@ class Visit(BaseRomanTaggedModel):
     total_exposures: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value),
+            default_factory=default_num_factory,
             title="Total number of planned exposures in visit",
             json_schema_extra=Archive(
                 sdf=Sdf(

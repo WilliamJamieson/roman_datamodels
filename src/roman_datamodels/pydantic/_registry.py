@@ -13,6 +13,7 @@ def _build_registry():
     uri_models = {}
     tagged_models = {}
     data_models = {}
+    step_models = {}
     ref_models = {}
 
     for model in _subcls_gen(_core.BaseRomanURIModel):
@@ -32,10 +33,10 @@ def _build_registry():
                 tagged_models[model._tag_uri] = model
 
         if issubclass(model, _core.BaseRomanStepModel):
-            if model.__name__ in data_models and issubclass(model, data_models[model.__name__]):
+            if model.__name__ in step_models and issubclass(model, step_models[model.__name__]):
                 raise ValueError(f"Duplicate data model: {model.__name__}")
             else:
-                data_models[model.__name__] = model
+                step_models[model.__name__] = model
 
         if issubclass(model, _core.BaseRomanRefModel):
             if model.__name__ in ref_models and issubclass(model, ref_models[model.__name__]):
@@ -47,6 +48,7 @@ def _build_registry():
         "URI_MODELS": uri_models,
         "TAGGED_MODELS": tagged_models,
         "DATA_MODELS": data_models,
+        "STEP_MODELS": step_models,
         "REF_MODELS": ref_models,
     }
 

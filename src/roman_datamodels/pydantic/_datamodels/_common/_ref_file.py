@@ -4,7 +4,7 @@ from pydantic import ConfigDict, Field
 
 from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from ..._core import BaseRomanModel, BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_model_factory, default_str_value
+from ..._defaults import default_constant_factory, default_model_factory, default_str_factory, default_str_value
 from ..._uri import asdf_tag_uri, asdf_uri
 
 __all__ = ["RefFile"]
@@ -16,7 +16,7 @@ class Crds(BaseRomanModel):
     sw_version: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="Version of CRDS file selection software used",
             json_schema_extra=Archive(
                 sdf=Sdf(
@@ -38,7 +38,7 @@ class Crds(BaseRomanModel):
     context_used: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NOSTR.value),
+            default_factory=default_str_factory,
             title="CRDS context (.pmap) used to select ref files",
             json_schema_extra=Archive(
                 sdf=Sdf(
