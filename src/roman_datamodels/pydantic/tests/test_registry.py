@@ -1,6 +1,6 @@
 import pytest
 
-from roman_datamodels.pydantic._core import BaseRomanDataModel, BaseRomanRefModel, BaseRomanTaggedModel, BaseRomanURIModel
+from roman_datamodels.pydantic._core import BaseRomanRefModel, BaseRomanStepModel, BaseRomanTaggedModel, BaseRomanURIModel
 from roman_datamodels.pydantic._registry import DATA_MODELS, REF_MODELS, TAGGED_MODELS, URI_MODELS
 from roman_datamodels.pydantic._uri import asdf_tag_uri, asdf_uri, base_uri
 
@@ -29,7 +29,7 @@ def test_all_tags_registered():
 
 @pytest.mark.parametrize("model", DATA_MODELS.values())
 def test_data_models(model):
-    assert issubclass(model, BaseRomanDataModel)
+    assert issubclass(model, BaseRomanStepModel)
 
     assert model._uri in URI_MODELS
     assert model is URI_MODELS[model._uri]

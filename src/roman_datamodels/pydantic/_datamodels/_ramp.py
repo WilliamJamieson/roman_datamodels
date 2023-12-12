@@ -6,7 +6,7 @@ from pydantic import ConfigDict, Field
 
 from .._adaptors import AstropyQuantity, NdArray
 from .._config import create_shape_config
-from .._core import BaseRomanDataModel
+from .._core import BaseRomanStepModel
 from .._defaults import default_model_factory, default_ndarray_factory, default_quantity_factory
 from .._uri import asdf_tag_uri, asdf_uri
 from ._common import Common
@@ -47,7 +47,7 @@ class RampShapeData(NamedTuple):
 _SHAPE, ramp_shape_context = create_shape_config(RampShapeData(8, 4096, 4096))
 
 
-class RampModel(BaseRomanDataModel):
+class RampModel(BaseRomanStepModel):
     _uri: ClassVar = asdf_uri.RAMP.value
     _tag_uri: ClassVar = asdf_tag_uri.RAMP.value
 

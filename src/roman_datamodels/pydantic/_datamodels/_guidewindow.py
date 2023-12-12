@@ -8,7 +8,7 @@ from pydantic import ConfigDict, Field
 from .._adaptors import AstropyQuantity, AstropyTime
 from .._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
 from .._config import create_shape_config
-from .._core import BaseRomanDataModel
+from .._core import BaseRomanStepModel
 from .._defaults import (
     default_constant_factory,
     default_model_factory,
@@ -391,7 +391,7 @@ class GuidewindowMeta(Common):
     ]
 
 
-class GuidewindowModel(BaseRomanDataModel):
+class GuidewindowModel(BaseRomanStepModel):
     _uri: ClassVar = asdf_uri.GUIDEWINDOW.value
     _tag_uri: ClassVar = asdf_tag_uri.GUIDEWINDOW.value
 

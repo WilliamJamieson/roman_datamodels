@@ -31,7 +31,7 @@ def _build_registry():
             else:
                 tagged_models[model._tag_uri] = model
 
-        if issubclass(model, _core.BaseRomanDataModel):
+        if issubclass(model, _core.BaseRomanStepModel):
             if model.__name__ in data_models and issubclass(model, data_models[model.__name__]):
                 raise ValueError(f"Duplicate data model: {model.__name__}")
             else:

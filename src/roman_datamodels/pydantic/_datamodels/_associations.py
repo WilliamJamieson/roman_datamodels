@@ -2,7 +2,7 @@ from typing import Annotated, Callable, ClassVar, Optional
 
 from pydantic import ConfigDict, Field
 
-from .._core import BaseRomanDataModel, BaseRomanModel
+from .._core import BaseRomanModel, BaseRomanStepModel
 from .._defaults import default_constant_factory
 from .._strenum import StrEnum
 from .._uri import asdf_tag_uri, asdf_uri
@@ -57,7 +57,7 @@ def _default_product_factory(shape) -> Callable[[], list[Product]]:
     return product_factory
 
 
-class AssociationsModel(BaseRomanDataModel):
+class AssociationsModel(BaseRomanStepModel):
     _uri: ClassVar = asdf_uri.ASSOCIATIONS.value
     _tag_uri: ClassVar = asdf_tag_uri.ASSOCIATIONS.value
     _optional_fields: ClassVar = ("version_id", "code_version", "degraded_status", "program", "target", "constraints")

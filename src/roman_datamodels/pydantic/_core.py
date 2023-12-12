@@ -10,7 +10,7 @@ from pydantic.config import JsonDict
 from ._archive import Archive
 from ._uri import asdf_tag_uri, asdf_uri
 
-__all__ = ["BaseDataModel", "BaseRomanRefModel", "BaseRomanDataModel"]
+__all__ = ["BaseRomanRefModel", "BaseRomanStepModel"]
 
 
 def _asdf_schema_modify(json_schema: JsonDict, cls: BaseRomanModel) -> None:
@@ -42,7 +42,10 @@ def _asdf_schema_modify(json_schema: JsonDict, cls: BaseRomanModel) -> None:
         json_schema["flowStyle"] = "block"
 
 
-class BaseDataModel(BaseModel):
+class BaseRomanModel(BaseModel):
+    _optional_fields_: ClassVar[tuple[str] | None] = None
+    _optional_fields: ClassVar[tuple[str] | None] = None
+
     model_config = ConfigDict(
         # Allow enum values to be used in the model to define allowed values
         use_enum_values=True,
@@ -50,10 +53,23 @@ class BaseDataModel(BaseModel):
         validate_assignment=True,
         revalidate_instances="always",
         extra="allow",
+        # Add schema modification hook
+        json_schema_extra=_asdf_schema_modify,
     )
+
+    def __init_subclass__(cls, **kwargs: Any):
+        """Handle extending the optional fields for subclasses."""
+        super().__init_subclass__(**kwargs)
+
+        if cls._optional_fields is not None:
+            if cls._optional_fields_ is None:
+                cls._optional_fields_ = ()
+
+            cls._optional_fields_ += cls._optional_fields
 
     @contextmanager
     def pause_validation(self, *, revalidate_on_exit: bool = True) -> None:
+        """Context manager to pause validation of the model within the context."""
         self.model_config["validate_assignment"] = False
 
         try:
@@ -70,25 +86,8 @@ class BaseDataModel(BaseModel):
     def __setitem__(self, key: str, value: Any) -> None:
         setattr(self, key, value)
 
-
-class BaseRomanModel(BaseDataModel):
-    _optional_fields_: ClassVar[tuple[str] | None] = None
-    _optional_fields: ClassVar[tuple[str] | None] = None
-
-    def __init_subclass__(cls, **kwargs: Any):
-        super().__init_subclass__(**kwargs)
-
-        if cls._optional_fields is not None:
-            if cls._optional_fields_ is None:
-                cls._optional_fields_ = ()
-
-            cls._optional_fields_ += cls._optional_fields
-
-    model_config = ConfigDict(
-        json_schema_extra=_asdf_schema_modify,
-    )
-
     def to_asdf_tree(self) -> dict[str, Any]:
+        """Serialize to ASDF preserving intermediate tags"""
         tree = dict(self)
 
         for field_name, obj in tree.items():
@@ -107,14 +106,6 @@ class BaseRomanModel(BaseDataModel):
 
         return tree
 
-    @classmethod
-    def tagged_model_fields(cls) -> list[Any]:
-        return [
-            field
-            for field in cls.model_fields.values()
-            if isclass(field.annotation) and issubclass(field.annotation, BaseRomanTaggedModel)
-        ]
-
 
 class BaseRomanURIModel(BaseRomanModel):
     _uri: ClassVar[asdf_uri | None] = None
@@ -125,8 +116,23 @@ class BaseRomanTaggedModel(BaseRomanURIModel):
 
 
 class BaseRomanDataModel(BaseRomanTaggedModel):
+    _testing_default: ClassVar[dict[str, Any] | None] = None
+
+    @classmethod
+    def make_default(cls, data: Any = None, *, testing: bool = False, filepath=None, **context: Any) -> BaseRomanDataModel:
+        """Maker utility to create a default model constrained to some additional parameters."""
+        data = data or {}
+
+        if not context and testing:
+            context = {} if cls._testing_default is None else cls._testing_default
+
+        # Add save model to a file later
+        return cls.model_validate(data, context=context)
+
+
+class BaseRomanStepModel(BaseRomanDataModel):
     ...
 
 
-class BaseRomanRefModel(BaseRomanTaggedModel):
+class BaseRomanRefModel(BaseRomanDataModel):
     ...

@@ -6,7 +6,7 @@ from pydantic import ConfigDict, Field
 
 from .._adaptors import AstropyQuantity, NdArray
 from .._config import create_shape_config
-from .._core import BaseRomanDataModel
+from .._core import BaseRomanStepModel
 from .._defaults import default_model_factory, default_ndarray_factory, default_quantity_factory
 from .._uri import asdf_tag_uri, asdf_uri
 from ._common import CalLogs, Common, Photometry, Resample
@@ -46,7 +46,7 @@ class MosaicMeta(Common):
     ]
 
 
-class MosaicModel(BaseRomanDataModel):
+class MosaicModel(BaseRomanStepModel):
     _uri: ClassVar = asdf_uri.WFI_MOSAIC.value
     _tag_uri: ClassVar = asdf_tag_uri.WFI_MOSAIC.value
 
