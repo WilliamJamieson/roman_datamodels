@@ -2,23 +2,20 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["Ephemeris"]
 
 
-class ephemeris_type(StrEnum):
+class ephemeris_type(_strenum.StrEnum):
     DEFINITIVE = "DEFINITIVE"
     PREDICTED = "PREDICTED"
 
 
-class Ephemeris(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.EPHEMERIS.value
-    _tag_uri: ClassVar = asdf_tag_uri.EPHEMERIS.value
+class Ephemeris(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.EPHEMERIS.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.EPHEMERIS.value
 
     model_config = ConfigDict(
         title="Ephemeris data information",
@@ -27,16 +24,16 @@ class Ephemeris(BaseRomanTaggedModel):
     earth_angle: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[radians] Earth Angle",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.earth_angle",
@@ -49,16 +46,16 @@ class Ephemeris(BaseRomanTaggedModel):
     moon_angle: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[radians] Moon Angle",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.moon_angle",
@@ -71,16 +68,16 @@ class Ephemeris(BaseRomanTaggedModel):
     ephemeris_reference_frame: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Ephemeris reference frame",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(10)",
                     destination=[
                         "ScienceCommon.ephemeris_reference_frame",
@@ -93,16 +90,16 @@ class Ephemeris(BaseRomanTaggedModel):
     sun_angle: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[radians] Sun Angle",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.sun_angle",
@@ -115,16 +112,16 @@ class Ephemeris(BaseRomanTaggedModel):
     type: Annotated[
         ephemeris_type,
         Field(
-            default_factory=default_constant_factory(ephemeris_type.DEFINITIVE.value),
+            default_factory=_defaults.default_constant_factory(ephemeris_type.DEFINITIVE.value),
             title="Type of ephemeris",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceCommon.ephermeris_type",
@@ -137,16 +134,16 @@ class Ephemeris(BaseRomanTaggedModel):
     time: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="UTC time of position and velocity vectors in ephemeris (MJD)",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.ephemeris_time",
@@ -159,16 +156,16 @@ class Ephemeris(BaseRomanTaggedModel):
     spatial_x: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[km] X spatial coordinate of Roman",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.spatial_x",
@@ -181,16 +178,16 @@ class Ephemeris(BaseRomanTaggedModel):
     spatial_y: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[km] Y spatial coordinate of Roman",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.spatial_y",
@@ -203,16 +200,16 @@ class Ephemeris(BaseRomanTaggedModel):
     spatial_z: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[km] Z spatial coordinate of Roman",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.spatial_z",
@@ -225,16 +222,16 @@ class Ephemeris(BaseRomanTaggedModel):
     velocity_x: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[km/s] X component of Roman velocity",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.velocity_x",
@@ -247,16 +244,16 @@ class Ephemeris(BaseRomanTaggedModel):
     velocity_y: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[km/s] Y component of Roman velocity",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.velocity_y",
@@ -269,16 +266,16 @@ class Ephemeris(BaseRomanTaggedModel):
     velocity_z: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[km/s] Z component of Roman velocity",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.velocity_z",

@@ -3,17 +3,13 @@ from typing import Annotated, ClassVar
 from astropy.time import Time
 from pydantic import ConfigDict, Field
 
-from ..._adaptors import AstropyTime
-from ..._core import BaseRomanModel, BaseRomanURIModel
-from ..._datamodels import common
-from ..._defaults import default_constant_factory, default_model_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_uri
+from roman_datamodels.pydantic import _adaptors, _core, _datamodels, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["RefCommon", "ref_type"]
 
 
-class ref_type(StrEnum):
+class ref_type(_strenum.StrEnum):
     DARK = "DARK"
     DISTORTION = "DISTORTION"
     FLAT = "FLAT"
@@ -30,81 +26,81 @@ class ref_type(StrEnum):
     PHOTOM = "PHOTOM"
 
 
-class pedigree(StrEnum):
+class pedigree(_strenum.StrEnum):
     GROUND = "GROUND"
     MODEL = "MODEL"
     DUMMY = "DUMMY"
     SIMULATION = "SIMULATION"
 
 
-class Instrument(BaseRomanModel):
+class Instrument(_core.BaseRomanModel):
     name: Annotated[
-        common.instrument,
+        _datamodels.common.instrument,
         Field(
-            default_factory=default_constant_factory(common.instrument.WFI.value),
+            default_factory=_defaults.default_constant_factory(_datamodels.common.instrument.WFI.value),
             title="Instrument used to acquire the data",
         ),
     ]
-    detector: common.WfiDetector
+    detector: _datamodels.common.WfiDetector
 
 
-class RefCommon(BaseRomanURIModel):
-    _uri: ClassVar = asdf_uri.REF_COMMON.value
+class RefCommon(_core.BaseRomanURIModel):
+    _uri: ClassVar = uri.asdf_uri.REF_COMMON.value
 
     model_config = ConfigDict(title="Common reference metadata properties")
 
     reftype: Annotated[
         ref_type,
         Field(
-            default_factory=default_constant_factory(ref_type.DARK.value),
+            default_factory=_defaults.default_constant_factory(ref_type.DARK.value),
             title="Reference File Type",
         ),
     ]
     pedigree: Annotated[
         pedigree,
         Field(
-            default_factory=default_constant_factory(pedigree.GROUND.value),
+            default_factory=_defaults.default_constant_factory(pedigree.GROUND.value),
             title="The pedigree of the reference file",
         ),
     ]
     description: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("test description"),
+            default_factory=_defaults.default_constant_factory("test description"),
             title="Description of the reference file",
         ),
     ]
     author: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("test author"),
+            default_factory=_defaults.default_constant_factory("test author"),
             title="Author of the reference file",
         ),
     ]
     useafter: Annotated[
-        AstropyTime,
+        _adaptors.AstropyTime,
         Field(
-            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            default_factory=_defaults.default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
             title="Use after date of the reference file",
         ),
     ]
     telescope: Annotated[
-        common.telescope,
+        _datamodels.common.telescope,
         Field(
-            default_factory=default_constant_factory(common.telescope.ROMAN.value),
+            default_factory=_defaults.default_constant_factory(_datamodels.common.telescope.ROMAN.value),
             title="Telescope that reference file is used to calibrate",
         ),
     ]
     origin: Annotated[
-        common.origin,
+        _datamodels.common.origin,
         Field(
-            default_factory=default_constant_factory(common.origin.STSCI.value),
+            default_factory=_defaults.default_constant_factory(_datamodels.common.origin.STSCI.value),
             title="Organization responsible for creating file",
         ),
     ]
     instrument: Annotated[
         Instrument,
         Field(
-            default_factory=default_model_factory(Instrument),
+            default_factory=_defaults.default_model_factory(Instrument),
         ),
     ]

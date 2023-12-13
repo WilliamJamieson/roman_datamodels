@@ -3,28 +3,24 @@ from typing import Annotated, ClassVar
 from astropy.time import Time
 from pydantic import ConfigDict, Field
 
-from ..._adaptors import AstropyTime
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanURIModel
-from ..._defaults import default_constant_factory, default_str_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_uri
+from roman_datamodels.pydantic import _adaptors, _archive, _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["Basic", "telescope", "origin"]
 
 
-class telescope(StrEnum):
+class telescope(_strenum.StrEnum):
     ROMAN = "ROMAN"
 
 
-class origin(StrEnum):
+class origin(_strenum.StrEnum):
     STSCI = "STSCI"
     IPAC = "IPAC/SSC"
     SSC = "IPAC/SSC"
 
 
-class Basic(BaseRomanURIModel):
-    _uri: ClassVar = asdf_uri.BASIC.value
+class Basic(_core.BaseRomanURIModel):
+    _uri: ClassVar = uri.asdf_uri.BASIC.value
 
     model_config = ConfigDict(
         title="Common metadata keywords",
@@ -33,16 +29,16 @@ class Basic(BaseRomanURIModel):
     calibration_software_version: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("9.9.0"),
+            default_factory=_defaults.default_constant_factory("9.9.0"),
             title="Calibration software version number",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.calibration_software_version",
@@ -53,18 +49,18 @@ class Basic(BaseRomanURIModel):
         ),
     ]
     file_date: Annotated[
-        AstropyTime,
+        _adaptors.AstropyTime,
         Field(
-            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            default_factory=_defaults.default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
             title="Date this file was created (UTC)",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="datetime2",
                     destination=[
                         "ScienceCommon.filedate",
@@ -77,16 +73,16 @@ class Basic(BaseRomanURIModel):
     filename: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Name of the file",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.filename",
@@ -101,16 +97,16 @@ class Basic(BaseRomanURIModel):
         str,
         Field(
             alias="model_type",
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Type of data model",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(50)",
                     destination=[
                         "ScienceCommon.model_type",
@@ -123,16 +119,16 @@ class Basic(BaseRomanURIModel):
     origin: Annotated[
         origin,
         Field(
-            default_factory=default_constant_factory(origin.STSCI.value),
+            default_factory=_defaults.default_constant_factory(origin.STSCI.value),
             title="Organization responsible for creating file",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceCommon.origin",
@@ -145,16 +141,16 @@ class Basic(BaseRomanURIModel):
     prd_software_version: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("8.8.8"),
+            default_factory=_defaults.default_constant_factory("8.8.8"),
             title="S&OC PRD version number used in data processing",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.prd_software_version",
@@ -167,16 +163,16 @@ class Basic(BaseRomanURIModel):
     sdf_software_version: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("7.7.7"),
+            default_factory=_defaults.default_constant_factory("7.7.7"),
             title="SDF software version number",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.sdf_software_version",
@@ -189,16 +185,16 @@ class Basic(BaseRomanURIModel):
     telescope: Annotated[
         telescope,
         Field(
-            default_factory=default_constant_factory(telescope.ROMAN.value),
+            default_factory=_defaults.default_constant_factory(telescope.ROMAN.value),
             title="Telescope used to acquire the data",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(5)",
                     destination=[
                         "ScienceCommon.telescope",

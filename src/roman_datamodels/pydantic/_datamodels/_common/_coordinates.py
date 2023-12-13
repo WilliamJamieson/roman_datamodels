@@ -2,22 +2,19 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["Coordinates"]
 
 
-class coordinates(StrEnum):
+class coordinates(_strenum.StrEnum):
     ICRS = "ICRS"
 
 
-class Coordinates(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.COORDINATES.value
-    _tag_uri: ClassVar = asdf_tag_uri.COORDINATES.value
+class Coordinates(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.COORDINATES.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.COORDINATES.value
 
     _optional_fields: ClassVar = ("reference_frame",)
 
@@ -28,10 +25,10 @@ class Coordinates(BaseRomanTaggedModel):
     reference_frame: Annotated[
         coordinates,
         Field(
-            default_factory=default_constant_factory(coordinates.ICRS.value),
+            default_factory=_defaults.default_constant_factory(coordinates.ICRS.value),
             title="Reference frame",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(10)",
                     destination=[
                         "ScienceCommon.reference_frame",

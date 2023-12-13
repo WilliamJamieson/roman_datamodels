@@ -14,12 +14,13 @@ import numpy as np
 from numpy.typing import DTypeLike
 
 from ._adaptors import Units
+from ._check import check_shape, fill_shape, ndarray_maker, quantity_maker
 
 __all__ = [
     "check_shape",
     "fill_shape",
-    "ndarray_factory",
-    "quantity_factory",
+    "ndarray_maker",
+    "quantity_maker",
     "default_num_value",
     "default_str_value",
     "default_ndarray_factory",
@@ -31,83 +32,6 @@ __all__ = [
 ]
 
 T = TypeVar("T")
-
-
-def check_shape(
-    name: str,
-    shape: tuple[int] | None,
-    *,
-    n_shape: int | None = None,
-    border: str | None = None,
-    fill_border: bool = True,
-    value: T | None = None,
-    factory: Callable[[tuple[int]], T] | None = None,
-) -> T:
-    if shape is None:
-        return value
-
-    fill = 8 if fill_border else 0
-
-    if border == "lr":
-        shape = (shape[0] + fill, 4)
-    elif border == "tb":
-        shape = (4, shape[1] + fill)
-    elif border == "amp33":
-        shape = (shape[0] + fill, 128)
-
-    if n_shape is not None:
-        shape = (n_shape, *shape)
-
-    if value is not None:
-        if value.shape == shape:
-            return value
-
-        raise ValueError(f"Expected shape {shape} for {name}, got {value.shape}")
-
-    if factory:
-        return factory(shape)
-
-    raise ValueError(f"If {name} is None, factory must be provided")
-
-
-def fill_shape(
-    data: dict[str, Any],
-    name: str,
-    shape: tuple[int] | None,
-    *,
-    n_shape: int | None = None,
-    border: str | None = None,
-    fill_border: bool = True,
-    factory: Callable[[tuple[int]], T] | None = None,
-) -> None:
-    if (
-        value := check_shape(
-            name,
-            shape,
-            n_shape=n_shape,
-            border=border,
-            fill_border=fill_border,
-            value=data.get(name, None),
-            factory=factory,
-        )
-    ) is not None:
-        data[name] = value
-
-
-def ndarray_factory(dtype: DTypeLike, fill: float = 0) -> Callable[[tuple[int]], np.ndarray]:
-    def _factory(shape: tuple[int]) -> np.ndarray:
-        return np.full(shape, fill, dtype=dtype)
-
-    return _factory
-
-
-def quantity_factory(unit: Units, dtype: DTypeLike, fill: float = 0) -> Callable[[tuple[int]], u.Quantity]:
-    _ndarray = ndarray_factory(dtype, fill)
-
-    def _factory(shape: tuple[int]) -> u.Quantity:
-        return u.Quantity(_ndarray(shape), unit=unit, dtype=dtype)
-
-    return _factory
 
 
 class default_num_value(IntEnum):
@@ -124,7 +48,7 @@ def default_ndarray_factory(dtype: DTypeLike, shape: tuple[int], fill: float = 0
 
     This avoids the need to strip the default value from the schema.
     """
-    factory = ndarray_factory(dtype, fill)
+    factory = ndarray_maker(dtype, fill)
 
     def _factory() -> np.ndarray:
         return factory(shape)
@@ -137,7 +61,7 @@ def default_quantity_factory(dtype: DTypeLike, shape: tuple[int], unit: Units, f
 
     This avoids the need to strip the default value from the schema.
     """
-    factory = quantity_factory(unit, dtype, fill)
+    factory = quantity_maker(unit, dtype, fill)
 
     def _factory() -> u.Quantity:
         return factory(shape)

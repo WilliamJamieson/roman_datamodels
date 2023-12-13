@@ -2,30 +2,28 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanModel, BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_model_factory, default_str_factory, default_str_value
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["RefFile"]
 
 
-class Crds(BaseRomanModel):
+class Crds(_core.BaseRomanModel):
     _optional_fields: ClassVar = ("sw_version", "context_used")
 
     sw_version: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Version of CRDS file selection software used",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.crds_software_version",
@@ -38,16 +36,16 @@ class Crds(BaseRomanModel):
     context_used: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="CRDS context (.pmap) used to select ref files",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.crds_context_used",
@@ -59,9 +57,9 @@ class Crds(BaseRomanModel):
     ]
 
 
-class RefFile(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.REF_FILE.value
-    _tag_uri: ClassVar = asdf_tag_uri.REF_FILE.value
+class RefFile(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.REF_FILE.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.REF_FILE.value
 
     _optional_fields: ClassVar = (
         "crds",
@@ -84,17 +82,17 @@ class RefFile(BaseRomanTaggedModel):
     crds: Annotated[
         Crds,
         Field(
-            default_factory=default_model_factory(Crds),
+            default_factory=_defaults.default_model_factory(Crds),
             title="CRDS Parameters",
         ),
     ]
     dark: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Dark reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_dark",
@@ -107,10 +105,10 @@ class RefFile(BaseRomanTaggedModel):
     distortion: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Distortion reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_distortion",
@@ -123,10 +121,10 @@ class RefFile(BaseRomanTaggedModel):
     mask: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Mask reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_mask",
@@ -139,10 +137,10 @@ class RefFile(BaseRomanTaggedModel):
     flat: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Flat reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_flat",
@@ -155,10 +153,10 @@ class RefFile(BaseRomanTaggedModel):
     gain: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Gain reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_gain",
@@ -171,10 +169,10 @@ class RefFile(BaseRomanTaggedModel):
     readnoise: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Readnoise reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_readnoise",
@@ -187,10 +185,10 @@ class RefFile(BaseRomanTaggedModel):
     linearity: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="linearity reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_linearity",
@@ -203,10 +201,10 @@ class RefFile(BaseRomanTaggedModel):
     photom: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Photometry reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_photom",
@@ -219,10 +217,10 @@ class RefFile(BaseRomanTaggedModel):
     area: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Area reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_area",
@@ -235,10 +233,10 @@ class RefFile(BaseRomanTaggedModel):
     saturation: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(default_str_value.NA.value),
+            default_factory=_defaults.default_constant_factory(_defaults.default_str_value.NA.value),
             title="Saturation reference file location",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "ScienceCommon.r_saturation",

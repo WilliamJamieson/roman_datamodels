@@ -2,12 +2,12 @@ from typing import Annotated
 
 from pydantic import Field
 
-from ..._strenum import StrEnum
+from roman_datamodels.pydantic import _strenum
 
 __all__ = ["GuidewindowModes", "guidewindow_modes"]
 
 
-class guidewindow_modes(StrEnum):
+class guidewindow_modes(_strenum.StrEnum):
     WIM_ACQ = "WIM-ACQ"
     WIM_TRACK = "WIM-TRACK"
     WSM_ACQ_1 = "WSM-ACQ-1"

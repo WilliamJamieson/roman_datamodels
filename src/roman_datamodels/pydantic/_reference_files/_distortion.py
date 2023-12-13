@@ -4,42 +4,41 @@ import astropy.units as u
 from astropy.modeling.models import Shift
 from pydantic import ConfigDict, Field
 
-from .._adaptors import AstropyUnit
-from .._core import BaseRomanRefModel
-from .._defaults import default_constant_factory, default_model_factory
-from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, RefOpticalElement, ref_type
+from roman_datamodels.pydantic import _adaptors, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _ref_common
 
 __all__ = ["DistortionRefModel"]
 
 
-class DistortionRefMeta(RefOpticalElement, RefCommon):
+class DistortionRefMeta(_ref_common.RefOpticalElement, _ref_common.RefCommon):
     reftype: Annotated[
-        Literal[ref_type.DISTORTION],
+        Literal[_ref_common.ref_type.DISTORTION],
         Field(
-            default_factory=default_constant_factory(ref_type.DISTORTION.value),
+            default_factory=_defaults.default_constant_factory(_ref_common.ref_type.DISTORTION.value),
             title="Reference file type",
         ),
     ]
     input_units: Annotated[
-        AstropyUnit[u.pixel],
+        _adaptors.AstropyUnit[u.pixel],
         Field(
-            default_factory=default_constant_factory(u.pixel),
+            default_factory=_defaults.default_constant_factory(u.pixel),
             title="Units of the detector coordinate inputs to this model.",
         ),
     ]
     output_units: Annotated[
-        AstropyUnit[u.arcsec],
+        _adaptors.AstropyUnit[u.arcsec],
         Field(
-            default_factory=default_constant_factory(u.arcsec),
+            default_factory=_defaults.default_constant_factory(u.arcsec),
             title="Output units of V2/V3 coordinates after the model is applied.",
         ),
     ]
 
 
-class DistortionRefModel(BaseRomanRefModel):
-    _uri: ClassVar = asdf_uri.DISTORTION.value
-    _tag_uri: ClassVar = asdf_tag_uri.DISTORTION.value
+class DistortionRefModel(_core.BaseRomanRefModel):
+    _uri: ClassVar = uri.asdf_uri.DISTORTION.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.DISTORTION.value
 
     model_config = ConfigDict(
         title="Distortion reference schema",
@@ -48,14 +47,14 @@ class DistortionRefModel(BaseRomanRefModel):
     meta: Annotated[
         DistortionRefMeta,
         Field(
-            default_factory=default_model_factory(DistortionRefMeta),
+            default_factory=_defaults.default_model_factory(DistortionRefMeta),
             title="Distortion reference metadata",
         ),
     ]
     coordinate_transform: Annotated[
         Any,
         Field(
-            default_factory=default_constant_factory(Shift(1) & Shift(2)),
+            default_factory=_defaults.default_constant_factory(Shift(1) & Shift(2)),
             title="Distortion transform as an instance of astropy.modeling.Model.",
         ),
     ]

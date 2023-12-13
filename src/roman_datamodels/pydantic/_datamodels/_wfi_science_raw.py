@@ -6,19 +6,10 @@ import astropy.units as u
 import numpy as np
 from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
-from .._adaptors import AstropyQuantity, NdArray
-from .._core import BaseRomanStepModel
-from .._defaults import (
-    check_shape,
-    default_model_factory,
-    default_ndarray_factory,
-    default_quantity_factory,
-    fill_shape,
-    ndarray_factory,
-    quantity_factory,
-)
-from .._uri import asdf_tag_uri, asdf_uri
-from ._common import Common
+from roman_datamodels.pydantic import _adaptors, _check, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _common
 
 __all__ = ["ScienceRawModel"]
 
@@ -26,9 +17,9 @@ __all__ = ["ScienceRawModel"]
 _SHAPE = (8, 4096, 4096)
 
 
-class ScienceRawModel(BaseRomanStepModel):
-    _uri: ClassVar = asdf_uri.WFI_SCIENCE_RAW.value
-    _tag_uri: ClassVar = asdf_tag_uri.WFI_SCIENCE_RAW.value
+class ScienceRawModel(_core.BaseRomanStepModel):
+    _uri: ClassVar = uri.asdf_uri.WFI_SCIENCE_RAW.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.WFI_SCIENCE_RAW.value
 
     _optional_fields: ClassVar = ("resultantdq",)
 
@@ -37,29 +28,29 @@ class ScienceRawModel(BaseRomanStepModel):
     model_config = ConfigDict(title="The schema for Level 1 WFI science data (both imaging and spectrographic).")
 
     meta: Annotated[
-        Common,
+        _common.Common,
         Field(
-            default_factory=default_model_factory(Common),
+            default_factory=_defaults.default_model_factory(_common.Common),
         ),
     ]
     data: Annotated[
-        AstropyQuantity[np.uint16, 3, u.DN],
+        _adaptors.AstropyQuantity[np.uint16, 3, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
+            default_factory=_defaults.default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Science data, excluding border reference pixels.",
         ),
     ]
     amp33: Annotated[
-        AstropyQuantity[np.uint16, 3, u.DN],
+        _adaptors.AstropyQuantity[np.uint16, 3, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
+            default_factory=_defaults.default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Amp 33 reference pixel data",
         ),
     ]
     resultantdq: Annotated[
-        NdArray[np.uint8, 3],
+        _adaptors.NdArray[np.uint8, 3],
         Field(
-            default_factory=default_ndarray_factory(np.uint8, _SHAPE),
+            default_factory=_defaults.default_ndarray_factory(np.uint8, _SHAPE),
             title="Optional 3-D data quality array (plane dq for each resultant",
         ),
     ]
@@ -67,9 +58,9 @@ class ScienceRawModel(BaseRomanStepModel):
     def _check_shapes(self, shape: tuple[int] | None) -> None:
         """Check all the shapes are consistent"""
 
-        check_shape("data", shape, value=self.data)
-        check_shape("amp33", shape, value=self.amp33)
-        check_shape("resultantdq", shape, value=self.resultantdq)
+        _check.check_shape("data", shape, value=self.data)
+        _check.check_shape("amp33", shape, value=self.amp33)
+        _check.check_shape("resultantdq", shape, value=self.resultantdq)
 
     @model_validator(mode="after")
     def _handle_data_shape(self) -> ScienceRawModel:
@@ -100,9 +91,9 @@ class ScienceRawModel(BaseRomanStepModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "data", shape, factory=quantity_factory(u.DN, np.uint16))
-                fill_shape(data, "amp33", shape, factory=quantity_factory(u.DN, np.uint16))
-                fill_shape(data, "resultantdq", shape, factory=ndarray_factory(np.uint8))
+                _check.fill_shape(data, "data", shape, maker=_check.quantity_maker(u.DN, np.uint16))
+                _check.fill_shape(data, "amp33", shape, maker=_check.quantity_maker(u.DN, np.uint16))
+                _check.fill_shape(data, "resultantdq", shape, maker=_check.ndarray_maker(np.uint8))
 
             else:
                 raise ValueError(f"Expected dict or ScienceRawModel, got {type(data)}")

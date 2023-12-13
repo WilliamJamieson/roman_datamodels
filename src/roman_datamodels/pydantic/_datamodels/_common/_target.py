@@ -2,30 +2,27 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["Target"]
 
 
-class target_type(StrEnum):
+class target_type(_strenum.StrEnum):
     FIXED = "FIXED"
     MOVING = "MOVING"
     GENERIC = "GENERIC"
 
 
-class source_type(StrEnum):
+class source_type(_strenum.StrEnum):
     POINT = "POINT"
     EXTENDED = "EXTENDED"
     UNKNOWN = "UNKNOWN"
 
 
-class Target(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.TARGET.value
-    _tag_uri: ClassVar = asdf_tag_uri.TARGET.value
+class Target(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.TARGET.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.TARGET.value
 
     model_config = ConfigDict(
         title="Target information",
@@ -34,16 +31,16 @@ class Target(BaseRomanTaggedModel):
     proposer_name: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Proposer's name for the target",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.target_name",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(100)",
                     destination=[
                         "ScienceCommon.proposer_target_name",
@@ -56,16 +53,16 @@ class Target(BaseRomanTaggedModel):
     catalog_name: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Standard astronomical catalog name for target",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.standard_target_name",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(256)",
                     destination=[
                         "ScienceCommon.catalog_name",
@@ -78,16 +75,16 @@ class Target(BaseRomanTaggedModel):
     type: Annotated[
         target_type,
         Field(
-            default_factory=default_constant_factory(target_type.FIXED.value),
+            default_factory=_defaults.default_constant_factory(target_type.FIXED.value),
             title="Type of target",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.target_type",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(10)",
                     destination=[
                         "ScienceCommon.target_type",
@@ -100,16 +97,16 @@ class Target(BaseRomanTaggedModel):
     ra: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Target RA at mid time of exposure",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.ra_computed",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.ra",
@@ -122,16 +119,16 @@ class Target(BaseRomanTaggedModel):
     dec: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Target Dec at mid time of exposure",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.dec_computed",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.dec",
@@ -144,16 +141,16 @@ class Target(BaseRomanTaggedModel):
     ra_uncertainty: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Target RA uncertainty",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.ra_uncertainty_computed",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.ra_uncertainty",
@@ -166,16 +163,16 @@ class Target(BaseRomanTaggedModel):
     dec_uncertainty: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Target Dec uncertainty",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.dec_uncertainty_computed",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.dec_uncertainty",
@@ -188,16 +185,16 @@ class Target(BaseRomanTaggedModel):
     proper_motion_ra: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Target proper motion in RA",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.ra_proper_motion",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.proper_motion_ra",
@@ -210,16 +207,16 @@ class Target(BaseRomanTaggedModel):
     proper_motion_dec: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Target proper motion in Dec",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.dec_proper_motion",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.proper_motion_dec",
@@ -232,16 +229,16 @@ class Target(BaseRomanTaggedModel):
     proper_motion_epoch: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Target proper motion epoch",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.epoch",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(10)",
                     destination=[
                         "ScienceCommon.proper_motion_epoch",
@@ -254,17 +251,17 @@ class Target(BaseRomanTaggedModel):
     proposer_ra: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Proposer's target RA",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.ra_literal",
                         function="hms_to_degrees",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.proposer_ra",
@@ -277,17 +274,17 @@ class Target(BaseRomanTaggedModel):
     proposer_dec: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Proposer's target Dec",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:dms_target.dec_literal",
                         function="hms_to_degrees",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.proposer_dec",
@@ -300,16 +297,16 @@ class Target(BaseRomanTaggedModel):
     source_type: Annotated[
         source_type,
         Field(
-            default_factory=default_constant_factory(source_type.POINT.value),
+            default_factory=_defaults.default_constant_factory(source_type.POINT.value),
             title="Source type used for calibration",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(8)",
                     destination=[
                         "ScienceCommon.source_type",

@@ -15,8 +15,8 @@ from .._defaults import (
     default_ndarray_factory,
     default_quantity_factory,
     fill_shape,
-    ndarray_factory,
-    quantity_factory,
+    ndarray_maker,
+    quantity_maker,
 )
 from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, ref_type
@@ -101,7 +101,7 @@ class SaturationRefModel(BaseRomanRefModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "data", shape, factory=quantity_factory(u.DN, np.float32))
-                fill_shape(data, "dq", shape, factory=ndarray_factory(np.uint32))
+                fill_shape(data, "data", shape, maker=quantity_maker(u.DN, np.float32))
+                fill_shape(data, "dq", shape, maker=ndarray_maker(np.uint32))
 
         return data

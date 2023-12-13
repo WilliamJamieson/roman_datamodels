@@ -14,7 +14,7 @@ from .._defaults import (
     default_model_factory,
     default_ndarray_factory,
     fill_shape,
-    ndarray_factory,
+    ndarray_maker,
 )
 from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, ref_type
@@ -125,7 +125,7 @@ class LinearityRefModel(BaseRomanRefModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "coeffs", _shape, n_shape=_n_shape, factory=ndarray_factory(np.float32))
-                fill_shape(data, "dq", _shape, factory=ndarray_factory(np.uint32))
+                fill_shape(data, "coeffs", _shape, n_shape=_n_shape, maker=ndarray_maker(np.float32))
+                fill_shape(data, "dq", _shape, maker=ndarray_maker(np.uint32))
 
         return data

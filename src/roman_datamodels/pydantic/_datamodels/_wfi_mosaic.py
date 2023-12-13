@@ -6,19 +6,10 @@ import astropy.units as u
 import numpy as np
 from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
-from .._adaptors import AstropyQuantity, NdArray
-from .._core import BaseRomanStepModel
-from .._defaults import (
-    check_shape,
-    default_model_factory,
-    default_ndarray_factory,
-    default_quantity_factory,
-    fill_shape,
-    ndarray_factory,
-    quantity_factory,
-)
-from .._uri import asdf_tag_uri, asdf_uri
-from ._common import CalLogs, Common, Photometry, Resample
+from roman_datamodels.pydantic import _adaptors, _check, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _common
 
 __all__ = ["MosaicModel"]
 
@@ -27,24 +18,24 @@ _SHAPE = (4088, 4088)
 _N_IMAGES = 2
 
 
-class MosaicMeta(Common):
+class MosaicMeta(_common.Common):
     photometry: Annotated[
-        Photometry,
+        _common.Photometry,
         Field(
-            default_factory=default_model_factory(Photometry),
+            default_factory=_defaults.default_model_factory(_common.Photometry),
         ),
     ]
     resample: Annotated[
-        Resample | None,
+        _common.Resample | None,
         Field(
-            default_factory=default_model_factory(Resample),
+            default_factory=_defaults.default_model_factory(_common.Resample),
         ),
     ]
 
 
-class MosaicModel(BaseRomanStepModel):
-    _uri: ClassVar = asdf_uri.WFI_MOSAIC.value
-    _tag_uri: ClassVar = asdf_tag_uri.WFI_MOSAIC.value
+class MosaicModel(_core.BaseRomanStepModel):
+    _uri: ClassVar = uri.asdf_uri.WFI_MOSAIC.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.WFI_MOSAIC.value
 
     model_config = ConfigDict(title="The schema for WFI Level 3 mosaics.")
 
@@ -53,65 +44,65 @@ class MosaicModel(BaseRomanStepModel):
     meta: Annotated[
         MosaicMeta,
         Field(
-            default_factory=default_model_factory(MosaicMeta),
+            default_factory=_defaults.default_model_factory(MosaicMeta),
         ),
     ]
     data: Annotated[
-        AstropyQuantity[np.float32, 2, u.electron / u.s],
+        _adaptors.AstropyQuantity[np.float32, 2, u.electron / u.s],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
             title="Science data, excluding border reference pixels.",
         ),
     ]
     err: Annotated[
-        AstropyQuantity[np.float32, 2, u.electron / u.s],
+        _adaptors.AstropyQuantity[np.float32, 2, u.electron / u.s],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
         ),
     ]
     context: Annotated[
-        NdArray[np.uint32, 3],
+        _adaptors.NdArray[np.uint32, 3],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, (_N_IMAGES, *_SHAPE)),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, (_N_IMAGES, *_SHAPE)),
         ),
     ]
     weight: Annotated[
-        NdArray[np.float32, 2],
+        _adaptors.NdArray[np.float32, 2],
         Field(
-            default_factory=default_ndarray_factory(np.float32, _SHAPE),
+            default_factory=_defaults.default_ndarray_factory(np.float32, _SHAPE),
         ),
     ]
     var_poisson: Annotated[
-        AstropyQuantity[np.float32, 2, (u.electron / u.s) ** 2],
+        _adaptors.AstropyQuantity[np.float32, 2, (u.electron / u.s) ** 2],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
         ),
     ]
     var_rnoise: Annotated[
-        AstropyQuantity[np.float32, 2, (u.electron / u.s) ** 2],
+        _adaptors.AstropyQuantity[np.float32, 2, (u.electron / u.s) ** 2],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
         ),
     ]
     var_flat: Annotated[
-        AstropyQuantity[np.float32, 2, (u.electron / u.s) ** 2],
+        _adaptors.AstropyQuantity[np.float32, 2, (u.electron / u.s) ** 2],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
         ),
     ]
-    cal_logs: CalLogs
+    cal_logs: _common.CalLogs
 
     def _check_shapes(self, shape: tuple[int] | None, n_images: int | None) -> None:
         """Check all the shapes are consistent"""
 
-        check_shape("data", shape, value=self.data)
-        check_shape("err", shape, value=self.err)
-        check_shape("weight", shape, value=self.weight)
-        check_shape("var_poisson", shape, value=self.var_poisson)
-        check_shape("var_rnoise", shape, value=self.var_rnoise)
-        check_shape("var_flat", shape, value=self.var_flat)
+        _check.check_shape("data", shape, value=self.data)
+        _check.check_shape("err", shape, value=self.err)
+        _check.check_shape("weight", shape, value=self.weight)
+        _check.check_shape("var_poisson", shape, value=self.var_poisson)
+        _check.check_shape("var_rnoise", shape, value=self.var_rnoise)
+        _check.check_shape("var_flat", shape, value=self.var_flat)
 
-        check_shape("context", shape, n_shape=n_images, value=self.context)
+        _check.check_shape("context", shape, n_shape=n_images, value=self.context)
 
     @model_validator(mode="after")
     def _handle_data_shape(self) -> MosaicModel:
@@ -149,13 +140,13 @@ class MosaicModel(BaseRomanStepModel):
                 data._check_shapes(shape, n_images)
 
             elif isinstance(data, dict):
-                fill_shape(data, "data", shape, factory=quantity_factory(u.electron / u.s, np.float32))
-                fill_shape(data, "err", shape, factory=quantity_factory(u.electron / u.s, np.float32))
-                fill_shape(data, "weight", shape, factory=ndarray_factory(np.float32))
-                fill_shape(data, "var_poisson", shape, factory=quantity_factory((u.electron / u.s) ** 2, np.float32))
-                fill_shape(data, "var_rnoise", shape, factory=quantity_factory((u.electron / u.s) ** 2, np.float32))
-                fill_shape(data, "var_flat", shape, factory=quantity_factory((u.electron / u.s) ** 2, np.float32))
-                fill_shape(data, "context", shape, n_shape=n_images, factory=ndarray_factory(np.uint32))
+                _check.fill_shape(data, "data", shape, maker=_check.quantity_maker(u.electron / u.s, np.float32))
+                _check.fill_shape(data, "err", shape, maker=_check.quantity_maker(u.electron / u.s, np.float32))
+                _check.fill_shape(data, "weight", shape, maker=_check.ndarray_maker(np.float32))
+                _check.fill_shape(data, "var_poisson", shape, maker=_check.quantity_maker((u.electron / u.s) ** 2, np.float32))
+                _check.fill_shape(data, "var_rnoise", shape, maker=_check.quantity_maker((u.electron / u.s) ** 2, np.float32))
+                _check.fill_shape(data, "var_flat", shape, maker=_check.quantity_maker((u.electron / u.s) ** 2, np.float32))
+                _check.fill_shape(data, "context", shape, n_shape=n_images, maker=_check.ndarray_maker(np.uint32))
 
             else:
                 raise ValueError(f"Expected dict or MosaicModel, got {type(data)}")

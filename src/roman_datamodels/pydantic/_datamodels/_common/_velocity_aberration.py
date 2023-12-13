@@ -2,16 +2,14 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanURIModel
-from ..._defaults import default_num_factory
-from ..._uri import asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["VelocityAberration"]
 
 
-class VelocityAberration(BaseRomanURIModel):
-    _uri: ClassVar = asdf_uri.VELOCITY_ABERRATION.value
+class VelocityAberration(_core.BaseRomanURIModel):
+    _uri: ClassVar = uri.asdf_uri.VELOCITY_ABERRATION.value
 
     model_config = ConfigDict(
         title="Velocity aberration correction information",
@@ -20,16 +18,16 @@ class VelocityAberration(BaseRomanURIModel):
     ra_offset: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Velocity aberration right ascension offset",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.ra_offset",
@@ -42,16 +40,16 @@ class VelocityAberration(BaseRomanURIModel):
     dec_offset: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Velocity aberration declination offset",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.dec_offset",
@@ -64,16 +62,16 @@ class VelocityAberration(BaseRomanURIModel):
     scale_factor: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Velocity aberration scale factor",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.scale_factor",

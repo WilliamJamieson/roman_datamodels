@@ -14,7 +14,7 @@ from .._defaults import (
     default_model_factory,
     default_quantity_factory,
     fill_shape,
-    quantity_factory,
+    quantity_maker,
 )
 from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, RefExposureType, ref_type
@@ -91,6 +91,6 @@ class ReadnoiseRefModel(BaseRomanRefModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "data", shape, factory=quantity_factory(u.DN, np.float32))
+                fill_shape(data, "data", shape, maker=quantity_maker(u.DN, np.float32))
 
         return data

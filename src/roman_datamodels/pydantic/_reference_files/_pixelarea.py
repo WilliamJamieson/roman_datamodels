@@ -15,7 +15,7 @@ from .._defaults import (
     default_ndarray_factory,
     default_num_value,
     fill_shape,
-    ndarray_factory,
+    ndarray_maker,
 )
 from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, RefOpticalElement, ref_type
@@ -115,6 +115,6 @@ class PixelareaRefModel(BaseRomanRefModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "data", shape, factory=ndarray_factory(np.float32))
+                fill_shape(data, "data", shape, maker=ndarray_maker(np.float32))
 
         return data

@@ -6,19 +6,10 @@ import astropy.units as u
 import numpy as np
 from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
-from .._adaptors import AstropyQuantity, NdArray
-from .._core import BaseRomanStepModel
-from .._defaults import (
-    check_shape,
-    default_model_factory,
-    default_ndarray_factory,
-    default_quantity_factory,
-    fill_shape,
-    ndarray_factory,
-    quantity_factory,
-)
-from .._uri import asdf_tag_uri, asdf_uri
-from ._common import Common
+from roman_datamodels.pydantic import _adaptors, _check, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _common
 
 __all__ = ["RampModel"]
 
@@ -26,9 +17,9 @@ __all__ = ["RampModel"]
 _SHAPE = (8, 4096, 4096)
 
 
-class RampModel(BaseRomanStepModel):
-    _uri: ClassVar = asdf_uri.RAMP.value
-    _tag_uri: ClassVar = asdf_tag_uri.RAMP.value
+class RampModel(_core.BaseRomanStepModel):
+    _uri: ClassVar = uri.asdf_uri.RAMP.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.RAMP.value
 
     _testing_default: ClassVar = {"shape": (2, 8, 8)}
 
@@ -37,99 +28,99 @@ class RampModel(BaseRomanStepModel):
     )
 
     meta: Annotated[
-        Common,
+        _common.Common,
         Field(
-            default_factory=default_model_factory(Common),
+            default_factory=_defaults.default_model_factory(_common.Common),
         ),
     ]
     data: Annotated[
-        AstropyQuantity[np.float32, 3, (u.DN, u.electron)],
+        _adaptors.AstropyQuantity[np.float32, 3, (u.DN, u.electron)],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.DN),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.DN),
             title="Science data, including the border reference pixels.",
         ),
     ]
     pixeldq: Annotated[
-        NdArray[np.uint32, 2],
+        _adaptors.NdArray[np.uint32, 2],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, _SHAPE[1:]),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, _SHAPE[1:]),
             title="2-D data quality array for all planes",
         ),
     ]
     groupdq: Annotated[
-        NdArray[np.uint32, 3],
+        _adaptors.NdArray[np.uint32, 3],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, _SHAPE),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, _SHAPE),
             title="3-D data quality array (plane dq for each group)",
         ),
     ]
     err: Annotated[
-        AstropyQuantity[np.float32, 3, (u.DN, u.electron)],
+        _adaptors.AstropyQuantity[np.float32, 3, (u.DN, u.electron)],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.DN),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.DN),
             title="Error array containing the square root of the exposure-level combined variance",
         ),
     ]
     amp33: Annotated[
-        AstropyQuantity[np.uint16, 3, u.DN],
+        _adaptors.AstropyQuantity[np.uint16, 3, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.uint16, (*_SHAPE[:2], 128), u.DN),
+            default_factory=_defaults.default_quantity_factory(np.uint16, (*_SHAPE[:2], 128), u.DN),
             title="Amp 33 reference pixel data",
         ),
     ]
     border_ref_pix_left: Annotated[
-        AstropyQuantity[np.float32, 3, u.DN],
+        _adaptors.AstropyQuantity[np.float32, 3, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.float32, (*_SHAPE[:2], 4), u.DN),
+            default_factory=_defaults.default_quantity_factory(np.float32, (*_SHAPE[:2], 4), u.DN),
             title="Original border reference pixels, on left (from viewers perspective).",
         ),
     ]
     border_ref_pix_right: Annotated[
-        AstropyQuantity[np.float32, 3, u.DN],
+        _adaptors.AstropyQuantity[np.float32, 3, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.float32, (*_SHAPE[:2], 4), u.DN),
+            default_factory=_defaults.default_quantity_factory(np.float32, (*_SHAPE[:2], 4), u.DN),
             title="Original border reference pixels, on right (from viewers perspective).",
         ),
     ]
     border_ref_pix_top: Annotated[
-        AstropyQuantity[np.float32, 3, u.DN],
+        _adaptors.AstropyQuantity[np.float32, 3, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.float32, (_SHAPE[0], 4, _SHAPE[2]), u.DN),
+            default_factory=_defaults.default_quantity_factory(np.float32, (_SHAPE[0], 4, _SHAPE[2]), u.DN),
             title="Original border reference pixels, on top.",
         ),
     ]
     border_ref_pix_bottom: Annotated[
-        AstropyQuantity[np.float32, 3, u.DN],
+        _adaptors.AstropyQuantity[np.float32, 3, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.float32, (_SHAPE[0], 4, _SHAPE[2]), u.DN),
+            default_factory=_defaults.default_quantity_factory(np.float32, (_SHAPE[0], 4, _SHAPE[2]), u.DN),
             title="Original border reference pixels, on bottom.",
         ),
     ]
     dq_border_ref_pix_left: Annotated[
-        NdArray[np.uint32, 2],
+        _adaptors.NdArray[np.uint32, 2],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, (_SHAPE[1], 4)),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, (_SHAPE[1], 4)),
             title="DQ for border reference pixels, on left (from viewers perspective).",
         ),
     ]
     dq_border_ref_pix_right: Annotated[
-        NdArray[np.uint32, 2],
+        _adaptors.NdArray[np.uint32, 2],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, (_SHAPE[1], 4)),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, (_SHAPE[1], 4)),
             title="DQ for border reference pixels, on right (from viewers perspective).",
         ),
     ]
     dq_border_ref_pix_top: Annotated[
-        NdArray[np.uint32, 2],
+        _adaptors.NdArray[np.uint32, 2],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, (4, _SHAPE[2])),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, (4, _SHAPE[2])),
             title="DQ for border reference pixels, on top.",
         ),
     ]
     dq_border_ref_pix_bottom: Annotated[
-        NdArray[np.uint32, 2],
+        _adaptors.NdArray[np.uint32, 2],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, (4, _SHAPE[2])),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, (4, _SHAPE[2])),
             title="DQ for border reference pixels, on bottom.",
         ),
     ]
@@ -140,28 +131,30 @@ class RampModel(BaseRomanStepModel):
         _shape = shape[1:]
         _n_groups = shape[0]
 
-        check_shape("data", _shape, n_shape=_n_groups, value=self.data)
-        check_shape("pixeldq", _shape, value=self.pixeldq)
-        check_shape("groupdq", _shape, n_shape=_n_groups, value=self.groupdq)
-        check_shape("err", _shape, n_shape=_n_groups, value=self.err)
+        _check.check_shape("data", _shape, n_shape=_n_groups, value=self.data)
+        _check.check_shape("pixeldq", _shape, value=self.pixeldq)
+        _check.check_shape("groupdq", _shape, n_shape=_n_groups, value=self.groupdq)
+        _check.check_shape("err", _shape, n_shape=_n_groups, value=self.err)
 
-        check_shape("amp33", _shape, n_shape=_n_groups, border="amp33", fill_border=False, value=self.amp33)
-        check_shape(
+        _check.check_shape("amp33", _shape, n_shape=_n_groups, border="amp33", fill_border=False, value=self.amp33)
+        _check.check_shape(
             "border_ref_pix_left", _shape, n_shape=_n_groups, border="lr", fill_border=False, value=self.border_ref_pix_left
         )
-        check_shape(
+        _check.check_shape(
             "border_ref_pix_right", _shape, n_shape=_n_groups, border="lr", fill_border=False, value=self.border_ref_pix_right
         )
-        check_shape(
+        _check.check_shape(
             "border_ref_pix_top", _shape, n_shape=_n_groups, border="tb", fill_border=False, value=self.border_ref_pix_top
         )
-        check_shape(
+        _check.check_shape(
             "border_ref_pix_bottom", _shape, n_shape=_n_groups, border="tb", fill_border=False, value=self.border_ref_pix_bottom
         )
-        check_shape("dq_border_ref_pix_left", _shape, border="lr", fill_border=False, value=self.dq_border_ref_pix_left)
-        check_shape("dq_border_ref_pix_right", _shape, border="lr", fill_border=False, value=self.dq_border_ref_pix_right)
-        check_shape("dq_border_ref_pix_top", _shape, border="tb", fill_border=False, value=self.dq_border_ref_pix_top)
-        check_shape("dq_border_ref_pix_bottom", _shape, border="tb", fill_border=False, value=self.dq_border_ref_pix_bottom)
+        _check.check_shape("dq_border_ref_pix_left", _shape, border="lr", fill_border=False, value=self.dq_border_ref_pix_left)
+        _check.check_shape("dq_border_ref_pix_right", _shape, border="lr", fill_border=False, value=self.dq_border_ref_pix_right)
+        _check.check_shape("dq_border_ref_pix_top", _shape, border="tb", fill_border=False, value=self.dq_border_ref_pix_top)
+        _check.check_shape(
+            "dq_border_ref_pix_bottom", _shape, border="tb", fill_border=False, value=self.dq_border_ref_pix_bottom
+        )
 
     @model_validator(mode="after")
     def _handle_data_shape(self) -> RampModel:
@@ -195,66 +188,71 @@ class RampModel(BaseRomanStepModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "data", _shape, n_shape=_n_groups, factory=quantity_factory(u.DN, np.float32))
-                fill_shape(data, "pixeldq", _shape, factory=ndarray_factory(np.uint32))
-                fill_shape(data, "groupdq", _shape, n_shape=_n_groups, factory=ndarray_factory(np.uint32))
-                fill_shape(data, "err", _shape, n_shape=_n_groups, factory=quantity_factory(u.DN, np.float32))
-                fill_shape(
+                _check.fill_shape(data, "data", _shape, n_shape=_n_groups, maker=_check.quantity_maker(u.DN, np.float32))
+                _check.fill_shape(data, "pixeldq", _shape, maker=_check.ndarray_maker(np.uint32))
+                _check.fill_shape(data, "groupdq", _shape, n_shape=_n_groups, maker=_check.ndarray_maker(np.uint32))
+                _check.fill_shape(data, "err", _shape, n_shape=_n_groups, maker=_check.quantity_maker(u.DN, np.float32))
+                _check.fill_shape(
                     data,
                     "amp33",
                     _shape,
                     n_shape=_n_groups,
                     fill_border=False,
                     border="amp33",
-                    factory=quantity_factory(u.DN, np.uint16),
+                    maker=_check.quantity_maker(u.DN, np.uint16),
                 )
-                fill_shape(
+                _check.fill_shape(
                     data,
                     "border_ref_pix_left",
                     _shape,
                     n_shape=_n_groups,
                     border="lr",
                     fill_border=False,
-                    factory=quantity_factory(u.DN, np.float32),
+                    maker=_check.quantity_maker(u.DN, np.float32),
                 )
-                fill_shape(
+                _check.fill_shape(
                     data,
                     "border_ref_pix_right",
                     _shape,
                     n_shape=_n_groups,
                     border="lr",
                     fill_border=False,
-                    factory=quantity_factory(u.DN, np.float32),
+                    maker=_check.quantity_maker(u.DN, np.float32),
                 )
-                fill_shape(
+                _check.fill_shape(
                     data,
                     "border_ref_pix_top",
                     _shape,
                     n_shape=_n_groups,
                     border="tb",
                     fill_border=False,
-                    factory=quantity_factory(u.DN, np.float32),
+                    maker=_check.quantity_maker(u.DN, np.float32),
                 )
-                fill_shape(
+                _check.fill_shape(
                     data,
                     "border_ref_pix_bottom",
                     _shape,
                     n_shape=_n_groups,
                     border="tb",
                     fill_border=False,
-                    factory=quantity_factory(u.DN, np.float32),
+                    maker=_check.quantity_maker(u.DN, np.float32),
                 )
-                fill_shape(
-                    data, "dq_border_ref_pix_left", _shape, border="lr", fill_border=False, factory=ndarray_factory(np.uint32)
+                _check.fill_shape(
+                    data, "dq_border_ref_pix_left", _shape, border="lr", fill_border=False, maker=_check.ndarray_maker(np.uint32)
                 )
-                fill_shape(
-                    data, "dq_border_ref_pix_right", _shape, border="lr", fill_border=False, factory=ndarray_factory(np.uint32)
+                _check.fill_shape(
+                    data, "dq_border_ref_pix_right", _shape, border="lr", fill_border=False, maker=_check.ndarray_maker(np.uint32)
                 )
-                fill_shape(
-                    data, "dq_border_ref_pix_top", _shape, border="tb", fill_border=False, factory=ndarray_factory(np.uint32)
+                _check.fill_shape(
+                    data, "dq_border_ref_pix_top", _shape, border="tb", fill_border=False, maker=_check.ndarray_maker(np.uint32)
                 )
-                fill_shape(
-                    data, "dq_border_ref_pix_bottom", _shape, border="tb", fill_border=False, factory=ndarray_factory(np.uint32)
+                _check.fill_shape(
+                    data,
+                    "dq_border_ref_pix_bottom",
+                    _shape,
+                    border="tb",
+                    fill_border=False,
+                    maker=_check.ndarray_maker(np.uint32),
                 )
 
         return data

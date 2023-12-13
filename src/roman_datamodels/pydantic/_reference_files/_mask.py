@@ -13,7 +13,7 @@ from .._defaults import (
     default_model_factory,
     default_ndarray_factory,
     fill_shape,
-    ndarray_factory,
+    ndarray_maker,
 )
 from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, RefOpticalElement, ref_type
@@ -87,6 +87,6 @@ class MaskRefModel(BaseRomanRefModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "dq", shape, factory=ndarray_factory(np.uint32))
+                fill_shape(data, "dq", shape, maker=ndarray_maker(np.uint32))
 
         return data

@@ -2,27 +2,25 @@ from typing import Annotated, Callable, ClassVar, Optional
 
 from pydantic import ConfigDict, Field
 
-from .._core import BaseRomanModel, BaseRomanStepModel
-from .._defaults import default_constant_factory
-from .._strenum import StrEnum
-from .._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["AssociationsModel"]
 
 
-class exptype(StrEnum):
+class exptype(_strenum.StrEnum):
     SCIENCE = "SCIENCE"
     CALIBRATION = "CALIBRATION"
     ENGINEERING = "ENGINEERING"
 
 
-class Member(BaseRomanModel):
+class Member(_core.BaseRomanModel):
     expname: Annotated[str, Field()]
     exposerr: Annotated[Optional[float], Field()]
     exptype: Annotated[exptype, Field()]
 
 
-class Product(BaseRomanModel):
+class Product(_core.BaseRomanModel):
     name: Annotated[str, Field()]
     members: Annotated[list[Member], Field()]
 
@@ -57,9 +55,9 @@ def _default_product_factory(shape) -> Callable[[], list[Product]]:
     return product_factory
 
 
-class AssociationsModel(BaseRomanStepModel):
-    _uri: ClassVar = asdf_uri.ASSOCIATIONS.value
-    _tag_uri: ClassVar = asdf_tag_uri.ASSOCIATIONS.value
+class AssociationsModel(_core.BaseRomanStepModel):
+    _uri: ClassVar = uri.asdf_uri.ASSOCIATIONS.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.ASSOCIATIONS.value
     _optional_fields: ClassVar = ("version_id", "code_version", "degraded_status", "program", "target", "constraints")
 
     model_config = ConfigDict(
@@ -69,61 +67,61 @@ class AssociationsModel(BaseRomanStepModel):
     asn_id: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("o036"),
+            default_factory=_defaults.default_constant_factory("o036"),
         ),
     ]
     asn_pool: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("r00001_20200530t023154_pool"),
+            default_factory=_defaults.default_constant_factory("r00001_20200530t023154_pool"),
         ),
     ]
     asn_type: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("image"),
+            default_factory=_defaults.default_constant_factory("image"),
         ),
     ]
     asn_rule: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("candidate_Asn_Lv2Image_i2d"),
+            default_factory=_defaults.default_constant_factory("candidate_Asn_Lv2Image_i2d"),
         ),
     ]
     version_id: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("null"),
+            default_factory=_defaults.default_constant_factory("null"),
         ),
     ]
     code_version: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("0.16.2.dev16+g640b0b79"),
+            default_factory=_defaults.default_constant_factory("0.16.2.dev16+g640b0b79"),
         ),
     ]
     degraded_status: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("No known degraded exposures in association."),
+            default_factory=_defaults.default_constant_factory("No known degraded exposures in association."),
         ),
     ]
     program: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(1),
+            default_factory=_defaults.default_constant_factory(1),
         ),
     ]
     target: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(16),
+            default_factory=_defaults.default_constant_factory(16),
         ),
     ]
     constraints: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory(
+            default_factory=_defaults.default_constant_factory(
                 "DMSAttrConstraint({'name': 'program', 'sources': ['program'], "
                 "'value': '001'})\nConstraint_TargetAcq({'name': 'target_acq', 'value': "
                 "'target_acquisition'})\nDMSAttrConstraint({'name': 'science', "

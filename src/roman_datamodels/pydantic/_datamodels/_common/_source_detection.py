@@ -2,16 +2,15 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["SourceDetection"]
 
 
-class SourceDetection(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.SOURCE_DETECTION.value
-    _tag_uri: ClassVar = asdf_tag_uri.SOURCE_DETECTION.value
+class SourceDetection(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.SOURCE_DETECTION.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.SOURCE_DETECTION.value
 
     _optional_fields: ClassVar = ("tweakreg_catalog_name",)
 
@@ -22,6 +21,6 @@ class SourceDetection(BaseRomanTaggedModel):
     tweakreg_catalog_name: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("filename_tweakreg_catalog.asdf"),
+            default_factory=_defaults.default_constant_factory("filename_tweakreg_catalog.asdf"),
         ),
     ]

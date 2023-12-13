@@ -2,16 +2,13 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["Aperture"]
 
 
-class aperture(StrEnum):
+class aperture(_strenum.StrEnum):
     WFI_01_FULL = "WFI_01_FULL"
     WFI_02_FULL = "WFI_02_FULL"
     WFI_03_FULL = "WFI_03_FULL"
@@ -35,9 +32,9 @@ class aperture(StrEnum):
     WFI_CEN = "WFI_CEN"
 
 
-class Aperture(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.APERTURE.value
-    _tag_uri: ClassVar = asdf_tag_uri.APERTURE.value
+class Aperture(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.APERTURE.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.APERTURE.value
 
     model_config = ConfigDict(
         title="Aperture Information",
@@ -46,16 +43,16 @@ class Aperture(BaseRomanTaggedModel):
     name: Annotated[
         aperture,
         Field(
-            default_factory=default_constant_factory(aperture.WFI_06_FULL.value),
+            default_factory=_defaults.default_constant_factory(aperture.WFI_06_FULL.value),
             title="PRD science aperture used",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="PSS:aperture.AperName",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(40)",
                     destination=[
                         "ScienceCommon.aperture_name",
@@ -68,14 +65,14 @@ class Aperture(BaseRomanTaggedModel):
     position_angle: Annotated[
         float,
         Field(
-            default_factory=default_constant_factory(30.0),
+            default_factory=_defaults.default_constant_factory(30.0),
             title="[deg] Position angle of aperture used",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(origin="TBD"),
+                    source=_archive.SdfOrigin(origin="TBD"),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.position_angle",

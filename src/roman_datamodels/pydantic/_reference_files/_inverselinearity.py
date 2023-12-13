@@ -6,18 +6,10 @@ import astropy.units as u
 import numpy as np
 from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
-from .._adaptors import AstropyUnit, NdArray
-from .._core import BaseRomanRefModel
-from .._defaults import (
-    check_shape,
-    default_constant_factory,
-    default_model_factory,
-    default_ndarray_factory,
-    fill_shape,
-    ndarray_factory,
-)
-from .._uri import asdf_tag_uri, asdf_uri
-from ._ref_common import RefCommon, ref_type
+from roman_datamodels.pydantic import _adaptors, _check, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _ref_common
 
 __all__ = ["InverselinearityRefModel"]
 
@@ -25,33 +17,33 @@ __all__ = ["InverselinearityRefModel"]
 _SHAPE = (2, 4096, 4096)
 
 
-class InverselinearityRefMeta(RefCommon):
+class InverselinearityRefMeta(_ref_common.RefCommon):
     reftype: Annotated[
-        Literal[ref_type.INVERSELINEARITY],
+        Literal[_ref_common.ref_type.INVERSELINEARITY],
         Field(
-            default_factory=default_constant_factory(ref_type.INVERSELINEARITY.value),
+            default_factory=_defaults.default_constant_factory(_ref_common.ref_type.INVERSELINEARITY.value),
             title="Reference file type",
         ),
     ]
     input_units: Annotated[
-        AstropyUnit[u.DN],
+        _adaptors.AstropyUnit[u.DN],
         Field(
-            default_factory=default_constant_factory(u.DN),
+            default_factory=_defaults.default_constant_factory(u.DN),
             title="Units of the input to the inverse linearity polynomial.",
         ),
     ]
     output_units: Annotated[
-        AstropyUnit[u.DN],
+        _adaptors.AstropyUnit[u.DN],
         Field(
-            default_factory=default_constant_factory(u.DN),
+            default_factory=_defaults.default_constant_factory(u.DN),
             title="Units of the output of the inverse linearity polynomial.",
         ),
     ]
 
 
-class InverselinearityRefModel(BaseRomanRefModel):
-    _uri: ClassVar = asdf_uri.INVERSELINEARITY.value
-    _tag_uri: ClassVar = asdf_tag_uri.INVERSELINEARITY.value
+class InverselinearityRefModel(_core.BaseRomanRefModel):
+    _uri: ClassVar = uri.asdf_uri.INVERSELINEARITY.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.INVERSELINEARITY.value
 
     _testing_default: ClassVar = {"shape": (2, 8, 8)}
 
@@ -62,13 +54,13 @@ class InverselinearityRefModel(BaseRomanRefModel):
     meta: Annotated[
         InverselinearityRefMeta,
         Field(
-            default_factory=default_model_factory(InverselinearityRefMeta),
+            default_factory=_defaults.default_model_factory(InverselinearityRefMeta),
         ),
     ]
     coeffs: Annotated[
-        NdArray[np.float32, 3],
+        _adaptors.NdArray[np.float32, 3],
         Field(
-            default_factory=default_ndarray_factory(np.float32, _SHAPE),
+            default_factory=_defaults.default_ndarray_factory(np.float32, _SHAPE),
             title="Inverse linearly coefficients",
             description=(
                 "Contains the coefficients of a polynomial to add classic non-linearity "
@@ -78,9 +70,9 @@ class InverselinearityRefModel(BaseRomanRefModel):
         ),
     ]
     dq: Annotated[
-        NdArray[np.uint32, 2],
+        _adaptors.NdArray[np.uint32, 2],
         Field(
-            default_factory=default_ndarray_factory(np.uint32, _SHAPE[1:]),
+            default_factory=_defaults.default_ndarray_factory(np.uint32, _SHAPE[1:]),
             title="2-D data quality array for all planes",
         ),
     ]
@@ -89,8 +81,8 @@ class InverselinearityRefModel(BaseRomanRefModel):
         _n_shape = shape[0]
         _shape = shape[1:]
 
-        check_shape("coeffs", _shape, n_shape=_n_shape, value=self.coeffs)
-        check_shape("dq", _shape, value=self.dq)
+        _check.check_shape("coeffs", _shape, n_shape=_n_shape, value=self.coeffs)
+        _check.check_shape("dq", _shape, value=self.dq)
 
     @model_validator(mode="after")
     def _handle_data_shape(self) -> InverselinearityRefModel:
@@ -124,7 +116,7 @@ class InverselinearityRefModel(BaseRomanRefModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "coeffs", _shape, n_shape=_n_shape, factory=ndarray_factory(np.float32))
-                fill_shape(data, "dq", _shape, factory=ndarray_factory(np.uint32))
+                _check.fill_shape(data, "coeffs", _shape, n_shape=_n_shape, maker=_check.ndarray_maker(np.float32))
+                _check.fill_shape(data, "dq", _shape, maker=_check.ndarray_maker(np.uint32))
 
         return data

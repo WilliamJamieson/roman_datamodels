@@ -2,13 +2,12 @@ from typing import Annotated
 
 from pydantic import Field
 
-from ..._defaults import default_constant_factory
-from ..._strenum import StrEnum
+from roman_datamodels.pydantic import _defaults, _strenum
 
 __all__ = ["WfiOpticalElement"]
 
 
-class optical_element(StrEnum):
+class optical_element(_strenum.StrEnum):
     F062 = "F062"
     F087 = "F087"
     F106 = "F106"
@@ -25,7 +24,7 @@ class optical_element(StrEnum):
 WfiOpticalElement = Annotated[
     optical_element,
     Field(
-        default_factory=default_constant_factory(optical_element.F158.value),
+        default_factory=_defaults.default_constant_factory(optical_element.F158.value),
         title="name of the filter element used",
     ),
 ]

@@ -2,13 +2,12 @@ from typing import Annotated
 
 from pydantic import Field
 
-from ..._defaults import default_constant_factory
-from ..._strenum import StrEnum
+from roman_datamodels.pydantic import _defaults, _strenum
 
 __all__ = ["WfiDetector"]
 
 
-class detector(StrEnum):
+class detector(_strenum.StrEnum):
     WFI01 = "WFI01"
     WFI02 = "WFI02"
     WFI03 = "WFI03"
@@ -32,7 +31,7 @@ class detector(StrEnum):
 WfiDetector = Annotated[
     detector,
     Field(
-        default_factory=default_constant_factory(detector.WFI01.value),
+        default_factory=_defaults.default_constant_factory(detector.WFI01.value),
         title="Name of detector used to acquire the data",
     ),
 ]

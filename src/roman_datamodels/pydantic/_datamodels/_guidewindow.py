@@ -7,22 +7,10 @@ import numpy as np
 from astropy.time import Time
 from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
-from .._adaptors import AstropyQuantity, AstropyTime
-from .._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from .._core import BaseRomanStepModel
-from .._defaults import (
-    check_shape,
-    default_constant_factory,
-    default_model_factory,
-    default_num_factory,
-    default_num_value,
-    default_quantity_factory,
-    default_str_factory,
-    fill_shape,
-    quantity_factory,
-)
-from .._uri import asdf_tag_uri, asdf_uri
-from ._common import Common, GuidewindowModes, guidewindow_modes
+from roman_datamodels.pydantic import _adaptors, _archive, _check, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _common
 
 __all__ = ["GuidewindowModel"]
 
@@ -30,20 +18,20 @@ __all__ = ["GuidewindowModel"]
 _SHAPE = (2, 8, 16, 32, 32)
 
 
-class GuidewindowMeta(Common):
+class GuidewindowMeta(_common.Common):
     gw_start_time: Annotated[
-        AstropyTime,
+        _adaptors.AstropyTime,
         Field(
-            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            default_factory=_defaults.default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
             title="UTC time at the start of the guide window exposure",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="datetime2",
                     destination=[
                         "GuideWindow.gw_start_time",
@@ -53,18 +41,18 @@ class GuidewindowMeta(Common):
         ),
     ]
     gw_end_time: Annotated[
-        AstropyTime,
+        _adaptors.AstropyTime,
         Field(
-            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            default_factory=_defaults.default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
             title="UTC time at the end of the guide window exposure",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="datetime2",
                     destination=[
                         "GuideWindow.gw_end_time",
@@ -76,16 +64,16 @@ class GuidewindowMeta(Common):
     gw_frame_readout_time: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="The readout time for the guide window frame",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "GuideWindow.gw_frame_readout_time",
@@ -95,18 +83,18 @@ class GuidewindowMeta(Common):
         ),
     ]
     gw_function_start_time: Annotated[
-        AstropyTime,
+        _adaptors.AstropyTime,
         Field(
-            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            default_factory=_defaults.default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
             title="Observatory UTC time at guider function start",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="datetime2",
                     destination=[
                         "GuideWindow.gw_function_start_time",
@@ -116,18 +104,18 @@ class GuidewindowMeta(Common):
         ),
     ]
     gw_function_end_time: Annotated[
-        AstropyTime,
+        _adaptors.AstropyTime,
         Field(
-            default_factory=default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
+            default_factory=_defaults.default_constant_factory(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
             title="Observatory UTC time at guider function end",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="datetime2",
                     destination=[
                         "GuideWindow.gw_function_end_time",
@@ -139,16 +127,16 @@ class GuidewindowMeta(Common):
     gw_acq_exec_stat: Annotated[
         str,
         Field(
-            default_factory=default_constant_factory("StatusRMTest619"),
+            default_factory=_defaults.default_constant_factory("StatusRMTest619"),
             title="Guide star window acquisition status",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "GuideWindow.gw_acq_exec_stat",
@@ -160,17 +148,17 @@ class GuidewindowMeta(Common):
     pedestal_resultant_exp_time: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Total exposure time for the guide window pedestal frames",
             description=("The cumulative exposure time for all the guide window " "pedestal frames"),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "GuideWindow.pedestal_resultant_exp_time",
@@ -182,17 +170,17 @@ class GuidewindowMeta(Common):
     signal_resultant_exp_time: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Total exposure time for the guide window resultant frames",
             description=("The cumulative exposure time for all the guide window " "resultant frames"),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "GuideWindow.signal_resultant_exp_time",
@@ -204,17 +192,17 @@ class GuidewindowMeta(Common):
     gw_acq_number: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title='Guide Window ID "Q"',
             description=("A single digit representing the guide star acquisition " "number within the visit"),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "GuideWindow.gw_acq_number",
@@ -226,20 +214,20 @@ class GuidewindowMeta(Common):
     gw_science_file_source: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="The science data associated with this guide window",
             description=(
                 "The science data file that is associated with this guide window, "
                 'e.g. "r0000101001001001001_01101_0001_WFI01_uncal.asdf"'
             ),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(120)",
                     destination=[
                         "GuideWindow.gw_science_file_source",
@@ -249,17 +237,17 @@ class GuidewindowMeta(Common):
         ),
     ]
     gw_mode: Annotated[
-        GuidewindowModes,
+        _common.GuidewindowModes,
         Field(
-            default_factory=default_constant_factory(guidewindow_modes.WIM_ACQ.value),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            default_factory=_defaults.default_constant_factory(_common.guidewindow_modes.WIM_ACQ.value),
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(18)",
                     destination=[
                         "GuideWindow.gw_mode",
@@ -271,16 +259,16 @@ class GuidewindowMeta(Common):
     gw_window_xstart: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window x start position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "GuideWindow.gw_window_xstart",
@@ -292,16 +280,16 @@ class GuidewindowMeta(Common):
     gw_window_ystart: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window y start position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "GuideWindow.gw_window_ystart",
@@ -313,16 +301,16 @@ class GuidewindowMeta(Common):
     gw_window_xstop: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value + 170),
+            default_factory=_defaults.default_constant_factory(_defaults.default_num_value.NONUM.value + 170),
             title="Guide window x stop position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "GuideWindow.gw_window_xstop",
@@ -334,16 +322,16 @@ class GuidewindowMeta(Common):
     gw_window_ystop: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(default_num_value.NONUM.value + 24),
+            default_factory=_defaults.default_constant_factory(_defaults.default_num_value.NONUM.value + 24),
             title="Guide window y stop position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "GuideWindow.gw_window_ystop",
@@ -355,16 +343,16 @@ class GuidewindowMeta(Common):
     gw_window_xsize: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(170),
+            default_factory=_defaults.default_constant_factory(170),
             title="Guide window size in the x direction in detector coordinates",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "GuideWindow.gw_window_xsize",
@@ -376,16 +364,16 @@ class GuidewindowMeta(Common):
     gw_window_ysize: Annotated[
         int,
         Field(
-            default_factory=default_constant_factory(24),
+            default_factory=_defaults.default_constant_factory(24),
             title="Guide window size in the y direction in detector coordinates",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "GuideWindow.gw_window_ysize",
@@ -396,9 +384,9 @@ class GuidewindowMeta(Common):
     ]
 
 
-class GuidewindowModel(BaseRomanStepModel):
-    _uri: ClassVar = asdf_uri.GUIDEWINDOW.value
-    _tag_uri: ClassVar = asdf_tag_uri.GUIDEWINDOW.value
+class GuidewindowModel(_core.BaseRomanStepModel):
+    _uri: ClassVar = uri.asdf_uri.GUIDEWINDOW.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.GUIDEWINDOW.value
 
     _testing_default: ClassVar = {"shape": (2, 3, 4, 5, 6)}
 
@@ -409,13 +397,13 @@ class GuidewindowModel(BaseRomanStepModel):
     meta: Annotated[
         GuidewindowMeta,
         Field(
-            default_factory=default_model_factory(GuidewindowMeta),
+            default_factory=_defaults.default_model_factory(GuidewindowMeta),
         ),
     ]
     pedestal_frames: Annotated[
-        AstropyQuantity[np.uint16, 5, u.DN],
+        _adaptors.AstropyQuantity[np.uint16, 5, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
+            default_factory=_defaults.default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Pedestal frames",
             description=(
                 "Reconstituted and oriented pedestal frame GW images. "
@@ -425,9 +413,9 @@ class GuidewindowModel(BaseRomanStepModel):
         ),
     ]
     signal_frames: Annotated[
-        AstropyQuantity[np.uint16, 5, u.DN],
+        _adaptors.AstropyQuantity[np.uint16, 5, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
+            default_factory=_defaults.default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Signal frames",
             description=(
                 "Reconstituted and oriented signal frames. Dimensions: num_frames, "
@@ -437,9 +425,9 @@ class GuidewindowModel(BaseRomanStepModel):
         ),
     ]
     amp33: Annotated[
-        AstropyQuantity[np.uint16, 5, u.DN],
+        _adaptors.AstropyQuantity[np.uint16, 5, u.DN],
         Field(
-            default_factory=default_quantity_factory(np.uint16, _SHAPE, u.DN),
+            default_factory=_defaults.default_quantity_factory(np.uint16, _SHAPE, u.DN),
             title="Signal frames",
             description=(
                 "Amp 33 reference pixel data. Dimensions: num_frames, "
@@ -450,9 +438,9 @@ class GuidewindowModel(BaseRomanStepModel):
     ]
 
     def _check_shapes(self, shape: tuple[int] | None):
-        check_shape("pedestal_frames", shape, value=self.pedestal_frames)
-        check_shape("signal_frames", shape, value=self.signal_frames)
-        check_shape("amp33", shape, value=self.amp33)
+        _check.check_shape("pedestal_frames", shape, value=self.pedestal_frames)
+        _check.check_shape("signal_frames", shape, value=self.signal_frames)
+        _check.check_shape("amp33", shape, value=self.amp33)
 
     @model_validator(mode="after")
     def _handle_data_shape(self) -> GuidewindowModel:
@@ -483,8 +471,8 @@ class GuidewindowModel(BaseRomanStepModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "pedestal_frames", shape, factory=quantity_factory(u.DN, np.uint16))
-                fill_shape(data, "signal_frames", shape, factory=quantity_factory(u.DN, np.uint16))
-                fill_shape(data, "amp33", shape, factory=quantity_factory(u.DN, np.uint16))
+                _check.fill_shape(data, "pedestal_frames", shape, maker=_check.quantity_maker(u.DN, np.uint16))
+                _check.fill_shape(data, "signal_frames", shape, maker=_check.quantity_maker(u.DN, np.uint16))
+                _check.fill_shape(data, "amp33", shape, maker=_check.quantity_maker(u.DN, np.uint16))
 
         return data

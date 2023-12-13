@@ -2,18 +2,17 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory, default_num_factory, default_str_factory
-from ..._uri import asdf_tag_uri, asdf_uri
-from ._guidewindow_modes import GuidewindowModes, guidewindow_modes
+from roman_datamodels.pydantic import _archive, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _guidewindow_modes
 
 __all__ = ["Guidestar"]
 
 
-class Guidestar(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.GUIDESTAR.value
-    _tag_uri: ClassVar = asdf_tag_uri.GUIDESTAR.value
+class Guidestar(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.GUIDESTAR.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.GUIDESTAR.value
 
     model_config = ConfigDict(
         title="Guide star window information",
@@ -22,16 +21,16 @@ class Guidestar(BaseRomanTaggedModel):
     gw_id: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="guide star window identifier",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(20)",
                     destination=[
                         "ScienceCommon.gw_id",
@@ -42,17 +41,17 @@ class Guidestar(BaseRomanTaggedModel):
         ),
     ]
     gw_fgs_mode: Annotated[
-        GuidewindowModes,
+        _guidewindow_modes.GuidewindowModes,
         Field(
-            default_factory=default_constant_factory(guidewindow_modes.WSM_ACQ_2.value),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            default_factory=_defaults.default_constant_factory(_guidewindow_modes.guidewindow_modes.WSM_ACQ_2.value),
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(18)",
                     destination=[
                         "ScienceCommon.gw_fgs_mode",
@@ -65,17 +64,17 @@ class Guidestar(BaseRomanTaggedModel):
     gs_id: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="guide star identifier from the GSC2 catalog",
             description="guide star catalog id from the GSC2, field gsc2ID",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(20)",
                     destination=[
                         "ScienceCommon.gs_id",
@@ -88,20 +87,20 @@ class Guidestar(BaseRomanTaggedModel):
     gs_catalog_version: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="The version of the Guide Star Catalog",
             description=(
                 'The version of the catalog that the guide stars are selected, currently  "GSC 2.4.2", SDF should populate'
                 "this from the return value of CAT e.g. CAT=GSC242"
             ),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(20)",
                     destination=[
                         "ScienceCommon.gs_catalog_version",
@@ -113,16 +112,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_ra: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[deg] guide star right ascension",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_ra",
@@ -135,16 +134,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_dec: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[deg] guide star declination",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_dec",
@@ -157,16 +156,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_ura: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[deg] guide star right ascension uncertainty",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_ura",
@@ -179,16 +178,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_udec: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[deg] guide star declination uncertainty",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_udec",
@@ -201,16 +200,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_mag: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="guide star magnitude in detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_mag",
@@ -223,16 +222,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_umag: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="guide star magnitude uncertainty",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_umag",
@@ -245,16 +244,16 @@ class Guidestar(BaseRomanTaggedModel):
     data_start: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="MJD start time of guider data within this file",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.data_start",
@@ -267,16 +266,16 @@ class Guidestar(BaseRomanTaggedModel):
     data_end: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="MJD end time of guider data within this file",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.data_end",
@@ -289,16 +288,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_ctd_x: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[arcsec] guide star centroid x position in guider ideal frame",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_ctd_x",
@@ -311,16 +310,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_ctd_y: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[arcsec] guide star centroid y position in guider ideal frame",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_ctd_y",
@@ -333,16 +332,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_ctd_ux: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="uncertainty in the x position of the centroid",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_ctd_ux",
@@ -355,16 +354,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_ctd_uy: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="uncertainty in the y position of the centroid",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_ctd_uy",
@@ -377,16 +376,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_epoch: Annotated[
         str,
         Field(
-            default_factory=default_str_factory,
+            default_factory=_defaults.default_str_factory,
             title="Epoch of guide star coordinates",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(10)",
                     destination=[
                         "ScienceCommon.gs_epoch",
@@ -399,16 +398,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_mura: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[mas/yr] Guide star ICRS right ascension proper motion",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_mura",
@@ -421,16 +420,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_mudec: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[mas/yr] Guide star ICRS declination proper motion",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_mudec",
@@ -443,16 +442,16 @@ class Guidestar(BaseRomanTaggedModel):
     gs_para: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide star annual parallax",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_para",
@@ -465,21 +464,21 @@ class Guidestar(BaseRomanTaggedModel):
     gs_pattern_error: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="RMS of guide star position",
             description=(
                 "RMS of guide star position in guide window from pattern matching (error on "
                 "centroid not explicitly calculated, the FACE information takes all the centroids and "
                 "calculates the error across the guiding pattern)"
             ),
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.gs_pattern_error",
@@ -492,16 +491,16 @@ class Guidestar(BaseRomanTaggedModel):
     gw_window_xstart: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window x start position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "ScienceCommon.gw_window_xstart",
@@ -513,16 +512,16 @@ class Guidestar(BaseRomanTaggedModel):
     gw_window_ystart: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window y start position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "ScienceCommon.gw_window_ystart",
@@ -534,16 +533,16 @@ class Guidestar(BaseRomanTaggedModel):
     gw_window_xstop: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window x stop position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "ScienceCommon.gw_window_xstop",
@@ -555,16 +554,16 @@ class Guidestar(BaseRomanTaggedModel):
     gw_window_ystop: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window y stop position on the detector",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "ScienceCommon.gw_window_ystop",
@@ -576,16 +575,16 @@ class Guidestar(BaseRomanTaggedModel):
     gw_window_xsize: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window size in the x direction in detector coordinates",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "ScienceCommon.gw_window_xsize",
@@ -597,16 +596,16 @@ class Guidestar(BaseRomanTaggedModel):
     gw_window_ysize: Annotated[
         int,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="Guide window size in the y direction in detector coordinates",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="Science Data Formatting",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="int",
                     destination=[
                         "ScienceCommon.gw_window_ysize",

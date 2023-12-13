@@ -2,24 +2,21 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_tag_uri, asdf_uri
-from ._wfi_detector import WfiDetector
-from ._wfi_optical_element import WfiOpticalElement
+from roman_datamodels.pydantic import _archive, _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _wfi_detector, _wfi_optical_element
 
 __all__ = ["WfiMode", "instrument"]
 
 
-class instrument(StrEnum):
+class instrument(_strenum.StrEnum):
     WFI = "WFI"
 
 
-class WfiMode(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.WFI_MODE.value
-    _tag_uri: ClassVar = asdf_tag_uri.WFI_MODE.value
+class WfiMode(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.WFI_MODE.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.WFI_MODE.value
 
     model_config = ConfigDict(
         title="WFI observing configuration",
@@ -28,16 +25,16 @@ class WfiMode(BaseRomanTaggedModel):
     name: Annotated[
         instrument,
         Field(
-            default_factory=default_constant_factory(instrument.WFI.value),
+            default_factory=_defaults.default_constant_factory(instrument.WFI.value),
             title="Instrument used to acquire the data",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(5)",
                     destination=[
                         "ScienceCommon.instrument_name",
@@ -48,16 +45,16 @@ class WfiMode(BaseRomanTaggedModel):
         ),
     ]
     detector: Annotated[
-        WfiDetector,
+        _wfi_detector.WfiDetector,
         Field(
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(10)",
                     destination=[
                         "ScienceCommon.detector",
@@ -68,16 +65,16 @@ class WfiMode(BaseRomanTaggedModel):
         ),
     ]
     optical_element: Annotated[
-        WfiOpticalElement,
+        _wfi_optical_element.WfiOpticalElement,
         Field(
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(10)",
                     destination=[
                         "ScienceCommon.optical_element",

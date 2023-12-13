@@ -2,17 +2,15 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog, Sdf, SdfOrigin
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_num_factory
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["Pointing"]
 
 
-class Pointing(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.POINTING.value
-    _tag_uri: ClassVar = asdf_tag_uri.POINTING.value
+class Pointing(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.POINTING.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.POINTING.value
 
     model_config = ConfigDict(
         title="Spacecraft pointing information",
@@ -21,16 +19,16 @@ class Pointing(BaseRomanTaggedModel):
     ra_v1: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[deg] RA of telescope V1 axis",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.ra_v1",
@@ -43,16 +41,16 @@ class Pointing(BaseRomanTaggedModel):
     dec_v1: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[deg] Dec of telescope V1 axis",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.dec_v1",
@@ -65,16 +63,16 @@ class Pointing(BaseRomanTaggedModel):
     pa_v3: Annotated[
         float,
         Field(
-            default_factory=default_num_factory,
+            default_factory=_defaults.default_num_factory,
             title="[deg] Position angle of telescope V3 axis",
-            json_schema_extra=Archive(
-                sdf=Sdf(
+            json_schema_extra=_archive.Archive(
+                sdf=_archive.Sdf(
                     special_processing="VALUE_REQUIRED",
-                    source=SdfOrigin(
+                    source=_archive.SdfOrigin(
                         origin="TBD",
                     ),
                 ),
-                archive_catalog=ArchiveCatalog(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="float",
                     destination=[
                         "ScienceCommon.pa_v3",

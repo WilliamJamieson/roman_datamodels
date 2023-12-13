@@ -6,19 +6,10 @@ import astropy.units as u
 import numpy as np
 from pydantic import ConfigDict, Field, ValidationInfo, model_validator
 
-from .._adaptors import AstropyQuantity, NdArray
-from .._core import BaseRomanStepModel
-from .._defaults import (
-    check_shape,
-    default_model_factory,
-    default_ndarray_factory,
-    default_quantity_factory,
-    fill_shape,
-    ndarray_factory,
-    quantity_factory,
-)
-from .._uri import asdf_tag_uri, asdf_uri
-from ._common import Common
+from roman_datamodels.pydantic import _adaptors, _check, _core, _defaults
+from roman_datamodels.pydantic import _uri as uri
+
+from . import _common
 
 __all__ = ["RampFitOutputModel"]
 
@@ -26,9 +17,9 @@ __all__ = ["RampFitOutputModel"]
 _SHAPE = (8, 4096, 4096)
 
 
-class RampFitOutputModel(BaseRomanStepModel):
-    _uri: ClassVar = asdf_uri.RAMP_FIT_OUTPUT.value
-    _tag_uri: ClassVar = asdf_tag_uri.RAMP_FIT_OUTPUT.value
+class RampFitOutputModel(_core.BaseRomanStepModel):
+    _uri: ClassVar = uri.asdf_uri.RAMP_FIT_OUTPUT.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.RAMP_FIT_OUTPUT.value
 
     _testing_default: ClassVar = {"shape": (2, 8, 8)}
 
@@ -37,85 +28,85 @@ class RampFitOutputModel(BaseRomanStepModel):
     )
 
     meta: Annotated[
-        Common,
+        _common.Common,
         Field(
-            default_factory=default_model_factory(Common),
+            default_factory=_defaults.default_model_factory(_common.Common),
         ),
     ]
     slope: Annotated[
-        AstropyQuantity[np.float32, 3, u.electron / u.s],
+        _adaptors.AstropyQuantity[np.float32, 3, u.electron / u.s],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
             title="Segment-specific slope",
         ),
     ]
     sigslope: Annotated[
-        AstropyQuantity[np.float32, 3, u.electron / u.s],
+        _adaptors.AstropyQuantity[np.float32, 3, u.electron / u.s],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.electron / u.s),
             title="Sigma for segment-specific slope",
         ),
     ]
     yint: Annotated[
-        AstropyQuantity[np.float32, 3, u.electron],
+        _adaptors.AstropyQuantity[np.float32, 3, u.electron],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.electron),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.electron),
             title="Segment-specific y-intercept",
         ),
     ]
     sigyint: Annotated[
-        AstropyQuantity[np.float32, 3, u.electron],
+        _adaptors.AstropyQuantity[np.float32, 3, u.electron],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.electron),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.electron),
             title="Sigma for segment-specific y-intercept",
         ),
     ]
     pedestal: Annotated[
-        AstropyQuantity[np.float32, 2, u.electron],
+        _adaptors.AstropyQuantity[np.float32, 2, u.electron],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE[1:], u.electron),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE[1:], u.electron),
             title="Pedestal array",
         ),
     ]
     weights: Annotated[
-        NdArray[np.float32, 3],
+        _adaptors.NdArray[np.float32, 3],
         Field(
-            default_factory=default_ndarray_factory(np.float32, _SHAPE),
+            default_factory=_defaults.default_ndarray_factory(np.float32, _SHAPE),
             title="Weights for segment-specific fits",
         ),
     ]
     crmag: Annotated[
-        AstropyQuantity[np.float32, 3, u.electron],
+        _adaptors.AstropyQuantity[np.float32, 3, u.electron],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, u.electron),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, u.electron),
             title="Approximate CR magnitudes",
         ),
     ]
     var_poisson: Annotated[
-        AstropyQuantity[np.float32, 3, (u.electron / u.s) ** 2],
+        _adaptors.AstropyQuantity[np.float32, 3, (u.electron / u.s) ** 2],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
             title="Variance due to poisson noise for segment-specific slope",
         ),
     ]
     var_rnoise: Annotated[
-        AstropyQuantity[np.float32, 3, (u.electron / u.s) ** 2],
+        _adaptors.AstropyQuantity[np.float32, 3, (u.electron / u.s) ** 2],
         Field(
-            default_factory=default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
+            default_factory=_defaults.default_quantity_factory(np.float32, _SHAPE, (u.electron / u.s) ** 2),
             title="Variance due to read noise for segment-specific slope",
         ),
     ]
 
     def _check_shapes(self, shape: tuple[int] | None):
-        check_shape("slope", shape, value=self.slope)
-        check_shape("sigslope", shape, value=self.sigslope)
-        check_shape("yint", shape, value=self.yint)
-        check_shape("sigyint", shape, value=self.sigyint)
-        check_shape("pedestal", shape[1:], value=self.pedestal)
-        check_shape("weights", shape, value=self.weights)
-        check_shape("crmag", shape, value=self.crmag)
-        check_shape("var_poisson", shape, value=self.var_poisson)
-        check_shape("var_rnoise", shape, value=self.var_rnoise)
+        _check.check_shape("slope", shape, value=self.slope)
+        _check.check_shape("sigslope", shape, value=self.sigslope)
+        _check.check_shape("yint", shape, value=self.yint)
+        _check.check_shape("sigyint", shape, value=self.sigyint)
+        _check.check_shape("pedestal", shape[1:], value=self.pedestal)
+        _check.check_shape("weights", shape, value=self.weights)
+        _check.check_shape("crmag", shape, value=self.crmag)
+        _check.check_shape("var_poisson", shape, value=self.var_poisson)
+        _check.check_shape("var_rnoise", shape, value=self.var_rnoise)
 
     @model_validator(mode="after")
     def _handle_data_shape(self) -> RampFitOutputModel:
@@ -146,14 +137,14 @@ class RampFitOutputModel(BaseRomanStepModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "slope", shape, factory=quantity_factory(u.electron / u.s, np.float32))
-                fill_shape(data, "sigslope", shape, factory=quantity_factory(u.electron / u.s, np.float32))
-                fill_shape(data, "yint", shape, factory=quantity_factory(u.electron, np.float32))
-                fill_shape(data, "sigyint", shape, factory=quantity_factory(u.electron, np.float32))
-                fill_shape(data, "pedestal", shape[1:], factory=quantity_factory(u.electron, np.float32))
-                fill_shape(data, "weights", shape, factory=ndarray_factory(np.float32))
-                fill_shape(data, "crmag", shape, factory=quantity_factory(u.electron, np.float32))
-                fill_shape(data, "var_poisson", shape, factory=quantity_factory((u.electron / u.s) ** 2, np.float32))
-                fill_shape(data, "var_rnoise", shape, factory=quantity_factory((u.electron / u.s) ** 2, np.float32))
+                _check.fill_shape(data, "slope", shape, maker=_check.quantity_maker(u.electron / u.s, np.float32))
+                _check.fill_shape(data, "sigslope", shape, maker=_check.quantity_maker(u.electron / u.s, np.float32))
+                _check.fill_shape(data, "yint", shape, maker=_check.quantity_maker(u.electron, np.float32))
+                _check.fill_shape(data, "sigyint", shape, maker=_check.quantity_maker(u.electron, np.float32))
+                _check.fill_shape(data, "pedestal", shape[1:], maker=_check.quantity_maker(u.electron, np.float32))
+                _check.fill_shape(data, "weights", shape, maker=_check.ndarray_maker(np.float32))
+                _check.fill_shape(data, "crmag", shape, maker=_check.quantity_maker(u.electron, np.float32))
+                _check.fill_shape(data, "var_poisson", shape, maker=_check.quantity_maker((u.electron / u.s) ** 2, np.float32))
+                _check.fill_shape(data, "var_rnoise", shape, maker=_check.quantity_maker((u.electron / u.s) ** 2, np.float32))
 
         return data

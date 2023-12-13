@@ -2,25 +2,22 @@ from typing import Annotated, ClassVar
 
 from pydantic import ConfigDict, Field
 
-from ..._archive import Archive, ArchiveCatalog
-from ..._core import BaseRomanTaggedModel
-from ..._defaults import default_constant_factory
-from ..._strenum import StrEnum
-from ..._uri import asdf_tag_uri, asdf_uri
+from roman_datamodels.pydantic import _archive, _core, _defaults, _strenum
+from roman_datamodels.pydantic import _uri as uri
 
 __all__ = ["CalStep"]
 
 
-class calibration_status(StrEnum):
+class calibration_status(_strenum.StrEnum):
     NA = "N/A"
     COMPLETE = "COMPLETE"
     SKIPPED = "SKIPPED"
     INCOMPLETE = "INCOMPLETE"
 
 
-class CalStep(BaseRomanTaggedModel):
-    _uri: ClassVar = asdf_uri.CAL_STEP.value
-    _tag_uri: ClassVar = asdf_tag_uri.CAL_STEP.value
+class CalStep(_core.BaseRomanTaggedModel):
+    _uri: ClassVar = uri.asdf_uri.CAL_STEP.value
+    _tag_uri: ClassVar = uri.asdf_tag_uri.CAL_STEP.value
 
     model_config = ConfigDict(
         title="Calibration Status",
@@ -29,10 +26,10 @@ class CalStep(BaseRomanTaggedModel):
     assign_wcs: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Assign World Coordinate System",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_assign_wcs",
@@ -45,10 +42,10 @@ class CalStep(BaseRomanTaggedModel):
     flat_field: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Flat Field Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_flat_field",
@@ -61,10 +58,10 @@ class CalStep(BaseRomanTaggedModel):
     dark: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Dark Subtraction",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_dark",
@@ -77,10 +74,10 @@ class CalStep(BaseRomanTaggedModel):
     dq_init: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Data Quality Mask Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_dq_init",
@@ -93,10 +90,10 @@ class CalStep(BaseRomanTaggedModel):
     jump: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Jump Detection Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_jump",
@@ -109,10 +106,10 @@ class CalStep(BaseRomanTaggedModel):
     linearity: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Linearity Correction",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_linearity",
@@ -125,10 +122,10 @@ class CalStep(BaseRomanTaggedModel):
     photom: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Photometry Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_photom",
@@ -141,10 +138,10 @@ class CalStep(BaseRomanTaggedModel):
     source_detection: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Source Detection Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_source_detection",
@@ -157,10 +154,10 @@ class CalStep(BaseRomanTaggedModel):
     ramp_fit: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Ramp Fitting",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_ramp_fit",
@@ -173,10 +170,10 @@ class CalStep(BaseRomanTaggedModel):
     refpix: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Reference Pixel Correction",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_refpix",
@@ -189,10 +186,10 @@ class CalStep(BaseRomanTaggedModel):
     saturation: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Saturation Checking",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_saturation",
@@ -205,10 +202,10 @@ class CalStep(BaseRomanTaggedModel):
     outlier_detection: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Outlier Detection",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_outlier_detection",
@@ -221,10 +218,10 @@ class CalStep(BaseRomanTaggedModel):
     tweakreg: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Tweakreg Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_tweakreg",
@@ -237,10 +234,10 @@ class CalStep(BaseRomanTaggedModel):
     skymatch: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Sky Match Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_skymatch",
@@ -253,10 +250,10 @@ class CalStep(BaseRomanTaggedModel):
     resample: Annotated[
         calibration_status,
         Field(
-            default_factory=default_constant_factory(calibration_status.INCOMPLETE.value),
+            default_factory=_defaults.default_constant_factory(calibration_status.INCOMPLETE.value),
             title="Resample Step",
-            json_schema_extra=Archive(
-                archive_catalog=ArchiveCatalog(
+            json_schema_extra=_archive.Archive(
+                archive_catalog=_archive.ArchiveCatalog(
                     datatype="nvarchar(15)",
                     destination=[
                         "ScienceRefData.s_resample",

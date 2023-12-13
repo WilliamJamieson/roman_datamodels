@@ -14,7 +14,7 @@ from .._defaults import (
     default_model_factory,
     default_ndarray_factory,
     fill_shape,
-    ndarray_factory,
+    ndarray_maker,
 )
 from .._uri import asdf_tag_uri, asdf_uri
 from ._ref_common import RefCommon, ref_type
@@ -121,8 +121,8 @@ class RefpixRefModel(BaseRomanRefModel):
                 data._check_shapes(shape)
 
             elif isinstance(data, dict):
-                fill_shape(data, "gamma", shape, factory=ndarray_factory(np.complex128))
-                fill_shape(data, "zeta", shape, factory=ndarray_factory(np.complex128))
-                fill_shape(data, "alpha", shape, factory=ndarray_factory(np.complex128))
+                fill_shape(data, "gamma", shape, maker=ndarray_maker(np.complex128))
+                fill_shape(data, "zeta", shape, maker=ndarray_maker(np.complex128))
+                fill_shape(data, "alpha", shape, maker=ndarray_maker(np.complex128))
 
         return data
