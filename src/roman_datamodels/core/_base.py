@@ -301,7 +301,9 @@ class BaseDataModel(BaseModel, abc.ABC):
             return value
 
         return {
-            name: convert_value(value) for name, value in self.flat_items() if include_arrays or not isinstance(value, np.ndarray)
+            f"roman.{name}": convert_value(value)
+            for name, value in self.flat_items()
+            if include_arrays or not isinstance(value, np.ndarray)
         }
 
     def flat_items(self, *, flatten_lists: bool = True) -> Generator[tuple[str, Any], None, None]:
