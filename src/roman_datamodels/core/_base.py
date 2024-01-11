@@ -181,6 +181,10 @@ class BaseDataModel(BaseModel, abc.ABC):
             if name == "coordinate_distortion_transform":
                 return models.Shift(1) & models.Shift(2)
 
+            # Because of the regression tests, we will set the default value for the catalog name
+            if name == "tweakreg_catalog_name":
+                return "filename_tweakreg_catalog.asdf"
+
             return None
 
         def get_default(field_type: type, **kwargs) -> Any:
