@@ -154,6 +154,45 @@ class SchemaProperties:
         return schema_properties
 
 
+def property_factory(attr):
+    def fget(self):
+        # If the key is in the schema, then we can return the value
+        if attr in self._data:
+            # Cast the value into the appropriate tagged scalar class
+            value = self._convert_to_scalar(attr, self._data[attr])
+
+            # Return objects as node classes, if applicable
+            if isinstance(value, (dict, AsdfDictNode)):
+                return DNode(value, parent=self, name=attr)
+
+            elif isinstance(value, (list, AsdfListNode)):
+                return LNode(value)
+
+            else:
+                return value
+
+        # Raise the correct error for the attribute not being found
+        raise AttributeError(f"No such attribute ({attr}) found in node")
+
+    def fset(self, value):
+        # Wrap things in the tagged scalar classes if necessary
+        value = self._convert_to_scalar(attr, value, self._data.get(attr))
+
+        if attr in self._data or attr in self._schema_attributes:
+            # Perform validation if enabled
+            if will_validate():
+                schema = _get_schema_for_property(self._schema, attr)
+                if schema:
+                    _validate(attr, value, schema, self.ctx)
+
+            # Finally set the value
+            self._data[attr] = value
+        else:
+            raise AttributeError(f"No such attribute ({attr}) found in node")
+
+    return property(fget=fget, fset=fset)
+
+
 class DNode(MutableMapping):
     """
     Base class describing all "object" (dict-like) data nodes for STNode classes.
@@ -236,6 +275,9 @@ class DNode(MutableMapping):
         """
         Permit assigning dict keys as attributes.
         """
+        if key in self.__class__.__dict__:
+            self.__class__.__dict__[key].fset(self, value)
+            return
 
         # Private keys should just be in the normal __dict__
         if key[0] != "_":
