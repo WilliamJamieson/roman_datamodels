@@ -246,7 +246,7 @@ class DNode(MutableMapping):
             if key in self._data or key in self._schema_attributes:
                 # Perform validation if enabled
                 if will_validate():
-                    schema = _get_schema_for_property(self._schema(), key)
+                    schema = _get_schema_for_property(self._schema, key)
                     if schema:
                         _validate(key, value, schema, self.ctx)
 
@@ -263,7 +263,7 @@ class DNode(MutableMapping):
         Get the schema attributes for this node.
         """
         if self._x_schema_attributes is None:
-            self._x_schema_attributes = SchemaProperties.from_schema(self._schema())
+            self._x_schema_attributes = SchemaProperties.from_schema(self._schema)
         return self._x_schema_attributes
 
     def _recursive_items(self):
@@ -310,13 +310,14 @@ class DNode(MutableMapping):
                 key: convert_val(val) for (key, val) in item_getter() if not isinstance(val, (np.ndarray, ndarray.NDArrayType))
             }
 
+    @property
     def _schema(self):
         """
         If not overridden by a subclass, it will search for a schema from
         the parent class, recursing if necessary until one is found.
         """
         if self._x_schema is None:
-            parent_schema = self._parent._schema()
+            parent_schema = self._parent._schema
             # Extract the subschema corresponding to this node.
             subschema = _get_schema_for_property(parent_schema, self._name)
             self._x_schema = subschema

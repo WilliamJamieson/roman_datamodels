@@ -73,6 +73,7 @@ class TaggedObjectNode(DNode):
     def tag(self):
         return self._tag
 
+    @property
     def _schema(self):
         if self._x_schema is None:
             self._x_schema = self.get_schema()
@@ -146,6 +147,7 @@ class TaggedScalarNode:
     def key(self):
         return name_from_tag_uri(self._tag)
 
+    @property
     def get_schema(self):
         return get_schema_from_tag(self.ctx, self._tag)
 

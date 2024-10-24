@@ -128,7 +128,7 @@ def _check_value(value):
     validator_context = AsdfFile()
 
     if hasattr(value, "_schema"):
-        temp_schema = value._schema()
+        temp_schema = value._schema
     else:
         temp_schema = {"$schema": "http://stsci.edu/schemas/asdf-schema/0.1.0/asdf-schema"}
     validator = asdf_schema.get_validator(temp_schema, validator_context, validators=validator_callbacks)
