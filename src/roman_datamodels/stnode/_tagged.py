@@ -7,7 +7,6 @@ import copy
 import asdf
 
 from ._node import DNode, LNode
-from ._registry import LIST_NODE_CLASSES_BY_TAG, SCALAR_NODE_CLASSES_BY_KEY, SCALAR_NODE_CLASSES_BY_TAG
 
 __all__ = [
     "TaggedObjectNode",
@@ -56,17 +55,6 @@ class TaggedObjectNode(DNode):
         base type: object.
     """
 
-    def __init_subclass__(cls, **kwargs) -> None:
-        """
-        Register any subclasses of this class in the OBJECT_NODE_CLASSES_BY_TAG
-        registry.
-        """
-        super().__init_subclass__(**kwargs)
-        # if cls.__name__ != "TaggedObjectNode":
-        #     if cls._tag in OBJECT_NODE_CLASSES_BY_TAG:
-        #         raise RuntimeError(f"TaggedObjectNode class for tag '{cls._tag}' has been defined twice")
-        #     OBJECT_NODE_CLASSES_BY_TAG[cls._tag] = cls
-
     @property
     def tag(self):
         return self._tag
@@ -89,17 +77,6 @@ class TaggedListNode(LNode):
         base type: array.
     """
 
-    def __init_subclass__(cls, **kwargs) -> None:
-        """
-        Register any subclasses of this class in the LIST_NODE_CLASSES_BY_TAG
-        registry.
-        """
-        super().__init_subclass__(**kwargs)
-        if cls.__name__ != "TaggedListNode":
-            if cls._tag in LIST_NODE_CLASSES_BY_TAG:
-                raise RuntimeError(f"TaggedListNode class for tag '{cls._tag}' has been defined twice")
-            LIST_NODE_CLASSES_BY_TAG[cls._tag] = cls
-
     @property
     def tag(self):
         return self._tag
@@ -115,18 +92,6 @@ class TaggedScalarNode:
 
     _tag = None
     _ctx = None
-
-    def __init_subclass__(cls, **kwargs) -> None:
-        """
-        Register any subclasses of this class in the SCALAR_NODE_CLASSES_BY_TAG
-        and SCALAR_NODE_CLASSES_BY_KEY registry.
-        """
-        super().__init_subclass__(**kwargs)
-        if cls.__name__ != "TaggedScalarNode":
-            if cls._tag in SCALAR_NODE_CLASSES_BY_TAG:
-                raise RuntimeError(f"TaggedScalarNode class for tag '{cls._tag}' has been defined twice")
-            SCALAR_NODE_CLASSES_BY_TAG[cls._tag] = cls
-            SCALAR_NODE_CLASSES_BY_KEY[name_from_tag_uri(cls._tag)] = cls
 
     @property
     def ctx(self):

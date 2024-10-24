@@ -1,5 +1,7 @@
+from astropy.time import Time
+
 from . import _mixins
-from ._tagged import TaggedObjectNode
+from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode
 
 
 class Guidewindow(TaggedObjectNode): ...
@@ -21,32 +23,6 @@ class WfiMosaic(TaggedObjectNode): ...
 
 
 class WfiMode(_mixins.WfiModeMixin, TaggedObjectNode): ...
-
-
-# # Every optical element is a grating or a filter
-# #   There are less gratings than filters so its easier to list out the
-# #   gratings.
-# _GRATING_OPTICAL_ELEMENTS = {"GRISM", "PRISM"}
-
-# @property
-# def filter(self) -> str:
-#     """
-#     Returns the filter if it is one, otherwise None
-#     """
-#     if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
-#         return None
-#     else:
-#         return self.optical_element
-
-# @property
-# def grating(self) -> str:
-#     """
-#     Returns the grating if it is one, otherwise None
-#     """
-#     if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
-#         return self.optical_element
-#     else:
-#         return None
 
 
 class Exposure(TaggedObjectNode): ...
@@ -236,3 +212,78 @@ class TvacWfiMode(TaggedObjectNode): ...
 
 
 class MsosStack(TaggedObjectNode): ...
+
+
+class CalLogs(TaggedListNode): ...
+
+
+class CalibrationSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class Filename(str, TaggedScalarNode): ...
+
+
+class FileDate(Time, TaggedScalarNode): ...
+
+
+class ModelType(str, TaggedScalarNode): ...
+
+
+class Origin(str, TaggedScalarNode): ...
+
+
+class PrdSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class SdfSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class Telescope(str, TaggedScalarNode): ...
+
+
+class FpsCalibrationSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class FpsFilename(str, TaggedScalarNode): ...
+
+
+class FpsFileDate(Time, TaggedScalarNode): ...
+
+
+class FpsModelType(str, TaggedScalarNode): ...
+
+
+class FpsOrigin(str, TaggedScalarNode): ...
+
+
+class FpsPrdSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class FpsSdfSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class FpsTelescope(str, TaggedScalarNode): ...
+
+
+class TvacCalibrationSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class TvacFilename(str, TaggedScalarNode): ...
+
+
+class TvacFileDate(Time, TaggedScalarNode): ...
+
+
+class TvacModelType(str, TaggedScalarNode): ...
+
+
+class TvacOrigin(str, TaggedScalarNode): ...
+
+
+class TvacPrdSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class TvacSdfSoftwareVersion(str, TaggedScalarNode): ...
+
+
+class TvacTelescope(str, TaggedScalarNode): ...

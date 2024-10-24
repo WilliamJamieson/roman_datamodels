@@ -13,8 +13,13 @@ from rad import resources
 
 from . import _mixins, nodes
 from ._node import property_factory
-from ._registry import OBJECT_NODE_CLASSES_BY_TAG
-from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode, name_from_tag_uri
+from ._registry import (
+    LIST_NODE_CLASSES_BY_TAG,
+    OBJECT_NODE_CLASSES_BY_TAG,
+    SCALAR_NODE_CLASSES_BY_KEY,
+    SCALAR_NODE_CLASSES_BY_TAG,
+)
+from ._tagged import TaggedObjectNode, name_from_tag_uri
 
 __all__ = ["stnode_factory"]
 
@@ -124,18 +129,35 @@ def scalar_factory(tag):
     #   ASDF tag.
     # SCALAR_TYPE_MAP will need to be updated as new wrappers of scalar types are added
     #   to the RAD manifest.
-    if "type" in schema:
-        type_ = schema["type"]
-    elif "allOf" in schema:
-        type_ = schema["allOf"][0]["$ref"]
-    else:
-        raise RuntimeError(f"Unknown schema type: {schema}")
+    # if "type" in schema:
+    #     type_ = schema["type"]
+    # elif "allOf" in schema:
+    #     type_ = schema["allOf"][0]["$ref"]
+    # else:
+    #     raise RuntimeError(f"Unknown schema type: {schema}")
 
-    return type(
-        class_name,
-        (SCALAR_TYPE_MAP[type_], TaggedScalarNode),
-        {"_tag": tag["tag_uri"], "__module__": "roman_datamodels.stnode", "__doc__": docstring_from_tag(tag)},
-    )
+    cls = getattr(nodes, class_name)
+    cls._tag = tag["tag_uri"]
+    cls.__doc__ = docstring_from_tag(tag)
+    cls._schema = schema
+    if cls._tag in SCALAR_NODE_CLASSES_BY_TAG:
+        raise RuntimeError(f"TaggedScalarNode class for tag '{cls._tag}' has been defined twice")
+    SCALAR_NODE_CLASSES_BY_TAG[cls._tag] = cls
+    SCALAR_NODE_CLASSES_BY_KEY[name_from_tag_uri(cls._tag)] = cls
+
+    return cls
+
+
+def list_factory(class_name, tag, schema):
+    cls = getattr(nodes, class_name)
+    cls._tag = tag["tag_uri"]
+    cls.__doc__ = docstring_from_tag(tag)
+    cls._schema = schema
+    if cls._tag in LIST_NODE_CLASSES_BY_TAG:
+        raise RuntimeError(f"TaggedListNode class for tag '{cls._tag}' has been defined twice")
+    LIST_NODE_CLASSES_BY_TAG[cls._tag] = cls
+
+    return cls
 
 
 def object_factory(class_name, tag, schema):
@@ -211,7 +233,7 @@ def node_factory(tag):
         if schema["type"] == "object":
             class_type = TaggedObjectNode
         elif schema["type"] == "array":
-            class_type = TaggedListNode
+            return list_factory(class_name, tag, schema)
         else:
             raise RuntimeError(f"Unknown schema type: {schema['type']}")
     # Use of allOf in the schema indicates that the class is a TaggedObjectNode
