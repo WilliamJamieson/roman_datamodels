@@ -25,7 +25,10 @@ def test_generated_node_classes(tag):
     assert node_class._tag == tag["tag_uri"]
     assert tag["description"] in node_class.__doc__
     assert tag["tag_uri"] in node_class.__doc__
-    assert node_class.__module__ == stnode.__name__
+    if issubclass(node_class, stnode.TaggedObjectNode):
+        assert node_class.__module__ == f"{stnode.__name__}._base"
+    else:
+        assert node_class.__module__ == stnode.__name__
     assert hasattr(stnode, node_class.__name__)
 
 
@@ -73,21 +76,21 @@ def test_wfi_mode():
     assert node.grating == "GRISM"
     assert node.filter is None
     assert isinstance(node, stnode.DNode)
-    assert isinstance(node, stnode._mixins.WfiModeMixin)
+    assert isinstance(node, stnode.TaggedObjectNode)
 
     node = stnode.WfiMode({"optical_element": "PRISM"})
     assert node.optical_element == "PRISM"
     assert node.grating == "PRISM"
     assert node.filter is None
     assert isinstance(node, stnode.DNode)
-    assert isinstance(node, stnode._mixins.WfiModeMixin)
+    assert isinstance(node, stnode.TaggedObjectNode)
 
     node = stnode.WfiMode({"optical_element": "F129"})
     assert node.optical_element == "F129"
     assert node.grating is None
     assert node.filter == "F129"
     assert isinstance(node, stnode.DNode)
-    assert isinstance(node, stnode._mixins.WfiModeMixin)
+    assert isinstance(node, stnode.TaggedObjectNode)
 
 
 @pytest.mark.parametrize("node_class", stnode.NODE_CLASSES)

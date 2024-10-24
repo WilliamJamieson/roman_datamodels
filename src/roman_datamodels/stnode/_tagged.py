@@ -9,12 +9,7 @@ import copy
 import asdf
 
 from ._node import DNode, LNode
-from ._registry import (
-    LIST_NODE_CLASSES_BY_TAG,
-    OBJECT_NODE_CLASSES_BY_TAG,
-    SCALAR_NODE_CLASSES_BY_KEY,
-    SCALAR_NODE_CLASSES_BY_TAG,
-)
+from ._registry import LIST_NODE_CLASSES_BY_TAG, SCALAR_NODE_CLASSES_BY_KEY, SCALAR_NODE_CLASSES_BY_TAG
 
 __all__ = [
     "TaggedObjectNode",
@@ -69,10 +64,10 @@ class TaggedObjectNode(DNode):
         registry.
         """
         super().__init_subclass__(**kwargs)
-        if cls.__name__ != "TaggedObjectNode":
-            if cls._tag in OBJECT_NODE_CLASSES_BY_TAG:
-                raise RuntimeError(f"TaggedObjectNode class for tag '{cls._tag}' has been defined twice")
-            OBJECT_NODE_CLASSES_BY_TAG[cls._tag] = cls
+        # if cls.__name__ != "TaggedObjectNode":
+        #     if cls._tag in OBJECT_NODE_CLASSES_BY_TAG:
+        #         raise RuntimeError(f"TaggedObjectNode class for tag '{cls._tag}' has been defined twice")
+        #     OBJECT_NODE_CLASSES_BY_TAG[cls._tag] = cls
 
     @property
     def tag(self):

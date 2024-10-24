@@ -9,7 +9,8 @@ import yaml
 from astropy.time import Time
 from rad import resources
 
-from . import _mixins
+from . import _base, _mixins
+from ._registry import OBJECT_NODE_CLASSES_BY_TAG
 from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode, name_from_tag_uri
 
 __all__ = ["stnode_factory"]
@@ -167,6 +168,16 @@ def node_factory(tag):
         class_type = TaggedObjectNode
     else:
         raise RuntimeError(f"Unknown schema type for: {tag['schema_uri']}")
+
+    if class_type == TaggedObjectNode:
+        cls = getattr(_base, class_name)
+        cls._tag = tag["tag_uri"]
+        cls.__doc__ = docstring_from_tag(tag)
+        if cls._tag in OBJECT_NODE_CLASSES_BY_TAG:
+            raise RuntimeError(f"TaggedObjectNode class for tag '{cls._tag}' has been defined twice")
+        OBJECT_NODE_CLASSES_BY_TAG[cls._tag] = cls
+
+        return cls
 
     # In special cases one may need to add additional features to a tagged node class.
     #   This is done by creating a mixin class with the name <ClassName>Mixin in _mixins.py
