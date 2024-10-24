@@ -26,7 +26,7 @@ def test_generated_node_classes(tag):
     assert tag["description"] in node_class.__doc__
     assert tag["tag_uri"] in node_class.__doc__
     if issubclass(node_class, stnode.TaggedObjectNode):
-        assert node_class.__module__ == f"{stnode.__name__}._base"
+        assert node_class.__module__ == f"{stnode.__name__}.nodes"
     else:
         assert node_class.__module__ == stnode.__name__
     assert hasattr(stnode, node_class.__name__)

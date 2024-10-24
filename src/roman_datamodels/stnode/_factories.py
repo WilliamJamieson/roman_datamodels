@@ -4,12 +4,14 @@ Factories for creating Tagged STNode classes from tag_uris.
 """
 
 import importlib.resources
+from typing import Any
 
+import numpy as np
 import yaml
 from astropy.time import Time
 from rad import resources
 
-from . import _base, _mixins
+from . import _mixins, nodes
 from ._node import property_factory
 from ._registry import OBJECT_NODE_CLASSES_BY_TAG
 from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode, name_from_tag_uri
@@ -140,13 +142,43 @@ def object_factory(class_name, tag, schema):
     """
     Factory to fill in the class definition for a TaggedObjectNode
     """
-    cls = getattr(_base, class_name)
+    cls = getattr(nodes, class_name)
     cls._tag = tag["tag_uri"]
     cls.__doc__ = docstring_from_tag(tag)
     properties = schema["properties"]
 
-    for property_name in properties:
+    if "__annotations__" not in cls.__dict__:
+        cls.__annotations__ = {}
+
+    for property_name, property_schema in properties.items():
         setattr(cls, property_name, property_factory(property_name))
+        if "type" in property_schema:
+            match property_schema["type"]:
+                case "string":
+                    cls.__annotations__[property_name] = str
+                case "number":
+                    cls.__annotations__[property_name] = float
+                case "integer":
+                    cls.__annotations__[property_name] = int
+                case "boolean":
+                    cls.__annotations__[property_name] = bool
+                case "array":
+                    cls.__annotations__[property_name] = list
+                case "object":
+                    cls.__annotations__[property_name] = dict
+                case _:
+                    cls.__annotations__[property_name] = Any
+        elif "tag" in property_schema:
+            if "ndarray" in property_schema["tag"]:
+                cls.__annotations__[property_name] = np.ndarray
+            else:
+                property_class = class_name_from_tag_uri(property_schema["tag"])
+                if hasattr(nodes, property_class):
+                    cls.__annotations__[property_name] = getattr(nodes, property_class)
+                else:
+                    cls.__annotations__[property_name] = Any
+        else:
+            cls.__annotations__[property_name] = Any
 
     if cls._tag in OBJECT_NODE_CLASSES_BY_TAG:
         raise RuntimeError(f"TaggedObjectNode class for tag '{cls._tag}' has been defined twice")
