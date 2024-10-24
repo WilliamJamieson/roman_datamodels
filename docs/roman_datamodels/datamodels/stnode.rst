@@ -96,7 +96,7 @@ which gets turned into a name for the type that the factory will create.
     stnode object correctly when it is created.
 
 These factories are looped over and invoked by the
-`roman_datamodels.stnode._stnode` module which will be imported whenever
+`roman_datamodels.stnode.__init__` module which will be imported whenever
 `roman_datamodels.stnode` is imported which will generate the stnode objects and
 register them during that import. Note that this module is imported as part of
 the `roman_datamodels.datamodels` module.
