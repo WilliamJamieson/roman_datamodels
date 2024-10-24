@@ -8,7 +8,7 @@ import copy
 
 import asdf
 
-from ._node import DNode, LNode
+from ._core import DNode, LNode
 from ._registry import (
     LIST_NODE_CLASSES_BY_TAG,
     OBJECT_NODE_CLASSES_BY_TAG,
