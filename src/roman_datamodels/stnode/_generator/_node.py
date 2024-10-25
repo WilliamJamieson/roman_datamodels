@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from os import PathLike
 from pathlib import Path
 
-from ._annotation import schema_annotation, schema_properties
+from ._annotation import Annotation, schema_annotation, schema_object
 from ._property import create_property
 from ._schemas import class_name_from_uri, docstring_from_tag, load_schema_from_uri, module_name_from_uri
 
@@ -19,7 +19,7 @@ class {name}({base}):
 
 """
 
-_SCHEMA_CLASS_TEMPLATE = """
+_CLASS_TEMPLATE = """
 class {name}({base}):
 
 """
@@ -80,13 +80,14 @@ def create_tagged_object_node(path: PathLike, tag: dict[str, str], schema: dict[
     tag_uri = tag["tag_uri"]
 
     name = class_name_from_uri(tag_uri)
+    module_name = module_name_from_uri(tag_uri)
     base = f"_mixins.{name}Mixin, _tagged.TaggedObjectNode"
     docstring = textwrap.indent(f'"""\n{docstring_from_tag(tag)}\n"""', " " * 4)
 
     class_ = _TAGGED_CLASS_TEMPLATE.format(name=name, base=base, docstring=docstring, tag_uri=tag_uri)
 
     import_string = set()
-    for property_name, annotation in schema_properties(path, name, schema).items():
+    for property_name, annotation in schema_object(path, name, module_name, schema).items():
         final_annotation = annotation.final
         class_ += textwrap.indent(create_property(property_name, final_annotation.name), " " * 4)
         if isinstance(annotation.import_string, str):
@@ -94,7 +95,7 @@ def create_tagged_object_node(path: PathLike, tag: dict[str, str], schema: dict[
         else:
             import_string.update(annotation.import_string)
 
-    return TaggedNode(module_name_from_uri(tag_uri), class_, import_string)
+    return TaggedNode(module_name, class_, import_string)
 
 
 def create_tagged_list_node(tag: dict[str, str]) -> TaggedNode:
@@ -114,19 +115,22 @@ def create_tagged_scalar_node(path: PathLike, tag: dict[str, str], schema: dict[
     tag_uri = tag["tag_uri"]
 
     name = class_name_from_uri(tag_uri)
-    annotation = schema_annotation(path, name, schema).final
+    module_name = module_name_from_uri(tag_uri)
+    annotation = schema_annotation(path, name, module_name, None, schema).final
 
     base = f"{annotation.name}, _tagged.TaggedScalarNode"
     docstring = textwrap.indent(f'"""\n{docstring_from_tag(tag)}\n"""', " " * 4)
 
     return TaggedNode(
-        module_name_from_uri(tag_uri),
+        module_name,
         _TAGGED_CLASS_TEMPLATE.format(name=name, base=base, docstring=docstring, tag_uri=tag_uri),
         {annotation.import_string},
     )
 
 
 def create_node(path: PathLike, tag: dict[str, str]) -> TaggedNode:
+    print("Creating node: ", tag["tag_uri"])
+
     schema = load_schema_from_uri(tag["schema_uri"])
 
     if "tagged_scalar" in tag["schema_uri"]:
@@ -145,18 +149,19 @@ def create_node(path: PathLike, tag: dict[str, str]) -> TaggedNode:
     raise RuntimeError(f"Unknown schema type for: {tag['schema_uri']}")
 
 
-def create_ref_object_node(path: PathLike, schema_uri: str) -> TaggedNode:
+def create_ref_object_node(path: PathLike, property_name: str | None, schema_uri: str) -> TaggedNode:
     schema = load_schema_from_uri(schema_uri)
 
     name = class_name_from_uri(schema_uri)
+    module_name = module_name_from_uri(schema_uri)
 
-    annotation = schema_annotation(path, name, schema).final
+    annotation = schema_annotation(path, name, module_name, property_name, schema).final
     base = "_core.DNode" if annotation.name == "Any" else annotation.name
 
-    class_ = _SCHEMA_CLASS_TEMPLATE.format(name=name, base=base)
+    class_ = _CLASS_TEMPLATE.format(name=name, base=base)
 
     import_string = {"from roman_datamodels.stnode import _core\n"}
-    for property_name, annotation in schema_properties(path, name, schema).items():
+    for property_name, annotation in schema_object(path, name, module_name, schema).items():
         final_annotation = annotation.final
         class_ += textwrap.indent(create_property(property_name, final_annotation.name), " " * 4)
         if isinstance(annotation.import_string, str):
@@ -164,4 +169,31 @@ def create_ref_object_node(path: PathLike, schema_uri: str) -> TaggedNode:
         else:
             import_string.update(annotation.import_string)
 
-    return TaggedNode(module_name_from_uri(schema_uri), class_, import_string)
+    return TaggedNode(module_name, class_, import_string)
+
+
+def create_implied_object_node(
+    path: PathLike, class_name: str, module_name: str, all_of: list[dict], bases: list[Annotation]
+) -> TaggedNode:
+    print(f"    Creating implied object node: {module_name}.{class_name}")
+    base = ", ".join(list({base.name for base in bases}))
+
+    class_ = _CLASS_TEMPLATE.format(name=class_name, base=base)
+    import_string = set()
+    for annotation in bases:
+        if isinstance(annotation.import_string, str):
+            import_string.add(annotation.import_string)
+        else:
+            import_string.update(annotation.import_string)
+
+    for schema in all_of:
+        if "properties" in schema:
+            for property_name, annotation in schema_object(path, class_name, module_name, schema).items():
+                final_annotation = annotation.final
+                class_ += textwrap.indent(create_property(property_name, final_annotation.name), " " * 4)
+                if isinstance(annotation.import_string, str):
+                    import_string.add(annotation.import_string)
+                else:
+                    import_string.update(annotation.import_string)
+
+    return TaggedNode(module_name, class_, import_string)

@@ -11,7 +11,7 @@ from os import PathLike
 
 from ._schemas import RAD_TAG_URIS, class_name_from_uri, module_name_from_uri
 
-__all__ = ["schema_properties"]
+__all__ = ["schema_object"]
 
 
 @dataclass
@@ -102,6 +102,7 @@ class JsonSchemaType(StrEnum):
 class AsdfTags(StrEnum):
     ndarray = "tag:stsci.edu:asdf/core/ndarray-1.*"
     unit = "tag:astropy.org:astropy/units/unit-1.*"
+    asdf_unit = "tag:stsci.edu:asdf/unit/unit-1.*"
     time = "tag:stsci.edu:asdf/time/time-1.*"
     quantity = "tag:stsci.edu:asdf/unit/quantity-1.*"
     table = "tag:astropy.org:astropy/table/table-1.*"
@@ -109,7 +110,7 @@ class AsdfTags(StrEnum):
     fps_time = "http://stsci.edu/schemas/asdf/time/time-1.1.0"
 
     @classmethod
-    def get_annotation(cls, path: PathLike, tag: str) -> Annotation:
+    def get_annotation(cls, path: PathLike, property_name: str | None, tag: str) -> Annotation:
         """
         Deduce the type annotation from a "tag:" entry in a schema
         """
@@ -117,7 +118,7 @@ class AsdfTags(StrEnum):
         match tag:
             case cls.ndarray:
                 return Annotation("np.ndarray", "import numpy as np")
-            case cls.unit:
+            case cls.unit | cls.asdf_unit:
                 return Annotation("units.Unit", "from astropy import units")
             case cls.time | cls.fps_time:
                 return Annotation("time.Time", "from astropy import time")
@@ -130,31 +131,34 @@ class AsdfTags(StrEnum):
 
         if tag in RAD_TAG_URIS:
             # This follows the same pattern as an ref uri
-            return schema_ref(path, tag)
+            return schema_ref(path, property_name, tag)
 
         raise ValueError(f"Unknown tag: {tag}")
 
 
-def schema_ref(path: PathLike, ref: str) -> Annotation:
+def schema_ref(path: PathLike, property_name: str | None, ref: str) -> Annotation:
     """
     Deduce the type annotation from a "$ref:" entry in a schema
     """
     from ._node import create_ref_object_node
 
-    if ref not in RAD_TAG_URIS and create_ref_object_node(path, ref).write(path):
-        print(f"Creating ref object node for {ref}")
+    if ref in AsdfTags:
+        return AsdfTags.get_annotation(path, property_name, ref)
+
+    if ref not in RAD_TAG_URIS:
+        create_ref_object_node(path, property_name, ref).write(path)
 
     return Annotation(class_name_from_uri(ref), f"from .{module_name_from_uri(ref)} import {class_name_from_uri(ref)}")
 
 
-def schema_any_of(path: PathLike, name: str, any_of: list[dict]) -> Annotation:
+def schema_any_of(path: PathLike, name: str, module_name: str, property_name: str | None, any_of: list[dict]) -> Annotation:
     """
     Deduce the type annotation from an "anyOf:" entry in a schema
     """
     annotation = None
 
     for schema in any_of:
-        new_annotation = JsonSchemaProperty.get_annotation(path, name, schema)
+        new_annotation = JsonSchemaProperty.get_annotation(path, name, module_name, property_name, schema)
 
         if annotation is None:
             annotation = new_annotation
@@ -164,18 +168,39 @@ def schema_any_of(path: PathLike, name: str, any_of: list[dict]) -> Annotation:
     return annotation
 
 
-def schema_all_of(path: PathLike, name: str, all_of: list[dict]) -> Annotation:
+def schema_all_of(path: PathLike, name: str, module_name: str, property_name: str | None, all_of: list[dict]) -> Annotation:
     """
     Deduce the type annotation from an "allOf:" entry in a schema
     """
+    from ._node import create_implied_object_node
 
-    for schema in all_of:
-        if JsonSchemaProperty.ref in schema and (ref := schema[JsonSchemaProperty.ref]) not in AsdfTags:
-            schema_ref(path, ref)
+    if property_name is not None:
+        bases: list[Annotation] = []
+        for schema in all_of:
+            if JsonSchemaProperty.ref in schema:
+                ref = schema[JsonSchemaProperty.ref]
+                if ref in AsdfTags:
+                    bases.append(AsdfTags.get_annotation(path, property_name, ref))
+                else:
+                    bases.append(schema_ref(path, property_name, ref))
 
-    # This requires more thought
-    #    It will generate a whole new class object
-    return Annotation("Any", "from typing import Any")
+        class_name = f"{name}{property_name.capitalize()}"
+        new_module_name = f"{module_name}_{property_name}"
+        create_implied_object_node(path, class_name, new_module_name, all_of, bases).write(path)
+
+        return Annotation(class_name, f"from .{new_module_name} import {class_name}")
+
+    else:
+        annotation = None
+        for schema in all_of:
+            new_annotation = JsonSchemaProperty.get_annotation(path, name, module_name, property_name, schema)
+
+            if annotation is None:
+                annotation = new_annotation
+            else:
+                annotation.merge_with(new_annotation)
+
+        return annotation
 
 
 class JsonSchemaProperty(StrEnum):
@@ -190,7 +215,7 @@ class JsonSchemaProperty(StrEnum):
     allOf = "allOf"
 
     @classmethod
-    def get_annotation(cls, path: PathLike, name: str, schema: dict) -> Annotation:
+    def get_annotation(cls, path: PathLike, name: str, module_name: str, property_name: str | None, schema: dict) -> Annotation:
         """
         Deduce the type annotation from a property in a schema
         """
@@ -198,30 +223,30 @@ class JsonSchemaProperty(StrEnum):
             return JsonSchemaType.get_annotation(schema[cls.type])
 
         if cls.tag in schema:
-            return AsdfTags.get_annotation(path, schema[cls.tag])
+            return AsdfTags.get_annotation(path, property_name, schema[cls.tag])
 
         if cls.ref in schema:
-            return schema_ref(path, schema[cls.ref])
+            return schema_ref(path, property_name, schema[cls.ref])
 
         if cls.anyOf in schema:
-            return schema_any_of(path, name, schema[cls.anyOf])
+            return schema_any_of(path, name, module_name, property_name, schema[cls.anyOf])
 
         if cls.allOf in schema:
-            return schema_all_of(path, name, schema[cls.allOf])
+            return schema_all_of(path, name, module_name, property_name, schema[cls.allOf])
 
         # Fall back on Any
         return Annotation("Any", "from typing import Any")
 
 
-def schema_annotation(path: PathLike, name: str, schema: dict) -> Annotation:
+def schema_annotation(path: PathLike, name: str, module_name: str, property_name: str | None, schema: dict) -> Annotation:
     """
     Deduce the type annotation for a schema
     """
 
-    return JsonSchemaProperty.get_annotation(path, name, schema)
+    return JsonSchemaProperty.get_annotation(path, name, module_name, property_name, schema)
 
 
-def schema_properties(path: PathLike, name: str, schema: dict) -> dict[Annotation]:
+def schema_object(path: PathLike, name: str, module_name: str, schema: dict) -> dict[str, Annotation]:
     """
     Deduce the type annotations for the properties of a schema
     """
@@ -230,6 +255,6 @@ def schema_properties(path: PathLike, name: str, schema: dict) -> dict[Annotatio
 
     if "properties" in schema:
         for property_name, property_schema in schema["properties"].items():
-            annotations[property_name] = schema_annotation(path, name, property_schema)
+            annotations[property_name] = schema_annotation(path, name, module_name, property_name, property_schema)
 
     return annotations

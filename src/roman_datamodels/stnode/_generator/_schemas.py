@@ -127,3 +127,12 @@ def docstring_from_tag(tag):
     docstring = f"{tag['description']}\n\n" if "description" in tag else ""
 
     return docstring + f"Class generated from tag '{tag['tag_uri']}'"
+
+
+def camel_case_to_snake_case(value):
+    """
+    Courtesy of https://stackoverflow.com/a/1176023
+    """
+    import re
+
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", value).lower()
