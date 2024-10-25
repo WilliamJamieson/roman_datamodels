@@ -125,8 +125,9 @@ def docstring_from_tag(tag):
     A docstring for the class based on the tag
     """
     docstring = f"{tag['description']}\n\n" if "description" in tag else ""
+    docstring += f"Class generated from tag '{tag['tag_uri']}'"
 
-    return docstring + f"Class generated from tag '{tag['tag_uri']}'"
+    return f'"""\n{docstring}\n"""'
 
 
 def camel_case_to_snake_case(value):
