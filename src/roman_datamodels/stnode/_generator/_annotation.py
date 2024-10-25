@@ -106,6 +106,7 @@ class AsdfTags(StrEnum):
     quantity = "tag:stsci.edu:asdf/unit/quantity-1.*"
     table = "tag:astropy.org:astropy/table/table-1.*"
     wcs = "tag:stsci.edu:gwcs/wcs-*"
+    fps_time = "http://stsci.edu/schemas/asdf/time/time-1.1.0"
 
     @classmethod
     def get_annotation(cls, path: PathLike, tag: str) -> Annotation:
@@ -118,7 +119,7 @@ class AsdfTags(StrEnum):
                 return Annotation("np.ndarray", "import numpy as np")
             case cls.unit:
                 return Annotation("units.Unit", "from astropy import units")
-            case cls.time:
+            case cls.time | cls.fps_time:
                 return Annotation("time.Time", "from astropy import time")
             case cls.quantity:
                 return Annotation("units.Quantity", "from astropy import units")
@@ -168,16 +169,9 @@ def schema_all_of(path: PathLike, name: str, all_of: list[dict]) -> Annotation:
     Deduce the type annotation from an "allOf:" entry in a schema
     """
 
-    ref = None
     for schema in all_of:
-        if JsonSchemaProperty.ref in schema:
-            ref = schema[JsonSchemaProperty.ref]
-            break
-    else:
-        raise ValueError(f"No ref found in allOf for {name}")
-
-    print(f"creating all_of base for {ref}")
-    schema_ref(path, ref)
+        if JsonSchemaProperty.ref in schema and (ref := schema[JsonSchemaProperty.ref]) not in AsdfTags:
+            schema_ref(path, ref)
 
     # This requires more thought
     #    It will generate a whole new class object
