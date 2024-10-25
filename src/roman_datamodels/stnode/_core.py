@@ -204,10 +204,9 @@ class DNode(MutableMapping):
 
         return value
 
-    def __getattr__(self, key):
+    def _get_node(self, key):
         """
-        Permit accessing dict keys as attributes, assuming they are legal Python
-        variable names.
+        Attempt pull reference to data from the node.
         """
         # Private values should have already been handled by the __getattribute__ method
         #   bail out if we are falling back on this method
@@ -232,9 +231,21 @@ class DNode(MutableMapping):
         # Raise the correct error for the attribute not being found
         raise AttributeError(f"No such attribute ({key}) found in node")
 
-    def __setattr__(self, key, value):
+    def __getattr__(self, key):
         """
-        Permit assigning dict keys as attributes.
+        Permit accessing dict keys as attributes, assuming they are legal Python
+        variable names.
+        """
+        # Pass through to the node getter
+        #    Note that if getting a property, the property object will intercept
+        #    the call prior to arriving here and it will do the same thing.
+        #    This only exists so that we can add a setter with extra logic on
+        #    the property.
+        return self._get_node(key)
+
+    def _set_node(self, key, value):
+        """
+        Attempt to set a value in for the node
         """
 
         # Private keys should just be in the normal __dict__
@@ -256,6 +267,18 @@ class DNode(MutableMapping):
                 raise AttributeError(f"No such attribute ({key}) found in node")
         else:
             self.__dict__[key] = value
+
+    def __setattr__(self, key, value):
+        """
+        Permit setting dict keys as attributes, assuming they are legal Python
+        variable names.
+        """
+        # Set through the property if it exists as a property
+        if key in self.__class__.__dict__ and isinstance(prop := self.__class__.__dict__[key], property):
+            prop.fset(self, value)
+
+        # Fall back on the normal set attribute method
+        self._set_node(key, value)
 
     @property
     def _schema_attributes(self):
