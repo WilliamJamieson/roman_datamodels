@@ -6,6 +6,7 @@ from ._node import DNode
 
 NOFN = "none"
 NOSTR = "?"
+NONUM = -999999
 
 
 def get_schema_from_tag(ctx, tag):
@@ -31,7 +32,7 @@ class SchemaMixin(ABC):
         """URI of the schema that defines this node."""
 
 
-class TagMixin(ABC):
+class TagMixin(SchemaMixin, ABC):
     @property
     @abstractmethod
     def ctx(self):
@@ -54,10 +55,13 @@ class SchemaNode(DNode, SchemaMixin, ABC):
         """List of required fields in this node."""
 
 
-class TaggedNode(TagMixin, SchemaNode): ...
+class TaggedNode(SchemaNode, TagMixin, ABC): ...
 
 
-class TaggedScalarNode(TagMixin, SchemaMixin):
+class SchemaScalarNode(SchemaMixin, ABC): ...
+
+
+class TaggedScalarNode(TagMixin, SchemaMixin, ABC):
     """
     Base class for all tagged scalars defined by RAD
         There will be one of these for any tagged object defined by RAD, which has

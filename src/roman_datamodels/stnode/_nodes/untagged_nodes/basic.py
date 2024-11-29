@@ -52,6 +52,13 @@ class Basic(_core.SchemaNode):
         return self._get_node("calibration_software_version")
 
     @property
+    def product_type(self) -> ProductType:
+        if not self._has_node("product_type"):
+            self.product_type = ProductType("l2")
+
+        return self._get_node("product_type")
+
+    @property
     def filename(self) -> Filename:
         if not self._has_node("filename"):
             self.filename = Filename(_core.NOFN)
@@ -86,13 +93,6 @@ class Basic(_core.SchemaNode):
         return self._get_node("prd_version")
 
     @property
-    def product_type(self) -> ProductType:
-        if not self._has_node("product_type"):
-            self.product_type = ProductType("l2")
-
-        return self._get_node("product_type")
-
-    @property
     def sdf_software_version(self) -> SdfSoftwareVersion:
         if not self._has_node("sdf_software_version"):
             self.sdf_software_version = SdfSoftwareVersion("7.7.7")
@@ -102,6 +102,6 @@ class Basic(_core.SchemaNode):
     @property
     def telescope(self) -> Telescope:
         if not self._has_node("telescope"):
-            self.telescope = Telescope("ROMAN")
+            self.telescope = Telescope.ROMAN()
 
         return self._get_node("telescope")
