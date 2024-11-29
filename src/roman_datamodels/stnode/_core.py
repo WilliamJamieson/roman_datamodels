@@ -1,8 +1,11 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 import asdf
 
 from ._node import DNode
+
+NOFN = "none"
+NOSTR = "?"
 
 
 def get_schema_from_tag(ctx, tag):
@@ -21,14 +24,14 @@ def get_schema_from_tag(ctx, tag):
     return asdf.schema.load_schema(schema_uri, resolve_references=True)
 
 
-class SchemaMixin:
+class SchemaMixin(ABC):
     @property
     @abstractmethod
     def schema_uri(self):
         """URI of the schema that defines this node."""
 
 
-class TagMixin:
+class TagMixin(ABC):
     @property
     @abstractmethod
     def ctx(self):
@@ -44,7 +47,11 @@ class TagMixin:
         return self.ctx.extension_manager.get_tag_definition(self.tag).schema_uris[0]
 
 
-class SchemaNode(DNode, SchemaMixin): ...
+class SchemaNode(DNode, SchemaMixin, ABC):
+    @property
+    @abstractmethod
+    def required(self) -> tuple[str]:
+        """List of required fields in this node."""
 
 
 class TaggedNode(TagMixin, SchemaNode): ...

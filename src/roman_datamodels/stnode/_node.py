@@ -145,51 +145,70 @@ class DNode(MutableMapping):
 
         return value
 
+    def _has_node(self, key):
+        """
+        Check if a node exists in the dictionary.
+        """
+        return key in self._data
+
+    def __contains__(self, key):
+        return self._has_node(key)
+
+    def _coerce(self, key, value):
+        value = self._convert_to_scalar(key, value)
+
+        # Return objects as node classes, if applicable
+        if isinstance(value, dict | AsdfDictNode):
+            return DNode(value, parent=self, name=key)
+
+        if isinstance(value, list | AsdfListNode):
+            return LNode(value)
+
+        return value
+
+    def _get_node(self, key, coerce=True):
+        """
+        Get a node from the dictionary, coercing it to the correct type if necessary.
+        """
+        # __getattribute__ will handle private keys of methods and the like
+        if key.startswith("_"):
+            raise AttributeError(f"No attribute {key}")
+
+        if self._has_node(key):
+            value = self._data[key]
+            if coerce:
+                return self._coerce(key, value)
+            return value
+
+        raise AttributeError(f"No such attribute ({key}) found in node")
+
     def __getattr__(self, key):
         """
         Permit accessing dict keys as attributes, assuming they are legal Python
         variable names.
         """
-        # Private values should have already been handled by the __getattribute__ method
-        #   bail out if we are falling back on this method
-        if key.startswith("_"):
-            raise AttributeError(f"No attribute {key}")
+        return self._get_node(key)
 
-        # If the key is in the schema, then we can return the value
-        if key in self._data:
-            # Cast the value into the appropriate tagged scalar class
-            value = self._convert_to_scalar(key, self._data[key])
+    def _set_node(self, key, value, coerce=True):
+        """
+        Attempt to set a value in for the node
+        """
+        # Private keys should just be in the normal __dict__
+        if key[0] != "_":
+            # Wrap things in the tagged scalar classes if necessary
+            if coerce:
+                value = self._convert_to_scalar(key, value, self._data.get(key))
 
-            # Return objects as node classes, if applicable
-            if isinstance(value, dict | AsdfDictNode):
-                return DNode(value, parent=self, name=key)
+            self._data[key] = value
 
-            elif isinstance(value, list | AsdfListNode):
-                return LNode(value)
-
-            else:
-                return value
-
-        # Raise the correct error for the attribute not being found
-        raise AttributeError(f"No such attribute ({key}) found in node")
+        else:
+            self.__dict__[key] = value
 
     def __setattr__(self, key, value):
         """
         Permit assigning dict keys as attributes.
         """
-
-        # Private keys should just be in the normal __dict__
-        if key[0] != "_":
-            # Wrap things in the tagged scalar classes if necessary
-            value = self._convert_to_scalar(key, value, self._data.get(key))
-
-            if key in self._data or key in self._schema_attributes:
-                # Finally set the value
-                self._data[key] = value
-            else:
-                raise AttributeError(f"No such attribute ({key}) found in node")
-        else:
-            self.__dict__[key] = value
+        self._set_node(key, value)
 
     @property
     def _schema_attributes(self):
