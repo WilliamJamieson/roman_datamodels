@@ -117,8 +117,8 @@ class WfiMosaic(_core.DataModelNode):
             return self.data.shape
 
         # Allow for one to shrink the data size default
-        if self._has_node("shape"):
-            return self._data["shape"]
+        if self._has_node("array_shape"):
+            return self._data["array_shape"]
 
         # default fall-back
         return (4088, 4088)
