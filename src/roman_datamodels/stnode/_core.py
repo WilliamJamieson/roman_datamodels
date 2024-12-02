@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import asdf
 
-from ._base import DNode
+from ._base import DNode, LNode
 
 
 def get_schema_from_tag(ctx, tag):
@@ -55,6 +55,16 @@ class SchemaObjectNode(ObjectNode, SchemaMixin, ABC): ...
 
 
 class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC): ...
+
+
+class DataModelNode(TaggedObjectNode, ABC):
+    @property
+    @abstractmethod
+    def shape(self) -> tuple[int]:
+        """Shape of the data array."""
+
+
+class TaggedListNode(LNode, TagMixin, ABC): ...
 
 
 class SchemaScalarNode(SchemaMixin, ABC): ...

@@ -1,0 +1,187 @@
+import numpy as np
+from astropy import coordinates
+from astropy import units as u
+from astropy.modeling import models
+from gwcs import WCS, coordinate_frames
+
+from roman_datamodels.stnode import _core
+
+from ..meta import (
+    Basic,
+    CalLogs,
+    Coordinates,
+    IndividualImageMeta,
+    L3CalStep,
+    MosaicAssociations,
+    MosaicBasic,
+    Photometry,
+    Program,
+    RefFile,
+    Resample,
+    Wcsinfo,
+)
+
+__all__ = ["WfiMosaic"]
+
+
+class WfiMosaicMeta(Basic):
+    @property
+    def required(self) -> tuple[str]:
+        return (
+            *super().required,
+            "asn",
+            "basic",
+            "cal_step",
+            "photometry",
+            "program",
+            "resample",
+            "wcs",
+            "wcsinfo",
+        )
+
+    @property
+    def asn(self) -> MosaicAssociations:
+        return self._get_node("asn", MosaicAssociations)
+
+    @property
+    def basic(self) -> MosaicBasic:
+        return self._get_node("basic", MosaicBasic)
+
+    @property
+    def cal_step(self) -> L3CalStep:
+        return self._get_node("cal_step", L3CalStep)
+
+    @property
+    def coordinates(self) -> Coordinates:
+        return self._get_node("coordinates", Coordinates)
+
+    @property
+    def individual_image_meta(self) -> IndividualImageMeta:
+        return self._get_node("individual_image_meta", IndividualImageMeta)
+
+    @property
+    def photometry(self) -> Photometry:
+        return self._get_node("photometry", Photometry)
+
+    @property
+    def program(self) -> Program:
+        return self._get_node("program", Program)
+
+    @property
+    def ref_file(self) -> RefFile:
+        return self._get_node("ref_file", RefFile)
+
+    @property
+    def resample(self) -> Resample:
+        return self._get_node("resample", Resample)
+
+    @property
+    def wcs(self) -> WCS:
+        def _default_wcs():
+            pixelshift = models.Shift(-500) & models.Shift(-500)
+            pixelscale = models.Scale(0.1 / 3600.0) & models.Scale(0.1 / 3600.0)  # 0.1 arcsec/pixel
+            tangent_projection = models.Pix2Sky_TAN()
+            celestial_rotation = models.RotateNative2Celestial(30.0, 45.0, 180.0)
+
+            det2sky = pixelshift | pixelscale | tangent_projection | celestial_rotation
+
+            detector_frame = coordinate_frames.Frame2D(name="detector", axes_names=("x", "y"), unit=(u.pix, u.pix))
+            sky_frame = coordinate_frames.CelestialFrame(reference_frame=coordinates.ICRS(), name="icrs", unit=(u.deg, u.deg))
+            return WCS(
+                [
+                    (detector_frame, det2sky),
+                    (sky_frame, None),
+                ]
+            )
+
+        return self._get_node("wcs", _default_wcs)
+
+    @property
+    def wcsinfo(self) -> Wcsinfo:
+        return self._get_node("wcsinfo", Wcsinfo)
+
+
+class WfiMosaic(_core.DataModelNode):
+    """
+    WFI Level 3 mosaics data
+    """
+
+    @property
+    def tag(self) -> str:
+        return "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-1.0.0"
+
+    @property
+    def required(self) -> tuple[str]:
+        return (
+            "meta",
+            "data",
+            "context",
+            "err",
+            "weight",
+            "var_poisson",
+            "var_rnoise",
+            "cal_logs",
+        )
+
+    @property
+    def shape(self) -> tuple[int]:
+        """Return the shape of the data array"""
+        # The datamodel shape is based of the data array
+        if self._has_node("data"):
+            return self.data.shape
+
+        # Allow for one to shrink the data size default
+        if self._has_node("shape"):
+            return self._data["shape"]
+
+        # default fall-back
+        return (4096, 4096)
+
+    @property
+    def n_images(self) -> int:
+        # The number of images in the mosaic comes from the context array
+        if self._has_node("context"):
+            return self.context.shape[0]
+
+        # Allow for one to shrink/set the number of images
+        if self._has_node("n_images"):
+            return self._data["n_images"]
+
+        # default fall-back
+        return 2
+
+    @property
+    def meta(self) -> WfiMosaicMeta:
+        return self._get_node("meta", WfiMosaicMeta)
+
+    @property
+    def data(self) -> np.ndarray:
+        return self._get_node("data", lambda: np.zeros(self.shape, dtype=np.float32))
+
+    @property
+    def err(self) -> np.ndarray:
+        return self._get_node("err", lambda: np.zeros(self.shape, dtype=np.float32))
+
+    @property
+    def context(self) -> np.ndarray:
+        return self._get_node("context", lambda: np.zeros((self.n_images, *self.shape), dtype=np.uint32))
+
+    @property
+    def weight(self) -> np.ndarray:
+        return self._get_node("weight", lambda: np.zeros(self.shape, dtype=np.float32))
+
+    @property
+    def var_poisson(self) -> np.ndarray:
+        return self._get_node("var_poisson", lambda: np.zeros(self.shape, dtype=np.float32))
+
+    @property
+    def var_rnoise(self) -> np.ndarray:
+        return self._get_node("var_rnoise", lambda: np.zeros(self.shape, dtype=np.float32))
+
+    @property
+    def var_flat(self) -> np.ndarray:
+        return self._get_node("var_flat", lambda: np.zeros(self.shape, dtype=np.float32))
+
+    @property
+    def cal_logs(self) -> CalLogs:
+        return self._get_node("cal_logs", CalLogs.default)
