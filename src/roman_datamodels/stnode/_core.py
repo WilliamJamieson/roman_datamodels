@@ -44,11 +44,14 @@ class TagMixin(SchemaMixin, ABC):
         return self.ctx.extension_manager.get_tag_definition(self.tag).schema_uris[0]
 
 
-class SchemaObjectNode(DNode, SchemaMixin, ABC):
+class ObjectNode(DNode, ABC):
     @property
     @abstractmethod
     def required(self) -> tuple[str]:
         """List of required fields in this node."""
+
+
+class SchemaObjectNode(ObjectNode, SchemaMixin, ABC): ...
 
 
 class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC): ...

@@ -1,0 +1,99 @@
+from roman_datamodels.stnode import _core
+
+__all__ = ["RefFile"]
+
+
+class Crds(_core.ObjectNode):
+    @property
+    def required(self) -> tuple[str]:
+        return ("version" "context",)
+
+    @property
+    def version(self) -> str:
+        return self._get_node("version", lambda: "12.3.1")
+
+    @property
+    def context(self) -> str:
+        return self._get_node("context", lambda: "roman_0815.pmap")
+
+
+class RefFile(_core.TaggedObjectNode):
+    """
+    Calibration reference file names.
+
+    Class generated from tag 'asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0'
+    """
+
+    @property
+    def tag(self) -> str:
+        return "asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0"
+
+    @property
+    def required(self) -> str:
+        return (
+            "crds",
+            "dark",
+            "distortion",
+            "mask",
+            "flat",
+            "gain",
+            "readnoise",
+            "linearity",
+            "inverse_linearity",
+            "photom",
+            "area",
+            "saturation",
+            "refpix",
+        )
+
+    @property
+    def crds(self) -> Crds:
+        return self._get_node("crds", Crds)
+
+    @property
+    def dark(self) -> str:
+        return self._get_node("dark", lambda: "N/A")
+
+    @property
+    def distortion(self) -> str:
+        return self._get_node("distortion", lambda: "N/A")
+
+    @property
+    def mask(self) -> str:
+        return self._get_node("mask", lambda: "N/A")
+
+    @property
+    def flat(self) -> str:
+        return self._get_node("flat", lambda: "N/A")
+
+    @property
+    def gain(self) -> str:
+        return self._get_node("gain", lambda: "N/A")
+
+    @property
+    def readnoise(self) -> str:
+        return self._get_node("readnoise", lambda: "N/A")
+
+    @property
+    def linearity(self) -> str:
+        return self._get_node("linearity", lambda: "N/A")
+
+    @property
+    def inverse_linearity(self) -> str:
+        return self._get_node("inverse_linearity", lambda: "N/A")
+
+    @property
+    def photom(self) -> str:
+        return self._get_node("photom", lambda: "N/A")
+
+    @property
+    def area(self) -> str:
+        return self._get_node("area", lambda: "N/A")
+
+    @property
+    def saturation(self) -> str:
+        return self._get_node("saturation", lambda: "N/A")
+
+    @property
+    def refpix(self) -> str:
+        return self._get_node("refpix", lambda: "N/A")

@@ -31,6 +31,20 @@ def test_abstract_TaggedScalarNode():
     _ = ExampleTaggedScalarNode()
 
 
+def test_abstract_ObjectNode():
+    # Test that ObjectNode is an abstract class
+    with pytest.raises(TypeError):
+        _core.ObjectNode()
+
+    class ExampleObjectNode(_core.ObjectNode):
+        @property
+        def required(self):
+            return ("test",)
+
+    # Show no type error when correct methods are implemented
+    _ = ExampleObjectNode()
+
+
 def test_abstract_SchemaObjectNode():
     # Test that SchemaObjectNode is an abstract class
     with pytest.raises(TypeError):

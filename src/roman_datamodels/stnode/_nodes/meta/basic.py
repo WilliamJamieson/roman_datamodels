@@ -63,7 +63,7 @@ class Basic(_core.SchemaObjectNode):
 
     @property
     def origin(self) -> Origin:
-        return self._get_node("origin", lambda: Origin.STSCI_SOC())
+        return self._get_node("origin", Origin.STSCI_SOC)
 
     @property
     def prd_version(self) -> PrdVersion:
@@ -75,4 +75,4 @@ class Basic(_core.SchemaObjectNode):
 
     @property
     def telescope(self) -> Telescope:
-        return self._get_node("telescope", lambda: Telescope.ROMAN())
+        return self._get_node("telescope", Telescope.ROMAN)
