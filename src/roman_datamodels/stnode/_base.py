@@ -166,7 +166,7 @@ class DNode(MutableMapping):
 
         return value
 
-    def _get_node(self, key, coerce=True):
+    def _pull_node(self, key, coerce=True):
         """
         Get a node from the dictionary, coercing it to the correct type if necessary.
         """
@@ -189,25 +189,50 @@ class DNode(MutableMapping):
         if key.startswith("_"):
             raise AttributeError(f"No attribute {key}")
 
-        return self._get_node(key, coerce=True)
+        return self._pull_node(key, coerce=True)
+
+    def _set_node(self, key, value, coerce=True):
+        """
+        Attempt to set a value in for the node
+        """
+        # Private keys should just be in the normal __dict__
+        if key[0] != "_":
+            # Wrap things in the tagged scalar classes if necessary
+            if coerce:
+                value = self._convert_to_scalar(key, value, self._data.get(key))
+
+            self._data[key] = value
+
+        else:
+            self.__dict__[key] = value
 
     def __setattr__(self, key, value):
         """
         Permit assigning dict keys as attributes.
         """
+        self._set_node(key, value)
 
-        # Private keys should just be in the normal __dict__
-        if key[0] != "_":
-            # Wrap things in the tagged scalar classes if necessary
-            value = self._convert_to_scalar(key, value, self._data.get(key))
+    def _get_node(self, key, default, coerce=True):
+        """
+        Get a node and if not found construct it with the default value.
 
-            if key in self._data or key in self._schema_attributes:
-                # Finally set the value
-                self._data[key] = value
-            else:
-                raise AttributeError(f"No such attribute ({key}) found in node")
-        else:
-            self.__dict__[key] = value
+        Parameters
+        ----------
+        key : str
+            The key to look for in the dictionary.
+        default : Callable
+            The constructor for a default. Its callable to allow for lazy instantiation.
+            This will often take the form of a lambda, that way the argument to the lambda
+            is not evaluated until the default is actually needed, saving time and memory.
+            for things like numpy arrays.
+        coerce : bool
+            If type coercion should be applied to the value.
+        """
+
+        if not self._has_node(key):
+            self._set_node(key, default(), coerce=coerce)
+
+        return self._pull_node(key, coerce=coerce)
 
     @property
     def _schema_attributes(self):

@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import _core, _default
 
 from .tagged_scalars import (
     CalibrationSoftwareName,
@@ -18,7 +18,7 @@ from .tagged_scalars import (
 __all__ = ["Basic"]
 
 
-class Basic(_core.SchemaNode):
+class Basic(_core.SchemaObjectNode):
     @property
     def schema_uri(self) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/basic-1.0.0"
@@ -39,70 +39,40 @@ class Basic(_core.SchemaNode):
 
     @property
     def calibration_software_name(self) -> CalibrationSoftwareName:
-        # add a default value if necessary
-        if not self._has_node("calibration_software_name"):
-            self.calibration_software_name = CalibrationSoftwareName("RomanCAL")
-
-        return self._get_node("calibration_software_name")
+        return self._get_node("calibration_software_name", lambda: CalibrationSoftwareName("RomanCAL"))
 
     @property
     def calibration_software_version(self) -> CalibrationSoftwareVersion:
-        if not self._has_node("calibration_software_version"):
-            self.calibration_software_version = CalibrationSoftwareVersion("9.9.0")
-
-        return self._get_node("calibration_software_version")
+        return self._get_node("calibration_software_version", lambda: CalibrationSoftwareVersion("9.9.0"))
 
     @property
     def product_type(self) -> ProductType:
-        if not self._has_node("product_type"):
-            self.product_type = ProductType("l2")
-
-        return self._get_node("product_type")
+        return self._get_node("product_type", lambda: ProductType("l2"))
 
     @property
     def filename(self) -> Filename:
-        if not self._has_node("filename"):
-            self.filename = Filename(_core.NOFN)
-        return self._get_node("filename")
+        return self._get_node("filename", lambda: Filename(_default.NOFN))
 
     @property
     def file_date(self) -> FileDate:
-        if not self._has_node("file_date"):
-            self.file_date = FileDate(Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
-
-        return self._get_node("file_date")
+        return self._get_node("file_date", lambda: FileDate(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")))
 
     @property
     def model_type(self) -> ModelType:
-        if not self._has_node("model_type"):
-            self.model_type = ModelType(_core.NOSTR)
-
-        return self._get_node("model_type")
+        return self._get_node("model_type", lambda: ModelType(_default.NOSTR))
 
     @property
     def origin(self) -> Origin:
-        if not self._has_node("origin"):
-            self.origin = Origin.STSCI_SOC()
-
-        return self._get_node("origin")
+        return self._get_node("origin", lambda: Origin.STSCI_SOC())
 
     @property
     def prd_version(self) -> PrdVersion:
-        if not self._has_node("prd_version"):
-            self.prd_version = PrdVersion("8.8.8")
-
-        return self._get_node("prd_version")
+        return self._get_node("prd_version", lambda: PrdVersion("8.8.8"))
 
     @property
     def sdf_software_version(self) -> SdfSoftwareVersion:
-        if not self._has_node("sdf_software_version"):
-            self.sdf_software_version = SdfSoftwareVersion("7.7.7")
-
-        return self._get_node("sdf_software_version")
+        return self._get_node("sdf_software_version", lambda: SdfSoftwareVersion("7.7.7"))
 
     @property
     def telescope(self) -> Telescope:
-        if not self._has_node("telescope"):
-            self.telescope = Telescope.ROMAN()
-
-        return self._get_node("telescope")
+        return self._get_node("telescope", lambda: Telescope.ROMAN())
