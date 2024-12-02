@@ -1,10 +1,10 @@
-import numpy as np
-from astropy import coordinates
-from astropy import units as u
-from astropy.modeling import models
-from gwcs import WCS, coordinate_frames
+from __future__ import annotations
 
-from roman_datamodels.stnode import _core
+from typing import TYPE_CHECKING
+
+import numpy as np
+
+from roman_datamodels.stnode import _core, _default
 
 from ..meta import (
     Basic,
@@ -20,6 +20,9 @@ from ..meta import (
     Resample,
     Wcsinfo,
 )
+
+if TYPE_CHECKING:
+    from gwcs import WCS
 
 __all__ = ["WfiMosaic"]
 
@@ -76,25 +79,8 @@ class WfiMosaicMeta(Basic):
         return self._get_node("resample", Resample)
 
     @property
-    def wcs(self) -> WCS:
-        def _default_wcs():
-            pixelshift = models.Shift(-500) & models.Shift(-500)
-            pixelscale = models.Scale(0.1 / 3600.0) & models.Scale(0.1 / 3600.0)  # 0.1 arcsec/pixel
-            tangent_projection = models.Pix2Sky_TAN()
-            celestial_rotation = models.RotateNative2Celestial(30.0, 45.0, 180.0)
-
-            det2sky = pixelshift | pixelscale | tangent_projection | celestial_rotation
-
-            detector_frame = coordinate_frames.Frame2D(name="detector", axes_names=("x", "y"), unit=(u.pix, u.pix))
-            sky_frame = coordinate_frames.CelestialFrame(reference_frame=coordinates.ICRS(), name="icrs", unit=(u.deg, u.deg))
-            return WCS(
-                [
-                    (detector_frame, det2sky),
-                    (sky_frame, None),
-                ]
-            )
-
-        return self._get_node("wcs", _default_wcs)
+    def wcs(self) -> WCS | None:
+        return self._get_node("wcs", _default.Wcs)
 
     @property
     def wcsinfo(self) -> Wcsinfo:
@@ -124,7 +110,7 @@ class WfiMosaic(_core.DataModelNode):
         )
 
     @property
-    def shape(self) -> tuple[int]:
+    def array_shape(self) -> tuple[int]:
         """Return the shape of the data array"""
         # The datamodel shape is based of the data array
         if self._has_node("data"):
@@ -135,7 +121,7 @@ class WfiMosaic(_core.DataModelNode):
             return self._data["shape"]
 
         # default fall-back
-        return (4096, 4096)
+        return (4088, 4088)
 
     @property
     def n_images(self) -> int:
@@ -156,31 +142,31 @@ class WfiMosaic(_core.DataModelNode):
 
     @property
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.shape, dtype=np.float32))
+        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def err(self) -> np.ndarray:
-        return self._get_node("err", lambda: np.zeros(self.shape, dtype=np.float32))
+        return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def context(self) -> np.ndarray:
-        return self._get_node("context", lambda: np.zeros((self.n_images, *self.shape), dtype=np.uint32))
+        return self._get_node("context", lambda: np.zeros((self.n_images, *self.array_shape), dtype=np.uint32))
 
     @property
     def weight(self) -> np.ndarray:
-        return self._get_node("weight", lambda: np.zeros(self.shape, dtype=np.float32))
+        return self._get_node("weight", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def var_poisson(self) -> np.ndarray:
-        return self._get_node("var_poisson", lambda: np.zeros(self.shape, dtype=np.float32))
+        return self._get_node("var_poisson", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def var_rnoise(self) -> np.ndarray:
-        return self._get_node("var_rnoise", lambda: np.zeros(self.shape, dtype=np.float32))
+        return self._get_node("var_rnoise", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def var_flat(self) -> np.ndarray:
-        return self._get_node("var_flat", lambda: np.zeros(self.shape, dtype=np.float32))
+        return self._get_node("var_flat", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def cal_logs(self) -> CalLogs:

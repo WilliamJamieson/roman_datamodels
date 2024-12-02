@@ -60,7 +60,7 @@ class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC): ...
 class DataModelNode(TaggedObjectNode, ABC):
     @property
     @abstractmethod
-    def shape(self) -> tuple[int]:
+    def array_shape(self) -> tuple[int]:
         """Shape of the data array."""
 
 

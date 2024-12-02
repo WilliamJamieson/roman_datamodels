@@ -8,12 +8,16 @@ from .l3_cal_step import L3CalStep
 from .mosaic_associations import MosaicAssociations
 from .mosaic_basic import MosaicBasic
 from .observation import Observation
+from .outlier_detection import OutlierDetection
 from .photometry import Photometry
 from .pointing import Pointing
 from .program import Program
 from .rcs import Rcs
 from .ref_file import RefFile
 from .resample import Resample
+from .sky_background import SkyBackground
+from .source_detection import SourceDetection
+from .statistics import Statistics
 from .velocity_aberration import VelocityAberration
 from .visit import Visit
 from .wcsinfo import Wcsinfo
@@ -30,12 +34,16 @@ __all__ = [
     "MosaicAssociations",
     "MosaicBasic",
     "Observation",
+    "OutlierDetection",
     "Photometry",
     "Pointing",
     "Program",
     "Rcs",
     "RefFile",
     "Resample",
+    "SkyBackground",
+    "SourceDetection",
+    "Statistics",
     "VelocityAberration",
     "Visit",
     "Wcsinfo",
