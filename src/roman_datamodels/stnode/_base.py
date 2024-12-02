@@ -145,6 +145,40 @@ class DNode(MutableMapping):
 
         return value
 
+    def _has_node(self, key):
+        """
+        Check if a node exists in the dictionary.
+        """
+        return key in self._data
+
+    def __contains__(self, key):
+        return self._has_node(key)
+
+    def _coerce(self, key, value):
+        value = self._convert_to_scalar(key, value)
+
+        # Return objects as node classes, if applicable
+        if isinstance(value, dict | AsdfDictNode):
+            return DNode(value, parent=self, name=key)
+
+        if isinstance(value, list | AsdfListNode):
+            return LNode(value)
+
+        return value
+
+    def _get_node(self, key, coerce=True):
+        """
+        Get a node from the dictionary, coercing it to the correct type if necessary.
+        """
+
+        if self._has_node(key):
+            value = self._data[key]
+            if coerce:
+                return self._coerce(key, value)
+            return value
+
+        raise AttributeError(f"No such attribute ({key}) found in node")
+
     def __getattr__(self, key):
         """
         Permit accessing dict keys as attributes, assuming they are legal Python
@@ -155,23 +189,7 @@ class DNode(MutableMapping):
         if key.startswith("_"):
             raise AttributeError(f"No attribute {key}")
 
-        # If the key is in the schema, then we can return the value
-        if key in self._data:
-            # Cast the value into the appropriate tagged scalar class
-            value = self._convert_to_scalar(key, self._data[key])
-
-            # Return objects as node classes, if applicable
-            if isinstance(value, dict | AsdfDictNode):
-                return DNode(value, parent=self, name=key)
-
-            elif isinstance(value, list | AsdfListNode):
-                return LNode(value)
-
-            else:
-                return value
-
-        # Raise the correct error for the attribute not being found
-        raise AttributeError(f"No such attribute ({key}) found in node")
+        return self._get_node(key, coerce=True)
 
     def __setattr__(self, key, value):
         """
