@@ -55,7 +55,6 @@ class EpsfRef(_core.DataModelNode):
         return (
             "meta",
             "psf",
-            "extended_psf",
         )
 
     @property

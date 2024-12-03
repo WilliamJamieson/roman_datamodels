@@ -23,7 +23,7 @@ class L2CalStep(_core.TaggedObjectNode):
             "linearity",
             "outlier_detection",
             "photom",
-            "source_detection",
+            "source_catalog",
             "ramp_fit",
             "refpix",
             "saturation",
@@ -60,8 +60,8 @@ class L2CalStep(_core.TaggedObjectNode):
         return self._get_node("photom", lambda: "INCOMPLETE")
 
     @property
-    def source_detection(self) -> str:
-        return self._get_node("source_detection", lambda: "INCOMPLETE")
+    def source_catalog(self) -> str:
+        return self._get_node("catalog", lambda: "INCOMPLETE")
 
     @property
     def ramp_fit(self) -> str:

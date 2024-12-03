@@ -39,11 +39,7 @@ class Fps(_core.DataModelNode):
             "meta",
             "data",
             "amp33",
-            "amp33_reset_reads",
-            "amp33_reference_read",
             "guidewindow",
-            "reference_read",
-            "reset_reads",
         )
 
     @property

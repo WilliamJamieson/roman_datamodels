@@ -71,12 +71,6 @@ class Associations(_core.DataModelNode):
             "asn_pool",
             "asn_type",
             "asn_rule",
-            "version_id",
-            "code_version",
-            "degraded_status",
-            "program",
-            "target",
-            "constraints",
             "products",
         )
 

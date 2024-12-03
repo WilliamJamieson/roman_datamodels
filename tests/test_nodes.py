@@ -84,3 +84,21 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
 
     # check the class name against the tag uri
     assert _core.class_name_from_uri(tag_uri) == _nodes.TAGGED_NODES[tag_uri].__name__
+
+
+@pytest.mark.parametrize("schema_file", SCHEMA_FILES)
+def test_node_requires(schema_file):
+    """
+    Check that every schema file with a `required` has a corresponding method
+    listing those requirements.
+    """
+
+    if "required" in schema_file:
+        node_cls = _nodes.SCHEMA_NODES[schema_file["id"]]
+
+        # Check that the class has a `requires` method
+        assert issubclass(node_cls, _core.ObjectNode)
+        assert node_cls is not _core.ObjectNode
+
+        print(schema_file["id"])
+        assert set(schema_file["required"]) == set(node_cls.asdf_required())
