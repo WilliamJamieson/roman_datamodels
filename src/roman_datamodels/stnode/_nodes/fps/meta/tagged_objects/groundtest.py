@@ -54,7 +54,7 @@ class FpsGroundtest(_core.TaggedObjectNode):
 
     @property
     def test_script(self) -> str:
-        return self._coerce(str, self._get_node("test_script", coerce=False), "test_script")
+        return self._get_node("test_script", lambda: _default.NOSTR)
 
     @property
     def product_date(self) -> Time:
