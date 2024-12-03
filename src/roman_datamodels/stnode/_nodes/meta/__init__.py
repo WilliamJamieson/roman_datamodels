@@ -27,6 +27,9 @@ from .tagged_objects import (
     Wcsinfo,
     WfiMode,
 )
+from .untagged_scalars import (
+    GuidewindowModes,
+)
 
 __all__ = [
     "Basic",
@@ -36,6 +39,7 @@ __all__ = [
     "Ephemeris",
     "Exposure",
     "Guidestar",
+    "GuidewindowModes",
     "IndividualImageMeta",
     "L2CalStep",
     "L3CalStep",
