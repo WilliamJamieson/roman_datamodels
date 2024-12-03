@@ -4,6 +4,7 @@ from .ephemeris import Ephemeris
 from .exposure import Exposure
 from .guidestar import Guidestar
 from .individual_image_meta import IndividualImageMeta
+from .l2_cal_step import L2CalStep
 from .l3_cal_step import L3CalStep
 from .mosaic_associations import MosaicAssociations
 from .mosaic_basic import MosaicBasic
@@ -30,6 +31,7 @@ __all__ = [
     "Exposure",
     "Guidestar",
     "IndividualImageMeta",
+    "L2CalStep",
     "L3CalStep",
     "MosaicAssociations",
     "MosaicBasic",

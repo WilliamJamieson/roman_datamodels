@@ -153,7 +153,7 @@ class WfiImage(_core.DataModelNode):
 
     @property
     def amp33(self) -> np.ndarray:
-        return self._get_node("amp33", lambda: np.zeros((self.n_groups, 4096, 128), dtype=np.float32))
+        return self._get_node("amp33", lambda: np.zeros((self.n_groups, self.array_shape[0], 128), dtype=np.float32))
 
     @property
     def border_ref_pix_left(self) -> np.ndarray:
@@ -169,16 +169,15 @@ class WfiImage(_core.DataModelNode):
 
     @property
     def border_ref_pix_top(self) -> np.ndarray:
-        # I think it should be 4, self.array_shape[1] + 8
         return self._get_node(
-            "border_ref_pix_top", lambda: np.zeros((self.n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
+            "border_ref_pix_top", lambda: np.zeros((self.n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
         )
 
     @property
     def border_ref_pix_bottom(self) -> np.ndarray:
         # I think it should be 4, self.array_shape[1] + 8
         return self._get_node(
-            "border_ref_pix_bottom", lambda: np.zeros((self.n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
+            "border_ref_pix_bottom", lambda: np.zeros((self.n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
         )
 
     @property

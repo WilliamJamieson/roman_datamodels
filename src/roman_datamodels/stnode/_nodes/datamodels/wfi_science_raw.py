@@ -48,7 +48,7 @@ class WfiScienceRaw(_core.DataModelNode):
 
     @property
     def amp33(self) -> np.ndarray:
-        return self._get_node("amp33", np.zeros((self.array_shape[0], 4096, 128), dtype=np.uint16))
+        return self._get_node("amp33", np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16))
 
     @property
     def resultantdq(self) -> np.ndarray:
