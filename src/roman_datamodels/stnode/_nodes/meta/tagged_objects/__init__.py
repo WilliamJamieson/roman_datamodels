@@ -8,6 +8,7 @@ from .l2_cal_step import L2CalStep
 from .l3_cal_step import L3CalStep
 from .mosaic_associations import MosaicAssociations
 from .mosaic_basic import MosaicBasic
+from .mosaic_wcsinfo import MosaicWcsinfo
 from .observation import Observation
 from .outlier_detection import OutlierDetection
 from .photometry import Photometry
@@ -35,6 +36,7 @@ __all__ = [
     "L3CalStep",
     "MosaicAssociations",
     "MosaicBasic",
+    "MosaicWcsinfo",
     "Observation",
     "OutlierDetection",
     "Photometry",

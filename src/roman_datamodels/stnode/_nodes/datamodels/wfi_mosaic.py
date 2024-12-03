@@ -14,11 +14,11 @@ from ..meta import (
     L3CalStep,
     MosaicAssociations,
     MosaicBasic,
+    MosaicWcsinfo,
     Photometry,
     Program,
     RefFile,
     Resample,
-    Wcsinfo,
 )
 
 if TYPE_CHECKING:
@@ -83,8 +83,8 @@ class WfiMosaicMeta(Basic):
         return self._get_node("wcs", _default.Wcs)
 
     @property
-    def wcsinfo(self) -> Wcsinfo:
-        return self._get_node("wcsinfo", Wcsinfo)
+    def wcsinfo(self) -> MosaicWcsinfo:
+        return self._get_node("wcsinfo", MosaicWcsinfo)
 
 
 class WfiMosaic(_core.DataModelNode):
