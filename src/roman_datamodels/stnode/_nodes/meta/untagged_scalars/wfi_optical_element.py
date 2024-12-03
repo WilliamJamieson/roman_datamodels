@@ -2,7 +2,25 @@ from __future__ import annotations
 
 from roman_datamodels.stnode import _core
 
-__all__ = ["WfiOpticalElement"]
+__all__ = [
+    "OPTICAL_ELEMENTS",
+    "WfiOpticalElement",
+]
+
+
+OPTICAL_ELEMENTS = (
+    "F062",
+    "F087",
+    "F106",
+    "F129",
+    "F146",
+    "F158",
+    "F184",
+    "F213",
+    "GRISM",
+    "PRISM",
+    "DARK",
+)
 
 
 class WfiOpticalElement(str, _core.SchemaScalarNode):
