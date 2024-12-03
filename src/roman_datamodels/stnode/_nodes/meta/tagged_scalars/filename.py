@@ -3,7 +3,7 @@ from roman_datamodels.stnode import _core
 __all__ = ["Filename"]
 
 
-class Filename(str, _core.TaggedScalarNode):
+class Filename(_core.TaggedScalarNode, str):
     """
     Name of the file for the model
     """

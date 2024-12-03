@@ -3,7 +3,7 @@ from roman_datamodels.stnode import _core
 __all__ = ["CalibrationSoftwareName"]
 
 
-class CalibrationSoftwareName(_core.TaggedScalarNode, str):
+class CalibrationSoftwareName(str, _core.TaggedScalarNode):
     """
     Name of the calibration software used
     """

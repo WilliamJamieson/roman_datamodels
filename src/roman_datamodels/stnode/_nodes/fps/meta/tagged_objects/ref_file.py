@@ -1,9 +1,9 @@
 from roman_datamodels.stnode import _core
 
-__all__ = ["RefFile"]
+__all__ = ["FpsRefFile"]
 
 
-class Crds(_core.ObjectNode):
+class FpsCrds(_core.ObjectNode):
     @property
     def required(self) -> tuple[str]:
         return (
@@ -20,16 +20,14 @@ class Crds(_core.ObjectNode):
         return self._get_node("context", lambda: "roman_0815.pmap")
 
 
-class RefFile(_core.TaggedObjectNode):
+class FpsRefFile(_core.TaggedObjectNode):
     """
-    Calibration reference file names.
-
-    Class generated from tag 'asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0'
+    FPS Calibration reference file names.
     """
 
     @property
     def tag(self) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0"
+        return "asdf://stsci.edu/datamodels/roman/tags/fps/ref_file-1.0.0"
 
     @property
     def required(self) -> str:
@@ -42,16 +40,14 @@ class RefFile(_core.TaggedObjectNode):
             "gain",
             "readnoise",
             "linearity",
-            "inverse_linearity",
             "photom",
             "area",
             "saturation",
-            "refpix",
         )
 
     @property
-    def crds(self) -> Crds:
-        return self._get_node("crds", Crds)
+    def crds(self) -> FpsCrds:
+        return self._get_node("crds", FpsCrds)
 
     @property
     def dark(self) -> str:
@@ -82,10 +78,6 @@ class RefFile(_core.TaggedObjectNode):
         return self._get_node("linearity", lambda: "N/A")
 
     @property
-    def inverse_linearity(self) -> str:
-        return self._get_node("inverse_linearity", lambda: "N/A")
-
-    @property
     def photom(self) -> str:
         return self._get_node("photom", lambda: "N/A")
 
@@ -96,7 +88,3 @@ class RefFile(_core.TaggedObjectNode):
     @property
     def saturation(self) -> str:
         return self._get_node("saturation", lambda: "N/A")
-
-    @property
-    def refpix(self) -> str:
-        return self._get_node("refpix", lambda: "N/A")
