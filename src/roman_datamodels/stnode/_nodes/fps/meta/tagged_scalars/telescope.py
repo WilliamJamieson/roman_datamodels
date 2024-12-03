@@ -14,6 +14,6 @@ class FpsTelescope(str, _core.TaggedScalarNode):
     def ROMAN(cls) -> FpsTelescope:
         return cls("ROMAN")
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls):
         return "asdf://stsci.edu/datamodels/roman/tags/fps/telescope-1.0.0"

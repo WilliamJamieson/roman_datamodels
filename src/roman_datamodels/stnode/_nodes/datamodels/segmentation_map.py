@@ -13,10 +13,10 @@ __all__ = ["SegmentationMap"]
 
 
 class SegmentationMapMeta(Basic):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
+            *super().asdf_required(),
             "optical_element",
             "program",
             "visit",
@@ -52,12 +52,12 @@ class SegmentationMap(_core.DataModelNode):
     Segmentation map computed by the Source Catalog Step
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/segmentation_map-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "data",

@@ -8,6 +8,6 @@ class ProductType(str, _core.TaggedScalarNode):
     Type of data product
     """
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/product_type-1.0.0"

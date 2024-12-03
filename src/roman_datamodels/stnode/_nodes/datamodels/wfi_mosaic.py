@@ -28,10 +28,10 @@ __all__ = ["WfiMosaic"]
 
 
 class WfiMosaicMeta(Basic):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
+            *super().asdf_required(),
             "asn",
             "basic",
             "cal_step",
@@ -92,12 +92,12 @@ class WfiMosaic(_core.DataModelNode):
     WFI Level 3 mosaics data
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "data",

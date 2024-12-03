@@ -10,12 +10,12 @@ class IndividualImageMeta(_core.TaggedObjectNode):
     Combined level 2 metadata
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/individual_image_meta-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return ("basic",)
 
     # @property

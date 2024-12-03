@@ -14,14 +14,14 @@ __all__ = ["FpsCommon"]
 
 
 class FpsCommon(FpsBasic):
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
+            *super().asdf_required(),
             "cal_step",
             "exposure",
             "guidestar",

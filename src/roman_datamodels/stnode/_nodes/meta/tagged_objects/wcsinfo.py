@@ -8,12 +8,12 @@ class Wcsinfo(_core.TaggedObjectNode):
     Wcsinfo information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wcsinfo-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "aperture_name",
             "pa_aperture",

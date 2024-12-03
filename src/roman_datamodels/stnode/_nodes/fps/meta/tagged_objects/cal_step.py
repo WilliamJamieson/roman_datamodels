@@ -8,12 +8,12 @@ class FpsCalStep(_core.TaggedObjectNode):
     FPS Level 2 Calibration Step status information
     """
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(self) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/cal_step-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "assign_wcs",
             "flat_field",

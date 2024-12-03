@@ -10,12 +10,12 @@ class MosaicBasic(_core.TaggedObjectNode):
     Basic mosaic metadata keywords
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_basic-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "time_first_mjd",
             "time_last_mjd",

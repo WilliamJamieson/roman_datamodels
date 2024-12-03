@@ -24,8 +24,8 @@ class WfiImgPhotomRefPhotTableEntry(_core.ObjectNode):
             }
         )
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "photmjsr",
             "uncertainty",
@@ -50,12 +50,12 @@ class WfiImgPhotomRef(_core.DataModelNode):
     WFI imaging photometric flux conversion data model
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/wfi_img_photom-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "phot_table",

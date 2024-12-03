@@ -13,12 +13,12 @@ class TvacExposure(_core.TaggedObjectNode):
     Tvac Exposure information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/exposure-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "type",
             "start_time",

@@ -14,9 +14,10 @@ __all__ = ["Guidewindow"]
 class GuidewindowMeta(Common):
     """Metadata for the guide window"""
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
+            *super().asdf_required(),
             "gw_start_time",
             "gw_end_time",
             "gw_frame_readout_time",
@@ -110,12 +111,12 @@ class Guidewindow(_core.DataModelNode):
     Guide window schema
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/guidewindow-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "pedestal_frames",

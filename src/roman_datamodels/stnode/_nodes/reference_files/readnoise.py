@@ -12,11 +12,11 @@ __all__ = ["ReadnoiseRef"]
 
 
 class ReadnoiseRefMeta(RefCommonRef, RefExposureTypeRef):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
-            *super(RefCommonRef, self).required,
+            *super().asdf_required(),
+            *super(RefCommonRef, cls).asdf_required(),
         )
 
     @property
@@ -29,12 +29,12 @@ class ReadnoiseRef(_core.DataModelNode):
     Read noise reference schema
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/readnoise-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "data",

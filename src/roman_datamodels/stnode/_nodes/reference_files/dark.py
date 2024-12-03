@@ -13,8 +13,8 @@ __all__ = ["DarkRef"]
 
 
 class DarkRefMetaExposure(_core.ObjectNode):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "ngroups",
             "nframes",
@@ -45,12 +45,12 @@ class DarkRefMetaExposure(_core.ObjectNode):
 
 
 class DarkRefMeta(RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
-            *super(RefCommonRef, self).required,
-            *super(RefExposureTypeRef, self).required,
+            *super().asdf_required(),
+            *super(RefCommonRef, cls).asdf_required(),
+            *super(RefExposureTypeRef, cls).asdf_required(),
             "exposure",
         )
 
@@ -68,12 +68,12 @@ class DarkRef(_core.DataModelNode):
     Dark reference schema
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/dark-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "data",

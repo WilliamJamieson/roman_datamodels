@@ -18,6 +18,6 @@ class FpsOrigin(str, _core.TaggedScalarNode):
     def IPAC_SSC(cls) -> FpsOrigin:
         return cls("IPAC/SSC")
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/origin-1.0.0"

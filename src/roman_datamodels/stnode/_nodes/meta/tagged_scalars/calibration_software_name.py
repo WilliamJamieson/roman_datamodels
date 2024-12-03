@@ -8,6 +8,6 @@ class CalibrationSoftwareName(str, _core.TaggedScalarNode):
     Name of the calibration software used
     """
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/calibration_software_name-1.0.0"

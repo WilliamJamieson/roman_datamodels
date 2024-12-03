@@ -22,33 +22,49 @@ def get_schema_from_tag(ctx, tag):
 
 
 class SchemaMixin(ABC):
-    @property
+    @classmethod
     @abstractmethod
-    def schema_uri(self):
+    def asdf_schema_uri(clas) -> str:
         """URI of the schema that defines this node."""
+
+    @property
+    def schema_uri(self):
+        return self.asdf_schema_uri()
 
 
 class TagMixin(SchemaMixin, ABC):
-    @property
+    @classmethod
     @abstractmethod
-    def ctx(self):
+    def asdf_ctx(self):
         """The ASDF file context."""
 
     @property
+    def ctx(self):
+        return self.asdf_ctx()
+
+    @classmethod
     @abstractmethod
-    def tag(self):
+    def asdf_tag(cls) -> str:
         """Tag of the node."""
 
     @property
-    def schema_uri(self):
-        return self.ctx.extension_manager.get_tag_definition(self.tag).schema_uris[0]
+    def tag(self) -> str:
+        return self.asdf_tag()
+
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return cls.asdf_ctx().extension_manager.get_tag_definition(cls.asdf_tag()).schema_uris[0]
 
 
 class ObjectNode(DNode, ABC):
-    @property
+    @classmethod
     @abstractmethod
-    def required(self) -> tuple[str]:
+    def asdf_required(cls) -> tuple[str]:
         """List of required fields in this node."""
+
+    @property
+    def required(self) -> tuple[str]:
+        return self.asdf_required()
 
 
 class SchemaObjectNode(ObjectNode, SchemaMixin, ABC): ...
@@ -92,11 +108,11 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
     #         SCALAR_NODE_CLASSES_BY_TAG[cls._tag] = cls
     #         SCALAR_NODE_CLASSES_BY_KEY[name_from_tag_uri(cls._tag)] = cls
 
-    @property
-    def ctx(self):
-        if self._ctx is None:
-            TaggedScalarNode._ctx = asdf.AsdfFile()
-        return self._ctx
+    @classmethod
+    def asdf_ctx(cls):
+        if cls._ctx is None:
+            cls._ctx = asdf.AsdfFile()
+        return cls._ctx
 
     def __asdf_traverse__(self):
         return self

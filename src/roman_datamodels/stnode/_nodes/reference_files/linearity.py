@@ -9,10 +9,10 @@ __all__ = ["LinearityRef"]
 
 
 class LinearityRefMeta(RefCommonRef):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
+            *super().asdf_required(),
             "input_units",
             "output_units",
         )
@@ -35,12 +35,12 @@ class LinearityRef(_core.DataModelNode):
     Linearity correction reference schema
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/linearity-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "coeffs",

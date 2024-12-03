@@ -4,8 +4,8 @@ __all__ = ["TvacRefFile"]
 
 
 class TvacCrds(_core.ObjectNode):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "version",
             "context",
@@ -25,12 +25,12 @@ class TvacRefFile(_core.TaggedObjectNode):
     Tvac Calibration reference file names.
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/ref_file-1.0.0"
 
-    @property
-    def required(self) -> str:
+    @classmethod
+    def asdf_required(cls) -> str:
         return (
             "crds",
             "dark",

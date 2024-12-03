@@ -19,6 +19,6 @@ class CalLogs(_core.TaggedListNode):
             ]
         )
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/cal_logs-1.0.0"

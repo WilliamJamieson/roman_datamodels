@@ -5,9 +5,9 @@ from roman_datamodels.stnode import _core, _default
 __all__ = ["Visit"]
 
 
-class Dither(_core.ObjectNode):
-    @property
-    def required(self) -> tuple[str]:
+class VisitDither(_core.ObjectNode):
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "primary_name",
             "subpixel_name",
@@ -32,12 +32,12 @@ class Visit(_core.TaggedObjectNode):
     Visit information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/visit-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "dither",
             "engineering_quality",
@@ -51,8 +51,8 @@ class Visit(_core.TaggedObjectNode):
         )
 
     @property
-    def dither(self) -> Dither:
-        return self._get_node("dither", Dither)
+    def dither(self) -> VisitDither:
+        return self._get_node("dither", VisitDither)
 
     @property
     def engineering_quality(self) -> str:

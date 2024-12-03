@@ -8,14 +8,16 @@ class MosaicAssociations(_core.TaggedObjectNode):
     Mosaic associations metadata keywords
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_associations-1.0.0"
 
-    required = (
-        "pool_name",
-        "table_name",
-    )
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
+        return (
+            "pool_name",
+            "table_name",
+        )
 
     @property
     def pool_name(self) -> str:

@@ -22,11 +22,11 @@ class PixelareaRefMetaPhotometry(_core.ObjectNode):
 
 
 class PixelareaRefMeta(RefCommonRef, RefOpticalElementRef):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
-            *super(RefCommonRef, self).required,
+            *super().asdf_required(),
+            *super(RefCommonRef, cls).asdf_required(),
             "photometry",
         )
 
@@ -44,12 +44,12 @@ class PixelareaRef(_core.DataModelNode):
     Pixel area reference schema
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/pixelarea-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "data",

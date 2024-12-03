@@ -54,6 +54,6 @@ class FpsWfiOpticalElement(str, _core.SchemaScalarNode):
     def DARK(cls) -> FpsWfiOpticalElement:
         return cls("DARK")
 
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_optical_element-1.0.0"

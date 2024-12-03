@@ -6,8 +6,8 @@ __all__ = ["Associations"]
 class AssociationsMember(_core.ObjectNode):
     """The members of an association"""
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "expname",
             "exposerr",
@@ -30,8 +30,8 @@ class AssociationsMember(_core.ObjectNode):
 class AssociationsProducts(_core.ObjectNode):
     """The products of an association"""
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "name",
             "members",
@@ -51,8 +51,8 @@ class Associations(_core.DataModelNode):
     Association table
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/associations-1.0.0"
 
     @property
@@ -64,8 +64,8 @@ class Associations(_core.DataModelNode):
         # default fall-back
         return (2, 3, 1)
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "asn_id",
             "asn_pool",

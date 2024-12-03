@@ -8,12 +8,12 @@ class L3CalStep(_core.TaggedObjectNode):
     Level 3 Calibration Step status information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/l3_cal_step-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "flux",
             "outlier_detection",

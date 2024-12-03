@@ -22,6 +22,6 @@ class Origin(str, _core.TaggedScalarNode):
     def IPAC_SSC(cls) -> Origin:
         return cls("IPAC/SSC")
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/origin-1.0.0"

@@ -4,8 +4,8 @@ __all__ = ["RefFile"]
 
 
 class Crds(_core.ObjectNode):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "version",
             "context",
@@ -27,12 +27,12 @@ class RefFile(_core.TaggedObjectNode):
     Class generated from tag 'asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0'
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0"
 
-    @property
-    def required(self) -> str:
+    @classmethod
+    def asdf_required(cls) -> str:
         return (
             "crds",
             "dark",

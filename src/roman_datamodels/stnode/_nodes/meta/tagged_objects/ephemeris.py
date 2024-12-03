@@ -8,12 +8,12 @@ class Ephemeris(_core.TaggedObjectNode):
     Ephemeris information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/ephemeris-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "earth_angle",
             "moon_angle",

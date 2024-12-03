@@ -38,6 +38,6 @@ class TvacGuidewindowModes(str, _core.SchemaScalarNode):
     def DEFOCUSED_LARGE(cls) -> TvacGuidewindowModes:
         return cls("DEFOCUSED-LARGE")
 
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/guidewindow_modes-1.0.0"

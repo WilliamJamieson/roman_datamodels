@@ -12,8 +12,8 @@ __all__ = ["RefCommonRef"]
 
 
 class RefCommonRefInstrument(_core.ObjectNode):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "name",
             "detector",
@@ -33,12 +33,12 @@ class RefCommonRefInstrument(_core.ObjectNode):
 
 
 class RefCommonRef(_core.SchemaObjectNode):
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_common-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "reftype",
             "author",

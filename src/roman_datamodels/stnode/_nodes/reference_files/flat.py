@@ -11,11 +11,11 @@ __all__ = ["FlatRef"]
 
 
 class FlatRefMeta(RefCommonRef, RefOpticalElementRef):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
-            *super(RefCommonRef, self).required,
+            *super().asdf_required(),
+            *super(RefCommonRef, cls).asdf_required(),
         )
 
     @property
@@ -28,12 +28,12 @@ class FlatRef(_core.DataModelNode):
     Flat field information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "data",

@@ -82,6 +82,6 @@ class WfiDetector(str, _core.SchemaScalarNode):
     def WFI18(cls) -> WfiDetector:
         return cls("WFI18")
 
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/wfi_detector-1.0.0"

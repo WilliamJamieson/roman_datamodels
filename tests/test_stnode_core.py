@@ -9,8 +9,8 @@ def test_abstract_SchemaScalarNode():
         _core.SchemaScalarNode()
 
     class ExampleSchemaScalarNode(_core.SchemaScalarNode):
-        @property
-        def schema_uri(self):
+        @classmethod
+        def asdf_schema_uri(cls):
             return "test"
 
     # Show no type error when correct methods are implemented
@@ -23,8 +23,8 @@ def test_abstract_TaggedScalarNode():
         _core.TaggedScalarNode()
 
     class ExampleTaggedScalarNode(_core.TaggedScalarNode):
-        @property
-        def tag(self):
+        @classmethod
+        def asdf_tag(cls):
             return "test"
 
     # Show no type error when correct methods are implemented
@@ -37,8 +37,8 @@ def test_abstract_ObjectNode():
         _core.ObjectNode()
 
     class ExampleObjectNode(_core.ObjectNode):
-        @property
-        def required(self):
+        @classmethod
+        def asdf_required(cls):
             return ("test",)
 
     # Show no type error when correct methods are implemented
@@ -51,8 +51,8 @@ def test_abstract_SchemaObjectNode():
         _core.SchemaObjectNode()
 
     class ExampleSchemaObjectNodeUri(_core.SchemaObjectNode):
-        @property
-        def schema_uri(self):
+        @classmethod
+        def asdf_schema_uri(cls):
             return "test"
 
     # Test that SchemaObjectNode needs more than a URI
@@ -60,8 +60,8 @@ def test_abstract_SchemaObjectNode():
         ExampleSchemaObjectNodeUri()
 
     class ExampleSchemaObjectNodeRequired(ExampleSchemaObjectNodeUri):
-        @property
-        def required(self):
+        @classmethod
+        def asdf_required(cls):
             return ("test",)
 
     # Show no type error when correct methods are implemented
@@ -74,8 +74,8 @@ def test_abstract_TaggedObjectNode():
         _core.TaggedObjectNode()
 
     class ExampleTaggedObjectNodeTag(_core.TaggedObjectNode):
-        @property
-        def tag(self):
+        @classmethod
+        def asdf_tag(cls):
             return "test"
 
     # Test that TaggedObjectNode needs more than a tag
@@ -83,8 +83,8 @@ def test_abstract_TaggedObjectNode():
         ExampleTaggedObjectNodeTag()
 
     class ExampleTaggedObjectNodeRequired(ExampleTaggedObjectNodeTag):
-        @property
-        def required(self):
+        @classmethod
+        def asdf_required(cls):
             return ("test",)
 
     # Show no type error when correct methods are implemented

@@ -14,6 +14,6 @@ class TvacTelescope(str, _core.TaggedScalarNode):
     def ROMAN(cls) -> TvacTelescope:
         return cls("ROMAN")
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/telescope-1.0.0"

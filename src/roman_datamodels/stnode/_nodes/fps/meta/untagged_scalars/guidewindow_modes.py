@@ -38,6 +38,6 @@ class FpsGuidewindowModes(str, _core.SchemaScalarNode):
     def DEFOCUSED_LARGE(cls) -> FpsGuidewindowModes:
         return cls("DEFOCUSED-LARGE")
 
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/guidewindow_modes-1.0.0"

@@ -6,8 +6,8 @@ __all__ = ["RefOpticalElementRef"]
 
 
 class RefOpticalElementRefInstrument(_core.ObjectNode):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return ("optical_element",)
 
     @property
@@ -16,12 +16,12 @@ class RefOpticalElementRefInstrument(_core.ObjectNode):
 
 
 class RefOpticalElementRef(_core.SchemaObjectNode):
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_optical_element-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return ("instrument",)
 
     @property

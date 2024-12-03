@@ -34,6 +34,6 @@ class FpsExposureType(str, _core.SchemaScalarNode):
     def WFI_WFSC(cls) -> FpsExposureType:
         return cls("WFI_WFSC")
 
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/exposure_type-1.0.0"

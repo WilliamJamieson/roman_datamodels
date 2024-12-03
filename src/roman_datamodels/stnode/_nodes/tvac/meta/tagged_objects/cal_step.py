@@ -8,12 +8,12 @@ class TvacCalStep(_core.TaggedObjectNode):
     Tvac Level 2 Calibration Step status information
     """
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/cal_step-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "assign_wcs",
             "flat_field",

@@ -19,12 +19,12 @@ __all__ = ["Basic"]
 
 
 class Basic(_core.SchemaObjectNode):
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/basic-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "calibration_software_name",
             "calibration_software_version",

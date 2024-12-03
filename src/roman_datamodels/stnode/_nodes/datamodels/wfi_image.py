@@ -26,10 +26,10 @@ __all__ = ["WfiImage"]
 class WfiImageMeta(Common):
     """Common metadata for WfiImage"""
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
+            *super().asdf_required(),
             "photometry",
             "wcs",
         )
@@ -72,12 +72,12 @@ class WfiImage(_core.DataModelNode):
     Wfi level 2 image information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_image-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "data",

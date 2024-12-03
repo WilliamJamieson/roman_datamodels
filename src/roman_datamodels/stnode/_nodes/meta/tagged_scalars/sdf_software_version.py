@@ -8,6 +8,6 @@ class SdfSoftwareVersion(str, _core.TaggedScalarNode):
     SDF software version number
     """
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/sdf_software_version-1.0.0"

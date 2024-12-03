@@ -8,6 +8,6 @@ class ModelType(str, _core.TaggedScalarNode):
     Type of data model
     """
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/model_type-1.0.0"

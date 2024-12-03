@@ -8,12 +8,12 @@ class OutlierDetection(_core.TaggedObjectNode):
     Outlier Detection information
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/outlier_detection-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return ("good_bits",)
 
     @property

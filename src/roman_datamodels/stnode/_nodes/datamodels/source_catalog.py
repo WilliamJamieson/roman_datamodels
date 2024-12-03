@@ -1,6 +1,6 @@
 from astropy.table import Table
 
-from roman_datamodels.stnode import _tagged
+from roman_datamodels.stnode import _core
 
 from ..meta import (
     Basic,
@@ -15,10 +15,10 @@ __all__ = ["SourceCatalog"]
 
 
 class SourceCatalogMeta(Basic):
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
-            *super().required,
+            *super().asdf_required(),
             "optical_element",
             "exposure",
             "photometry",
@@ -47,17 +47,17 @@ class SourceCatalogMeta(Basic):
         return self._get_node("visit", Visit)
 
 
-class SourceCatalog(_tagged.DataModelNode):
+class SourceCatalog(_core.DataModelNode):
     """
     Photometry and astrometry computed by the Source Catalog Step
     """
 
-    @property
-    def tag(self) -> str:
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/source_catalog-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return (
             "meta",
             "source_catalog",

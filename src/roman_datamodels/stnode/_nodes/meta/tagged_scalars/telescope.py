@@ -14,6 +14,6 @@ class Telescope(str, _core.TaggedScalarNode):
     def ROMAN(cls) -> Telescope:
         return cls("ROMAN")
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/telescope-1.0.0"

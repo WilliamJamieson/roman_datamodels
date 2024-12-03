@@ -8,6 +8,6 @@ class TvacFilename(str, _core.TaggedScalarNode):
     Name of the file for the model
     """
 
-    @property
-    def tag(self):
+    @classmethod
+    def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/filename-1.0.0"
