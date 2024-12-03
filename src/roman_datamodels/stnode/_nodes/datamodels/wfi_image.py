@@ -12,7 +12,7 @@ from ..meta import (
     OutlierDetection,
     Photometry,
     SkyBackground,
-    SourceDetection,
+    SourceCatalog,
     Statistics,
     Wcsinfo,
 )
@@ -51,8 +51,8 @@ class WfiImageMeta(Common):
         return self._get_node("photometry", Photometry)
 
     @property
-    def source_detection(self) -> SourceDetection:
-        return self._get_node("source_detection", SourceDetection)
+    def source_detection(self) -> SourceCatalog:
+        return self._get_node("source_detection", SourceCatalog)
 
     @property
     def statistics(self) -> Statistics:

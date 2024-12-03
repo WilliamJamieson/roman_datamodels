@@ -11,10 +11,10 @@ from ..meta import (
     WfiOpticalElement,
 )
 
-__all__ = ["SourceCatalog"]
+__all__ = ["ImageSourceCatalog"]
 
 
-class SourceCatalogMeta(Basic):
+class ImageSourceCatalogMeta(Basic):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -47,14 +47,14 @@ class SourceCatalogMeta(Basic):
         return self._get_node("visit", Visit)
 
 
-class SourceCatalog(_core.DataModelNode):
+class ImageSourceCatalog(_core.DataModelNode):
     """
     Photometry and astrometry computed by the Source Catalog Step
     """
 
     @classmethod
     def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/source_catalog-1.0.0"
+        return "asdf://stsci.edu/datamodels/roman/tags/image_source_catalog-1.0.0"
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:
@@ -68,8 +68,8 @@ class SourceCatalog(_core.DataModelNode):
         raise NotImplementedError("This node does not have an array shape")
 
     @property
-    def meta(self) -> SourceCatalogMeta:
-        return self._get_node("meta", SourceCatalogMeta)
+    def meta(self) -> ImageSourceCatalogMeta:
+        return self._get_node("meta", ImageSourceCatalogMeta)
 
     @property
     def source_catalog(self) -> Table:

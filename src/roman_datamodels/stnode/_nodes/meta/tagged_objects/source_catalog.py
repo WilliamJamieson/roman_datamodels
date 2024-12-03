@@ -1,16 +1,16 @@
 from roman_datamodels.stnode import _core
 
-__all__ = ["SourceDetection"]
+__all__ = ["SourceCatalog"]
 
 
-class SourceDetection(_core.TaggedObjectNode):
+class SourceCatalog(_core.TaggedObjectNode):
     """
-    Source catalog for TweakReg
+    Source detection catalog for TweakReg
     """
 
     @classmethod
     def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/source_detection-1.0.0"
+        return "asdf://stsci.edu/datamodels/roman/tags/source_catalog-1.0.0"
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:

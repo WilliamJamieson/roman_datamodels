@@ -18,7 +18,7 @@ from .rcs import Rcs
 from .ref_file import RefFile
 from .resample import Resample
 from .sky_background import SkyBackground
-from .source_detection import SourceDetection
+from .source_catalog import SourceCatalog
 from .statistics import Statistics
 from .velocity_aberration import VelocityAberration
 from .visit import Visit
@@ -46,7 +46,7 @@ __all__ = [
     "RefFile",
     "Resample",
     "SkyBackground",
-    "SourceDetection",
+    "SourceCatalog",
     "Statistics",
     "VelocityAberration",
     "Visit",
