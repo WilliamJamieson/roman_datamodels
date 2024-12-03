@@ -20,4 +20,4 @@ class TvacOrigin(str, _core.TaggedScalarNode):
 
     @classmethod
     def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/fps/origin-1.0.0"
+        return "asdf://stsci.edu/datamodels/roman/tags/tvac/origin-1.0.0"

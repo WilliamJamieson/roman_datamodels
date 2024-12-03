@@ -31,7 +31,7 @@ class Tvac(_core.DataModelNode):
 
     @classmethod
     def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tvac/fps-1.0.0"
+        return "asdf://stsci.edu/datamodels/roman/tags/tvac-1.0.0"
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:

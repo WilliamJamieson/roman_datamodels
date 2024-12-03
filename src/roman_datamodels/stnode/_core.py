@@ -4,6 +4,16 @@ import asdf
 
 from ._base import DNode, LNode
 
+__all__ = [
+    "DataModelNode",
+    "ObjectNode",
+    "SchemaObjectNode",
+    "SchemaScalarNode",
+    "TaggedListNode",
+    "TaggedObjectNode",
+    "TaggedScalarNode",
+]
+
 
 def get_schema_from_tag(ctx, tag):
     """
@@ -21,6 +31,29 @@ def get_schema_from_tag(ctx, tag):
     return asdf.schema.load_schema(schema_uri, resolve_references=True)
 
 
+def class_name_from_uri(uri):
+    """
+    Compute the name of the schema from the uri.
+
+    Parameters
+    ----------
+    uri : str
+        The uri to find the name from
+    """
+    name = uri.split("/")[-1].split("-")[0]
+    if "/tvac/" in uri and "tvac" not in name:
+        name = "tvac_" + uri.split("/")[-1].split("-")[0]
+    elif "/fps/" in uri and "fps" not in name:
+        name = "fps_" + uri.split("/")[-1].split("-")[0]
+
+    name = "".join([p.capitalize() for p in name.split("_")])
+
+    if "reference_files" in uri:
+        name += "Ref"
+
+    return name
+
+
 class SchemaMixin(ABC):
     @classmethod
     @abstractmethod
@@ -33,10 +66,13 @@ class SchemaMixin(ABC):
 
 
 class TagMixin(SchemaMixin, ABC):
+    _ctx = None
+
     @classmethod
-    @abstractmethod
-    def asdf_ctx(self):
-        """The ASDF file context."""
+    def asdf_ctx(cls):
+        if cls._ctx is None:
+            cls._ctx = asdf.AsdfFile()
+        return cls._ctx
 
     @property
     def ctx(self):
@@ -58,6 +94,22 @@ class TagMixin(SchemaMixin, ABC):
 
 class ObjectNode(DNode, ABC):
     @classmethod
+    def _object_nodes(cls):
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._object_nodes()
+            for name, sub_node in sub_nodes.items():
+                if name in nodes and nodes[name] != sub_node:
+                    raise RuntimeError(f"ObjectNode class '{node.__name__}' has conflicting sub-node '{name}'")
+
+                nodes[name] = sub_node
+
+            if node not in (ObjectNode, SchemaObjectNode, TaggedObjectNode, DataModelNode):
+                nodes[node.__name__] = node
+
+        return nodes
+
+    @classmethod
     @abstractmethod
     def asdf_required(cls) -> tuple[str]:
         """List of required fields in this node."""
@@ -67,23 +119,107 @@ class ObjectNode(DNode, ABC):
         return self.asdf_required()
 
 
-class SchemaObjectNode(ObjectNode, SchemaMixin, ABC): ...
+class SchemaObjectNode(ObjectNode, SchemaMixin, ABC):
+    @classmethod
+    def _schema_object_nodes(cls):
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._schema_object_nodes()
+            for uri, sub_node in sub_nodes.items():
+                if uri in nodes and nodes[uri] != sub_node:
+                    raise RuntimeError(f"SchemaObjectNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                nodes[uri] = sub_node
+
+            try:
+                uri = node.asdf_schema_uri()
+            except KeyError:
+                continue
+
+            # Filter out the subclasses of schema nodes
+            if node.__name__ == class_name_from_uri(uri):
+                nodes[uri] = node
+
+        return nodes
 
 
-class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC): ...
+class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):
+    @classmethod
+    def _tagged_object_nodes(cls):
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._tagged_object_nodes()
+            for uri, sub_node in sub_nodes.items():
+                if uri in nodes and nodes[uri] != sub_node:
+                    raise RuntimeError(f"TaggedObjectNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                nodes[uri] = sub_node
+
+            # Filter out the abstract classes
+            if uri := node.asdf_tag():
+                # tagged node names should match with the tag uri
+                if node.__name__ != class_name_from_uri(uri):
+                    raise RuntimeError(f"TaggedObjectNode class '{node.__name__}' has incorrect tag '{uri}'")
+
+                nodes[uri] = node
+
+        return nodes
 
 
 class DataModelNode(TaggedObjectNode, ABC):
+    @classmethod
+    def _data_model_nodes(cls):
+        # Just start one level up so we don't capture the non-datamodels
+        return cls._tagged_object_nodes()
+
     @property
     @abstractmethod
     def array_shape(self) -> tuple[int]:
         """Shape of the data array."""
 
 
-class TaggedListNode(LNode, TagMixin, ABC): ...
+class TaggedListNode(LNode, TagMixin, ABC):
+    @classmethod
+    def _tagged_list_nodes(cls):
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._tagged_list_nodes()
+            for uri, sub_node in sub_nodes.items():
+                if uri in nodes and nodes[uri] != sub_node:
+                    raise RuntimeError(f"TaggedObjectNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                nodes[uri] = sub_node
+
+            if uri := node.asdf_tag():
+                # tagged node names should match with the tag uri
+                if node.__name__ != class_name_from_uri(uri):
+                    raise RuntimeError(f"TaggedObjectNode class '{node.__name__}' has incorrect tag '{uri}'")
+
+                nodes[uri] = node
+
+        return nodes
 
 
-class SchemaScalarNode(SchemaMixin, ABC): ...
+class SchemaScalarNode(SchemaMixin, ABC):
+    @classmethod
+    def _schema_scalar_nodes(cls):
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._schema_scalar_nodes()
+            for uri, sub_node in sub_nodes.items():
+                if uri in nodes and nodes[uri] != sub_node:
+                    raise RuntimeError(f"SchemaObjectNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                nodes[uri] = sub_node
+
+            try:
+                uri = node.asdf_schema_uri()
+            except KeyError:
+                continue
+
+            # These should not be subclassed
+            if node.__name__ != class_name_from_uri(uri):
+                raise RuntimeError(f"SchemaScalarNode class '{node.__name__}' should not be subclassed")
+
+            nodes[uri] = node
+
+        return nodes
 
 
 class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
@@ -94,39 +230,10 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
         These will all be in the tagged_scalars directory.
     """
 
-    _ctx = None
-
-    # def __init_subclass__(cls, **kwargs) -> None:
-    #     """
-    #     Register any subclasses of this class in the SCALAR_NODE_CLASSES_BY_TAG
-    #     and SCALAR_NODE_CLASSES_BY_KEY registry.
-    #     """
-    #     super().__init_subclass__(**kwargs)
-    #     if cls.__name__ != "TaggedScalarNode":
-    #         if cls._tag in SCALAR_NODE_CLASSES_BY_TAG:
-    #             raise RuntimeError(f"TaggedScalarNode class for tag '{cls._tag}' has been defined twice")
-    #         SCALAR_NODE_CLASSES_BY_TAG[cls._tag] = cls
-    #         SCALAR_NODE_CLASSES_BY_KEY[name_from_tag_uri(cls._tag)] = cls
-
     @classmethod
-    def asdf_ctx(cls):
-        if cls._ctx is None:
-            cls._ctx = asdf.AsdfFile()
-        return cls._ctx
+    def _tagged_scalar_nodes(cls):
+        # Just start one level up so we don't capture the non-tagged scalars
+        return cls._schema_scalar_nodes()
 
     def __asdf_traverse__(self):
         return self
-
-    # @property
-    # def tag(self):
-    #     return self._tag
-
-    # @property
-    # def key(self):
-    #     return name_from_tag_uri(self._tag)
-
-    # def get_schema(self):
-    #     return get_schema_from_tag(self.ctx, self._tag)
-
-    # def copy(self):
-    #     return copy.copy(self)

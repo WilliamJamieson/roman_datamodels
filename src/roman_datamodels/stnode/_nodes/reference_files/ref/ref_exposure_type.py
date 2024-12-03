@@ -1,4 +1,4 @@
-from roman_datamodels.stnode._nodes import _core
+from roman_datamodels.stnode import _core
 
 from ...meta import ExposureType
 
@@ -7,7 +7,7 @@ __all__ = ["RefExposureTypeRef"]
 
 class RefExposureTypeRefExposure(_core.ObjectNode):
     @property
-    def required(self) -> tuple[str]:
+    def asdf_required(cls) -> tuple[str]:
         return (
             "type",
             "p_exptype",
@@ -23,12 +23,12 @@ class RefExposureTypeRefExposure(_core.ObjectNode):
 
 
 class RefExposureTypeRef(_core.SchemaObjectNode):
-    @property
-    def schema_uri(self) -> str:
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_exposure_type-1.0.0"
 
-    @property
-    def required(self) -> tuple[str]:
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
         return ("exposure",)
 
     @property
