@@ -28,7 +28,10 @@ from .tagged_objects import (
     WfiMode,
 )
 from .untagged_scalars import (
+    ExposureType,
     GuidewindowModes,
+    WfiDetector,
+    WfiOpticalElement,
 )
 
 __all__ = [
@@ -38,6 +41,7 @@ __all__ = [
     "Coordinates",
     "Ephemeris",
     "Exposure",
+    "ExposureType",
     "Guidestar",
     "GuidewindowModes",
     "IndividualImageMeta",
@@ -59,5 +63,7 @@ __all__ = [
     "VelocityAberration",
     "Visit",
     "Wcsinfo",
+    "WfiDetector",
     "WfiMode",
+    "WfiOpticalElement",
 ]
