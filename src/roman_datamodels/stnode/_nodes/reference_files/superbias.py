@@ -7,7 +7,7 @@ from .ref import RefCommonRef
 __all__ = ["SuperbiasRef"]
 
 
-class SuperbiasRefMeta(RefCommonRef):
+class SuperbiasRef_Meta(RefCommonRef):
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "BIAS")
@@ -45,8 +45,8 @@ class SuperbiasRef(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> SuperbiasRefMeta:
-        return self._get_node("meta", SuperbiasRefMeta)
+    def meta(self) -> SuperbiasRef_Meta:
+        return self._get_node("meta", SuperbiasRef_Meta)
 
     @property
     def data(self) -> np.ndarray:

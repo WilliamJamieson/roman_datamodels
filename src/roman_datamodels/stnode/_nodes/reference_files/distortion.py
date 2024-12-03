@@ -12,7 +12,7 @@ from .ref import (
 __all__ = ["DistortionRef"]
 
 
-class DistortionRefMeta(RefCommonRef, RefOpticalElementRef):
+class DistortionRef_Meta(RefCommonRef, RefOpticalElementRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -56,8 +56,8 @@ class DistortionRef(_core.DataModelNode):
         raise NotImplementedError("array_shape is not implemented")
 
     @property
-    def meta(self) -> DistortionRefMeta:
-        return self._get_node("meta", DistortionRefMeta)
+    def meta(self) -> DistortionRef_Meta:
+        return self._get_node("meta", DistortionRef_Meta)
 
     @property
     def coordinate_distortion_transform(self) -> Model:

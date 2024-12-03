@@ -11,7 +11,7 @@ from .ref import (
 __all__ = ["ReadnoiseRef"]
 
 
-class ReadnoiseRefMeta(RefCommonRef, RefExposureTypeRef):
+class ReadnoiseRef_Meta(RefCommonRef, RefExposureTypeRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -55,8 +55,8 @@ class ReadnoiseRef(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> ReadnoiseRefMeta:
-        return self._get_node("meta", ReadnoiseRefMeta)
+    def meta(self) -> ReadnoiseRef_Meta:
+        return self._get_node("meta", ReadnoiseRef_Meta)
 
     @property
     def data(self) -> u.Quantity:

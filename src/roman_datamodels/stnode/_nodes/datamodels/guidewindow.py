@@ -11,7 +11,7 @@ from ..meta import (
 __all__ = ["Guidewindow"]
 
 
-class GuidewindowMeta(Common):
+class Guidewindow_Meta(Common):
     """Metadata for the guide window"""
 
     @classmethod
@@ -139,8 +139,8 @@ class Guidewindow(_core.DataModelNode):
         return (2, 8, 16, 32, 32)
 
     @property
-    def meta(self) -> GuidewindowMeta:
-        return self._get_node("meta", GuidewindowMeta)
+    def meta(self) -> Guidewindow_Meta:
+        return self._get_node("meta", Guidewindow_Meta)
 
     def pedestal_frames(self) -> np.ndarray:
         return self._get_node("pedestal_frames", np.zeros(self.array_shape, dtype=np.uint16))

@@ -5,7 +5,7 @@ from ...meta import ExposureType
 __all__ = ["RefExposureTypeRef"]
 
 
-class RefExposureTypeRefExposure(_core.ObjectNode):
+class RefExposureTypeRef_Exposure(_core.ObjectNode):
     @property
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -32,5 +32,5 @@ class RefExposureTypeRef(_core.SchemaObjectNode):
         return ("exposure",)
 
     @property
-    def exposure(self) -> RefExposureTypeRefExposure:
-        return self._get_node("exposure", RefExposureTypeRefExposure)
+    def exposure(self) -> RefExposureTypeRef_Exposure:
+        return self._get_node("exposure", RefExposureTypeRef_Exposure)

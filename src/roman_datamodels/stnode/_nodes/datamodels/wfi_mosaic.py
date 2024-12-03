@@ -1,8 +1,5 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
 import numpy as np
+from gwcs import WCS
 
 from roman_datamodels.stnode import _core, _default
 
@@ -21,13 +18,10 @@ from ..meta import (
     Resample,
 )
 
-if TYPE_CHECKING:
-    from gwcs import WCS
-
 __all__ = ["WfiMosaic"]
 
 
-class WfiMosaicMeta(Basic):
+class WfiMosaic_Meta(Basic):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -137,8 +131,8 @@ class WfiMosaic(_core.DataModelNode):
         return 2
 
     @property
-    def meta(self) -> WfiMosaicMeta:
-        return self._get_node("meta", WfiMosaicMeta)
+    def meta(self) -> WfiMosaic_Meta:
+        return self._get_node("meta", WfiMosaic_Meta)
 
     @property
     def data(self) -> np.ndarray:

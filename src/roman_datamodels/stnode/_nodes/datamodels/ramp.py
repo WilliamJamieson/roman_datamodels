@@ -10,7 +10,7 @@ from ..meta import (
 __all__ = ["Ramp"]
 
 
-class RampMeta(Common):
+class Ramp_Meta(Common):
     @property
     def cal_step(self) -> L2CalStep:
         return self._get_node("cal_step", L2CalStep)
@@ -59,8 +59,8 @@ class Ramp(_core.DataModelNode):
         return (8, 4096, 4096)
 
     @property
-    def meta(self) -> RampMeta:
-        return self._get_node("meta", RampMeta)
+    def meta(self) -> Ramp_Meta:
+        return self._get_node("meta", Ramp_Meta)
 
     @property
     def data(self) -> np.ndarray:

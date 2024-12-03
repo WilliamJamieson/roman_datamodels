@@ -8,7 +8,7 @@ from .ref import RefCommonRef
 __all__ = ["SaturationRef"]
 
 
-class SaturationRefMeta(RefCommonRef):
+class SaturationRef_Meta(RefCommonRef):
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "SATURATION")
@@ -46,8 +46,8 @@ class SaturationRef(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> SaturationRefMeta:
-        return self._get_node("meta", SaturationRefMeta)
+    def meta(self) -> SaturationRef_Meta:
+        return self._get_node("meta", SaturationRef_Meta)
 
     @property
     def data(self) -> u.Quantity:

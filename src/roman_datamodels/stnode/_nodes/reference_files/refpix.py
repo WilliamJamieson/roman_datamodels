@@ -8,7 +8,7 @@ from .ref import RefCommonRef
 __all__ = ["RefpixRef"]
 
 
-class RefpixRefMeta(RefCommonRef):
+class RefpixRef_Meta(RefCommonRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -63,8 +63,8 @@ class RefpixRef(_core.DataModelNode):
         return (32, 286721)
 
     @property
-    def meta(self) -> RefpixRefMeta:
-        return self._get_node("meta", RefpixRefMeta)
+    def meta(self) -> RefpixRef_Meta:
+        return self._get_node("meta", RefpixRef_Meta)
 
     @property
     def gamma(self) -> np.ndarray:

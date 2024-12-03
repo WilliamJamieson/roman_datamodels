@@ -11,7 +11,7 @@ from .meta import (
 __all__ = ["Tvac"]
 
 
-class TvacMeta(TvacCommon):
+class Tvac_Meta(TvacCommon):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -57,8 +57,8 @@ class Tvac(_core.DataModelNode):
         return (8, 4096, 4096)
 
     @property
-    def meta(self) -> TvacMeta:
-        return self._get_node("meta", TvacMeta)
+    def meta(self) -> Tvac_Meta:
+        return self._get_node("meta", Tvac_Meta)
 
     @property
     def data(self) -> u.Quantity:

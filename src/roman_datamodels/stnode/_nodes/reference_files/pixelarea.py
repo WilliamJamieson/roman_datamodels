@@ -11,7 +11,7 @@ from .ref import (
 __all__ = ["PixelareaRef"]
 
 
-class PixelareaRefMetaPhotometry(_core.ObjectNode):
+class PixelareaRef_Meta_Photometry(_core.ObjectNode):
     @property
     def pixelarea_steradians(self) -> u.Quantity | None:
         return self._get_node("pixelarea_steradians", lambda: float(_default.NONUM) * u.sr)
@@ -21,7 +21,7 @@ class PixelareaRefMetaPhotometry(_core.ObjectNode):
         return self._get_node("pixelarea_arcsecsq", lambda: float(_default.NONUM) * u.arcsec**2)
 
 
-class PixelareaRefMeta(RefCommonRef, RefOpticalElementRef):
+class PixelareaRef_Meta(RefCommonRef, RefOpticalElementRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -35,8 +35,8 @@ class PixelareaRefMeta(RefCommonRef, RefOpticalElementRef):
         return self._get_node("reftype", lambda: "PIXELAREA")
 
     @property
-    def photometry(self) -> PixelareaRefMetaPhotometry:
-        return self._get_node("photometry", PixelareaRefMetaPhotometry)
+    def photometry(self) -> PixelareaRef_Meta_Photometry:
+        return self._get_node("photometry", PixelareaRef_Meta_Photometry)
 
 
 class PixelareaRef(_core.DataModelNode):
@@ -70,8 +70,8 @@ class PixelareaRef(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> PixelareaRefMeta:
-        return self._get_node("meta", PixelareaRefMeta)
+    def meta(self) -> PixelareaRef_Meta:
+        return self._get_node("meta", PixelareaRef_Meta)
 
     @property
     def data(self) -> np.ndarray:

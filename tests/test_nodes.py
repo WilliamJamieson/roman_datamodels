@@ -1,4 +1,5 @@
 from importlib import resources as importlib_resources
+from inspect import signature
 from pathlib import Path
 
 import pytest
@@ -102,3 +103,108 @@ def test_node_requires(schema_file):
 
         print(schema_file["id"])
         assert set(schema_file["required"]) == set(node_cls.asdf_required())
+
+
+def get_orphan_nodes():
+    """
+    Get all the nodes that are implied by the schemas but do not have their own one
+    """
+    nodes = _nodes.NODES.copy()
+    for node_cls in _nodes.SCHEMA_NODES.values():
+        del nodes[node_cls.__name__]
+
+    return nodes
+
+
+ORPHAN_NODES = get_orphan_nodes()
+
+
+def _camel_case_to_snake_case(value):
+    """
+    Courtesy of https://stackoverflow.com/a/1176023
+    """
+    import re
+
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", value).lower()
+
+
+SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
+
+
+@pytest.mark.parametrize("node_cls", ORPHAN_NODES.values())
+def test_orphan_node(node_cls):
+    """
+    Test that the orphan nodes follow a consistent naming pattern
+        <ContainingNodeName>_<PropertyName>
+    """
+
+    def parse_orphan_name(name):
+        split = name.split("_")
+        assert len(split) > 1
+
+        return "_".join(split[:-1]), _camel_case_to_snake_case(split[-1])
+
+    containing_name, property_name = parse_orphan_name(node_cls.__name__)
+
+    def get_containing_cls(containing_name):
+        # Get the containing class
+        assert containing_name in _nodes.NODES, f"No node found for {containing_name}"
+        return _nodes.NODES[containing_name]
+
+    containing_cls = get_containing_cls(containing_name)
+
+    # Check that the property exists on the containing class
+    assert hasattr(containing_cls, property_name), f"Property {property_name} not found on {containing_name}"
+    cls_property = getattr(containing_cls, property_name)
+    assert isinstance(cls_property, property), f"Property {property_name} is not a property"
+
+    # Check that the property's return type matches the orphan node
+    annotation = signature(cls_property.fget).return_annotation
+    assert annotation is node_cls or annotation == list[node_cls] or annotation == dict[str, node_cls]
+
+    def parse_schema(schema, property_name):
+        if "type" in schema:
+            if schema["type"] == "object":
+                if "properties" in schema:
+                    if property_name in schema["properties"]:
+                        return schema["properties"][property_name]
+                    return None
+            elif schema["type"] == "array":
+                return parse_schema(schema["items"], property_name)
+
+        if "allOf" in schema:
+            for sub_schema in schema["allOf"]:
+                if all_of_schema := parse_schema(sub_schema, property_name):
+                    return all_of_schema
+            else:
+                raise ValueError(f"Property {property_name} not found in {schema['allOf']}")
+
+        return None
+
+    def get_schema(containing_cls, containing_name, property_name):
+        if containing_cls in set(_nodes.SCHEMA_NODES.values()):
+            schema = SCHEMA_DICT[containing_cls.asdf_schema_uri()]
+            return parse_schema(schema, property_name)
+
+        new_containing_name, new_property_name = parse_orphan_name(containing_name)
+        new_containing_cls = get_containing_cls(new_containing_name)
+
+        s = get_schema(new_containing_cls, new_containing_name, new_property_name)
+        return parse_schema(s, property_name)
+
+    # Check that the orphan node's schema matches the schema of the property
+    schema = get_schema(containing_cls, containing_name, property_name)
+
+    if annotation is node_cls:
+        assert "allOf" in schema or ("type" in schema and schema["type"] == "object")
+
+    if annotation == list[node_cls]:
+        assert "type" in schema and schema["type"] == "array"
+        assert "items" in schema
+        assert "allOf" in schema["items"] or ("type" in schema["items"] and schema["items"]["type"] == "object")
+
+    if annotation == dict[str, node_cls]:
+        assert "type" in schema and schema["type"] == "object"
+        assert "patternProperties" in schema
+        pattern_schema = schema["patternProperties"][next(iter(schema["patternProperties"]))]
+        assert "type" in pattern_schema and pattern_schema["type"] == "object"

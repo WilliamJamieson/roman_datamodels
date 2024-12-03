@@ -5,7 +5,7 @@ from roman_datamodels.stnode import _core, _default
 __all__ = ["Visit"]
 
 
-class VisitDither(_core.ObjectNode):
+class Visit_Dither(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -51,8 +51,8 @@ class Visit(_core.TaggedObjectNode):
         )
 
     @property
-    def dither(self) -> VisitDither:
-        return self._get_node("dither", VisitDither)
+    def dither(self) -> Visit_Dither:
+        return self._get_node("dither", Visit_Dither)
 
     @property
     def engineering_quality(self) -> str:

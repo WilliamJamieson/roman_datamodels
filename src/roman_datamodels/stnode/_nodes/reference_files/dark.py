@@ -12,7 +12,7 @@ from .ref import (
 __all__ = ["DarkRef"]
 
 
-class DarkRefMetaExposure(_core.ObjectNode):
+class DarkRef_Meta_Exposure(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -44,7 +44,7 @@ class DarkRefMetaExposure(_core.ObjectNode):
         return self._get_node("ma_table_number", lambda: _default.NONUM)
 
 
-class DarkRefMeta(RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):
+class DarkRef_Meta(RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -59,8 +59,8 @@ class DarkRefMeta(RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):
         return self._get_node("reftype", lambda: "DARK")
 
     @property
-    def exposure(self) -> DarkRefMetaExposure:
-        return self._get_node("exposure", DarkRefMetaExposure)
+    def exposure(self) -> DarkRef_Meta_Exposure:
+        return self._get_node("exposure", DarkRef_Meta_Exposure)
 
 
 class DarkRef(_core.DataModelNode):
@@ -97,8 +97,8 @@ class DarkRef(_core.DataModelNode):
         return (2, 4096, 4096)
 
     @property
-    def meta(self) -> DarkRefMeta:
-        return self._get_node("meta", DarkRefMeta)
+    def meta(self) -> DarkRef_Meta:
+        return self._get_node("meta", DarkRef_Meta)
 
     @property
     def data(self) -> u.Quantity:

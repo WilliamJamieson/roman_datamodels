@@ -5,7 +5,7 @@ from ...meta import WfiOpticalElement
 __all__ = ["RefOpticalElementRef"]
 
 
-class RefOpticalElementRefInstrument(_core.ObjectNode):
+class RefOpticalElementRef_Instrument(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return ("optical_element",)
@@ -25,5 +25,5 @@ class RefOpticalElementRef(_core.SchemaObjectNode):
         return ("instrument",)
 
     @property
-    def instrument(self) -> RefOpticalElementRefInstrument:
-        return self._coerce(RefOpticalElementRefInstrument, self._get_node("instrument", coerce=False), "instrument")
+    def instrument(self) -> RefOpticalElementRef_Instrument:
+        return self._coerce(RefOpticalElementRef_Instrument, self._get_node("instrument", coerce=False), "instrument")

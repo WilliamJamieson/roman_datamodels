@@ -10,7 +10,7 @@ from .ref import (
 __all__ = ["FlatRef"]
 
 
-class FlatRefMeta(RefCommonRef, RefOpticalElementRef):
+class FlatRef_Meta(RefCommonRef, RefOpticalElementRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -56,8 +56,8 @@ class FlatRef(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> FlatRefMeta:
-        return self._coerce(FlatRefMeta, self._get_node("meta", coerce=False), "meta")
+    def meta(self) -> FlatRef_Meta:
+        return self._coerce(FlatRef_Meta, self._get_node("meta", coerce=False), "meta")
 
     @property
     def data(self) -> np.ndarray:

@@ -14,7 +14,7 @@ from ..meta import (
 __all__ = ["ImageSourceCatalog"]
 
 
-class ImageSourceCatalogMeta(Basic):
+class ImageSourceCatalog_Meta(Basic):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -68,8 +68,8 @@ class ImageSourceCatalog(_core.DataModelNode):
         raise NotImplementedError("This node does not have an array shape")
 
     @property
-    def meta(self) -> ImageSourceCatalogMeta:
-        return self._get_node("meta", ImageSourceCatalogMeta)
+    def meta(self) -> ImageSourceCatalog_Meta:
+        return self._get_node("meta", ImageSourceCatalog_Meta)
 
     @property
     def source_catalog(self) -> Table:

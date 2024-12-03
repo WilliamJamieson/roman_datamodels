@@ -3,7 +3,7 @@ from roman_datamodels.stnode import _core
 __all__ = ["TvacRefFile"]
 
 
-class TvacCrds(_core.ObjectNode):
+class TvacRefFile_Crds(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -46,8 +46,8 @@ class TvacRefFile(_core.TaggedObjectNode):
         )
 
     @property
-    def crds(self) -> TvacCrds:
-        return self._get_node("crds", TvacCrds)
+    def crds(self) -> TvacRefFile_Crds:
+        return self._get_node("crds", TvacRefFile_Crds)
 
     @property
     def dark(self) -> str:

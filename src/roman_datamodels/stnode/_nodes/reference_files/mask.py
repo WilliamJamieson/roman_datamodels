@@ -7,7 +7,7 @@ from .ref import RefCommonRef
 __all__ = ["MaskRef"]
 
 
-class MaskRefMeta(RefCommonRef):
+class MaskRef_Meta(RefCommonRef):
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "MASK")
@@ -44,8 +44,8 @@ class MaskRef(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> MaskRefMeta:
-        return self._get_node("meta", MaskRefMeta)
+    def meta(self) -> MaskRef_Meta:
+        return self._get_node("meta", MaskRef_Meta)
 
     @property
     def dq(self) -> np.ndarray:

@@ -11,7 +11,7 @@ from .meta import (
 __all__ = ["Fps"]
 
 
-class FpsMeta(FpsCommon):
+class Fps_Meta(FpsCommon):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -57,8 +57,8 @@ class Fps(_core.DataModelNode):
         return (8, 4096, 4096)
 
     @property
-    def meta(self) -> FpsMeta:
-        return self._get_node("meta", FpsMeta)
+    def meta(self) -> Fps_Meta:
+        return self._get_node("meta", Fps_Meta)
 
     @property
     def data(self) -> u.Quantity:

@@ -10,7 +10,7 @@ from .ref import (
 __all__ = ["EpsfRef"]
 
 
-class EpsfRefMeta(RefCommonRef, RefOpticalElementRef):
+class EpsfRef_Meta(RefCommonRef, RefOpticalElementRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -72,8 +72,8 @@ class EpsfRef(_core.DataModelNode):
         return (2, 4096, 4096)
 
     @property
-    def meta(self) -> EpsfRefMeta:
-        return self._coerce(EpsfRefMeta, self._get_node("meta", coerce=False), "meta")
+    def meta(self) -> EpsfRef_Meta:
+        return self._coerce(EpsfRef_Meta, self._get_node("meta", coerce=False), "meta")
 
     @property
     def psf(self) -> np.ndarray:

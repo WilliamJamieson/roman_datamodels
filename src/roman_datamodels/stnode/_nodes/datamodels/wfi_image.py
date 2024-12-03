@@ -1,8 +1,5 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
 import numpy as np
+from gwcs import WCS
 
 from roman_datamodels.stnode import _core, _default
 
@@ -17,13 +14,10 @@ from ..meta import (
     Wcsinfo,
 )
 
-if TYPE_CHECKING:
-    from gwcs import WCS
-
 __all__ = ["WfiImage"]
 
 
-class WfiImageMeta(Common):
+class WfiImage_Meta(Common):
     """Common metadata for WfiImage"""
 
     @classmethod
@@ -124,8 +118,8 @@ class WfiImage(_core.DataModelNode):
         return 8
 
     @property
-    def meta(self) -> WfiImageMeta:
-        return self._get_node("meta", WfiImageMeta)
+    def meta(self) -> WfiImage_Meta:
+        return self._get_node("meta", WfiImage_Meta)
 
     @property
     def data(self) -> np.ndarray:

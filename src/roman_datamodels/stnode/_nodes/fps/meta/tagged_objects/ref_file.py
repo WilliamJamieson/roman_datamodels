@@ -3,7 +3,7 @@ from roman_datamodels.stnode import _core
 __all__ = ["FpsRefFile"]
 
 
-class FpsCrds(_core.ObjectNode):
+class FpsRefFile_Crds(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -46,8 +46,8 @@ class FpsRefFile(_core.TaggedObjectNode):
         )
 
     @property
-    def crds(self) -> FpsCrds:
-        return self._get_node("crds", FpsCrds)
+    def crds(self) -> FpsRefFile_Crds:
+        return self._get_node("crds", FpsRefFile_Crds)
 
     @property
     def dark(self) -> str:

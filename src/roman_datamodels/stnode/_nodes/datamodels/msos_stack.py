@@ -7,7 +7,7 @@ from ..meta import Common
 __all__ = ["MsosStack"]
 
 
-class MsosStackMeta(Common):
+class MsosStack_Meta(Common):
     @property
     def image_list(self) -> str:
         return self._get_node("image_list", _default.NOSTR)
@@ -47,8 +47,8 @@ class MsosStack(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> MsosStackMeta:
-        return self._get_node("meta", MsosStackMeta)
+    def meta(self) -> MsosStack_Meta:
+        return self._get_node("meta", MsosStack_Meta)
 
     @property
     def data(self) -> np.ndarray:

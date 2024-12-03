@@ -8,15 +8,15 @@ from .ref import RefCommonRef
 __all__ = ["WfiImgPhotomRef"]
 
 
-class WfiImgPhotomRefMeta(RefCommonRef):
+class WfiImgPhotomRef_Meta(RefCommonRef):
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "PHOTOM")
 
 
-class WfiImgPhotomRefPhotTableEntry(_core.ObjectNode):
+class WfiImgPhotomRef_PhotTable(_core.ObjectNode):
     @classmethod
-    def no_phot(cls) -> "WfiImgPhotomRefPhotTableEntry":
+    def no_phot(cls) -> "WfiImgPhotomRef_PhotTable":
         return cls(
             {
                 "photmjsr": None,
@@ -66,18 +66,18 @@ class WfiImgPhotomRef(_core.DataModelNode):
         raise NotImplementedError("array_data is not implemented")
 
     @property
-    def meta(self) -> WfiImgPhotomRefMeta:
-        return self._get_node("meta", WfiImgPhotomRefMeta)
+    def meta(self) -> WfiImgPhotomRef_Meta:
+        return self._get_node("meta", WfiImgPhotomRef_Meta)
 
     @property
-    def phot_table(self) -> dict[str, WfiImgPhotomRefPhotTableEntry]:
+    def phot_table(self) -> dict[str, WfiImgPhotomRef_PhotTable]:
         def _default():
             table = {}
             for element in OPTICAL_ELEMENTS:
                 if element in ("GRISM", "PRISM", "DARK"):
-                    table[element] = WfiImgPhotomRefPhotTableEntry.no_phot()
+                    table[element] = WfiImgPhotomRef_PhotTable.no_phot()
                 else:
-                    table[element] = WfiImgPhotomRefPhotTableEntry()
+                    table[element] = WfiImgPhotomRef_PhotTable()
             return table
 
         return self._get_node("phot_table", _default)

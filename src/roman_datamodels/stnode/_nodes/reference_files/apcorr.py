@@ -8,7 +8,7 @@ from .ref import RefCommonRef
 __all__ = ["ApcorrRef"]
 
 
-class ApcorrRefDataPatternproperties(_core.ObjectNode):
+class ApcorrRef_Data(_core.ObjectNode):
     @property
     def array_shape(self) -> tuple[int]:
         if self._has_node("ap_corrections"):
@@ -43,7 +43,7 @@ class ApcorrRefDataPatternproperties(_core.ObjectNode):
         return self._get_node("sky_background_rout", lambda: _default.NONUM)
 
 
-class ApcorrRefMeta(RefCommonRef):
+class ApcorrRef_Meta(RefCommonRef):
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "APCORR")
@@ -73,12 +73,12 @@ class ApcorrRef(_core.DataModelNode):
         return (10,)
 
     @property
-    def meta(self) -> ApcorrRefMeta:
-        return self._get_node("meta", ApcorrRefMeta)
+    def meta(self) -> ApcorrRef_Meta:
+        return self._get_node("meta", ApcorrRef_Meta)
 
     @property
-    def data(self) -> dict[str, ApcorrRefDataPatternproperties]:
+    def data(self) -> dict[str, ApcorrRef_Data]:
         def _default():
-            return {element: ApcorrRefDataPatternproperties() for element in OPTICAL_ELEMENTS}
+            return {element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS}
 
         return self._get_node("data", _default)

@@ -6,13 +6,13 @@ from .ref import RefCommonRef
 __all__ = ["AbvegaoffsetRef"]
 
 
-class AbvegaoffsetRefMeta(RefCommonRef):
+class AbvegaoffsetRef_Meta(RefCommonRef):
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "ABVEGAOFFSET")
 
 
-class AbvegaoffsetRefDataPatternproperties(_core.ObjectNode):
+class AbvegaoffsetRef_Data(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return ("abvega_offset",)
@@ -43,12 +43,12 @@ class AbvegaoffsetRef(_core.DataModelNode):
         raise NotImplementedError("array_data is not implemented")
 
     @property
-    def meta(self) -> AbvegaoffsetRefMeta:
-        return self._get_node("meta", AbvegaoffsetRefMeta)
+    def meta(self) -> AbvegaoffsetRef_Meta:
+        return self._get_node("meta", AbvegaoffsetRef_Meta)
 
     @property
-    def data(self) -> dict[str, AbvegaoffsetRefDataPatternproperties]:
+    def data(self) -> dict[str, AbvegaoffsetRef_Data]:
         def _default():
-            return {element: AbvegaoffsetRefDataPatternproperties() for element in OPTICAL_ELEMENTS}
+            return {element: AbvegaoffsetRef_Data() for element in OPTICAL_ELEMENTS}
 
         return self._get_node("data", _default)

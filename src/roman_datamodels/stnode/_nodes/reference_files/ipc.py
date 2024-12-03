@@ -10,7 +10,7 @@ from .ref import (
 __all__ = ["IpcRef"]
 
 
-class IpcRefMeta(RefCommonRef, RefOpticalElementRef):
+class IpcRef_Meta(RefCommonRef, RefOpticalElementRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -54,8 +54,8 @@ class IpcRef(_core.DataModelNode):
         return (3, 3)
 
     @property
-    def meta(self) -> IpcRefMeta:
-        return self._coerce(IpcRefMeta, self._get_node("meta", coerce=False), "meta")
+    def meta(self) -> IpcRef_Meta:
+        return self._coerce(IpcRef_Meta, self._get_node("meta", coerce=False), "meta")
 
     @property
     def data(self) -> np.ndarray:

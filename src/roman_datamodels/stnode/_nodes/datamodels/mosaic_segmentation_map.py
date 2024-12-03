@@ -11,7 +11,7 @@ from ..meta import (
 __all__ = ["MosaicSegmentationMap"]
 
 
-class MosaicSegmentationMapMeta(Basic):
+class MosaicSegmentationMap_Meta(Basic):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -60,8 +60,8 @@ class MosaicSegmentationMap(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> MosaicSegmentationMapMeta:
-        return self._get_node("meta", MosaicSegmentationMapMeta)
+    def meta(self) -> MosaicSegmentationMap_Meta:
+        return self._get_node("meta", MosaicSegmentationMap_Meta)
 
     @property
     def data(self) -> np.ndarray:

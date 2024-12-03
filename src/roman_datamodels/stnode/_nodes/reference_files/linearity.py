@@ -8,7 +8,7 @@ from .ref import RefCommonRef
 __all__ = ["LinearityRef"]
 
 
-class LinearityRefMeta(RefCommonRef):
+class LinearityRef_Meta(RefCommonRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -62,8 +62,8 @@ class LinearityRef(_core.DataModelNode):
         return (2, 4096, 4096)
 
     @property
-    def meta(self) -> LinearityRefMeta:
-        return self._coerce(LinearityRefMeta, self._get_node("meta", coerce=False), "meta")
+    def meta(self) -> LinearityRef_Meta:
+        return self._coerce(LinearityRef_Meta, self._get_node("meta", coerce=False), "meta")
 
     @property
     def coeffs(self) -> np.ndarray:

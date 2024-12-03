@@ -3,7 +3,7 @@ from roman_datamodels.stnode import _core
 __all__ = ["Associations"]
 
 
-class AssociationsMember(_core.ObjectNode):
+class Associations_Products_Members(_core.ObjectNode):
     """The members of an association"""
 
     @classmethod
@@ -27,7 +27,7 @@ class AssociationsMember(_core.ObjectNode):
         return self._get_node("exptype", lambda: "SCIENCE")
 
 
-class AssociationsProducts(_core.ObjectNode):
+class Associations_Products(_core.ObjectNode):
     """The products of an association"""
 
     @classmethod
@@ -42,7 +42,7 @@ class AssociationsProducts(_core.ObjectNode):
         return self._get_node("name", lambda: "product0")
 
     @property
-    def members(self) -> list[str]:
+    def members(self) -> list[Associations_Products_Members]:
         return self._get_node("members", lambda: [])
 
 
@@ -124,7 +124,7 @@ class Associations(_core.DataModelNode):
         )
 
     @property
-    def products(self) -> list[AssociationsProducts]:
+    def products(self) -> list[Associations_Products]:
         def _default():
             file_idx = 0
             products = []
@@ -133,12 +133,12 @@ class Associations(_core.DataModelNode):
                 members_lst = []
                 for member_idx in range(members):
                     members_lst.append(
-                        AssociationsMember(
+                        Associations_Products_Members(
                             {"expname": "file_" + str(file_idx) + ".asdf", "exposerr": "null", "exptype": CHOICES[member_idx % 3]}
                         )
                     )
                     file_idx += 1
-                products.append(AssociationsProducts({"name": f"product{product_idx}", "members": members_lst}))
+                products.append(Associations_Products({"name": f"product{product_idx}", "members": members_lst}))
 
             return products
 

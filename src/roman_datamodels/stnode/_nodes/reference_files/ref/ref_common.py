@@ -11,7 +11,7 @@ from ...meta import (
 __all__ = ["RefCommonRef"]
 
 
-class RefCommonRefInstrument(_core.ObjectNode):
+class RefCommonRef_Instrument(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -79,5 +79,5 @@ class RefCommonRef(_core.SchemaObjectNode):
         return self._get_node("origin", lambda: "STSCI")
 
     @property
-    def instrument(self) -> RefCommonRefInstrument:
-        return self._get_node("instrument", RefCommonRefInstrument)
+    def instrument(self) -> RefCommonRef_Instrument:
+        return self._get_node("instrument", RefCommonRef_Instrument)

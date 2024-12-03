@@ -12,7 +12,7 @@ from ..meta import (
 __all__ = ["MosaicSourceCatalog"]
 
 
-class MosaicSourceCatalogMeta(Basic):
+class MosaicSourceCatalog_Meta(Basic):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -56,8 +56,8 @@ class MosaicSourceCatalog(_core.DataModelNode):
         raise NotImplementedError("This node does not have an array shape")
 
     @property
-    def meta(self) -> MosaicSourceCatalogMeta:
-        return self._get_node("meta", MosaicSourceCatalogMeta)
+    def meta(self) -> MosaicSourceCatalog_Meta:
+        return self._get_node("meta", MosaicSourceCatalog_Meta)
 
     @property
     def source_catalog(self) -> Table:

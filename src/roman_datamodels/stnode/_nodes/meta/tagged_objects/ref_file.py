@@ -3,7 +3,7 @@ from roman_datamodels.stnode import _core
 __all__ = ["RefFile"]
 
 
-class Crds(_core.ObjectNode):
+class RefFile_Crds(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -50,8 +50,8 @@ class RefFile(_core.TaggedObjectNode):
         )
 
     @property
-    def crds(self) -> Crds:
-        return self._get_node("crds", Crds)
+    def crds(self) -> RefFile_Crds:
+        return self._get_node("crds", RefFile_Crds)
 
     @property
     def dark(self) -> str:

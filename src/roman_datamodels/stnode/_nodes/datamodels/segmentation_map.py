@@ -12,7 +12,7 @@ from ..meta import (
 __all__ = ["SegmentationMap"]
 
 
-class SegmentationMapMeta(Basic):
+class SegmentationMap_Meta(Basic):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -78,8 +78,8 @@ class SegmentationMap(_core.DataModelNode):
         return (4096, 4096)
 
     @property
-    def meta(self) -> SegmentationMapMeta:
-        return self._get_node("meta", SegmentationMapMeta)
+    def meta(self) -> SegmentationMap_Meta:
+        return self._get_node("meta", SegmentationMap_Meta)
 
     @property
     def data(self) -> np.ndarray:
