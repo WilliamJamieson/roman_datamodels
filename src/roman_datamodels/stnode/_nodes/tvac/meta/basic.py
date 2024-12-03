@@ -19,7 +19,7 @@ __all__ = ["TvacBasic"]
 class TvacBasic(_core.SchemaObjectNode):
     @classmethod
     def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/fps/basic-1.0.0"
+        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/basic-1.0.0"
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:

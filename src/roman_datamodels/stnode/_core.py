@@ -176,7 +176,48 @@ class DataModelNode(TaggedObjectNode, ABC):
         """Shape of the data array."""
 
 
-class TaggedListNode(LNode, TagMixin, ABC):
+class ListNode(LNode, ABC):
+    @classmethod
+    def _list_nodes(cls):
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._list_nodes()
+            for name, sub_node in sub_nodes.items():
+                if name in nodes and nodes[name] != sub_node:
+                    raise RuntimeError(f"ListNode class '{node.__name__}' has conflicting sub-node '{name}'")
+
+                nodes[name] = sub_node
+
+            if node not in (ListNode, SchemaListNode, TaggedListNode):
+                nodes[node.__name__] = node
+
+        return nodes
+
+
+class SchemaListNode(ListNode, SchemaMixin, ABC):
+    @classmethod
+    def _schema_list_nodes(cls):
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._schema_list_nodes()
+            for uri, sub_node in sub_nodes.items():
+                if uri in nodes and nodes[uri] != sub_node:
+                    raise RuntimeError(f"SchemaListNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                nodes[uri] = sub_node
+
+            try:
+                uri = node.asdf_schema_uri()
+            except KeyError:
+                continue
+
+            # Filter out the subclasses of schema nodes
+            if node.__name__ == class_name_from_uri(uri):
+                nodes[uri] = node
+
+        return nodes
+
+
+class TaggedListNode(SchemaListNode, TagMixin, ABC):
     @classmethod
     def _tagged_list_nodes(cls):
         nodes = {}
@@ -184,13 +225,13 @@ class TaggedListNode(LNode, TagMixin, ABC):
             sub_nodes = node._tagged_list_nodes()
             for uri, sub_node in sub_nodes.items():
                 if uri in nodes and nodes[uri] != sub_node:
-                    raise RuntimeError(f"TaggedObjectNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                    raise RuntimeError(f"TaggedListNode class '{node.__name__}' has conflicting sub-node '{uri}'")
                 nodes[uri] = sub_node
 
             if uri := node.asdf_tag():
                 # tagged node names should match with the tag uri
                 if node.__name__ != class_name_from_uri(uri):
-                    raise RuntimeError(f"TaggedObjectNode class '{node.__name__}' has incorrect tag '{uri}'")
+                    raise RuntimeError(f"TaggedListNode class '{node.__name__}' has incorrect tag '{uri}'")
 
                 nodes[uri] = node
 
@@ -205,7 +246,7 @@ class SchemaScalarNode(SchemaMixin, ABC):
             sub_nodes = node._schema_scalar_nodes()
             for uri, sub_node in sub_nodes.items():
                 if uri in nodes and nodes[uri] != sub_node:
-                    raise RuntimeError(f"SchemaObjectNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                    raise RuntimeError(f"SchemaScalarNode class '{node.__name__}' has conflicting sub-node '{uri}'")
                 nodes[uri] = sub_node
 
             try:
@@ -232,8 +273,22 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
 
     @classmethod
     def _tagged_scalar_nodes(cls):
-        # Just start one level up so we don't capture the non-tagged scalars
-        return cls._schema_scalar_nodes()
+        nodes = {}
+        for node in cls.__subclasses__():
+            sub_nodes = node._tagged_scalar_nodes()
+            for uri, sub_node in sub_nodes.items():
+                if uri in nodes and nodes[uri] != sub_node:
+                    raise RuntimeError(f"TaggedScalarNode class '{node.__name__}' has conflicting sub-node '{uri}'")
+                nodes[uri] = sub_node
+
+            if uri := node.asdf_tag():
+                # tagged node names should match with the tag uri
+                if node.__name__ != class_name_from_uri(uri):
+                    raise RuntimeError(f"TaggedScalarNode class '{node.__name__}' has incorrect tag '{uri}'")
+
+                nodes[uri] = node
+
+        return nodes
 
     def __asdf_traverse__(self):
         return self
