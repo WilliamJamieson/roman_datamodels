@@ -209,12 +209,12 @@ def _get_mixin_fields(cls: type) -> tuple[str]:
     set[str]
         The mixin fields of the class.
     """
-    from .._mixins import NodeMixin
+    from .._mixins import AdditionalNodeMixin
 
     mixin_fields = set()
-    if issubclass(cls, NodeMixin):
+    if issubclass(cls, AdditionalNodeMixin):
         for base in cls.__bases__:
-            if issubclass(base, NodeMixin):
+            if issubclass(base, AdditionalNodeMixin):
                 mixin_fields.update(get_all_fields(base))
 
     return tuple(mixin_fields)

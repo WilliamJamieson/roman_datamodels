@@ -12,13 +12,13 @@ if TYPE_CHECKING:
 __all__ = ["WfiModeMixin"]
 
 
-class NodeMixin:
+class AdditionalNodeMixin:
     """
     Base class for all mixin classes.
     """
 
 
-class WfiModeMixin(NodeMixin):
+class WfiModeMixin(AdditionalNodeMixin):
     """
     Extensions to the WfiMode class.
         Adds to indication properties

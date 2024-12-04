@@ -10,8 +10,6 @@ class LNode(UserList):
     Base class describing all "array" (list-like) data nodes for STNode classes.
     """
 
-    _tag = None
-
     def __init__(self, node=None):
         if node is None:
             self.data = []

@@ -1,13 +1,11 @@
 import datetime
 from collections.abc import MutableMapping
 
-import asdf
 import numpy as np
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from asdf.tags.core import ndarray
 from astropy.time import Time
 
-from .._registry import SCALAR_NODE_CLASSES_BY_KEY
 from ._utils import SchemaProperties, get_schema_for_property
 
 __all__ = ["DNode"]
@@ -17,9 +15,6 @@ class DNode(MutableMapping):
     """
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
-
-    _tag = None
-    _ctx = None
 
     def __init__(self, node=None, parent=None, name=None):
         # Handle if we are passed different data types
@@ -37,32 +32,6 @@ class DNode(MutableMapping):
         self._name = name
         self._x_schema_attributes = None
 
-    @property
-    def ctx(self):
-        """Asdf context for this node. This should be an empty file"""
-        if self._ctx is None:
-            DNode._ctx = asdf.AsdfFile()
-        return self._ctx
-
-    @staticmethod
-    def _convert_to_scalar(key, value, ref=None):
-        """Find and wrap scalars in the appropriate class, if its a tagged one."""
-        from .._tagged import TaggedScalarNode
-
-        if isinstance(ref, TaggedScalarNode):
-            # we want the exact class (not possible subclasses)
-            if type(value) == type(ref):  # noqa: E721
-                return value
-            return type(ref)(value)
-
-        if isinstance(value, TaggedScalarNode):
-            return value
-
-        if key in SCALAR_NODE_CLASSES_BY_KEY:
-            value = SCALAR_NODE_CLASSES_BY_KEY[key](value)
-
-        return value
-
     def _has_node(self, key):
         """
         Check if a node exists in the dictionary.
@@ -74,8 +43,6 @@ class DNode(MutableMapping):
 
     def _coerce(self, key, value):
         from ._l_node import LNode
-
-        value = self._convert_to_scalar(key, value)
 
         # Return objects as node classes, if applicable
         if isinstance(value, dict | AsdfDictNode):
@@ -117,10 +84,6 @@ class DNode(MutableMapping):
         """
         # Private keys should just be in the normal __dict__
         if key[0] != "_":
-            # Wrap things in the tagged scalar classes if necessary
-            if coerce:
-                value = self._convert_to_scalar(key, value, self._data.get(key))
-
             self._data[key] = value
 
         else:
@@ -240,13 +203,10 @@ class DNode(MutableMapping):
     def __setitem__(self, key, value):
         """Dictionary style access set data"""
 
-        # Convert the value to a tagged scalar if necessary
-        value = self._convert_to_scalar(key, value, self._data.get(key))
-
         # If the value is a dictionary, loop over its keys and convert them to tagged scalars
         if isinstance(value, dict | AsdfDictNode):
             for sub_key, sub_value in value.items():
-                value[sub_key] = self._convert_to_scalar(sub_key, sub_value)
+                value[sub_key] = sub_value
 
         self._data[key] = value
 
