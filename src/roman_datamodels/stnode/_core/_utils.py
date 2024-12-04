@@ -2,6 +2,8 @@ import asdf
 
 __all__ = [
     "class_name_from_uri",
+    "get_all_fields",
+    "get_node_fields",
     "get_nodes",
     "get_nodes",
     "get_schema_from_tag",
@@ -173,3 +175,68 @@ def get_tagged_nodes(cls: type) -> dict[str, type]:
         return nodes
 
     return _get_tagged_nodes(cls, cls)
+
+
+def get_all_fields(cls: type) -> set[str]:
+    """
+    Get all the fields from the class.
+
+    Parameters
+    ----------
+    cls : type
+        The class to get the fields from.
+
+    Returns
+    -------
+    set[str]
+        The fields of the class.
+    """
+
+    return {property_name for property_name in dir(cls) if isinstance(getattr(cls, property_name), property)}
+
+
+def _get_mixin_fields(cls: type) -> tuple[str]:
+    """
+    Get all the mixin fields from the class.
+
+    Parameters
+    ----------
+    cls : type
+        The class to get the mixin fields from.
+
+    Returns
+    -------
+    set[str]
+        The mixin fields of the class.
+    """
+    from .._mixins import NodeMixin
+
+    mixin_fields = set()
+    if issubclass(cls, NodeMixin):
+        for base in cls.__bases__:
+            if issubclass(base, NodeMixin):
+                mixin_fields.update(get_all_fields(base))
+
+    return tuple(mixin_fields)
+
+
+def get_node_fields(cls: type) -> tuple[str]:
+    """
+    Get all the node fields from the class.
+        This excludes the reserved fields and mixin fields.
+
+    Parameters
+    ----------
+    cls : type
+        The class to get the node fields from.
+
+    Returns
+    -------
+    tuple[str]
+        The node fields of the class.
+    """
+    from .._nodes import RESERVED_FIELDS
+
+    return tuple(
+        property_name for property_name in get_all_fields(cls) if property_name not in (*RESERVED_FIELDS, *_get_mixin_fields(cls))
+    )

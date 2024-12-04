@@ -131,6 +131,7 @@ __all__ = [
     "DATA_MODEL_NODES",
     "NODES",
     "OPTICAL_ELEMENTS",
+    "RESERVED_FIELDS",
     "SCHEMA_NODES",
     "TAGGED_NODES",
     "AbvegaoffsetRef",
@@ -262,6 +263,7 @@ from .._core import (
     TaggedListNode,
     TaggedObjectNode,
     TaggedScalarNode,
+    get_all_fields,
     get_nodes,
     get_schema_nodes,
     get_tagged_nodes,
@@ -286,3 +288,10 @@ TAGGED_NODES = {
 }
 
 DATA_MODEL_NODES = get_tagged_nodes(DataModelNode)
+
+RESERVED_FIELDS = tuple(
+    get_all_fields(ObjectNode)
+    | get_all_fields(SchemaObjectNode)
+    | get_all_fields(TaggedObjectNode)
+    | get_all_fields(DataModelNode)
+)
