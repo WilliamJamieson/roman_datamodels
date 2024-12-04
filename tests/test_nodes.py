@@ -3,9 +3,13 @@ from inspect import signature
 from pathlib import Path
 from typing import get_args
 
+import numpy as np
 import pytest
 import yaml
+from astropy import units as u
+from astropy.table import Table
 from astropy.time import Time
+from gwcs import WCS
 from rad import resources
 
 from roman_datamodels.stnode import _base, _core, nodes
@@ -331,6 +335,151 @@ def test_properties_in_schema(node_cls):
     properties = set(_core.get_node_fields(node_cls))
     schema = find_schema_for_node(node_cls)
     assert get_properties(schema) == properties
+
+
+def find_property_schema(schema, property_name):
+    property_name = "pass" if property_name == "pass_" else property_name
+    if "properties" in schema:
+        if property_name in schema["properties"]:
+            return schema["properties"][property_name]
+
+        raise ValueError(f"Property {property_name} not found in {schema['properties']}")
+
+    if "$ref" in schema:
+        return find_property_schema(_SCHEMA_DICT[schema["$ref"]], property_name)
+
+    if "allOf" in schema:
+        for sub_schema in schema["allOf"]:
+            try:
+                return find_property_schema(sub_schema, property_name)
+            except ValueError:
+                continue
+
+        raise ValueError(f"Property {property_name} not found in {schema['allOf']}")
+
+    if "type" in schema:
+        if schema["type"] == "array":
+            return find_property_schema(schema["items"], property_name)
+
+        if schema["type"] == "object" and "patternProperties" in schema:
+            sub_schema = schema["patternProperties"]
+            return find_property_schema(sub_schema[next(iter(sub_schema))], property_name)
+
+    raise ValueError(f"Property {property_name} not found in {schema}")
+
+
+_EXTERNAL_TAG_MAP = {
+    "tag:stsci.edu:asdf/time/time-1.*": Time,
+    "tag:stsci.edu:asdf/core/ndarray-1.*": np.ndarray,
+    "tag:stsci.edu:asdf/unit/quantity-1.*": u.Quantity,
+    "tag:stsci.edu:asdf/unit/unit-1.*": u.UnitBase,
+    "tag:astropy.org:astropy/units/unit-1.*": u.UnitBase,
+    "tag:astropy.org:astropy/table/table-1.*": Table,
+    "tag:stsci.edu:gwcs/wcs-*": WCS,
+}
+
+
+def build_annotation_from_schema(schema, annotation):
+    if "type" in schema:
+        match schema["type"]:
+            case "integer":
+                return int
+            case "number":
+                return float
+            case "string":
+                return str
+            case "boolean":
+                return bool
+            case "object":
+                if annotation.__name__ in ORPHAN_NODES:
+                    # The orphan nodes are tested separately,
+                    #     they are implied by the schema
+                    return annotation
+
+                if "patternProperties" in schema:
+                    # check that the annotation is for string key dictionary
+                    annotation_args = get_args(annotation)
+                    assert len(annotation_args) == 2  # base_type, value_type
+                    assert annotation_args[0] is _base.DNode
+                    assert len(annotation_args[1]) == 2  # key_type, value_type
+                    assert annotation_args[1][0] is str  # string key
+
+                    # The value should be an orphan node
+                    assert annotation_args[1][1].__name__ in ORPHAN_NODES
+
+                    # The annotation is correct in this case
+                    return annotation
+
+                return _base.DNode
+            case "array":
+                if "items" in schema:
+                    annotation_args = get_args(annotation)
+                    # The annotation should have 2 arguments, base and the arg
+                    assert len(annotation_args) == 2
+                    print(annotation)
+                    if len(get_args(annotation_args[0])) > 1:
+                        annotation_args = get_args(annotation_args[0])
+                    assert annotation_args[0] is _base.LNode
+                    base_annotation = build_annotation_from_schema(schema["items"], annotation_args[1])
+
+                    return _base.LNode[base_annotation]
+
+                raise ValueError(f"Array schema {schema} does not have items")
+            case "null" | None:
+                return None
+            case _:
+                raise ValueError(f"Unknown type {schema['type']}")
+
+    if "$ref" in schema:
+        if schema["$ref"] in nodes.SCHEMA_NODES:
+            return nodes.SCHEMA_NODES[schema["$ref"]]
+        return build_annotation_from_schema(_SCHEMA_DICT[schema["$ref"]], annotation)
+
+    if "tag" in schema:
+        if schema["tag"] in _EXTERNAL_TAG_MAP:
+            return _EXTERNAL_TAG_MAP[schema["tag"]]
+
+        if schema["tag"] in nodes.TAGGED_NODES:
+            return nodes.TAGGED_NODES[schema["tag"]]
+
+    if "anyOf" in schema:
+        sub_schemas = schema["anyOf"].copy()
+        schema_annotation = build_annotation_from_schema(sub_schemas.pop(0), annotation)
+        for sub_schema in sub_schemas:
+            schema_annotation = schema_annotation | build_annotation_from_schema(sub_schema, annotation)
+        return schema_annotation
+
+    if "allOf" in schema:
+        # These result in an orphan node which is tested elsewhere
+        assert annotation.__name__ in ORPHAN_NODES
+        return annotation
+
+    return None
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_property_annotation(node_cls):
+    """
+    Check that the annotation for every property matches the schema
+    """
+
+    properties = set(_core.get_node_fields(node_cls))
+    schema = find_schema_for_node(node_cls)
+
+    for property_name in properties:
+        property_cls = getattr(node_cls, property_name)
+        annotation = signature(property_cls.fget).return_annotation
+        schema_property = find_property_schema(schema, property_name)
+        schema_annotation = build_annotation_from_schema(schema_property, annotation)
+        # if schema_annotation is not None:
+        # This is a special case because the schemas do not specify that it
+        # is supposed to be an astropy Model
+        if property_name == "coordinate_distortion_transform":
+            assert schema_annotation is _base.DNode
+        else:
+            assert (
+                annotation == schema_annotation
+            ), f"Property {property_name} Annotation {annotation} does not match schema {schema_annotation}"
 
 
 def check_type_fits_annotation(value, annotation):

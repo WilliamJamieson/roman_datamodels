@@ -66,8 +66,8 @@ class MosaicBasic(_core.TaggedObjectNode):
         return self._get_node("pass", lambda: _default.NOINT)
 
     @property
-    def program(self) -> str:
-        return self._get_node("program", lambda: _default.NOSTR)
+    def program(self) -> int:
+        return self._get_node("program", lambda: _default.NOINT)
 
     @property
     def survey(self) -> str:

@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default
+from roman_datamodels.stnode import _base, _default
 
 from .basic import TvacBasic
 from .tagged_objects import (
@@ -52,16 +52,16 @@ class TvacCommon(TvacBasic):
         return self._get_node("ref_file", TvacRefFile)
 
     @property
-    def hdf5_meta(self) -> dict:
-        return self._get_node("hdf5_meta", lambda: {"test": _default.NOSTR})
+    def hdf5_meta(self) -> _base.DNode:
+        return self._get_node("hdf5_meta", lambda: _base.DNode({"test": _default.NOSTR}))
 
     @property
     def hdf5_telemetry(self) -> str:
         return self._get_node("hdf5_telemetry", lambda: _default.NOSTR)
 
     @property
-    def gw_meta(self) -> dict:
-        return self._get_node("gw_meta", lambda: {"test": _default.NOSTR})
+    def gw_meta(self) -> _base.DNode:
+        return self._get_node("gw_meta", lambda: _base.DNode({"test": _default.NOSTR}))
 
     # Not present in the schema
     # @property
