@@ -235,7 +235,7 @@ def get_node_fields(cls: type) -> tuple[str]:
     tuple[str]
         The node fields of the class.
     """
-    from .._nodes import RESERVED_FIELDS
+    from ..nodes import RESERVED_FIELDS
 
     return tuple(
         property_name for property_name in get_all_fields(cls) if property_name not in (*RESERVED_FIELDS, *_get_mixin_fields(cls))

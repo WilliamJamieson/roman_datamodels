@@ -7,7 +7,7 @@ import yaml
 from astropy.time import Time
 from rad import resources
 
-from roman_datamodels.stnode import _core, _mixins, _nodes
+from roman_datamodels.stnode import _core, _mixins, nodes
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -47,13 +47,13 @@ def test_node_exists_for_schema(schema_file):
     uri = schema_file["id"]
 
     # Check there is a node for this schema
-    assert uri in _nodes.SCHEMA_NODES
+    assert uri in nodes.SCHEMA_NODES
 
     # check the class's asdf_schema_uri matches the uri
-    assert _nodes.SCHEMA_NODES[uri].asdf_schema_uri() == uri
+    assert nodes.SCHEMA_NODES[uri].asdf_schema_uri() == uri
 
     # check the class name against the uri
-    assert _core.class_name_from_uri(uri) == _nodes.SCHEMA_NODES[uri].__name__
+    assert _core.class_name_from_uri(uri) == nodes.SCHEMA_NODES[uri].__name__
 
 
 def manifest_tags():
@@ -76,19 +76,19 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
     Check that every tag in the manifest has a corresponding node class
     """
     # Check that there is a node for this tag
-    assert tag_uri in _nodes.TAGGED_NODES
+    assert tag_uri in nodes.TAGGED_NODES
 
     # check the class's asdf_tag matches the tag uri
-    assert _nodes.TAGGED_NODES[tag_uri].asdf_tag() == tag_uri
+    assert nodes.TAGGED_NODES[tag_uri].asdf_tag() == tag_uri
 
     # check the class's asdf_schema_uri matches the schema uri
-    assert _nodes.TAGGED_NODES[tag_uri].asdf_schema_uri() == schema_uri
+    assert nodes.TAGGED_NODES[tag_uri].asdf_schema_uri() == schema_uri
 
     # check the class name against the tag uri
-    assert _core.class_name_from_uri(tag_uri) == _nodes.TAGGED_NODES[tag_uri].__name__
+    assert _core.class_name_from_uri(tag_uri) == nodes.TAGGED_NODES[tag_uri].__name__
 
 
-@pytest.mark.parametrize("node_cls", _nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", nodes.NODES.values())
 def test_node_can_be_instantiated(node_cls):
     """
     Check that every node class can be instantiated
@@ -103,11 +103,11 @@ def get_orphan_nodes():
     """
     Get all the nodes that are implied by the schemas but do not have their own one
     """
-    nodes = _nodes.NODES.copy()
-    for node_cls in _nodes.SCHEMA_NODES.values():
-        del nodes[node_cls.__name__]
+    orphan = nodes.NODES.copy()
+    for node_cls in nodes.SCHEMA_NODES.values():
+        del orphan[node_cls.__name__]
 
-    return nodes
+    return orphan
 
 
 ORPHAN_NODES = get_orphan_nodes()
@@ -131,8 +131,8 @@ def parse_orphan_name(name):
 
 def get_containing_cls(containing_name):
     # Get the containing class
-    assert containing_name in _nodes.NODES, f"No node found for {containing_name}"
-    return _nodes.NODES[containing_name]
+    assert containing_name in nodes.NODES, f"No node found for {containing_name}"
+    return nodes.NODES[containing_name]
 
 
 def parse_schema(schema, property_name):
@@ -156,7 +156,7 @@ def parse_schema(schema, property_name):
 
 
 def get_schema(containing_cls, containing_name, property_name):
-    if containing_cls in set(_nodes.SCHEMA_NODES.values()):
+    if containing_cls in set(nodes.SCHEMA_NODES.values()):
         schema = SCHEMA_DICT[containing_cls.asdf_schema_uri()]
         return parse_schema(schema, property_name)
 
@@ -246,7 +246,7 @@ def get_required(schema):
     return set()
 
 
-@pytest.mark.parametrize("node_cls", _nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", nodes.NODES.values())
 def test_node_requires(node_cls):
     """
     Check that every schema file with a `required` has a corresponding method
@@ -274,7 +274,7 @@ def test_node_requires(node_cls):
     raise ValueError(f"Node {node_cls} is not handled")
 
 
-@pytest.mark.parametrize("node_cls", _nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", nodes.NODES.values())
 def test_node_requires_properties(node_cls):
     """
     Check that every property listed in `asdf_required` in the node class
@@ -410,7 +410,7 @@ def test_lazy_defaults(node_cls):
 
         stored_name = "pass" if property_name == "pass_" else property_name
 
-        if node_cls is _nodes.RefCommonRef and stored_name == "reftype":
+        if node_cls is nodes.RefCommonRef and stored_name == "reftype":
             continue  # This property is not implemented until the individual meta classes
 
         # Check the property is not in the instance
