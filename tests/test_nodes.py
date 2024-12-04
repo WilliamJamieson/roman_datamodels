@@ -8,7 +8,7 @@ import yaml
 from astropy.time import Time
 from rad import resources
 
-from roman_datamodels.stnode import _base, _core, _mixins, nodes
+from roman_datamodels.stnode import _base, _core, nodes
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -244,6 +244,16 @@ def get_required(schema):
     return set()
 
 
+def find_schema_for_node(node_cls):
+    if node_cls.__name__ not in ORPHAN_NODES:
+        return _SCHEMA_DICT[node_cls.asdf_schema_uri()]
+
+    containing_name, property_name = parse_orphan_name(node_cls.__name__)
+    containing_cls = get_containing_cls(containing_name)
+
+    return get_schema(containing_cls, containing_name, property_name)
+
+
 @pytest.mark.parametrize("node_cls", nodes.NODES.values())
 def test_node_requires(node_cls):
     """
@@ -256,20 +266,8 @@ def test_node_requires(node_cls):
 
     assert hasattr(node_cls, "asdf_required"), f"No `asdf_required` method found for {node_cls}"
 
-    if node_cls.__name__ not in ORPHAN_NODES:
-        schema = _SCHEMA_DICT[node_cls.asdf_schema_uri()]
-        assert get_required(schema) == set(node_cls.asdf_required())
-        return
-
-    if node_cls.__name__ in ORPHAN_NODES:
-        containing_name, property_name = parse_orphan_name(node_cls.__name__)
-        containing_cls = get_containing_cls(containing_name)
-
-        schema = get_schema(containing_cls, containing_name, property_name)
-        assert get_required(schema) == set(node_cls.asdf_required())
-        return
-
-    raise ValueError(f"Node {node_cls} is not handled")
+    schema = find_schema_for_node(node_cls)
+    assert get_required(schema) == set(node_cls.asdf_required())
 
 
 @pytest.mark.parametrize("node_cls", nodes.NODES.values())
@@ -287,43 +285,6 @@ def test_node_requires_properties(node_cls):
         assert hasattr(node_cls, property_name), f"Property {property_name} not found on {node_cls}"
         property_cls = getattr(node_cls, property_name)
         assert isinstance(property_cls, property), f"Property {property_name} is not a property"
-
-
-def find_builtin_properties():
-    """
-    Find all the properties that are built into the ObjectNode class
-    """
-    mixins = set()
-    for mixin_name in _mixins.__all__:
-        mixin = getattr(_mixins, mixin_name)
-        mixins.update({property_name for property_name in dir(mixin) if isinstance(getattr(mixin, property_name), property)})
-
-    return (
-        mixins
-        | {
-            property_name
-            for property_name in dir(_core.ObjectNode)
-            if isinstance(getattr(_core.ObjectNode, property_name), property)
-        }
-        | {
-            property_name
-            for property_name in dir(_core.SchemaObjectNode)
-            if isinstance(getattr(_core.SchemaObjectNode, property_name), property)
-        }
-        | {
-            property_name
-            for property_name in dir(_core.TaggedObjectNode)
-            if isinstance(getattr(_core.TaggedObjectNode, property_name), property)
-        }
-        | {
-            property_name
-            for property_name in dir(_core.DataModelNode)
-            if isinstance(getattr(_core.DataModelNode, property_name), property)
-        }
-    )
-
-
-_BUILTIN_PROPERTIES = find_builtin_properties()
 
 
 def get_properties(schema):
@@ -366,24 +327,9 @@ def test_properties_in_schema(node_cls):
     """
     Check that every property of the class in the schema
     """
-    properties = {
-        property_name
-        for property_name in dir(node_cls)
-        if isinstance(getattr(node_cls, property_name), property)
-        and property_name not in _BUILTIN_PROPERTIES
-        and not property_name.startswith("_")
-    }
 
-    if node_cls.__name__ not in ORPHAN_NODES:
-        schema = _SCHEMA_DICT[node_cls.asdf_schema_uri()]
-    elif node_cls.__name__ in ORPHAN_NODES:
-        containing_name, property_name = parse_orphan_name(node_cls.__name__)
-        containing_cls = get_containing_cls(containing_name)
-
-        schema = get_schema(containing_cls, containing_name, property_name)
-    else:
-        raise ValueError(f"Node {node_cls} is not handled")
-
+    properties = set(_core.get_node_fields(node_cls))
+    schema = find_schema_for_node(node_cls)
     assert get_properties(schema) == properties
 
 
@@ -406,13 +352,7 @@ def test_lazy_defaults(node_cls):
     Check that every property can successfully be called into existence
     """
 
-    properties = {
-        property_name
-        for property_name in dir(node_cls)
-        if isinstance(getattr(node_cls, property_name), property)
-        and property_name not in _BUILTIN_PROPERTIES
-        and not property_name.startswith("_")
-    }
+    properties = _core.get_node_fields(node_cls)
 
     for property_name in properties:
         # Generate a fresh instance of the class

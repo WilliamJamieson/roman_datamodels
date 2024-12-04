@@ -238,5 +238,7 @@ def get_node_fields(cls: type) -> tuple[str]:
     from ..nodes import RESERVED_FIELDS
 
     return tuple(
-        property_name for property_name in get_all_fields(cls) if property_name not in (*RESERVED_FIELDS, *_get_mixin_fields(cls))
+        property_name
+        for property_name in get_all_fields(cls)
+        if (property_name not in (*RESERVED_FIELDS, *_get_mixin_fields(cls)) and not property_name.startswith("_"))
     )
