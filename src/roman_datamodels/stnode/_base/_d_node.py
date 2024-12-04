@@ -1,11 +1,4 @@
-"""
-Base node classes for all STNode classes.
-    These are the base classes for the data objects used by the datamodels package.
-"""
-
 import datetime
-import re
-from collections import UserList
 from collections.abc import MutableMapping
 
 import asdf
@@ -14,85 +7,10 @@ from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from asdf.tags.core import ndarray
 from astropy.time import Time
 
-from ._registry import SCALAR_NODE_CLASSES_BY_KEY
+from .._registry import SCALAR_NODE_CLASSES_BY_KEY
+from ._utils import SchemaProperties, get_schema_for_property
 
-__all__ = ["DNode", "LNode"]
-
-
-def _get_schema_for_property(schema, attr):
-    """
-    Pull out the schema for a particular property.
-    """
-    # Check if attr is a property
-    subschema = schema.get("properties", {}).get(attr, None)
-
-    # Check if attr is a pattern property
-    props = schema.get("patternProperties", {})
-    for key, value in props.items():
-        if re.match(key, attr):
-            subschema = value
-            break
-
-    # Have found a schema for the attribute return it
-    if subschema is not None:
-        return subschema
-
-    # Still have not found a schema for the attribute, so check for combiners
-    # and search for the attribute through the entries in the combiners
-    for combiner in ["allOf", "anyOf"]:
-        for subschema in schema.get(combiner, []):
-            subsubschema = _get_schema_for_property(subschema, attr)
-            if subsubschema != {}:
-                return subsubschema
-
-    # Still have not found a schema for the attribute, so return an empty one
-    return {}
-
-
-class SchemaProperties:
-    """
-    This class provides the capability for using the "contains" machinery
-    so that an attribute can be tested against patternProperties as well
-    as whether the attribute is explicitly a property of the schema.
-    """
-
-    def __init__(self, explicit_properties, patterns):
-        self.explicit_properties = explicit_properties
-        self.patterns = patterns
-
-    def __contains__(self, attr):
-        if attr in self.explicit_properties:
-            return True
-        else:
-            for key in self.patterns.keys():
-                if re.match(key, attr):
-                    return True
-        return False
-
-    def extend(self, other):
-        """
-        Extend the current SchemaProperties with those from another instance.
-        """
-        self.explicit_properties = set(self.explicit_properties).union(other.explicit_properties)
-        self.patterns.update(other.patterns)
-
-    @classmethod
-    def from_schema(cls, schema):
-        """
-        Create a SchemaProperties object from a schema.
-        """
-
-        # Handle the top-level properties
-        explicit_properties = schema.get("properties", {}).keys()
-        patterns = schema.get("patternProperties", {})
-        schema_properties = cls(explicit_properties, patterns)
-
-        # Handle the case where the schema is using an "allOf" combiner
-        if "allOf" in schema:
-            for subschema in schema["allOf"]:
-                schema_properties.extend(cls.from_schema(subschema))
-
-        return schema_properties
+__all__ = ["DNode"]
 
 
 class DNode(MutableMapping):
@@ -129,7 +47,7 @@ class DNode(MutableMapping):
     @staticmethod
     def _convert_to_scalar(key, value, ref=None):
         """Find and wrap scalars in the appropriate class, if its a tagged one."""
-        from ._tagged import TaggedScalarNode
+        from .._tagged import TaggedScalarNode
 
         if isinstance(ref, TaggedScalarNode):
             # we want the exact class (not possible subclasses)
@@ -155,6 +73,8 @@ class DNode(MutableMapping):
         return self._has_node(key)
 
     def _coerce(self, key, value):
+        from ._l_node import LNode
+
         value = self._convert_to_scalar(key, value)
 
         # Return objects as node classes, if applicable
@@ -244,6 +164,8 @@ class DNode(MutableMapping):
         return self._x_schema_attributes
 
     def _recursive_items(self):
+        from ._l_node import LNode
+
         def recurse(tree, path=None):
             path = path or []  # Avoid mutable default arguments
             if isinstance(tree, DNode | dict | AsdfDictNode):
@@ -296,7 +218,7 @@ class DNode(MutableMapping):
         if self._x_schema is None:
             parent_schema = self._parent._schema()
             # Extract the subschema corresponding to this node.
-            subschema = _get_schema_for_property(parent_schema, self._name)
+            subschema = get_schema_for_property(parent_schema, self._name)
             self._x_schema = subschema
         return self._x_schema
 
@@ -347,33 +269,3 @@ class DNode(MutableMapping):
         instance.__dict__["_data"] = self.__dict__["_data"].copy()
 
         return instance
-
-
-class LNode(UserList):
-    """
-    Base class describing all "array" (list-like) data nodes for STNode classes.
-    """
-
-    _tag = None
-
-    def __init__(self, node=None):
-        if node is None:
-            self.data = []
-        elif isinstance(node, list | AsdfListNode):
-            self.data = node
-        elif isinstance(node, self.__class__):
-            self.data = node.data
-        else:
-            raise ValueError("Initializer only accepts lists")
-
-    def __getitem__(self, index):
-        value = self.data[index]
-        if isinstance(value, dict | AsdfDictNode):
-            return DNode(value)
-        elif isinstance(value, list | AsdfListNode):
-            return LNode(value)
-        else:
-            return value
-
-    def __asdf_traverse__(self):
-        return list(self)
