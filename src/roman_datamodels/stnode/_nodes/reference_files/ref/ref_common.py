@@ -5,7 +5,6 @@ from roman_datamodels.stnode import _core
 from ...meta import (
     Telescope,
     WfiDetector,
-    WfiOpticalElement,
 )
 
 __all__ = ["RefCommonRef"]
@@ -27,9 +26,10 @@ class RefCommonRef_Instrument(_core.ObjectNode):
     def detector(self) -> WfiDetector | str:
         return self._get_node("detector", lambda: WfiDetector.WFI)
 
-    @property
-    def optical_element(self) -> WfiOpticalElement | str:
-        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
+    # Not present in the schema
+    # @property
+    # def optical_element(self) -> WfiOpticalElement | str:
+    #     return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
 
 
 class RefCommonRef(_core.SchemaObjectNode):

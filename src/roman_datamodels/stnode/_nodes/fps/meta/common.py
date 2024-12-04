@@ -6,7 +6,6 @@ from .tagged_objects import (
     FpsExposure,
     FpsGuidestar,
     FpsRefFile,
-    FpsStatistics,
     FpsWfiMode,
 )
 
@@ -64,6 +63,7 @@ class FpsCommon(FpsBasic):
     def gw_meta(self) -> dict:
         return self._get_node("gw_meta", lambda: {"test": _default.NOSTR})
 
-    @property
-    def statistics(self) -> FpsStatistics:
-        return self._get_node("statistics", FpsStatistics)
+    # Not present in the schema
+    # @property
+    # def statistics(self) -> FpsStatistics:
+    #     return self._get_node("statistics", FpsStatistics)

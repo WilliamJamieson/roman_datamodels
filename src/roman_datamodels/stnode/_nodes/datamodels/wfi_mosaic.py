@@ -118,7 +118,7 @@ class WfiMosaic(_core.DataModelNode):
         return (4088, 4088)
 
     @property
-    def n_images(self) -> int:
+    def _n_images(self) -> int:
         # The number of images in the mosaic comes from the context array
         if self._has_node("context"):
             return self.context.shape[0]

@@ -22,26 +22,6 @@ class WfiMode(_mixins.WfiModeMixin, _core.TaggedObjectNode):
     #   gratings.
     _GRATING_OPTICAL_ELEMENTS: ClassVar[tuple[str]] = ("GRISM", "PRISM")
 
-    @property
-    def filter(self) -> WfiOpticalElement:
-        """
-        Returns the filter if it is one, otherwise None
-        """
-        if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
-            return None
-
-        return self.optical_element
-
-    @property
-    def grating(self) -> WfiOpticalElement:
-        """
-        Returns the grating if it is one, otherwise None
-        """
-        if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
-            return self.optical_element
-
-        return None
-
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_mode-1.0.0"

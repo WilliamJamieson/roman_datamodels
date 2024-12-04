@@ -62,7 +62,7 @@ class WfiImgPhotomRef(_core.DataModelNode):
         )
 
     @property
-    def array_data(self) -> tuple[int]:
+    def array_shape(self) -> tuple[int]:
         raise NotImplementedError("array_data is not implemented")
 
     @property

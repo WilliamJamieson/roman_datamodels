@@ -6,7 +6,7 @@ import pytest
 import yaml
 from rad import resources
 
-from roman_datamodels.stnode import _core, _nodes
+from roman_datamodels.stnode import _core, _mixins, _nodes
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -273,3 +273,101 @@ def test_node_requires_properties(node_cls):
         assert hasattr(node_cls, property_name), f"Property {property_name} not found on {node_cls}"
         property_cls = getattr(node_cls, property_name)
         assert isinstance(property_cls, property), f"Property {property_name} is not a property"
+
+
+def find_builtin_properties():
+    """
+    Find all the properties that are built into the ObjectNode class
+    """
+    mixins = set()
+    for mixin_name in _mixins.__all__:
+        mixin = getattr(_mixins, mixin_name)
+        mixins.update({property_name for property_name in dir(mixin) if isinstance(getattr(mixin, property_name), property)})
+
+    return (
+        mixins
+        | {
+            property_name
+            for property_name in dir(_core.ObjectNode)
+            if isinstance(getattr(_core.ObjectNode, property_name), property)
+        }
+        | {
+            property_name
+            for property_name in dir(_core.SchemaObjectNode)
+            if isinstance(getattr(_core.SchemaObjectNode, property_name), property)
+        }
+        | {
+            property_name
+            for property_name in dir(_core.TaggedObjectNode)
+            if isinstance(getattr(_core.TaggedObjectNode, property_name), property)
+        }
+        | {
+            property_name
+            for property_name in dir(_core.DataModelNode)
+            if isinstance(getattr(_core.DataModelNode, property_name), property)
+        }
+    )
+
+
+_BUILTIN_PROPERTIES = find_builtin_properties()
+
+
+def get_properties(schema):
+    if "properties" in schema:
+        properties = set(schema["properties"].keys())
+
+        if "pass" in properties:
+            properties.add("pass_")
+            properties.remove("pass")
+        return properties
+
+    if "$ref" in schema:
+        return get_properties(_SCHEMA_DICT[schema["$ref"]])
+
+    if "allOf" in schema:
+        required = set()
+        for sub_schema in schema["allOf"]:
+            required.update(get_properties(sub_schema))
+
+        return required
+
+    if "type" in schema:
+        if schema["type"] == "array":
+            return get_properties(schema["items"])
+
+        if schema["type"] == "object" and "patternProperties" in schema:
+            sub_schema = schema["patternProperties"]
+            return get_properties(sub_schema[next(iter(sub_schema))])
+
+    return set()
+
+
+@pytest.mark.parametrize(
+    "node_cls",
+    _core.get_nodes(
+        _core.ObjectNode, (_core.ObjectNode, _core.SchemaObjectNode, _core.TaggedObjectNode, _core.DataModelNode)
+    ).values(),
+)
+def test_properties_in_schema(node_cls):
+    """
+    Check that every property of the class in the schema
+    """
+    properties = {
+        property_name
+        for property_name in dir(node_cls)
+        if isinstance(getattr(node_cls, property_name), property)
+        and property_name not in _BUILTIN_PROPERTIES
+        and not property_name.startswith("_")
+    }
+
+    if node_cls.__name__ not in ORPHAN_NODES:
+        schema = _SCHEMA_DICT[node_cls.asdf_schema_uri()]
+    elif node_cls.__name__ in ORPHAN_NODES:
+        containing_name, property_name = parse_orphan_name(node_cls.__name__)
+        containing_cls = get_containing_cls(containing_name)
+
+        schema = get_schema(containing_cls, containing_name, property_name)
+    else:
+        raise ValueError(f"Node {node_cls} is not handled")
+
+    assert get_properties(schema) == properties

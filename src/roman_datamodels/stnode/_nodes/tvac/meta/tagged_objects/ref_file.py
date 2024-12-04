@@ -13,12 +13,12 @@ class TvacRefFile_Crds(_core.ObjectNode):
         # )
 
     @property
-    def version(self) -> str:
-        return self._get_node("version", lambda: "12.3.1")
+    def sw_version(self) -> str:
+        return self._get_node("sw_version", lambda: "12.3.1")
 
     @property
-    def context(self) -> str:
-        return self._get_node("context", lambda: "roman_0815.pmap")
+    def context_used(self) -> str:
+        return self._get_node("context_used", lambda: "roman_0815.pmap")
 
 
 class TvacRefFile(_core.TaggedObjectNode):

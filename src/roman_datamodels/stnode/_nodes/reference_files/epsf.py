@@ -29,6 +29,10 @@ class EpsfRef_Meta(RefCommonRef, RefOpticalElementRef):
         return self._get_node("oversample", lambda: _default.NONUM)
 
     @property
+    def spectral_type(self) -> list[str]:
+        return self._get_node("spectral_type", lambda: ["None"])
+
+    @property
     def defocus(self) -> list[int]:
         return self._get_node("defocus", lambda: np.arange(1, 10).tolist())
 

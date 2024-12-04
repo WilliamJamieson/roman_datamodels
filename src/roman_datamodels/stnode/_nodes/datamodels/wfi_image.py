@@ -6,6 +6,7 @@ from roman_datamodels.stnode import _core, _default
 from ..meta import (
     CalLogs,
     Common,
+    L2CalStep,
     OutlierDetection,
     Photometry,
     SkyBackground,
@@ -37,6 +38,10 @@ class WfiImage_Meta(Common):
         return self._get_node("cal_logs", CalLogs)
 
     @property
+    def cal_step(self) -> L2CalStep:
+        return self._get_node("cal_step", L2CalStep)
+
+    @property
     def outlier_detection(self) -> OutlierDetection:
         return self._get_node("outlier_detection", OutlierDetection)
 
@@ -45,7 +50,7 @@ class WfiImage_Meta(Common):
         return self._get_node("photometry", Photometry)
 
     @property
-    def source_detection(self) -> SourceCatalog:
+    def source_catalog(self) -> SourceCatalog:
         return self._get_node("source_detection", SourceCatalog)
 
     @property
@@ -105,7 +110,7 @@ class WfiImage(_core.DataModelNode):
         return (4088, 4088)
 
     @property
-    def n_groups(self) -> int:
+    def _n_groups(self) -> int:
         # The number of groups used for the image
         if self._has_node("amp33"):
             return self.amp33.shape[0]
@@ -147,31 +152,31 @@ class WfiImage(_core.DataModelNode):
 
     @property
     def amp33(self) -> np.ndarray:
-        return self._get_node("amp33", lambda: np.zeros((self.n_groups, self.array_shape[0], 128), dtype=np.float32))
+        return self._get_node("amp33", lambda: np.zeros((self._n_groups, self.array_shape[0], 128), dtype=np.float32))
 
     @property
     def border_ref_pix_left(self) -> np.ndarray:
         return self._get_node(
-            "border_ref_pix_left", lambda: np.zeros((self.n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
+            "border_ref_pix_left", lambda: np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
         )
 
     @property
     def border_ref_pix_right(self) -> np.ndarray:
         return self._get_node(
-            "border_ref_pix_right", lambda: np.zeros((self.n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
+            "border_ref_pix_right", lambda: np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
         )
 
     @property
     def border_ref_pix_top(self) -> np.ndarray:
         return self._get_node(
-            "border_ref_pix_top", lambda: np.zeros((self.n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
+            "border_ref_pix_top", lambda: np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
         )
 
     @property
     def border_ref_pix_bottom(self) -> np.ndarray:
         # I think it should be 4, self.array_shape[1] + 8
         return self._get_node(
-            "border_ref_pix_bottom", lambda: np.zeros((self.n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
+            "border_ref_pix_bottom", lambda: np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
         )
 
     @property

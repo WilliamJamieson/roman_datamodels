@@ -48,6 +48,18 @@ class IndividualImageMeta(_core.TaggedObjectNode):
         return self._get_node("basic", lambda: QTable({"dummy": [_default.NONUM]}))
 
     @property
+    def background(self) -> Table:
+        return self._get_node("background", lambda: QTable({"dummy": [_default.NONUM]}))
+
+    @property
+    def cal_step(self) -> Table:
+        return self._get_node("cal_step", lambda: QTable({"dummy": [_default.NONUM]}))
+
+    @property
+    def cal_logs(self) -> Table:
+        return self._get_node("cal_logs", lambda: QTable({"dummy": [_default.NONUM]}))
+
+    @property
     def coordinates(self) -> Table:
         return self._get_node("coordinates", lambda: QTable({"dummy": [_default.NONUM]}))
 
@@ -72,6 +84,10 @@ class IndividualImageMeta(_core.TaggedObjectNode):
         return self._get_node("observation", lambda: QTable({"dummy": [_default.NONUM]}))
 
     @property
+    def outlier_detection(self) -> Table:
+        return self._get_node("outlier_detection", lambda: QTable({"dummy": [_default.NONUM]}))
+
+    @property
     def photometry(self) -> Table:
         return self._get_node("photometry", lambda: QTable({"dummy": [_default.NONUM]}))
 
@@ -84,12 +100,16 @@ class IndividualImageMeta(_core.TaggedObjectNode):
         return self._get_node("program", lambda: QTable({"dummy": [_default.NONUM]}))
 
     @property
+    def rcs(self) -> Table:
+        return self._get_node("rcs", lambda: QTable({"dummy": [_default.NONUM]}))
+
+    @property
     def ref_file(self) -> Table:
         return self._get_node("ref_file", lambda: QTable({"dummy": [_default.NONUM]}))
 
     @property
-    def target(self) -> Table:
-        return self._get_node("target", lambda: QTable({"dummy": [_default.NONUM]}))
+    def source_catalog(self) -> Table:
+        return self._get_node("source_catalog", lambda: QTable({"dummy": [_default.NONUM]}))
 
     @property
     def velocity_aberration(self) -> Table:

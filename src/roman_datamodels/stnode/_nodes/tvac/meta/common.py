@@ -6,7 +6,6 @@ from .tagged_objects import (
     TvacExposure,
     TvacGuidestar,
     TvacRefFile,
-    TvacStatistics,
     TvacWfiMode,
 )
 
@@ -64,6 +63,7 @@ class TvacCommon(TvacBasic):
     def gw_meta(self) -> dict:
         return self._get_node("gw_meta", lambda: {"test": _default.NOSTR})
 
-    @property
-    def statistics(self) -> TvacStatistics:
-        return self._get_node("statistics", TvacStatistics)
+    # Not present in the schema
+    # @property
+    # def statistics(self) -> TvacStatistics:
+    #     return self._get_node("statistics", TvacStatistics)
