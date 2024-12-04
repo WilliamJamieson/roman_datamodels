@@ -16,7 +16,7 @@ class LNode(UserList, Generic[T]):
     Base class describing all "array" (list-like) data nodes for STNode classes.
     """
 
-    def __init__(self, node=None):
+    def __init__(self, node=None) -> None:
         if node is None:
             self.data = []
         elif isinstance(node, list | AsdfListNode):
@@ -31,8 +31,5 @@ class LNode(UserList, Generic[T]):
 
         return Annotated[cls, item_type]
 
-    def __getitem__(self, index):
-        return self.data[index]
-
-    def __asdf_traverse__(self):
+    def __asdf_traverse__(self) -> list[T]:
         return list(self)

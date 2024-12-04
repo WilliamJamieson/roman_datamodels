@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import datetime
-from collections.abc import MutableMapping
+from collections.abc import Callable, MutableMapping
 from typing import Annotated, Generic, TypeVar
 
 import numpy as np
@@ -20,7 +20,7 @@ class DNode(MutableMapping, Generic[T]):
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
 
-    def __init__(self, node=None):
+    def __init__(self, node=None) -> None:
         # Handle if we are passed different data types
         if node is None:
             self.__dict__["_data"] = {}
@@ -34,16 +34,16 @@ class DNode(MutableMapping, Generic[T]):
 
         return Annotated[cls, item_type]
 
-    def _has_node(self, key):
+    def _has_node(self, key: str) -> bool:
         """
         Check if a node exists in the dictionary.
         """
         return key in self._data
 
-    def __contains__(self, key):
+    def __contains__(self, key: str) -> bool:
         return self._has_node(key)
 
-    def _pull_node(self, key):
+    def _pull_node(self, key: str) -> T:
         """
         Get a node from the dictionary, coercing it to the correct type if necessary.
         """
@@ -53,7 +53,7 @@ class DNode(MutableMapping, Generic[T]):
 
         raise AttributeError(f"No such attribute ({key}) found in node")
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: str) -> T:
         """
         Permit accessing dict keys as attributes, assuming they are legal Python
         variable names.
@@ -65,7 +65,11 @@ class DNode(MutableMapping, Generic[T]):
 
         return self._pull_node(key)
 
-    def _set_node(self, key, value):
+    def __getitem__(self, key: str) -> T:
+        """Dictionary style access data"""
+        return self._pull_node(key)
+
+    def _set_node(self, key: str, value: T) -> None:
         """
         Attempt to set a value in for the node
         """
@@ -75,15 +79,22 @@ class DNode(MutableMapping, Generic[T]):
         else:
             self._data[key] = value
 
-    def __setattr__(self, key, value):
+    def __setattr__(self, key: str, value: T) -> None:
         """
         Permit assigning dict keys as attributes.
         """
         self._set_node(key, value)
 
-    def _get_node(self, key, default):
+    def __setitem__(self, key: str, value: T) -> None:
+        """Dictionary style access set data"""
+        self._set_node(key, value)
+
+    def _get_node(self, key: str, default: Callable[[], T]) -> T:
         """
         Get a node and if not found construct it with the default value.
+
+        Note: This is what creates the lazy instantiation of the default values
+        This is what all the schema related properties should use to get their values.
 
         Parameters
         ----------
@@ -117,7 +128,7 @@ class DNode(MutableMapping, Generic[T]):
 
         yield from recurse(self)
 
-    def to_flat_dict(self, include_arrays=True, recursive=False):
+    def to_flat_dict(self, include_arrays: bool = True, recursive: bool = False) -> dict[str, T]:
         """
         Returns a dictionary of all of the schema items as a flat dictionary.
 
@@ -148,44 +159,27 @@ class DNode(MutableMapping, Generic[T]):
                 key: convert_val(val) for (key, val) in item_getter() if not isinstance(val, np.ndarray | ndarray.NDArrayType)
             }
 
-    def __asdf_traverse__(self):
+    def __asdf_traverse__(self) -> dict[str, T]:
         """Asdf traverse method for things like info/search"""
         return dict(self)
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Define length of the node"""
         return len(self._data)
 
-    def __getitem__(self, key):
-        """Dictionary style access data"""
-        if key in self._data:
-            return self._data[key]
-
-        raise KeyError(f"No such key ({key}) found in node")
-
-    def __setitem__(self, key, value):
-        """Dictionary style access set data"""
-
-        # If the value is a dictionary, loop over its keys and convert them to tagged scalars
-        if isinstance(value, dict | AsdfDictNode):
-            for sub_key, sub_value in value.items():
-                value[sub_key] = sub_value
-
-        self._data[key] = value
-
-    def __delitem__(self, key):
+    def __delitem__(self, key: str) -> None:
         """Dictionary style access delete data"""
         del self._data[key]
 
-    def __iter__(self):
+    def __iter__(self) -> iter[dict[str, T]]:
         """Define iteration"""
         return iter(self._data)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Define a representation"""
         return repr(self._data)
 
-    def copy(self):
+    def copy(self) -> DNode:
         """Handle copying of the node"""
         instance = self.__class__.__new__(self.__class__)
         instance.__dict__.update(self.__dict__.copy())
