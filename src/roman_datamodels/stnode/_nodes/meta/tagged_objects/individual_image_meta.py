@@ -16,7 +16,7 @@ class IndividualImageMeta(_core.TaggedObjectNode):
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:
-        return ("basic",)
+        return tuple()
 
     # @property
     # def required(self) -> tuple[str]:

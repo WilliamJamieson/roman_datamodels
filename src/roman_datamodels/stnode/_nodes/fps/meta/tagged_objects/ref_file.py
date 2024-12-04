@@ -6,10 +6,11 @@ __all__ = ["FpsRefFile"]
 class FpsRefFile_Crds(_core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
-        return (
-            "version",
-            "context",
-        )
+        return tuple()
+        # return (
+        #     "version",
+        #     "context",
+        # )
 
     @property
     def version(self) -> str:
@@ -30,20 +31,21 @@ class FpsRefFile(_core.TaggedObjectNode):
         return "asdf://stsci.edu/datamodels/roman/tags/fps/ref_file-1.0.0"
 
     @classmethod
-    def asdf_required(cls) -> str:
-        return (
-            "crds",
-            "dark",
-            "distortion",
-            "mask",
-            "flat",
-            "gain",
-            "readnoise",
-            "linearity",
-            "photom",
-            "area",
-            "saturation",
-        )
+    def asdf_required(cls) -> tuple[str]:
+        return tuple()
+        # return (
+        #     "crds",
+        #     "dark",
+        #     "distortion",
+        #     "mask",
+        #     "flat",
+        #     "gain",
+        #     "readnoise",
+        #     "linearity",
+        #     "photom",
+        #     "area",
+        #     "saturation",
+        # )
 
     @property
     def crds(self) -> FpsRefFile_Crds:

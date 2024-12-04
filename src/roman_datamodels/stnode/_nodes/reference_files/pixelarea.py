@@ -12,6 +12,13 @@ __all__ = ["PixelareaRef"]
 
 
 class PixelareaRef_Meta_Photometry(_core.ObjectNode):
+    @classmethod
+    def asdf_required(cls) -> tuple[str]:
+        return (
+            "pixelarea_steradians",
+            "pixelarea_arcsecsq",
+        )
+
     @property
     def pixelarea_steradians(self) -> u.Quantity | None:
         return self._get_node("pixelarea_steradians", lambda: float(_default.NONUM) * u.sr)

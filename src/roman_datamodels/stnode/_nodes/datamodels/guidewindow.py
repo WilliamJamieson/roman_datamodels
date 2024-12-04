@@ -142,6 +142,7 @@ class Guidewindow(_core.DataModelNode):
     def meta(self) -> Guidewindow_Meta:
         return self._get_node("meta", Guidewindow_Meta)
 
+    @property
     def pedestal_frames(self) -> np.ndarray:
         return self._get_node("pedestal_frames", np.zeros(self.array_shape, dtype=np.uint16))
 

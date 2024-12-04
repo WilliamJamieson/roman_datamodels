@@ -32,22 +32,23 @@ class RefFile(_core.TaggedObjectNode):
         return "asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0"
 
     @classmethod
-    def asdf_required(cls) -> str:
-        return (
-            "crds",
-            "dark",
-            "distortion",
-            "mask",
-            "flat",
-            "gain",
-            "readnoise",
-            "linearity",
-            "inverse_linearity",
-            "photom",
-            "area",
-            "saturation",
-            "refpix",
-        )
+    def asdf_required(cls) -> tuple[str]:
+        return tuple()
+        # return (
+        #     "crds",
+        #     "dark",
+        #     "distortion",
+        #     "mask",
+        #     "flat",
+        #     "gain",
+        #     "readnoise",
+        #     "linearity",
+        #     "inverse_linearity",
+        #     "photom",
+        #     "area",
+        #     "saturation",
+        #     "refpix",
+        # )
 
     @property
     def crds(self) -> RefFile_Crds:

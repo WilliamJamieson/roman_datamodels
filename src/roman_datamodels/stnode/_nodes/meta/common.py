@@ -30,7 +30,7 @@ class Common(Basic):
             "coordinates",
             "ephemeris",
             "exposure",
-            "guidestar",
+            "guide_star",
             "instrument",
             "observation",
             "pointing",

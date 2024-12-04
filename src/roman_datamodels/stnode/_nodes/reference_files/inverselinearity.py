@@ -8,7 +8,7 @@ from .ref import RefCommonRef
 __all__ = ["InverselinearityRef"]
 
 
-class InverselinearityRef_meta(RefCommonRef):
+class InverselinearityRef_Meta(RefCommonRef):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -62,8 +62,8 @@ class InverselinearityRef(_core.DataModelNode):
         return (2, 4096, 4096)
 
     @property
-    def meta(self) -> InverselinearityRef_meta:
-        return self._coerce(InverselinearityRef_meta, self._get_node("meta", coerce=False), "meta")
+    def meta(self) -> InverselinearityRef_Meta:
+        return self._coerce(InverselinearityRef_Meta, self._get_node("meta", coerce=False), "meta")
 
     @property
     def coeffs(self) -> np.ndarray:

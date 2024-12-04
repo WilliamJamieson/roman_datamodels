@@ -6,7 +6,7 @@ __all__ = ["RefExposureTypeRef"]
 
 
 class RefExposureTypeRef_Exposure(_core.ObjectNode):
-    @property
+    @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
             "type",
