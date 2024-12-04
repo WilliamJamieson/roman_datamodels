@@ -24,27 +24,15 @@ class SegmentationMap_Meta(Basic):
 
     @property
     def optical_element(self) -> WfiOpticalElement:
-        return self._coerce(WfiOpticalElement, self._get_node("optical_element", coerce=False), "optical_element")
-
-    @optical_element.setter
-    def optical_element(self, value: WfiOpticalElement) -> None:
-        self._set_node("optical_element", self._coerce(WfiOpticalElement, value, "optical_element"))
+        return self._get_node("optical_element", WfiOpticalElement.F158)
 
     @property
     def program(self) -> Program:
-        return self._coerce(Program, self._get_node("program", coerce=False), "program")
-
-    @program.setter
-    def program(self, value: Program) -> None:
-        self._set_node("program", self._coerce(Program, value, "program"))
+        return self._get_node("program", Program)
 
     @property
     def visit(self) -> Visit:
-        return self._coerce(Visit, self._get_node("visit", coerce=False), "visit")
-
-    @visit.setter
-    def visit(self, value: Visit) -> None:
-        self._set_node("visit", self._coerce(Visit, value, "visit"))
+        return self._get_node("visit", Visit)
 
 
 class SegmentationMap(_core.DataModelNode):
@@ -83,4 +71,4 @@ class SegmentationMap(_core.DataModelNode):
 
     @property
     def data(self) -> np.ndarray:
-        return self._get_node("data", np.zeros(self.array_shape, dtype=np.uint32))
+        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint32))

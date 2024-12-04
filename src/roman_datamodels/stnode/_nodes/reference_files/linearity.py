@@ -63,12 +63,12 @@ class LinearityRef(_core.DataModelNode):
 
     @property
     def meta(self) -> LinearityRef_Meta:
-        return self._coerce(LinearityRef_Meta, self._get_node("meta", coerce=False), "meta")
+        return self._get_node("meta", LinearityRef_Meta)
 
     @property
     def coeffs(self) -> np.ndarray:
-        return self._get_node("coeffs", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("coeffs", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def dq(self) -> np.ndarray:
-        return self._get_node("dq", np.zeros(self.array_shape[1:], dtype=np.uint32))
+        return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))

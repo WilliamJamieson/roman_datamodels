@@ -20,7 +20,7 @@ class IpcRef_Meta(RefCommonRef, RefOpticalElementRef):
 
     @property
     def reftype(self) -> str:
-        return self._coerce(str, self._get_node("reftype", coerce=False), "reftype")
+        return self._get_node("reftype", lambda: "IPC")
 
 
 class IpcRef(_core.DataModelNode):
@@ -55,7 +55,7 @@ class IpcRef(_core.DataModelNode):
 
     @property
     def meta(self) -> IpcRef_Meta:
-        return self._coerce(IpcRef_Meta, self._get_node("meta", coerce=False), "meta")
+        return self._get_node("meta", IpcRef_Meta)
 
     @property
     def data(self) -> np.ndarray:

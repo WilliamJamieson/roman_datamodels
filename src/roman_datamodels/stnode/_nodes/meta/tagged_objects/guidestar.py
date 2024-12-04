@@ -54,7 +54,7 @@ class Guidestar(_core.TaggedObjectNode):
 
     @property
     def guide_mode(self) -> GuidewindowModes:
-        return self._get_node("guide_mode", GuidewindowModes.WIM_ACQ_2)
+        return self._get_node("guide_mode", GuidewindowModes.WSM_ACQ_2)
 
     @property
     def data_start(self) -> Time:
@@ -114,7 +114,7 @@ class Guidestar(_core.TaggedObjectNode):
 
     @property
     def fgs_magnitude(self) -> float:
-        return self._get_node("fgs_magnitude", _default.NONUM)
+        return self._get_node("fgs_magnitude", lambda: _default.NONUM)
 
     @property
     def fgs_magnitude_uncertainty(self) -> float:

@@ -62,46 +62,58 @@ class Tvac(_core.DataModelNode):
 
     @property
     def data(self) -> u.Quantity:
-        return self._get_node("data", u.Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=u.DN, dtype=np.uint16))
+        return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=u.DN, dtype=np.uint16))
 
     @property
     def amp33(self) -> u.Quantity:
         return self._get_node(
             "amp33",
-            u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16),
+            lambda: u.Quantity(
+                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
+            ),
         )
 
     @property
     def amp33_reset_reads(self) -> u.Quantity:
         return self._get_node(
             "amp33_reset_reads",
-            u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16),
+            lambda: u.Quantity(
+                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
+            ),
         )
 
     @property
     def amp33_reference_read(self) -> u.Quantity:
         return self._get_node(
             "amp33_reference_read",
-            u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16),
+            lambda: u.Quantity(
+                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
+            ),
         )
 
     @property
     def guidewindow(self) -> u.Quantity:
         return self._get_node(
             "guidewindow",
-            u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16),
+            lambda: u.Quantity(
+                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
+            ),
         )
 
     @property
     def reference_read(self) -> u.Quantity:
         return self._get_node(
             "reference_read",
-            u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16),
+            lambda: u.Quantity(
+                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
+            ),
         )
 
     @property
     def reset_reads(self) -> u.Quantity:
         return self._get_node(
             "reset_reads",
-            u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16),
+            lambda: u.Quantity(
+                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
+            ),
         )

@@ -24,7 +24,7 @@ class MosaicBasic(_core.TaggedObjectNode):
             "mean_exposure_time",
             "visit",
             "segment",
-            "pass",
+            "pass_",
             "program",
             "survey",
             "optical_element",

@@ -61,7 +61,7 @@ class L2CalStep(_core.TaggedObjectNode):
 
     @property
     def source_catalog(self) -> str:
-        return self._get_node("catalog", lambda: "INCOMPLETE")
+        return self._get_node("source_catalog", lambda: "INCOMPLETE")
 
     @property
     def ramp_fit(self) -> str:

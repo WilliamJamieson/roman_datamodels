@@ -56,7 +56,7 @@ class TvacBasic(_core.SchemaObjectNode):
 
     @property
     def prd_software_version(self) -> TvacPrdSoftwareVersion:
-        return self._get_node("prd_version", lambda: TvacPrdSoftwareVersion("8.8.8"))
+        return self._get_node("prd_software_version", lambda: TvacPrdSoftwareVersion("8.8.8"))
 
     @property
     def sdf_software_version(self) -> TvacSdfSoftwareVersion:

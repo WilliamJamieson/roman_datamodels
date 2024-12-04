@@ -54,8 +54,8 @@ class SuperbiasRef(_core.DataModelNode):
 
     @property
     def dq(self) -> np.ndarray:
-        return self._get_node("dq", np.zeros(self.array_shape, dtype=np.uint32))
+        return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))
 
     @property
     def err(self) -> np.ndarray:
-        return self._get_node("err", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))

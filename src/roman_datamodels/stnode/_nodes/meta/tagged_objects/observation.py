@@ -19,7 +19,7 @@ class Observation(_core.TaggedObjectNode):
             "visit_id",
             "program",
             "execution_plan",
-            "pass",
+            "pass_",
             "segment",
             "observation",
             "visit",

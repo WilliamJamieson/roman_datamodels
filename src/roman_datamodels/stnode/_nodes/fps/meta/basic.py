@@ -56,7 +56,7 @@ class FpsBasic(_core.SchemaObjectNode):
 
     @property
     def prd_software_version(self) -> FpsPrdSoftwareVersion:
-        return self._get_node("prd_version", lambda: FpsPrdSoftwareVersion("8.8.8"))
+        return self._get_node("prd_software_version", lambda: FpsPrdSoftwareVersion("8.8.8"))
 
     @property
     def sdf_software_version(self) -> FpsSdfSoftwareVersion:

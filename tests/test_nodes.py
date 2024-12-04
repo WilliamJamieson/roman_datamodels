@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from astropy.time import Time
 from rad import resources
 
 from roman_datamodels.stnode import _core, _mixins, _nodes
@@ -85,6 +86,17 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
 
     # check the class name against the tag uri
     assert _core.class_name_from_uri(tag_uri) == _nodes.TAGGED_NODES[tag_uri].__name__
+
+
+@pytest.mark.parametrize("node_cls", _nodes.NODES.values())
+def test_node_can_be_instantiated(node_cls):
+    """
+    Check that every node class can be instantiated
+    """
+    if issubclass(node_cls, Time):
+        node_cls(Time.now())
+    else:
+        node_cls()
 
 
 def get_orphan_nodes():
@@ -207,7 +219,11 @@ _SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
 
 def get_required(schema):
     if "required" in schema:
-        return set(schema["required"])
+        required = set(schema["required"])
+        if "pass" in required:
+            required.add("pass_")
+            required.remove("pass")
+        return required
 
     if "$ref" in schema:
         return get_required(_SCHEMA_DICT[schema["$ref"]])
@@ -342,12 +358,12 @@ def get_properties(schema):
     return set()
 
 
-@pytest.mark.parametrize(
-    "node_cls",
-    _core.get_nodes(
-        _core.ObjectNode, (_core.ObjectNode, _core.SchemaObjectNode, _core.TaggedObjectNode, _core.DataModelNode)
-    ).values(),
+_OBJECT_NODES = _core.get_nodes(
+    _core.ObjectNode, (_core.ObjectNode, _core.SchemaObjectNode, _core.TaggedObjectNode, _core.DataModelNode)
 )
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
 def test_properties_in_schema(node_cls):
     """
     Check that every property of the class in the schema
@@ -371,3 +387,40 @@ def test_properties_in_schema(node_cls):
         raise ValueError(f"Node {node_cls} is not handled")
 
     assert get_properties(schema) == properties
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_lazy_defaults(node_cls):
+    """
+    Check that every property can successfully be called into existence
+    """
+
+    properties = {
+        property_name
+        for property_name in dir(node_cls)
+        if isinstance(getattr(node_cls, property_name), property)
+        and property_name not in _BUILTIN_PROPERTIES
+        and not property_name.startswith("_")
+    }
+
+    for property_name in properties:
+        print(property_name)
+        # Generate a fresh instance of the class
+        instance = node_cls()
+
+        stored_name = "pass" if property_name == "pass_" else property_name
+
+        if node_cls is _nodes.RefCommonRef and stored_name == "reftype":
+            continue  # This property is not implemented until the individual meta classes
+
+        # Check the property is not in the instance
+        assert stored_name not in instance
+        assert stored_name not in instance._data
+
+        # Access via the property
+        assert property_name in dir(instance)
+        getattr(instance, property_name)
+
+        # Check the property is now in the instance
+        assert stored_name in instance
+        assert stored_name in instance._data

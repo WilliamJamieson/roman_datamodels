@@ -10,7 +10,7 @@ __all__ = ["MsosStack"]
 class MsosStack_Meta(Common):
     @property
     def image_list(self) -> str:
-        return self._get_node("image_list", _default.NOSTR)
+        return self._get_node("image_list", lambda: _default.NOSTR)
 
 
 class MsosStack(_core.DataModelNode):
@@ -52,16 +52,16 @@ class MsosStack(_core.DataModelNode):
 
     @property
     def data(self) -> np.ndarray:
-        return self._get_node("data", np.zeros(self.array_shape, dtype=np.float64))
+        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
     @property
     def uncertainty(self) -> np.ndarray:
-        return self._get_node("uncertainty", np.zeros(self.array_shape, dtype=np.float64))
+        return self._get_node("uncertainty", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
     @property
     def mask(self) -> np.ndarray:
-        return self._get_node("mask", np.zeros(self.array_shape, dtype=np.uint8))
+        return self._get_node("mask", lambda: np.zeros(self.array_shape, dtype=np.uint8))
 
     @property
     def coverage(self) -> np.ndarray:
-        return self._get_node("coverage", np.zeros(self.array_shape, dtype=np.uint8))
+        return self._get_node("coverage", lambda: np.zeros(self.array_shape, dtype=np.uint8))

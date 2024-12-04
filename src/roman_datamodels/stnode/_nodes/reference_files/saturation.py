@@ -55,4 +55,4 @@ class SaturationRef(_core.DataModelNode):
 
     @property
     def dq(self) -> np.ndarray:
-        return self._get_node("dq", np.zeros(self.array_shape, dtype=np.uint32))
+        return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))

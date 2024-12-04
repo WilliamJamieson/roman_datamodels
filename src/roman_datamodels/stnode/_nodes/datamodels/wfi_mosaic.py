@@ -144,7 +144,7 @@ class WfiMosaic(_core.DataModelNode):
 
     @property
     def context(self) -> np.ndarray:
-        return self._get_node("context", lambda: np.zeros((self.n_images, *self.array_shape), dtype=np.uint32))
+        return self._get_node("context", lambda: np.zeros((self._n_images, *self.array_shape), dtype=np.uint32))
 
     @property
     def weight(self) -> np.ndarray:

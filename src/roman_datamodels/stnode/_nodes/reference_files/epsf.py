@@ -77,7 +77,7 @@ class EpsfRef(_core.DataModelNode):
 
     @property
     def meta(self) -> EpsfRef_Meta:
-        return self._coerce(EpsfRef_Meta, self._get_node("meta", coerce=False), "meta")
+        return self._get_node("meta", EpsfRef_Meta)
 
     @property
     def psf(self) -> np.ndarray:

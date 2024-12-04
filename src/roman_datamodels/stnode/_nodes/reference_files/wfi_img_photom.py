@@ -42,7 +42,7 @@ class WfiImgPhotomRef_PhotTable(_core.ObjectNode):
 
     @property
     def pixelareasr(self) -> u.Quantity | None:
-        return self._get_node("pixelareasr", lambda: 1.0e-13 * u.steradia)
+        return self._get_node("pixelareasr", lambda: 1.0e-13 * u.steradian)
 
 
 class WfiImgPhotomRef(_core.DataModelNode):

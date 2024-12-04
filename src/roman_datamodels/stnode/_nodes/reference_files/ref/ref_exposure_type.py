@@ -19,7 +19,7 @@ class RefExposureTypeRef_Exposure(_core.ObjectNode):
 
     @property
     def p_exptype(self) -> str:
-        return self._get_node("p_exptype", "WFI_IMAGE|WFI_GRISM|WFI_PRISM|")
+        return self._get_node("p_exptype", lambda: "WFI_IMAGE|WFI_GRISM|WFI_PRISM|")
 
 
 class RefExposureTypeRef(_core.SchemaObjectNode):

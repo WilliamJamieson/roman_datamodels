@@ -73,4 +73,4 @@ class ImageSourceCatalog(_core.DataModelNode):
 
     @property
     def source_catalog(self) -> Table:
-        return self._get_node("source_catalog", Table([range(3), range(3)], names=["a", "b"]))
+        return self._get_node("source_catalog", lambda: Table([range(3), range(3)], names=["a", "b"]))

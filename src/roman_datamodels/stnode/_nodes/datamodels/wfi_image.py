@@ -51,7 +51,7 @@ class WfiImage_Meta(Common):
 
     @property
     def source_catalog(self) -> SourceCatalog:
-        return self._get_node("source_detection", SourceCatalog)
+        return self._get_node("source_catalog", SourceCatalog)
 
     @property
     def statistics(self) -> Statistics:

@@ -63,7 +63,7 @@ class InverselinearityRef(_core.DataModelNode):
 
     @property
     def meta(self) -> InverselinearityRef_Meta:
-        return self._coerce(InverselinearityRef_Meta, self._get_node("meta", coerce=False), "meta")
+        return self._get_node("meta", InverselinearityRef_Meta)
 
     @property
     def coeffs(self) -> np.ndarray:
@@ -71,4 +71,4 @@ class InverselinearityRef(_core.DataModelNode):
 
     @property
     def dq(self) -> np.ndarray:
-        return self._get_node("dq", np.zeros(self.array_shape[1:], dtype=np.uint32))
+        return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))

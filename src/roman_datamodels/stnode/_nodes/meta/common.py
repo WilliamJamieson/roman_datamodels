@@ -56,7 +56,7 @@ class Common(Basic):
 
     @property
     def guide_star(self) -> Guidestar:
-        return self._get_node("guidestar", Guidestar)
+        return self._get_node("guide_star", Guidestar)
 
     @property
     def instrument(self) -> WfiMode:

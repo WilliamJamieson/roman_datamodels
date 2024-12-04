@@ -26,4 +26,4 @@ class RefOpticalElementRef(_core.SchemaObjectNode):
 
     @property
     def instrument(self) -> RefOpticalElementRef_Instrument:
-        return self._coerce(RefOpticalElementRef_Instrument, self._get_node("instrument", coerce=False), "instrument")
+        return self._get_node("instrument", RefOpticalElementRef_Instrument)

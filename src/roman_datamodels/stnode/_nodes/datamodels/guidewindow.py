@@ -144,12 +144,12 @@ class Guidewindow(_core.DataModelNode):
 
     @property
     def pedestal_frames(self) -> np.ndarray:
-        return self._get_node("pedestal_frames", np.zeros(self.array_shape, dtype=np.uint16))
+        return self._get_node("pedestal_frames", lambda: np.zeros(self.array_shape, dtype=np.uint16))
 
     @property
     def signal_frames(self) -> np.ndarray:
-        return self._get_node("signal_frames", np.zeros(self.array_shape, dtype=np.uint16))
+        return self._get_node("signal_frames", lambda: np.zeros(self.array_shape, dtype=np.uint16))
 
     @property
     def amp33(self) -> np.ndarray:
-        return self._get_node("amp33", np.zeros(self.array_shape, dtype=np.uint16))
+        return self._get_node("amp33", lambda: np.zeros(self.array_shape, dtype=np.uint16))

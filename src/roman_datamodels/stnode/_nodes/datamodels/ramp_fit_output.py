@@ -51,36 +51,36 @@ class RampFitOutput(_core.DataModelNode):
 
     @property
     def slope(self) -> np.ndarray:
-        return self._get_node("slope", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("slope", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def sigslope(self) -> np.ndarray:
-        return self._get_node("sigslope", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("sigslope", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def yint(self) -> np.ndarray:
-        return self._get_node("yint", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("yint", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def sigyint(self) -> np.ndarray:
-        return self._get_node("sigyint", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("sigyint", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def pedestal(self) -> np.ndarray:
-        return self._get_node("pedestal", np.zeros(self.array_shape[1:], dtype=np.float32))
+        return self._get_node("pedestal", lambda: np.zeros(self.array_shape[1:], dtype=np.float32))
 
     @property
     def weights(self) -> np.ndarray:
-        return self._get_node("weights", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("weights", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def crmag(self) -> np.ndarray:
-        return self._get_node("crmag", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("crmag", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def var_poisson(self) -> np.ndarray:
-        return self._get_node("var_poisson", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("var_poisson", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
     @property
     def var_rnoise(self) -> np.ndarray:
-        return self._get_node("var_rnoise", np.zeros(self.array_shape, dtype=np.float32))
+        return self._get_node("var_rnoise", lambda: np.zeros(self.array_shape, dtype=np.float32))

@@ -65,4 +65,4 @@ class MosaicSegmentationMap(_core.DataModelNode):
 
     @property
     def data(self) -> np.ndarray:
-        return self._get_node("data", np.zeros(self.array_shape, dtype=np.int32))
+        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.int32))

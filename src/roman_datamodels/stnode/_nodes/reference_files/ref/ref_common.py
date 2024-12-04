@@ -24,7 +24,7 @@ class RefCommonRef_Instrument(_core.ObjectNode):
 
     @property
     def detector(self) -> WfiDetector | str:
-        return self._get_node("detector", lambda: WfiDetector.WFI)
+        return self._get_node("detector", lambda: WfiDetector.WFI01)
 
     # Not present in the schema
     # @property
@@ -72,7 +72,7 @@ class RefCommonRef(_core.SchemaObjectNode):
 
     @property
     def telescope(self) -> Telescope | str:
-        return self._get_node("telescope", coerce=False)
+        return self._get_node("telescope", Telescope.ROMAN)
 
     @property
     def origin(self) -> str:
