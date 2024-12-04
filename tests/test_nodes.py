@@ -572,3 +572,61 @@ def test_flush_out_all(node_cls):
         keys.remove("pass")
 
     assert keys == set(_core.get_node_fields(node_cls))
+
+
+def test_wfi_mode_mixin():
+    """
+    Test the the wfi mode mixin class works
+    """
+
+    # Test when element is a filter
+    instance = nodes.WfiMode()
+    # default is F158 -> a filter
+    assert instance.optical_element == "F158"
+    assert instance.filter == "F158"
+    assert instance.grating is None
+
+    # Test when element is a grating
+    instance = nodes.WfiMode()
+    instance.optical_element = "GRISM"
+    assert instance.optical_element == "GRISM"
+    assert instance.filter is None
+    assert instance.grating == "GRISM"
+
+
+def test_fps_common_mixin():
+    """
+    Test that the fps common mixin class works
+    """
+    # This mixes in statistics, which is present in constructors but not in the schema
+    instance = nodes.FpsCommon()
+    assert "statistics" not in instance._data
+    assert instance.statistics is not None
+    assert "statistics" in instance._data
+    assert isinstance(instance.statistics, nodes.FpsStatistics)
+
+
+def test_tvac_common_mixin():
+    """
+    Test that the tvac common mixin class works
+    """
+    # This mixes in statistics, which is present in constructors but not in the schema
+    instance = nodes.TvacCommon()
+    assert "statistics" not in instance._data
+    assert instance.statistics is not None
+    assert "statistics" in instance._data
+    assert isinstance(instance.statistics, nodes.TvacStatistics)
+
+
+def test_ref_common_ref_instrument_mixin():
+    """
+    Test that the ref common ref instrument mixin class works
+    """
+    # Not publicly exposed, but it can be found through the RefCommonRef class
+    instance = nodes.RefCommonRef().instrument
+    # This mixes in optical_element, which is present in constructors but not in the schema
+    assert "optical_element" not in instance._data
+    assert instance.optical_element is not None
+    assert "optical_element" in instance._data
+    assert isinstance(instance.optical_element, nodes.WfiOpticalElement)
+    assert instance.optical_element == "F158"

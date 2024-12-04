@@ -6,13 +6,22 @@ from .tagged_objects import (
     FpsExposure,
     FpsGuidestar,
     FpsRefFile,
+    FpsStatistics,
     FpsWfiMode,
 )
 
 __all__ = ["FpsCommon"]
 
 
-class FpsCommon(FpsBasic):
+class FpsCommonMixin(_base.AdditionalNodeMixin):
+    """Mixin things present in the constructors not present in the schema"""
+
+    @property
+    def statistics(self) -> FpsStatistics:
+        return self._get_node("statistics", FpsStatistics)
+
+
+class FpsCommon(FpsBasic, FpsCommonMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0"
@@ -62,8 +71,3 @@ class FpsCommon(FpsBasic):
     @property
     def gw_meta(self) -> _base.DNode:
         return self._get_node("gw_meta", lambda: _base.DNode({"test": _default.NOSTR}))
-
-    # Not present in the schema
-    # @property
-    # def statistics(self) -> FpsStatistics:
-    #     return self._get_node("statistics", FpsStatistics)

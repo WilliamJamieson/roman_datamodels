@@ -6,13 +6,22 @@ from .tagged_objects import (
     TvacExposure,
     TvacGuidestar,
     TvacRefFile,
+    TvacStatistics,
     TvacWfiMode,
 )
 
 __all__ = ["TvacCommon"]
 
 
-class TvacCommon(TvacBasic):
+class TvacCommonMixin(_base.AdditionalNodeMixin):
+    """Mixin things present in the constructors not present in the schema"""
+
+    @property
+    def statistics(self) -> TvacStatistics:
+        return self._get_node("statistics", TvacStatistics)
+
+
+class TvacCommon(TvacBasic, TvacCommonMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0"
@@ -62,8 +71,3 @@ class TvacCommon(TvacBasic):
     @property
     def gw_meta(self) -> _base.DNode:
         return self._get_node("gw_meta", lambda: _base.DNode({"test": _default.NOSTR}))
-
-    # Not present in the schema
-    # @property
-    # def statistics(self) -> TvacStatistics:
-    #     return self._get_node("statistics", TvacStatistics)

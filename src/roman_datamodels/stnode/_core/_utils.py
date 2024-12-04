@@ -195,7 +195,7 @@ def get_all_fields(cls: type) -> set[str]:
     return {property_name for property_name in dir(cls) if isinstance(getattr(cls, property_name), property)}
 
 
-def _get_mixin_fields(cls: type) -> tuple[str]:
+def _get_mixin_fields(cls: type) -> set[str]:
     """
     Get all the mixin fields from the class.
 
@@ -209,15 +209,20 @@ def _get_mixin_fields(cls: type) -> tuple[str]:
     set[str]
         The mixin fields of the class.
     """
-    from .._mixins import AdditionalNodeMixin
+    from .._base import AdditionalNodeMixin
 
     mixin_fields = set()
     if issubclass(cls, AdditionalNodeMixin):
         for base in cls.__bases__:
             if issubclass(base, AdditionalNodeMixin):
-                mixin_fields.update(get_all_fields(base))
-
-    return tuple(mixin_fields)
+                if base is AdditionalNodeMixin:
+                    # This means that cls is the actual mixin class
+                    new_fields = get_all_fields(cls)
+                else:
+                    # This means cls is a child of the class with the mixin
+                    new_fields = _get_mixin_fields(base)
+                mixin_fields.update(new_fields)
+    return mixin_fields
 
 
 def get_node_fields(cls: type) -> tuple[str]:

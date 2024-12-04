@@ -1,16 +1,25 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import _base, _core
 
 from ...meta import (
     Telescope,
     WfiDetector,
+    WfiOpticalElement,
 )
 
 __all__ = ["RefCommonRef"]
 
 
-class RefCommonRef_Instrument(_core.ObjectNode):
+class RefCommonRef_InstrumentMixin(_base.AdditionalNodeMixin):
+    """Mixin things present in the constructors not present in the schema"""
+
+    @property
+    def optical_element(self) -> WfiOpticalElement | str:
+        return self._get_node("optical_element", WfiOpticalElement.F158)
+
+
+class RefCommonRef_Instrument(_core.ObjectNode, RefCommonRef_InstrumentMixin):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -25,11 +34,6 @@ class RefCommonRef_Instrument(_core.ObjectNode):
     @property
     def detector(self) -> WfiDetector:
         return self._get_node("detector", WfiDetector.WFI01)
-
-    # Not present in the schema
-    # @property
-    # def optical_element(self) -> WfiOpticalElement | str:
-    #     return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
 
 
 class RefCommonRef(_core.SchemaObjectNode):
