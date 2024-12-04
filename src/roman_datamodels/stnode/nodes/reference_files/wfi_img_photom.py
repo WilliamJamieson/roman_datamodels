@@ -1,6 +1,6 @@
 from astropy import units as u
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import _base, _core
 
 from ..meta import OPTICAL_ELEMENTS
 from .ref import RefCommonRef
@@ -70,7 +70,7 @@ class WfiImgPhotomRef(_core.DataModelNode):
         return self._get_node("meta", WfiImgPhotomRef_Meta)
 
     @property
-    def phot_table(self) -> dict[str, WfiImgPhotomRef_PhotTable]:
+    def phot_table(self) -> _base.DNode[str, WfiImgPhotomRef_PhotTable]:
         def _default():
             table = {}
             for element in OPTICAL_ELEMENTS:
@@ -78,6 +78,6 @@ class WfiImgPhotomRef(_core.DataModelNode):
                     table[element] = WfiImgPhotomRef_PhotTable.no_phot()
                 else:
                     table[element] = WfiImgPhotomRef_PhotTable()
-            return table
+            return _base.DNode(table)
 
         return self._get_node("phot_table", _default)

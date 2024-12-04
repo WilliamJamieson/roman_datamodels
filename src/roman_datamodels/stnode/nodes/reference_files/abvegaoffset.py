@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 from ..meta import OPTICAL_ELEMENTS
 from .ref import RefCommonRef
@@ -47,8 +47,8 @@ class AbvegaoffsetRef(_core.DataModelNode):
         return self._get_node("meta", AbvegaoffsetRef_Meta)
 
     @property
-    def data(self) -> dict[str, AbvegaoffsetRef_Data]:
+    def data(self) -> _base.DNode[str, AbvegaoffsetRef_Data]:
         def _default():
-            return {element: AbvegaoffsetRef_Data() for element in OPTICAL_ELEMENTS}
+            return _base.DNode({element: AbvegaoffsetRef_Data() for element in OPTICAL_ELEMENTS})
 
         return self._get_node("data", _default)

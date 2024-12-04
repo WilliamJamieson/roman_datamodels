@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 from ..meta import OPTICAL_ELEMENTS
 from .ref import RefCommonRef
@@ -87,8 +87,8 @@ class ApcorrRef(_core.DataModelNode):
         return self._get_node("meta", ApcorrRef_Meta)
 
     @property
-    def data(self) -> dict[str, ApcorrRef_Data]:
+    def data(self) -> _base.DNode[str, ApcorrRef_Data]:
         def _default():
-            return {element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS}
+            return _base.DNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})
 
         return self._get_node("data", _default)

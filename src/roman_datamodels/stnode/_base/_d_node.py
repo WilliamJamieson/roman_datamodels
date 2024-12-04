@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import datetime
 from collections.abc import MutableMapping
+from typing import Annotated, Generic, TypeVar
 
 import numpy as np
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
@@ -10,8 +13,11 @@ from ._utils import SchemaProperties, get_schema_for_property
 
 __all__ = ["DNode"]
 
+T = TypeVar("T")
 
-class DNode(MutableMapping):
+
+# Once we are >3.11 -> DNode[T] can replace the Generic[T] in the class definition
+class DNode(MutableMapping, Generic[T]):
     """
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
@@ -31,6 +37,11 @@ class DNode(MutableMapping):
         self._parent = parent
         self._name = name
         self._x_schema_attributes = None
+
+    def __class_getitem__(cls, item_type: type) -> type[DNode[T]]:
+        """Enable type hinting for the class"""
+
+        return Annotated[cls, item_type]
 
     def _has_node(self, key):
         """

@@ -7,7 +7,7 @@ import yaml
 from astropy.time import Time
 from rad import resources
 
-from roman_datamodels.stnode import _core, _mixins, nodes
+from roman_datamodels.stnode import _base, _core, _mixins, nodes
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -189,7 +189,7 @@ def test_orphan_node(node_cls):
 
     # Check that the property's return type matches the orphan node
     annotation = signature(cls_property.fget).return_annotation
-    assert annotation is node_cls or annotation == list[node_cls] or annotation == dict[str, node_cls]
+    assert annotation is node_cls or annotation == _base.LNode[node_cls] or annotation == _base.DNode[str, node_cls]
 
     # Check that the orphan node's schema matches the schema of the property
     schema = get_schema(containing_cls, containing_name, property_name)
@@ -198,13 +198,13 @@ def test_orphan_node(node_cls):
         assert "allOf" in schema or ("type" in schema and schema["type"] == "object")
         return
 
-    if annotation == list[node_cls]:
+    if annotation == _base.LNode[node_cls]:
         assert "type" in schema and schema["type"] == "array"
         assert "items" in schema
         assert "allOf" in schema["items"] or ("type" in schema["items"] and schema["items"]["type"] == "object")
         return
 
-    if annotation == dict[str, node_cls]:
+    if annotation == _base.DNode[str, node_cls]:
         assert "type" in schema and schema["type"] == "object"
         assert "patternProperties" in schema
         pattern_schema = schema["patternProperties"][next(iter(schema["patternProperties"]))]

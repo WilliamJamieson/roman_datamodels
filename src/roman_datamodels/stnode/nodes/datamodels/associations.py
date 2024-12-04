@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import _base, _core
 
 __all__ = ["Associations"]
 
@@ -42,7 +42,7 @@ class Associations_Products(_core.ObjectNode):
         return self._get_node("name", lambda: "product0")
 
     @property
-    def members(self) -> list[Associations_Products_Members]:
+    def members(self) -> _base.LNode[Associations_Products_Members]:
         return self._get_node("members", lambda: [])
 
 
@@ -124,7 +124,7 @@ class Associations(_core.DataModelNode):
         )
 
     @property
-    def products(self) -> list[Associations_Products]:
+    def products(self) -> _base.LNode[Associations_Products]:
         def _default():
             file_idx = 0
             products = []
@@ -138,8 +138,8 @@ class Associations(_core.DataModelNode):
                         )
                     )
                     file_idx += 1
-                products.append(Associations_Products({"name": f"product{product_idx}", "members": members_lst}))
+                products.append(Associations_Products({"name": f"product{product_idx}", "members": _base.LNode(members_lst)}))
 
-            return products
+            return _base.LNode(products)
 
         return self._get_node("products", _default)
