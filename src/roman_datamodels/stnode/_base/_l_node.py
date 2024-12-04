@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import UserList
 from typing import Annotated, Generic, TypeVar
 
-from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
+from asdf.lazy_nodes import AsdfListNode
 
 __all__ = ["LNode"]
 
@@ -32,15 +32,7 @@ class LNode(UserList, Generic[T]):
         return Annotated[cls, item_type]
 
     def __getitem__(self, index):
-        from ._d_node import DNode
-
-        value = self.data[index]
-        if isinstance(value, dict | AsdfDictNode):
-            return DNode(value)
-        elif isinstance(value, list | AsdfListNode):
-            return LNode(value)
-        else:
-            return value
+        return self.data[index]
 
     def __asdf_traverse__(self):
         return list(self)

@@ -417,7 +417,6 @@ def build_annotation_from_schema(schema, annotation):
                     annotation_args = get_args(annotation)
                     # The annotation should have 2 arguments, base and the arg
                     assert len(annotation_args) == 2
-                    print(annotation)
                     if len(get_args(annotation_args[0])) > 1:
                         annotation_args = get_args(annotation_args[0])
                     assert annotation_args[0] is _base.LNode

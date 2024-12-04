@@ -87,8 +87,6 @@ class TvacExposure(_core.TaggedObjectNode):
     def read_pattern(self) -> _base.LNode[_base.LNode[int]]:
         def _default():
             base = np.arange(1, 56).reshape((-1, 1)).tolist()
-            for this in base:
-                this = _base.LNode(this)
-            return _base.LNode(base)
+            return _base.LNode([_base.LNode(row) for row in base])
 
         return self._get_node("read_pattern", _default)

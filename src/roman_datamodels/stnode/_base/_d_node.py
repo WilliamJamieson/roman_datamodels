@@ -9,8 +9,6 @@ from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from asdf.tags.core import ndarray
 from astropy.time import Time
 
-from ._utils import SchemaProperties, get_schema_for_property
-
 __all__ = ["DNode"]
 
 T = TypeVar("T")
@@ -22,7 +20,7 @@ class DNode(MutableMapping, Generic[T]):
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
 
-    def __init__(self, node=None, parent=None, name=None):
+    def __init__(self, node=None):
         # Handle if we are passed different data types
         if node is None:
             self.__dict__["_data"] = {}
@@ -30,13 +28,6 @@ class DNode(MutableMapping, Generic[T]):
             self.__dict__["_data"] = node
         else:
             raise ValueError("Initializer only accepts dicts")
-
-        # Set the metadata tracked by the node
-        self._x_schema = None
-        self._schema_uri = None
-        self._parent = parent
-        self._name = name
-        self._x_schema_attributes = None
 
     def __class_getitem__(cls, item_type: type) -> type[DNode[T]]:
         """Enable type hinting for the class"""
@@ -52,28 +43,13 @@ class DNode(MutableMapping, Generic[T]):
     def __contains__(self, key):
         return self._has_node(key)
 
-    def _coerce(self, key, value):
-        from ._l_node import LNode
-
-        # Return objects as node classes, if applicable
-        if isinstance(value, dict | AsdfDictNode):
-            return DNode(value, parent=self, name=key)
-
-        if isinstance(value, list | AsdfListNode):
-            return LNode(value)
-
-        return value
-
-    def _pull_node(self, key, coerce=True):
+    def _pull_node(self, key):
         """
         Get a node from the dictionary, coercing it to the correct type if necessary.
         """
 
         if self._has_node(key):
-            value = self._data[key]
-            if coerce:
-                return self._coerce(key, value)
-            return value
+            return self._data[key]
 
         raise AttributeError(f"No such attribute ({key}) found in node")
 
@@ -87,18 +63,17 @@ class DNode(MutableMapping, Generic[T]):
         if key.startswith("_"):
             raise AttributeError(f"No attribute {key}")
 
-        return self._pull_node(key, coerce=True)
+        return self._pull_node(key)
 
-    def _set_node(self, key, value, coerce=True):
+    def _set_node(self, key, value):
         """
         Attempt to set a value in for the node
         """
         # Private keys should just be in the normal __dict__
-        if key[0] != "_":
-            self._data[key] = value
-
-        else:
+        if key[0] == "_":
             self.__dict__[key] = value
+        else:
+            self._data[key] = value
 
     def __setattr__(self, key, value):
         """
@@ -106,7 +81,7 @@ class DNode(MutableMapping, Generic[T]):
         """
         self._set_node(key, value)
 
-    def _get_node(self, key, default, coerce=True):
+    def _get_node(self, key, default):
         """
         Get a node and if not found construct it with the default value.
 
@@ -119,23 +94,12 @@ class DNode(MutableMapping, Generic[T]):
             This will often take the form of a lambda, that way the argument to the lambda
             is not evaluated until the default is actually needed, saving time and memory.
             for things like numpy arrays.
-        coerce : bool
-            If type coercion should be applied to the value.
         """
 
         if not self._has_node(key):
-            self._set_node(key, default(), coerce=coerce)
+            self._set_node(key, default())
 
-        return self._pull_node(key, coerce=coerce)
-
-    @property
-    def _schema_attributes(self):
-        """
-        Get the schema attributes for this node.
-        """
-        if self._x_schema_attributes is None:
-            self._x_schema_attributes = SchemaProperties.from_schema(self._schema())
-        return self._x_schema_attributes
+        return self._pull_node(key)
 
     def _recursive_items(self):
         from ._l_node import LNode
@@ -183,18 +147,6 @@ class DNode(MutableMapping, Generic[T]):
             return {
                 key: convert_val(val) for (key, val) in item_getter() if not isinstance(val, np.ndarray | ndarray.NDArrayType)
             }
-
-    def _schema(self):
-        """
-        If not overridden by a subclass, it will search for a schema from
-        the parent class, recursing if necessary until one is found.
-        """
-        if self._x_schema is None:
-            parent_schema = self._parent._schema()
-            # Extract the subschema corresponding to this node.
-            subschema = get_schema_for_property(parent_schema, self._name)
-            self._x_schema = subschema
-        return self._x_schema
 
     def __asdf_traverse__(self):
         """Asdf traverse method for things like info/search"""
