@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from importlib import resources as importlib_resources
 from inspect import signature
 from pathlib import Path
@@ -528,3 +529,47 @@ def test_lazy_defaults(node_cls):
         property_cls = getattr(node_cls, property_name)
         annotation = signature(property_cls.fget).return_annotation
         check_type_fits_annotation(instance[stored_name], annotation)
+
+
+# RefCommonRef is a special case that cannot flush
+@pytest.mark.parametrize("node_cls", [node for node in _OBJECT_NODES.values() if node is not nodes.RefCommonRef])
+def test_flush_out_required(node_cls):
+    """
+    Check that the `flush_out_required` method works
+    """
+
+    instance = node_cls()
+    assert instance._data == {}
+
+    context = pytest.warns(UserWarning) if instance.required else nullcontext()
+
+    # Check that the instance can be brought into a valid state
+    with context:
+        instance.flush_out_required(warn=True)
+
+    keys = set(instance._data.keys())
+    if "pass" in keys:
+        keys.add("pass_")
+        keys.remove("pass")
+
+    assert keys == set(instance.required)
+
+
+@pytest.mark.parametrize("node_cls", [node for node in _OBJECT_NODES.values() if node is not nodes.RefCommonRef])
+def test_flush_out_all(node_cls):
+    """
+    Check that the `flush_out_all` method works
+    """
+    instance = node_cls()
+    assert instance._data == {}
+
+    # Check that the instance can be brought into a valid state
+    with pytest.warns(UserWarning):
+        instance.flush_out_all(warn=True)
+
+    keys = set(instance._data.keys())
+    if "pass" in keys:
+        keys.add("pass_")
+        keys.remove("pass")
+
+    assert keys == set(_core.get_node_fields(node_cls))
