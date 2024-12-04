@@ -1,6 +1,7 @@
 from importlib import resources as importlib_resources
 from inspect import signature
 from pathlib import Path
+from typing import get_args
 
 import pytest
 import yaml
@@ -175,9 +176,6 @@ def test_orphan_node(node_cls):
     Test that the orphan nodes follow a consistent naming pattern
         <ContainingNodeName>_<PropertyName>
     """
-    print(node_cls)
-    # raise ValueError("Stop here")
-
     containing_name, property_name = parse_orphan_name(node_cls.__name__)
 
     containing_cls = get_containing_cls(containing_name)
@@ -389,6 +387,19 @@ def test_properties_in_schema(node_cls):
     assert get_properties(schema) == properties
 
 
+def check_type_fits_annotation(value, annotation):
+    annotation_args = get_args(annotation)
+    if annotation_args:
+        check_type_fits_annotation(value, annotation_args[0])
+
+        if annotation_args[0] is _base.LNode:
+            assert len(annotation_args) == 2
+            for item in value:
+                check_type_fits_annotation(item, annotation_args[1])
+    else:
+        assert isinstance(value, annotation)
+
+
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
 def test_lazy_defaults(node_cls):
     """
@@ -404,7 +415,6 @@ def test_lazy_defaults(node_cls):
     }
 
     for property_name in properties:
-        print(property_name)
         # Generate a fresh instance of the class
         instance = node_cls()
 
@@ -424,3 +434,8 @@ def test_lazy_defaults(node_cls):
         # Check the property is now in the instance
         assert stored_name in instance
         assert stored_name in instance._data
+
+        # Check the property has the correct type
+        property_cls = getattr(node_cls, property_name)
+        annotation = signature(property_cls.fget).return_annotation
+        check_type_fits_annotation(instance[stored_name], annotation)

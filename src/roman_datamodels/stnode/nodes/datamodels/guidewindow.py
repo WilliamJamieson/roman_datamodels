@@ -71,7 +71,7 @@ class Guidewindow_Meta(Common):
 
     @property
     def gw_acq_number(self) -> int:
-        return self._get_node("gw_acq_number", lambda: _default.NONUM)
+        return self._get_node("gw_acq_number", lambda: _default.NOINT)
 
     @property
     def gw_science_file_source(self) -> str:
@@ -83,11 +83,11 @@ class Guidewindow_Meta(Common):
 
     @property
     def gw_window_xstart(self) -> int:
-        return self._get_node("gw_window_xstart", lambda: _default.NONUM)
+        return self._get_node("gw_window_xstart", lambda: _default.NOINT)
 
     @property
     def gw_window_ystart(self) -> int:
-        return self._get_node("gw_window_ystart", lambda: _default.NONUM)
+        return self._get_node("gw_window_ystart", lambda: _default.NOINT)
 
     @property
     def gw_window_xstop(self) -> int:

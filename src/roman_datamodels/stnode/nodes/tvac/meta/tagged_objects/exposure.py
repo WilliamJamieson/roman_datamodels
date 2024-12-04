@@ -1,7 +1,7 @@
 import numpy as np
 from astropy.time import Time
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 from ..untagged_scalars import TvacExposureType
 
@@ -57,7 +57,7 @@ class TvacExposure(_core.TaggedObjectNode):
 
     @property
     def frame_divisor(self) -> int:
-        return self._get_node("frame_divisor", lambda: _default.NONUM)
+        return self._get_node("frame_divisor", lambda: _default.NOINT)
 
     @property
     def groupgap(self) -> int:
@@ -81,8 +81,14 @@ class TvacExposure(_core.TaggedObjectNode):
 
     @property
     def ma_table_number(self) -> int:
-        return self._get_node("ma_table_number", lambda: _default.NONUM)
+        return self._get_node("ma_table_number", lambda: _default.NOINT)
 
     @property
-    def read_pattern(self) -> list[list[int]]:
-        return self._get_node("read_pattern", lambda: np.arange(1, 56).reshape((-1, 1)).tolist())
+    def read_pattern(self) -> _base.LNode[_base.LNode[int]]:
+        def _default():
+            base = np.arange(1, 56).reshape((-1, 1)).tolist()
+            for this in base:
+                this = _base.LNode(this)
+            return _base.LNode(base)
+
+        return self._get_node("read_pattern", _default)

@@ -61,16 +61,16 @@ class Guidestar(_core.TaggedObjectNode):
         return self._get_node("data_start", lambda: Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
 
     @property
-    def data_end(self) -> float:
+    def data_end(self) -> Time:
         return self._get_node("data_end", lambda: Time("2020-01-01T01:00:00.0", format="isot", scale="utc"))
 
     @property
     def window_xstart(self) -> int:
-        return self._get_node("window_xstart", lambda: _default.NONUM)
+        return self._get_node("window_xstart", lambda: _default.NOINT)
 
     @property
     def window_ystart(self) -> int:
-        return self._get_node("window_ystart", lambda: _default.NONUM)
+        return self._get_node("window_ystart", lambda: _default.NOINT)
 
     @property
     def window_xstop(self) -> int:

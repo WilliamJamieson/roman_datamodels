@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 __all__ = ["Visit"]
 
@@ -23,8 +23,8 @@ class Visit_Dither(_core.ObjectNode):
         return self._get_node("subpixel_name", lambda: "None")
 
     @property
-    def executed_pattern(self) -> list[float] | None:
-        return self._get_node("executed_pattern", lambda: list(range(1, 10)))
+    def executed_pattern(self) -> _base.LNode[float] | None:
+        return self._get_node("executed_pattern", lambda: _base.LNode([float(v) for v in range(1, 10)]))
 
 
 class Visit(_core.TaggedObjectNode):
@@ -80,7 +80,7 @@ class Visit(_core.TaggedObjectNode):
 
     @property
     def nexposures(self) -> int:
-        return self._get_node("nexposures", lambda: _default.NONUM)
+        return self._get_node("nexposures", lambda: _default.NOINT)
 
     @property
     def internal_target(self) -> bool:

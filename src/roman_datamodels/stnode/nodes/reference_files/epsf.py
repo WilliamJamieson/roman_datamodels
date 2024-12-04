@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 from .ref import (
     RefCommonRef,
@@ -26,23 +26,23 @@ class EpsfRef_Meta(RefCommonRef, RefOpticalElementRef):
 
     @property
     def oversample(self) -> int:
-        return self._get_node("oversample", lambda: _default.NONUM)
+        return self._get_node("oversample", lambda: _default.NOINT)
 
     @property
-    def spectral_type(self) -> list[str]:
-        return self._get_node("spectral_type", lambda: ["None"])
+    def spectral_type(self) -> _base.LNode[str]:
+        return self._get_node("spectral_type", lambda: _base.LNode(["None"]))
 
     @property
-    def defocus(self) -> list[int]:
-        return self._get_node("defocus", lambda: np.arange(1, 10).tolist())
+    def defocus(self) -> _base.LNode[int]:
+        return self._get_node("defocus", lambda: _base.LNode(list(range(1, 10))))
 
     @property
-    def pixel_x(self) -> list[float]:
-        return self._get_node("pixel_x", lambda: np.arange(1, 10, dtype=np.float32).tolist())
+    def pixel_x(self) -> _base.LNode[float]:
+        return self._get_node("pixel_x", lambda: _base.LNode([float(i) for i in range(1, 10)]))
 
     @property
-    def pixel_y(self) -> list[float]:
-        return self._get_node("pixel_y", lambda: np.arange(1, 10, dtype=np.float32).tolist())
+    def pixel_y(self) -> _base.LNode[float]:
+        return self._get_node("pixel_y", lambda: _base.LNode([float(i) for i in range(1, 10)]))
 
 
 class EpsfRef(_core.DataModelNode):

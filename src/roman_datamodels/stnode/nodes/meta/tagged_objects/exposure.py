@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 from ..untagged_scalars import ExposureType
 
@@ -76,11 +76,13 @@ class Exposure(_core.TaggedObjectNode):
 
     @property
     def ma_table_number(self) -> int:
-        return self._get_node("ma_table_number", lambda: _default.NONUM)
+        return self._get_node("ma_table_number", lambda: _default.NOINT)
 
     @property
-    def read_pattern(self) -> list[list[int]]:
-        return self._get_node("read_pattern", lambda: [[1], [2, 3], [4], [5, 6, 7, 8], [9, 10], [11]])
+    def read_pattern(self) -> _base.LNode[_base.LNode[int]]:
+        return self._get_node(
+            "read_pattern", lambda: _base.LNode([_base.LNode(read) for read in ([1], [2, 3], [4], [5, 6, 7, 8], [9, 10], [11])])
+        )
 
     @property
     def truncated(self) -> bool:

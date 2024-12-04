@@ -21,13 +21,13 @@ class Photometry(_core.TaggedObjectNode):
         )
 
     @property
-    def conversion_megajanskys(self) -> None | float:
+    def conversion_megajanskys(self) -> float | None:
         return self._get_node("conversion_megajanskys", lambda: _default.NONUM)
 
     @property
-    def conversion_megajanskys_uncertainty(self) -> None | float:
+    def conversion_megajanskys_uncertainty(self) -> float | None:
         return self._get_node("conversion_megajanskys_uncertainty", lambda: _default.NONUM)
 
     @property
-    def pixel_area(self) -> None | float:
+    def pixel_area(self) -> float | None:
         return self._get_node("pixel_area", lambda: _default.NONUM)

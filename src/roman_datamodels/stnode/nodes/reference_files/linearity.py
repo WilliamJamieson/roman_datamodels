@@ -22,11 +22,11 @@ class LinearityRef_Meta(RefCommonRef):
         return self._get_node("reftype", lambda: "LINEARITY")
 
     @property
-    def input_units(self) -> u.Unit:
+    def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.DN)
 
     @property
-    def output_units(self) -> u.Unit:
+    def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.DN)
 
 

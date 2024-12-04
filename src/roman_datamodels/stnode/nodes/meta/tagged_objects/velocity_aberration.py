@@ -30,4 +30,4 @@ class VelocityAberration(_core.TaggedObjectNode):
 
     @property
     def scale_factor(self) -> float:
-        return self._get_node("scale_factor", lambda: 1)
+        return self._get_node("scale_factor", lambda: 1.0)

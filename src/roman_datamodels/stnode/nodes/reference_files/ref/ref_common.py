@@ -23,8 +23,8 @@ class RefCommonRef_Instrument(_core.ObjectNode):
         return self._get_node("name", lambda: "WFI")
 
     @property
-    def detector(self) -> WfiDetector | str:
-        return self._get_node("detector", lambda: WfiDetector.WFI01)
+    def detector(self) -> WfiDetector:
+        return self._get_node("detector", WfiDetector.WFI01)
 
     # Not present in the schema
     # @property

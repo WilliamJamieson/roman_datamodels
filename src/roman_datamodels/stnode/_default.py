@@ -3,12 +3,13 @@ from astropy import units as u
 from astropy.modeling import models
 from gwcs import WCS, coordinate_frames
 
-__all__ = ["NOFN", "NONUM", "NOSTR", "Wcs"]
+__all__ = ["NOFN", "NOINT", "NONUM", "NOSTR", "Wcs"]
 
 
 NOFN = "none"
 NOSTR = "?"
-NONUM = -999999
+NONUM = -999999.0
+NOINT = int(NONUM)
 
 
 def Wcs():

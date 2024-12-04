@@ -55,15 +55,15 @@ class MosaicBasic(_core.TaggedObjectNode):
 
     @property
     def visit(self) -> int:
-        return self._get_node("visit", lambda: _default.NONUM)
+        return self._get_node("visit", lambda: _default.NOINT)
 
     @property
     def segment(self) -> int:
-        return self._get_node("segment", lambda: _default.NONUM)
+        return self._get_node("segment", lambda: _default.NOINT)
 
     @property
     def pass_(self) -> int:
-        return self._get_node("pass", lambda: _default.NONUM)
+        return self._get_node("pass", lambda: _default.NOINT)
 
     @property
     def program(self) -> str:

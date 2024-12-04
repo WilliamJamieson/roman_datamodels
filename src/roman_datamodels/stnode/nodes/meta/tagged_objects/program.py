@@ -45,4 +45,4 @@ class Program(_core.TaggedObjectNode):
 
     @property
     def continuation_id(self) -> int:
-        return self._get_node("continuation_id", lambda: _default.NONUM)
+        return self._get_node("continuation_id", lambda: _default.NOINT)

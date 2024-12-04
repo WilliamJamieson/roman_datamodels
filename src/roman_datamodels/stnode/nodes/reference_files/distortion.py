@@ -27,11 +27,11 @@ class DistortionRef_Meta(RefCommonRef, RefOpticalElementRef):
         return self._get_node("reftype", lambda: "DISTORTION")
 
     @property
-    def input_units(self) -> u.Unit:
+    def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.pixel)
 
     @property
-    def output_units(self) -> u.Unit:
+    def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.arcsec)
 
 

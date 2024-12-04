@@ -2,7 +2,7 @@ import numpy as np
 from astropy import units as u
 from astropy.time import Time
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 __all__ = ["TvacGroundtest"]
 
@@ -106,7 +106,7 @@ class TvacGroundtest(_core.TaggedObjectNode):
 
     @property
     def readout_col_num(self) -> int:
-        return self._get_node("readout_col_num", lambda: _default.NONUM)
+        return self._get_node("readout_col_num", lambda: _default.NOINT)
 
     @property
     def detector_pixel_size(self) -> u.Quantity:
@@ -120,15 +120,15 @@ class TvacGroundtest(_core.TaggedObjectNode):
 
     @property
     def activity_number(self) -> int:
-        return self._get_node("activity_number", lambda: _default.NONUM)
+        return self._get_node("activity_number", lambda: _default.NOINT)
 
     @property
-    def led_bank1_band_number_on(self) -> list[int]:
-        return self._get_node("led_bank1_band_number_on", lambda: [_default.NONUM])
+    def led_bank1_band_number_on(self) -> _base.LNode[int]:
+        return self._get_node("led_bank1_band_number_on", lambda: _base.LNode([_default.NOINT]))
 
     @property
-    def led_bank2_bank1_number_on(self) -> list[int]:
-        return self._get_node("led_bank2_bank1_number_on", lambda: [_default.NONUM])
+    def led_bank2_bank1_number_on(self) -> _base.LNode[int]:
+        return self._get_node("led_bank2_bank1_number_on", lambda: _base.LNode([_default.NOINT]))
 
     @property
     def led_bank1_approx_wlen(self) -> u.Quantity:

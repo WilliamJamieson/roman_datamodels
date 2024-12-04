@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 __all__ = ["Resample"]
 
@@ -36,15 +36,15 @@ class Resample(_core.TaggedObjectNode):
 
     @property
     def pointings(self) -> int:
-        return self._get_node("pointings", lambda: _default.NONUM)
+        return self._get_node("pointings", lambda: _default.NOINT)
 
     @property
     def product_exposure_time(self) -> float:
         return self._get_node("product_exposure_time", lambda: _default.NONUM)
 
     @property
-    def members(self) -> list[str]:
-        return self._get_node("members", lambda: [])
+    def members(self) -> _base.LNode[str]:
+        return self._get_node("members", lambda: _base.LNode([]))
 
     @property
     def weight_type(self) -> str:

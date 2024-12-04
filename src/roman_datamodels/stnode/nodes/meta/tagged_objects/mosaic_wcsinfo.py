@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 __all__ = ["MosaicWcsinfo"]
 
@@ -56,8 +56,16 @@ class MosaicWcsinfo(_core.TaggedObjectNode):
         return self._get_node("y_ref", lambda: _default.NONUM)
 
     @property
-    def rotation_matrix(self) -> list[list[float]]:
-        return self._get_node("rotation_matrix", lambda: [[_default.NONUM, _default.NONUM], [_default.NONUM, _default.NONUM]])
+    def rotation_matrix(self) -> _base.LNode[_base.LNode[float]]:
+        return self._get_node(
+            "rotation_matrix",
+            lambda: _base.LNode(
+                [
+                    _base.LNode([_default.NONUM, _default.NONUM]),
+                    _base.LNode([_default.NONUM, _default.NONUM]),
+                ]
+            ),
+        )
 
     @property
     def pixel_scale(self) -> float:
@@ -76,8 +84,8 @@ class MosaicWcsinfo(_core.TaggedObjectNode):
         return self._get_node("s_region", lambda: _default.NOSTR)
 
     @property
-    def pixel_shape(self) -> list[int]:
-        return self._get_node("pixel_shape", lambda: [_default.NONUM, _default.NONUM])
+    def pixel_shape(self) -> _base.LNode[int]:
+        return self._get_node("pixel_shape", lambda: _base.LNode([_default.NOINT, _default.NOINT]))
 
     @property
     def ra_center(self) -> float:

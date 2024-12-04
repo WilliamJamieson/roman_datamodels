@@ -41,7 +41,7 @@ class DarkRef_Meta_Exposure(_core.ObjectNode):
 
     @property
     def ma_table_number(self) -> int:
-        return self._get_node("ma_table_number", lambda: _default.NONUM)
+        return self._get_node("ma_table_number", lambda: _default.NOINT)
 
 
 class DarkRef_Meta(RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):

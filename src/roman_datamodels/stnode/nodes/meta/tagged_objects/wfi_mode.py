@@ -1,13 +1,8 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
+from typing import ClassVar
 
 from roman_datamodels.stnode import _core, _mixins
 
 from ..untagged_scalars import WfiDetector, WfiOpticalElement
-
-if TYPE_CHECKING:
-    from typing import ClassVar
 
 __all__ = ["WfiMode"]
 

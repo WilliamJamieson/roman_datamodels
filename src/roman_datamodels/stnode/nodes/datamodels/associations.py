@@ -43,7 +43,7 @@ class Associations_Products(_core.ObjectNode):
 
     @property
     def members(self) -> _base.LNode[Associations_Products_Members]:
-        return self._get_node("members", lambda: [])
+        return self._get_node("members", lambda: _base.LNode([]))
 
 
 class Associations(_core.DataModelNode):

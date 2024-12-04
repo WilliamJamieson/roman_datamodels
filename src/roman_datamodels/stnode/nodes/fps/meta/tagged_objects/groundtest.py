@@ -106,7 +106,7 @@ class FpsGroundtest(_core.TaggedObjectNode):
 
     @property
     def readout_col_num(self) -> int:
-        return self._get_node("readout_col_num", lambda: _default.NONUM)
+        return self._get_node("readout_col_num", lambda: _default.NOINT)
 
     @property
     def detector_pixel_size(self) -> u.Quantity:

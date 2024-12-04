@@ -40,4 +40,4 @@ class Rcs(_core.TaggedObjectNode):
 
     @property
     def counts(self) -> int:
-        return self._get_node("counts", lambda: _default.NONUM)
+        return self._get_node("counts", lambda: _default.NOINT)

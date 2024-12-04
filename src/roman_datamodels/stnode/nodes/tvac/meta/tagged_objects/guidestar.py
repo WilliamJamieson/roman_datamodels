@@ -47,11 +47,11 @@ class TvacGuidestar(_core.TaggedObjectNode):
 
     @property
     def gw_window_xstart(self) -> int:
-        return self._get_node("gw_window_xstart", lambda: _default.NONUM)
+        return self._get_node("gw_window_xstart", lambda: _default.NOINT)
 
     @property
     def gw_window_ystart(self) -> int:
-        return self._get_node("gw_window_ystart", lambda: _default.NONUM)
+        return self._get_node("gw_window_ystart", lambda: _default.NOINT)
 
     @property
     def gw_window_xstop(self) -> int:
