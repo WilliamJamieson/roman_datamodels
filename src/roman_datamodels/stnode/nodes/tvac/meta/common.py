@@ -20,8 +20,12 @@ class TvacCommonMixin(_base.AdditionalNodeMixin):
     def statistics(self) -> TvacStatistics:
         return self._get_node("statistics", TvacStatistics)
 
+    @classmethod
+    def _extra_fields(self) -> tuple[str]:
+        return ("statistics",)
 
-class TvacCommon(TvacBasic, TvacCommonMixin):
+
+class TvacCommon(TvacCommonMixin, TvacBasic):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0"

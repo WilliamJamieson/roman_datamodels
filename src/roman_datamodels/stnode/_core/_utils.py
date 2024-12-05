@@ -293,7 +293,13 @@ def coerce(value: Any, signature: T) -> T:
                 return u.Unit(value)
             return signature(value)
 
+    # This is an annotation of some kind
     if args:
+        # This is the case where we have a <type> | None annotation with value being None
+        # -> bail out early and return None
+        if value is None and type(None) in args:
+            return None
+
         container, value_signature = args
 
         # This is the case where we have a "nacked" DNode -> dictionary in schema
@@ -325,11 +331,3 @@ def coerce(value: Any, signature: T) -> T:
 
     # Fall back on returning the value as is
     return value
-    # if signature_args:
-    #     container, value = signature_args
-    #     if container is DNode:
-    #         if not isinstance(value, DNode):
-    #             for key, sub_val in value.items():
-
-    # if not isinstance(value, signature):
-    #     return signature(value)

@@ -1,7 +1,7 @@
 import warnings
 from abc import ABC, abstractmethod
 
-from .._base import DNode
+from .._base import DNode, FlushOptions
 from ._mixins import SchemaMixin, TagMixin
 from ._utils import get_node_fields
 
@@ -23,9 +23,9 @@ class ObjectNode(DNode, ABC):
     def required(self) -> tuple[str]:
         return self.asdf_required()
 
-    def flush_out_required(self, warn: bool = False) -> None:
+    def flush(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> None:
         """
-        Flush out the required fields.
+        Flush out the object.
             This will be used by asdf to ensure that all required fields are present
             prior to writing the tree to disk. These objects are intended to be
             filled in lazily, so this method will fill in any missing required fields
@@ -33,6 +33,8 @@ class ObjectNode(DNode, ABC):
 
         Parameters
         ----------
+        flush : FlushOptions
+            Options for flushing out required fields, see FlushOptions for more info
         warn : bool
             If `True`, warn if any required fields are missing.
 
@@ -40,41 +42,48 @@ class ObjectNode(DNode, ABC):
         -------
         All required fields are flushed out with their default values.
         """
+        match flush:
+            case FlushOptions.NONE:
+                return
+            case FlushOptions.REQUIRED:
+                fields = self.required
+            case FlushOptions.ALL:
+                fields = get_node_fields(type(self))
+            case FlushOptions.EXTRA:
+                fields = get_node_fields(type(self)) + self._extra_fields()
+            case _:
+                raise ValueError(f"Invalid flush option: {flush}")
 
-        for field in self.required:
+        for field in fields:
             if not self._has_node(field):
                 if warn:
                     warnings.warn(f"Filling in missing required field '{field}' with default value.", UserWarning, stacklevel=2)
+                # access the field to trigger its default value
                 getattr(self, field)
 
-    def flush_out_all(self, warn: bool = False) -> None:
-        """
-        Flush out all fields.
-
-        Parameters
-        ----------
-        warn : bool
-            If `True`, warn if any fields are missing.
-
-        Results
-        -------
-        All fields are flushed out with their default values.
-        """
-
-        for field in get_node_fields(type(self)):
-            if not self._has_node(field):
-                if warn:
-                    warnings.warn(f"Filling in missing field '{field}' with default value.", UserWarning, stacklevel=2)
-                getattr(self, field)
+    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
+        # Flush out any required fields
+        self.flush(flush, warn)
+        return super().to_asdf_tree(flush=flush, warn=warn)
 
 
-class SchemaObjectNode(ObjectNode, SchemaMixin, ABC): ...
+class SchemaObjectNode(ObjectNode, SchemaMixin, ABC):
+    """
+    Base class for all objects described by their own schema in RAD.
+    """
 
 
-class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC): ...
+class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):
+    """
+    Base class for all objects that are tagged in RAD.
+    """
 
 
 class DataModelNode(TaggedObjectNode, ABC):
+    """
+    Base class for all objects in RAD that are marked as data models
+    """
+
     @property
     @abstractmethod
     def array_shape(self) -> tuple[int]:

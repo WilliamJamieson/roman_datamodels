@@ -20,8 +20,12 @@ class FpsCommonMixin(_base.AdditionalNodeMixin):
     def statistics(self) -> FpsStatistics:
         return self._get_node("statistics", FpsStatistics)
 
+    @classmethod
+    def _extra_fields(self) -> tuple[str]:
+        return ("statistics",)
 
-class FpsCommon(FpsBasic, FpsCommonMixin):
+
+class FpsCommon(FpsCommonMixin, FpsBasic):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0"

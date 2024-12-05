@@ -1,5 +1,7 @@
 from abc import ABC
+from typing import Any
 
+from .._base import AsdfNodeMixin, FlushOptions
 from ._mixins import SchemaMixin, TagMixin
 
 __all__ = [
@@ -8,7 +10,22 @@ __all__ = [
 ]
 
 
-class SchemaScalarNode(SchemaMixin, ABC): ...
+class SchemaScalarNode(AsdfNodeMixin, SchemaMixin, ABC):
+    """
+    Base class for all scalars that are described by their own schema in RAD.
+    """
+
+    def unwrap(self) -> Any:
+        return type(self).__bases__[0](self)
+
+    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
+        if isinstance(self, TagMixin):
+            return self
+
+        return self.unwrap()
+
+    def __asdf_traverse__(self):
+        return self.unwrap()
 
 
 class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):

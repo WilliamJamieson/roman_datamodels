@@ -18,8 +18,12 @@ class RefCommonRef_InstrumentMixin(_base.AdditionalNodeMixin):
     def optical_element(self) -> WfiOpticalElement | str:
         return self._get_node("optical_element", WfiOpticalElement.F158)
 
+    @classmethod
+    def _extra_fields(self) -> tuple[str]:
+        return ("optical_element",)
 
-class RefCommonRef_Instrument(_core.ObjectNode, RefCommonRef_InstrumentMixin):
+
+class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, _core.ObjectNode):
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

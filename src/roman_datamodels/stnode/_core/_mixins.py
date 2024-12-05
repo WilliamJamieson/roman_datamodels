@@ -1,34 +1,12 @@
 from abc import ABC, abstractmethod
 
-import asdf
-
 __all__ = [
-    "AsdfNodeMixin",
     "SchemaMixin",
     "TagMixin",
 ]
 
 
-class AsdfNodeMixin:
-    """Mixin so that Nodes can have an asdf context."""
-
-    _ctx: asdf.AsdfFile | None = None
-
-    @classmethod
-    def asdf_ctx(cls) -> asdf.AsdfFile:
-        """Get the asdf context for the class."""
-        if cls._ctx is None:
-            cls._ctx = asdf.AsdfFile()
-
-        return cls._ctx
-
-    @property
-    def ctx(self) -> asdf.AsdfFile:
-        """Get the asdf context for the instance."""
-        return self.asdf_ctx()
-
-
-class SchemaMixin(AsdfNodeMixin, ABC):
+class SchemaMixin(ABC):
     """Mixin for nodes to support linking to a schema."""
 
     @classmethod

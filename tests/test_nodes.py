@@ -344,7 +344,7 @@ def test_fields(node_cls):
     Check that the fields property returns the correct fields
     """
 
-    properties = set(_core.get_node_fields(node_cls))
+    properties = set(_core.get_node_fields(node_cls)) | set(node_cls._extra_fields())
     instance = node_cls()
     assert instance._fields is None
     assert properties == set(instance.fields)
@@ -514,7 +514,7 @@ def test_lazy_defaults(node_cls):
     Check that every property can successfully be called into existence
     """
 
-    properties = _core.get_node_fields(node_cls)
+    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
 
     for property_name in properties:
         # Generate a fresh instance of the class
@@ -652,7 +652,7 @@ def test_coerce_setting(node_cls):
     Check that things get coerced to the right value during setting
     """
 
-    properties = _core.get_node_fields(node_cls)
+    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
 
     for property_name in properties:
         if coerce_property_skips(node_cls, property_name):
@@ -690,7 +690,7 @@ def test_coerce_getting(node_cls):
     Check that things get coerced to the right value when getting
     """
 
-    properties = _core.get_node_fields(node_cls)
+    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
 
     for property_name in properties:
         if coerce_property_skips(node_cls, property_name):
@@ -710,6 +710,9 @@ def test_coerce_getting(node_cls):
 
         # Access the value and show it is now coerced
         with context:
+            this = getattr(instance, property_name)
+            print(this)
+            print(type(this))
             assert isinstance(getattr(instance, property_name), Table if type(compare_value) is QTable else type(compare_value))
 
         # Check the value is coerced into the correct type for storage
@@ -724,9 +727,22 @@ def test_coerce_getting(node_cls):
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
-def test_flush_out_required(node_cls):
+def test_flush_none(node_cls):
     """
-    Check that the `flush_out_required` method works
+    Check that the `flush` method works with `FlushOptions.NONE`
+    """
+
+    instance = node_cls()
+    assert instance._data == {}
+
+    instance.flush(flush=_base.FlushOptions.NONE, warn=True)
+    assert instance._data == {}  # Nothing should have changed
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_flush_required(node_cls):
+    """
+    Check that the `flush` method works with `FlushOptions.REQUIRED`
     """
 
     instance = node_cls()
@@ -736,7 +752,7 @@ def test_flush_out_required(node_cls):
 
     # Check that the instance can be brought into a valid state
     with context:
-        instance.flush_out_required(warn=True)
+        instance.flush(warn=True)  # REQUIRED is the default
 
     keys = set(instance._data.keys())
     if "pass" in keys:
@@ -747,16 +763,16 @@ def test_flush_out_required(node_cls):
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
-def test_flush_out_all(node_cls):
+def test_flush_all(node_cls):
     """
-    Check that the `flush_out_all` method works
+    Check that the `flush` method works with `FlushOptions.ALL`
     """
     instance = node_cls()
     assert instance._data == {}
 
     # Check that the instance can be brought into a valid state
     with pytest.warns(UserWarning):
-        instance.flush_out_all(warn=True)
+        instance.flush(flush=_base.FlushOptions.ALL, warn=True)
 
     keys = set(instance._data.keys())
     if "pass" in keys:
@@ -764,6 +780,26 @@ def test_flush_out_all(node_cls):
         keys.remove("pass")
 
     assert keys == set(_core.get_node_fields(node_cls))
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_flush_extra(node_cls):
+    """
+    Check that the `flush` method works with `FlushOptions.EXTRA`
+    """
+    instance = node_cls()
+    assert instance._data == {}
+
+    # Check that the instance can be brought into a valid state
+    with pytest.warns(UserWarning):
+        instance.flush(flush=_base.FlushOptions.EXTRA, warn=True)
+
+    keys = set(instance._data.keys())
+    if "pass" in keys:
+        keys.add("pass_")
+        keys.remove("pass")
+
+    assert keys == set(_core.get_node_fields(node_cls)) | set(node_cls._extra_fields())
 
 
 def test_wfi_mode_mixin():
@@ -797,6 +833,8 @@ def test_fps_common_mixin():
     assert "statistics" in instance._data
     assert isinstance(instance.statistics, nodes.FpsStatistics)
 
+    assert type(instance)._extra_fields() == ("statistics",)
+
 
 def test_tvac_common_mixin():
     """
@@ -808,6 +846,8 @@ def test_tvac_common_mixin():
     assert instance.statistics is not None
     assert "statistics" in instance._data
     assert isinstance(instance.statistics, nodes.TvacStatistics)
+
+    assert type(instance)._extra_fields() == ("statistics",)
 
 
 def test_ref_common_ref_instrument_mixin():
@@ -822,3 +862,14 @@ def test_ref_common_ref_instrument_mixin():
     assert "optical_element" in instance._data
     assert isinstance(instance.optical_element, nodes.WfiOpticalElement)
     assert instance.optical_element == "F158"
+
+    assert type(instance)._extra_fields() == ("optical_element",)
+
+
+@pytest.mark.parametrize("node_cls", nodes.NODES.values())
+def test_to_asdf_tree(node_cls):
+    """
+    Smoke test that the to_asdf_tree method runs without error
+    """
+    instance = node_cls(Time.now()) if issubclass(node_cls, Time) else node_cls()
+    instance.to_asdf_tree()

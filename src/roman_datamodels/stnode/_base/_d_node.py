@@ -10,13 +10,15 @@ from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from asdf.tags.core import ndarray
 from astropy.time import Time
 
+from ._mixins import AsdfNodeMixin, FlushOptions
+
 __all__ = ["DNode"]
 
 T = TypeVar("T")
 
 
 # Once we are >3.11 -> DNode[T] can replace the Generic[T] in the class definition
-class DNode(MutableMapping, Generic[T]):
+class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
     """
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
@@ -68,6 +70,11 @@ class DNode(MutableMapping, Generic[T]):
 
         return "pass_" if key == "pass" else key
 
+    @classmethod
+    def _extra_fields(self) -> tuple[str]:
+        """List of extra fields that are not in the schema."""
+        return tuple()
+
     @property
     def fields(self) -> tuple[str]:
         """
@@ -78,7 +85,7 @@ class DNode(MutableMapping, Generic[T]):
         from .._core import get_node_fields
 
         if self._fields is None:
-            self._fields = get_node_fields(type(self))
+            self._fields = get_node_fields(type(self)) + type(self)._extra_fields()
 
         return self._fields
 
@@ -247,10 +254,6 @@ class DNode(MutableMapping, Generic[T]):
                 key: convert_val(val) for (key, val) in item_getter() if not isinstance(val, np.ndarray | ndarray.NDArrayType)
             }
 
-    def __asdf_traverse__(self) -> dict[str, T]:
-        """Asdf traverse method for things like info/search"""
-        return dict(self)
-
     def __len__(self) -> int:
         """Define length of the node"""
         return len(self._data)
@@ -274,3 +277,28 @@ class DNode(MutableMapping, Generic[T]):
         instance.__dict__["_data"] = self.__dict__["_data"].copy()
 
         return instance
+
+    def unwrap(self) -> dict:
+        return dict(self)
+
+    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
+        from .._core import TagMixin
+
+        tree = self.unwrap()
+
+        for key, value in tree.items():
+            # Leave tagged objects alone, ASDF will take care of them
+            if isinstance(value, TagMixin):
+                continue
+
+            # Recursively convert not-tagged nodes
+            if isinstance(value, AsdfNodeMixin):
+                tree[key] = value.to_asdf_tree(flush=flush, warn=warn)
+
+            # Don't need to touch anything else
+
+        return tree
+
+    def __asdf_traverse__(self) -> dict[str, T]:
+        """Asdf traverse method for things like info/search"""
+        return self.unwrap()
