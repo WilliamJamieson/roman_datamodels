@@ -40,36 +40,6 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         return Annotated[cls, item_type]
 
-    @staticmethod
-    def _handle_data_key(key: str) -> str:
-        """
-        This exists to make it so that the _data storage always
-        uses "pass" instead of "pass_" as the key.
-
-        This is a workaround for the fact that "pass" is a very
-        reserved word in Python and can't be used as function name
-        for example.
-
-        Note that this means that "pass_" and "pass" will be equivalent
-        for the purposes of DNode.
-
-        Any time we access self._data this should be used to make sure
-        pass is correctly handled.
-        """
-        return "pass" if key == "pass_" else key
-
-    @staticmethod
-    def _handle_field_key(key: str) -> str:
-        """
-        Matching to _handle_data_key, this is used to make sure that
-        when we are using keys in reference to property (fields) names that
-        "pass_" is used instead of "pass".
-
-        Anytime fields is accessed this should be used to make sure pass is correctly handled.
-        """
-
-        return "pass_" if key == "pass" else key
-
     @classmethod
     def _extra_fields(self) -> tuple[str]:
         """List of extra fields that are not in the schema."""
@@ -94,7 +64,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         The field signatures for the node.
         """
         # Make change upfront as the key will be reused several times
-        key = self._handle_field_key(key)
+        key = self._to_field_key(key)
 
         # Note we cache these as inspect an be expensive
         if key not in self.fields:
@@ -114,7 +84,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """
         from .._core import coerce
 
-        if self._handle_field_key(key) in self.fields:
+        if self._to_field_key(key) in self.fields:
             # Get the return signature for the field property
             return coerce(value, self.field_signature(key))
 
@@ -124,7 +94,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """
         Check if a node exists in the dictionary.
         """
-        return self._handle_data_key(key) in self._data
+        return self._to_schema_key(key) in self._data
 
     def __contains__(self, key: str) -> bool:
         return self._has_node(key)
@@ -134,7 +104,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         Get a node from the dictionary, coercing it to the correct type if necessary.
         """
         if self._has_node(key):
-            value = self._data[self._handle_data_key(key)]
+            value = self._data[self._to_schema_key(key)]
             # Save currently stored value's type for comparison
             stored_type = type(value)
             value = self._coerce(key, value)
@@ -142,7 +112,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
             # If the stored type is different from the coerced type, update the stored value
             # so coercion only happens once
             if stored_type is not type(value):
-                self._data[self._handle_data_key(key)] = value
+                self._data[self._to_schema_key(key)] = value
 
             return value
 
@@ -172,7 +142,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         if key[0] == "_":
             self.__dict__[key] = value
         else:
-            self._data[self._handle_data_key(key)] = self._coerce(key, value)
+            self._data[self._to_schema_key(key)] = self._coerce(key, value)
 
     def __setattr__(self, key: str, value: T) -> None:
         """
@@ -260,7 +230,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
     def __delitem__(self, key: str) -> None:
         """Dictionary style access delete data"""
-        del self._data[self._handle_data_key(key)]
+        del self._data[self._to_schema_key(key)]
 
     def __iter__(self) -> iter[dict[str, T]]:
         """Define iteration"""

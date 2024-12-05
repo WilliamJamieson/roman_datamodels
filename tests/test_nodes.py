@@ -884,4 +884,6 @@ def test_asdf_schema(node_cls):
     Smoke test that the asdf_schema method runs without error
     """
     instance = node_cls(Time.now()) if issubclass(node_cls, Time) else node_cls()
-    instance.asdf_schema()
+    schema = instance.asdf_schema()
+    if issubclass(node_cls, _core.ObjectNode):
+        assert schema.required == set(instance.required)

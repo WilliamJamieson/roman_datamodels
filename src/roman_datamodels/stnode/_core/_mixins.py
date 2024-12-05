@@ -44,7 +44,7 @@ class SchemaMixin(RadNodeMixin, ABC):
     def asdf_schema(cls) -> RadSchema:
         # Pull the schema through ASDF
         if cls._asdf_schema is None:
-            cls._asdf_schema = RadSchema(cls)
+            cls._asdf_schema = RadSchema(cls.get_schema(cls.asdf_schema_uri()))
 
         return cls._asdf_schema
 
@@ -118,9 +118,7 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
     def asdf_schema(cls) -> RadSchema:
         """Get the schema for the implied node"""
         if cls._asdf_schema is None:
-            cls._asdf_schema = RadSchema(
-                cls, cls.asdf_implied_by().asdf_schema().get_field_schema(cls.asdf_implied_property_name())
-            )
+            cls._asdf_schema = cls.asdf_implied_by().asdf_schema().fields[cls.asdf_implied_property_name()]
 
         return cls._asdf_schema
 

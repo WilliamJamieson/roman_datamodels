@@ -7,35 +7,16 @@ from asdf.config import AsdfConfig, get_config
 
 __all__ = [
     "AdditionalNodeMixin",
+    "AsdfContextMixin",
     "AsdfNodeMixin",
     "FlushOptions",
 ]
 
 
-class FlushOptions(StrEnum):
+class AsdfContextMixin:
     """
-    Options for flushing out required fields
-        NONE     -> Do not flush out any fields,
-                    - this may result in an invalid object for asdf writing
-        REQUIRED -> Flush out only the required fields with their default values
-        ALL      -> Flush out all fields with their default values,
-                    - this fills in all the fields listed in the schema with
-                      their default values
-        EXTRA    -> Flush out all fields with their default values including
-                    extra fields that are not listed in the schema
-                    - fills in everything from ALL, then fills in fields that
-                      are mixedin to the object which have defaults but are not
-                      listed in the schema
+    Provides the ability to access ASDF file context and configuration features.
     """
-
-    NONE = auto()
-    REQUIRED = auto()
-    ALL = auto()
-    EXTRA = auto()
-
-
-class AsdfNodeMixin(ABC):
-    """Mixin so that Nodes can have an asdf context."""
 
     _ctx: asdf.AsdfFile | None = None
     _asdf_config: AsdfConfig | None = None
@@ -47,11 +28,6 @@ class AsdfNodeMixin(ABC):
             cls._ctx = asdf.AsdfFile()
 
         return cls._ctx
-
-    @property
-    def ctx(self) -> asdf.AsdfFile:
-        """Get the asdf context for the instance."""
-        return self.asdf_ctx()
 
     @classmethod
     def asdf_config(cls) -> AsdfConfig:
@@ -76,6 +52,62 @@ class AsdfNodeMixin(ABC):
         The raw schema dictionary for the given URI
         """
         return yaml.safe_load(cls.asdf_config().resource_manager[uri])
+
+    @staticmethod
+    def _to_schema_key(key: str) -> str:
+        """
+        This exists to make it so that the _data storage always
+        uses "pass" instead of "pass_" as the key.
+
+        This is a workaround for the fact that "pass" is a very
+        reserved word in Python and can't be used as function name
+        for example.
+
+        Note that this means that "pass_" and "pass" will be equivalent
+        for the purposes of DNode.
+
+        Any time we access self._data this should be used to make sure
+        pass is correctly handled.
+        """
+        return "pass" if key == "pass_" else key
+
+    @staticmethod
+    def _to_field_key(key: str) -> str:
+        """
+        Matching to _handle_data_key, this is used to make sure that
+        when we are using keys in reference to property (fields) names that
+        "pass_" is used instead of "pass".
+
+        Anytime fields is accessed this should be used to make sure pass is correctly handled.
+        """
+
+        return "pass_" if key == "pass" else key
+
+
+class FlushOptions(StrEnum):
+    """
+    Options for flushing out required fields
+        NONE     -> Do not flush out any fields,
+                    - this may result in an invalid object for asdf writing
+        REQUIRED -> Flush out only the required fields with their default values
+        ALL      -> Flush out all fields with their default values,
+                    - this fills in all the fields listed in the schema with
+                      their default values
+        EXTRA    -> Flush out all fields with their default values including
+                    extra fields that are not listed in the schema
+                    - fills in everything from ALL, then fills in fields that
+                      are mixedin to the object which have defaults but are not
+                      listed in the schema
+    """
+
+    NONE = auto()
+    REQUIRED = auto()
+    ALL = auto()
+    EXTRA = auto()
+
+
+class AsdfNodeMixin(AsdfContextMixin, ABC):
+    """Mixin so that Nodes can have an asdf context."""
 
     @abstractmethod
     def __asdf_traverse__(self):

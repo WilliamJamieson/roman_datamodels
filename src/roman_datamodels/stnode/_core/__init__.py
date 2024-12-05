@@ -2,7 +2,7 @@ from ._list import ListNode, SchemaListNode, TaggedListNode
 from ._mixins import ImpliedNodeMixin, SchemaMixin, TagMixin
 from ._object import DataModelNode, ObjectNode, SchemaObjectNode, TaggedObjectNode
 from ._scalar import SchemaScalarNode, TaggedScalarNode
-from ._schema import MissingSchemaKeyError, RadSchema
+from ._schema import RadSchema
 from ._utils import (
     camel_case_to_snake_case,
     class_name_from_uri,
@@ -19,7 +19,6 @@ __all__ = [
     "DataModelNode",
     "ImpliedNodeMixin",
     "ListNode",
-    "MissingSchemaKeyError",
     "ObjectNode",
     "RadSchema",
     "SchemaListNode",
