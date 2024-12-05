@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from enum import StrEnum, auto
 
 import asdf
+from asdf.config import AsdfConfig, get_config
 
 __all__ = [
     "AdditionalNodeMixin",
@@ -36,6 +37,7 @@ class AsdfNodeMixin(ABC):
     """Mixin so that Nodes can have an asdf context."""
 
     _ctx: asdf.AsdfFile | None = None
+    _asdf_config: AsdfConfig | None = None
 
     @classmethod
     def asdf_ctx(cls) -> asdf.AsdfFile:
@@ -49,6 +51,14 @@ class AsdfNodeMixin(ABC):
     def ctx(self) -> asdf.AsdfFile:
         """Get the asdf context for the instance."""
         return self.asdf_ctx()
+
+    @classmethod
+    def asdf_config(cls) -> AsdfConfig:
+        """Get the asdf config for the class."""
+        if cls._asdf_config is None:
+            cls._asdf_config = get_config()
+
+        return cls._asdf_config
 
     @abstractmethod
     def __asdf_traverse__(self):

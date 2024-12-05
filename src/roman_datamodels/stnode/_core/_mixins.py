@@ -1,7 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
+from enum import EnumType
 from inspect import signature
 from typing import get_args
 
+from .._base import AsdfNodeMixin
 from ._utils import camel_case_to_snake_case
 
 __all__ = [
@@ -11,7 +13,18 @@ __all__ = [
 ]
 
 
-class SchemaMixin(ABC):
+class RadNodeMixin(AsdfNodeMixin, ABC):
+    """
+    Mixin for direct interaction with RAD nodes.
+    """
+
+    @classmethod
+    @abstractmethod
+    def asdf_schema(cls) -> dict:
+        """Get the schema in rad for this class."""
+
+
+class SchemaMixin(RadNodeMixin, ABC):
     """Mixin for nodes to support linking to a schema."""
 
     @classmethod
@@ -23,6 +36,11 @@ class SchemaMixin(ABC):
     def schema_uri(self):
         """Get the URI for this instance"""
         return self.asdf_schema_uri()
+
+    @classmethod
+    def asdf_schema(cls) -> dict:
+        # Pull the schema through ASDF
+        return cls.asdf_config().resource_manager[cls.asdf_schema_uri()]
 
 
 class TagMixin(SchemaMixin, ABC):
@@ -44,7 +62,7 @@ class TagMixin(SchemaMixin, ABC):
         return cls.asdf_ctx().extension_manager.get_tag_definition(cls.asdf_tag()).schema_uris[0]
 
 
-class ImpliedNodeMixin(ABC):
+class ImpliedNodeMixin(RadNodeMixin, ABC):
     """
     Mixin for nodes that are implied by other nodes.
 
@@ -81,3 +99,20 @@ class ImpliedNodeMixin(ABC):
 
             raise TypeError(f"Expected {container} to be a DNode or LNode")
         return None
+
+    @classmethod
+    def asdf_schema(cls) -> dict:
+        # This is temporary until we actually implement this
+        return cls.asdf_implied_by().asdf_schema()
+
+
+class NodeEnumMeta(ABCMeta, EnumType):
+    """
+    Meta class for enums of nodes
+
+    Since all nodes are ABC classes they have ABCMeta as their metaclass. But
+    Enum classes have EnumType (used to be EnumMeta) as their metaclass. This
+    makes it so that the enum classes cannot be ABC classes due to a metaclass
+    conflict. This metaclass resolves that conflict by inheriting from both
+    enabling the use of the enum
+    """

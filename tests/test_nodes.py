@@ -876,3 +876,12 @@ def test_to_asdf_tree(node_cls):
     """
     instance = node_cls(Time.now()) if issubclass(node_cls, Time) else node_cls()
     instance.to_asdf_tree()
+
+
+@pytest.mark.parametrize("node_cls", nodes.NODES.values())
+def test_asdf_schema(node_cls):
+    """
+    Smoke test that the asdf_schema method runs without error
+    """
+    instance = node_cls(Time.now()) if issubclass(node_cls, Time) else node_cls()
+    instance.asdf_schema()

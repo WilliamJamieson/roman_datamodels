@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import Any
 
-from .._base import AsdfNodeMixin, FlushOptions
+from .._base import FlushOptions
 from ._mixins import SchemaMixin, TagMixin
 
 __all__ = [
@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-class SchemaScalarNode(AsdfNodeMixin, SchemaMixin, ABC):
+class SchemaScalarNode(SchemaMixin, ABC):
     """
     Base class for all scalars that are described by their own schema in RAD.
     """
