@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from enum import StrEnum, auto
 
 import asdf
+import yaml
 from asdf.config import AsdfConfig, get_config
 
 __all__ = [
@@ -59,6 +60,22 @@ class AsdfNodeMixin(ABC):
             cls._asdf_config = get_config()
 
         return cls._asdf_config
+
+    @classmethod
+    def get_schema(cls, uri: str) -> dict:
+        """
+        Get the schema for the given URI
+
+        Parameters
+        ----------
+        uri : str
+            The URI of the schema to get
+
+        Returns
+        -------
+        The raw schema dictionary for the given URI
+        """
+        return yaml.safe_load(cls.asdf_config().resource_manager[uri])
 
     @abstractmethod
     def __asdf_traverse__(self):

@@ -4,6 +4,7 @@ from inspect import signature
 from typing import get_args
 
 from .._base import AsdfNodeMixin
+from ._schema import RadSchema
 from ._utils import camel_case_to_snake_case
 
 __all__ = [
@@ -27,6 +28,8 @@ class RadNodeMixin(AsdfNodeMixin, ABC):
 class SchemaMixin(RadNodeMixin, ABC):
     """Mixin for nodes to support linking to a schema."""
 
+    _asdf_schema: RadSchema | None = None
+
     @classmethod
     @abstractmethod
     def asdf_schema_uri(clas) -> str:
@@ -38,9 +41,12 @@ class SchemaMixin(RadNodeMixin, ABC):
         return self.asdf_schema_uri()
 
     @classmethod
-    def asdf_schema(cls) -> dict:
+    def asdf_schema(cls) -> RadSchema:
         # Pull the schema through ASDF
-        return cls.asdf_config().resource_manager[cls.asdf_schema_uri()]
+        if cls._asdf_schema is None:
+            cls._asdf_schema = RadSchema(cls)
+
+        return cls._asdf_schema
 
 
 class TagMixin(SchemaMixin, ABC):
@@ -70,16 +76,24 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
         <implying_node_name>_<camel_case(implied_property_name)>
     """
 
+    _asdf_schema: RadSchema | None = None
+
     @classmethod
     @abstractmethod
     def asdf_implied_by(cls) -> type:
         """The name of the field that implies this node."""
 
     @classmethod
-    def asdf_implied_property(cls) -> property:
+    def asdf_implied_property_name(cls) -> str:
         """The name of the property that implies this node."""
 
-        return getattr(cls.asdf_implied_by(), camel_case_to_snake_case(cls.__name__.split("_")[-1]))
+        return camel_case_to_snake_case(cls.__name__.split("_")[-1])
+
+    @classmethod
+    def asdf_implied_property(cls) -> property:
+        """Get the raw property object that will accept this node"""
+
+        return getattr(cls.asdf_implied_by(), cls.asdf_implied_property_name())
 
     @classmethod
     def asdf_property_container(cls) -> type | None:
@@ -101,9 +115,14 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
         return None
 
     @classmethod
-    def asdf_schema(cls) -> dict:
-        # This is temporary until we actually implement this
-        return cls.asdf_implied_by().asdf_schema()
+    def asdf_schema(cls) -> RadSchema:
+        """Get the schema for the implied node"""
+        if cls._asdf_schema is None:
+            cls._asdf_schema = RadSchema(
+                cls, cls.asdf_implied_by().asdf_schema().get_field_schema(cls.asdf_implied_property_name())
+            )
+
+        return cls._asdf_schema
 
 
 class NodeEnumMeta(ABCMeta, EnumType):
