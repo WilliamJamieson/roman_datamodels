@@ -16,24 +16,6 @@ class Exposure(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/exposure-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "type",
-            "start_time",
-            "mid_time",
-            "end_time",
-            "nresultants",
-            "data_problem",
-            "frame_time",
-            "exposure_time",
-            "effective_exposure_time",
-            "ma_table_name",
-            "ma_table_number",
-            "read_pattern",
-            "truncated",
-        )
-
     @property
     def type(self) -> ExposureType:
         return self._get_node("type", ExposureType.WFI_IMAGE)

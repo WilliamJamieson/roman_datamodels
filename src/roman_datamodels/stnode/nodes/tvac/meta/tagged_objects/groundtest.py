@@ -16,30 +16,6 @@ class TvacGroundtest(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/groundtest-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "test_name",
-            "test_phase",
-            "test_environment",
-            "test_script",
-            "product_date",
-            "product_version",
-            "conversion_date",
-            "conversion_version",
-            "filename_pnt5",
-            "filepath_level_pnt5",
-            "filename_l1a",
-            "detector_id",
-            "detector_temp",
-            "frames_temp",
-            "ota_temp",
-            "rcs_on",
-            "readout_col_num",
-            "detector_pixel_size",
-            "sensor_error",
-        )
-
     @property
     def test_name(self) -> str:
         return self._get_node("test_name", lambda: _default.NOSTR)

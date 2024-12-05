@@ -12,23 +12,6 @@ class Ephemeris(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/ephemeris-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "earth_angle",
-            "moon_angle",
-            "sun_angle",
-            "type",
-            "time",
-            "ephemeris_reference_frame",
-            "spatial_x",
-            "spatial_y",
-            "spatial_z",
-            "velocity_x",
-            "velocity_y",
-            "velocity_z",
-        )
-
     @property
     def earth_angle(self) -> float:
         return self._get_node("earth_angle", lambda: _default.NONUM)

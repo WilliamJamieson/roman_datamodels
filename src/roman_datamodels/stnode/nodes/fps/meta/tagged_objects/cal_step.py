@@ -12,26 +12,6 @@ class FpsCalStep(_core.TaggedObjectNode):
     def asdf_tag(self) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/cal_step-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "assign_wcs",
-            "flat_field",
-            "flux",
-            "dark",
-            "dq_init",
-            "jump",
-            "linearity",
-            "outlier_detection",
-            "photom",
-            "source_detection",
-            "ramp_fit",
-            "refpix",
-            "saturation",
-            "skymatch",
-            "tweakreg",
-        )
-
     @property
     def assign_wcs(self) -> str:
         return self._get_node("assign_wcs", lambda: "INCOMPLETE")

@@ -15,15 +15,6 @@ class EpsfRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
     def asdf_implied_by(cls) -> type:
         return EpsfRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            *super(RefCommonRef, cls).asdf_required(),
-            "pixel_x",
-            "pixel_y",
-        )
-
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "EPSF")
@@ -57,13 +48,6 @@ class EpsfRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/epsf-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "psf",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

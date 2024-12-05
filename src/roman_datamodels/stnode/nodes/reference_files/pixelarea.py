@@ -16,13 +16,6 @@ class PixelareaRef_Meta_Photometry(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return PixelareaRef_Meta
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "pixelarea_steradians",
-            "pixelarea_arcsecsq",
-        )
-
     @property
     def pixelarea_steradians(self) -> u.Quantity | None:
         return self._get_node("pixelarea_steradians", lambda: float(_default.NONUM) * u.sr)
@@ -36,14 +29,6 @@ class PixelareaRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementR
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            *super(RefCommonRef, cls).asdf_required(),
-            "photometry",
-        )
 
     @property
     def reftype(self) -> str:
@@ -62,13 +47,6 @@ class PixelareaRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/pixelarea-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

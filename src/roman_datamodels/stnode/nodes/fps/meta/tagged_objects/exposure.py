@@ -17,24 +17,6 @@ class FpsExposure(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/exposure-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "type",
-            "start_time",
-            "ngroups",
-            "nframes",
-            "data_problem",
-            "frame_divisor",
-            "groupgap",
-            "frame_time",
-            "group_time",
-            "exposure_time",
-            "ma_table_name",
-            "ma_table_number",
-            "read_pattern",
-        )
-
     @property
     def type(self) -> FpsExposureType:
         return self._get_node("type", FpsExposureType.WFI_IMAGE)

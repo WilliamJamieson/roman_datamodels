@@ -16,13 +16,6 @@ class Tvac_Meta(_core.ImpliedNodeMixin, TvacCommon):
     def asdf_implied_by(cls) -> type:
         return Tvac
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "groundtest",
-        )
-
     @property
     def groundtest(self) -> TvacGroundtest:
         return self._get_node("groundtest", TvacGroundtest)
@@ -36,15 +29,6 @@ class Tvac(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "amp33",
-            "guidewindow",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

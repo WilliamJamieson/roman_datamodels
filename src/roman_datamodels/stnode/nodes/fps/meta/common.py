@@ -30,20 +30,6 @@ class FpsCommon(FpsCommonMixin, FpsBasic):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "cal_step",
-            "exposure",
-            "guidestar",
-            "instrument",
-            "ref_file",
-            "hdf5_meta",
-            "hdf5_telemetry",
-            "gw_meta",
-        )
-
     @property
     def cal_step(self) -> FpsCalStep:
         return self._get_node("cal_step", FpsCalStep)

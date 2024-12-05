@@ -32,14 +32,6 @@ class WfiImgPhotomRef_PhotTable(_core.ImpliedNodeMixin, _core.ObjectNode):
             }
         )
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "photmjsr",
-            "uncertainty",
-            "pixelareasr",
-        )
-
     @property
     def photmjsr(self) -> u.Quantity | None:
         return self._get_node("photmjsr", lambda: 1.0e-15 * u.megajansky / u.steradian)
@@ -61,13 +53,6 @@ class WfiImgPhotomRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/wfi_img_photom-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "phot_table",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

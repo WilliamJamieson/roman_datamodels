@@ -10,14 +10,6 @@ class Visit_Dither(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return Visit
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "primary_name",
-            "subpixel_name",
-            "executed_pattern",
-        )
-
     @property
     def primary_name(self) -> str | None:
         return self._get_node("primary_name", lambda: "None")
@@ -39,20 +31,6 @@ class Visit(_core.TaggedObjectNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/visit-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "dither",
-            "engineering_quality",
-            "pointing_engineering_source",
-            "type",
-            "start_time",
-            "end_time",
-            "status",
-            "nexposures",
-            "internal_target",
-        )
 
     @property
     def dither(self) -> Visit_Dither:

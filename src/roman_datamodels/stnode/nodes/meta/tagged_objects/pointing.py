@@ -12,17 +12,6 @@ class Pointing(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/pointing-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "ra_v1",
-            "dec_v1",
-            "pa_v3",
-            "target_aperture",
-            "target_ra",
-            "target_dec",
-        )
-
     @property
     def ra_v1(self) -> float:
         return self._get_node("ra_v1", lambda: _default.NONUM)

@@ -16,13 +16,6 @@ class Fps_Meta(_core.ImpliedNodeMixin, FpsCommon):
     def asdf_implied_by(cls) -> type:
         return Fps
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "groundtest",
-        )
-
     @property
     def groundtest(self) -> FpsGroundtest:
         return self._get_node("groundtest", FpsGroundtest)
@@ -36,15 +29,6 @@ class Fps(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "amp33",
-            "guidewindow",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

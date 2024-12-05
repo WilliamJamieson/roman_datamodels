@@ -12,15 +12,6 @@ class Statistics(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/statistics-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "zodiacal_light",
-            "image_median",
-            "image_rms",
-            "good_pixel_fraction",
-        )
-
     @property
     def zodiacal_light(self) -> float:
         return self._get_node("zodiacal_light", lambda: _default.NONUM)

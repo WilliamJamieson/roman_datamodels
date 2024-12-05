@@ -48,14 +48,6 @@ class WfiMode(WfiModeMixin, _core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_mode-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "name",
-            "detector",
-            "optical_element",
-        )
-
     @property
     def name(self) -> str:
         return self._get_node("name", lambda: "WFI")

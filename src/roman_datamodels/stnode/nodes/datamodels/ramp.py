@@ -29,25 +29,6 @@ class Ramp(_core.DataModelNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/ramp-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "pixeldq",
-            "groupdq",
-            "err",
-            "amp33",
-            "border_ref_pix_left",
-            "border_ref_pix_right",
-            "border_ref_pix_top",
-            "border_ref_pix_bottom",
-            "dq_border_ref_pix_left",
-            "dq_border_ref_pix_right",
-            "dq_border_ref_pix_top",
-            "dq_border_ref_pix_bottom",
-        )
-
     @property
     def array_shape(self) -> tuple[int]:
         """Return the shape of the data array"""

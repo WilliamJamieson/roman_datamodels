@@ -12,23 +12,6 @@ class Observation(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/observation-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "observation_id",
-            "visit_id",
-            "program",
-            "execution_plan",
-            "pass_",
-            "segment",
-            "observation",
-            "visit",
-            "visit_file_group",
-            "visit_file_sequence",
-            "visit_file_activity",
-            "exposure",
-        )
-
     @property
     def observation_id(self) -> str:
         return self._get_node("observation_id", lambda: _default.NOSTR)

@@ -17,15 +17,6 @@ class SegmentationMap_Meta(_core.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return SegmentationMap
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "optical_element",
-            "program",
-            "visit",
-        )
-
     @property
     def optical_element(self) -> WfiOpticalElement:
         return self._get_node("optical_element", WfiOpticalElement.F158)
@@ -47,13 +38,6 @@ class SegmentationMap(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/segmentation_map-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

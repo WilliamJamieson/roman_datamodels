@@ -19,17 +19,6 @@ class ImageSourceCatalog_Meta(_core.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return ImageSourceCatalog
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "optical_element",
-            "exposure",
-            "photometry",
-            "program",
-            "visit",
-        )
-
     @property
     def optical_element(self) -> WfiOpticalElement:
         return self._get_node("optical_element", WfiOpticalElement.F158)
@@ -59,13 +48,6 @@ class ImageSourceCatalog(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/image_source_catalog-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "source_catalog",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

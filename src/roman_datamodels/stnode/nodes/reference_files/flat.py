@@ -15,17 +15,9 @@ class FlatRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
     def asdf_implied_by(cls) -> type:
         return FlatRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            *super(RefCommonRef, cls).asdf_required(),
-        )
-
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "FLAT")
-        return self._coerce(str, self._get_node("reftype", coerce=False), "reftype")
 
 
 class FlatRef(_core.DataModelNode):
@@ -36,15 +28,6 @@ class FlatRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/flat-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "dq",
-            "err",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

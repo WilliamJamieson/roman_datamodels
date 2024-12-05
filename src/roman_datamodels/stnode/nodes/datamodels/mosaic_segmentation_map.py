@@ -16,14 +16,6 @@ class MosaicSegmentationMap_Meta(_core.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return MosaicSegmentationMap
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "basic",
-            "program",
-        )
-
     @property
     def basic(self) -> MosaicBasic:
         return self._get_node("basic", MosaicBasic)
@@ -41,13 +33,6 @@ class MosaicSegmentationMap(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_segmentation_map-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

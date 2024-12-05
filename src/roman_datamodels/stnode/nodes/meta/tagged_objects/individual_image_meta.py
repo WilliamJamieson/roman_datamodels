@@ -14,35 +14,6 @@ class IndividualImageMeta(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/individual_image_meta-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return tuple()
-
-    # @property
-    # def required(self) -> tuple[str]:
-    #     return (
-    #         "basic",
-    #         "background",
-    #         "cal_step",
-    #         "cal_logs",
-    #         "coordinates",
-    #         "ephemeris",
-    #         "exposure",
-    #         "guide_star",
-    #         "instrument",
-    #         "observation",
-    #         "outlier_detection",
-    #         "photometry",
-    #         "pointing",
-    #         "program",
-    #         "rcs",
-    #         "ref_file",
-    #         "source_detection",
-    #         "velocity_aberration",
-    #         "visit",
-    #         "wcsinfo",
-    #     )
-
     @property
     def basic(self) -> Table:
         return self._get_node("basic", lambda: QTable({"dummy": [_default.NONUM]}))

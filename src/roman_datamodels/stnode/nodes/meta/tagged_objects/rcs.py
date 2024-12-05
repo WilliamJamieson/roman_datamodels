@@ -12,16 +12,6 @@ class Rcs(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/rcs-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "active",
-            "electronics",
-            "bank",
-            "led",
-            "counts",
-        )
-
     @property
     def active(self) -> bool:
         return self._get_node("active", lambda: False)

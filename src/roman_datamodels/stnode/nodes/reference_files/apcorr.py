@@ -13,16 +13,6 @@ class ApcorrRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "ap_corrections",
-            "ee_fractions",
-            "ee_radii",
-            "sky_background_rin",
-            "sky_background_rout",
-        )
-
     @property
     def array_shape(self) -> tuple[int]:
         if self._has_node("ap_corrections"):
@@ -75,13 +65,6 @@ class ApcorrRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/apcorr-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

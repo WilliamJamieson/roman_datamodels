@@ -12,14 +12,6 @@ class SkyBackground(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/sky_background-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "level",
-            "method",
-            "subtracted",
-        )
-
     @property
     def level(self) -> float | None:
         return self._get_node("level", lambda: _default.NONUM)

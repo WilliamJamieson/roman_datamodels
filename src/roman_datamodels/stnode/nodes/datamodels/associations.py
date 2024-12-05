@@ -10,14 +10,6 @@ class Associations_Products_Members(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return Associations_Products
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "expname",
-            "exposerr",
-            "exptype",
-        )
-
     @property
     def expname(self) -> str:
         return self._get_node("expname", lambda: "file_0")
@@ -37,13 +29,6 @@ class Associations_Products(_core.ImpliedNodeMixin, _core.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "name",
-            "members",
-        )
 
     @property
     def name(self) -> str:
@@ -71,16 +56,6 @@ class Associations(_core.DataModelNode):
 
         # default fall-back
         return (2, 3, 1)
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "asn_id",
-            "asn_pool",
-            "asn_type",
-            "asn_rule",
-            "products",
-        )
 
     @property
     def asn_id(self) -> str:

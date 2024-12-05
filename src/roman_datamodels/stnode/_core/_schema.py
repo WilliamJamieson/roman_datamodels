@@ -116,7 +116,7 @@ class RadSchema(AsdfContextMixin, Generic[S]):
     @property
     def required(self) -> set[str]:
         if self._required is None:
-            self._required = set(self._to_field_key(key) for key in chain(*self.get_key("required")))
+            self._required = set(self._to_field_key(key) for key in list(chain(*self.get_key("required"))))
 
         return self._required
 

@@ -12,21 +12,6 @@ class Wcsinfo(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wcsinfo-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "aperture_name",
-            "pa_aperture",
-            "v2_ref",
-            "v3_ref",
-            "vparity",
-            "v3yangle",
-            "ra_ref",
-            "dec_ref",
-            "roll_ref",
-            "s_region",
-        )
-
     @property
     def aperture_name(self) -> str:
         return self._get_node("aperture_name", lambda: "WFI01_FULL")

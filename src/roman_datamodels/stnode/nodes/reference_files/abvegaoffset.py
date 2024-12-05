@@ -21,10 +21,6 @@ class AbvegaoffsetRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return ("abvega_offset",)
-
     @property
     def abvega_offset(self) -> float | None:
         return self._get_node("abvega_offset", lambda: _default.NONUM)
@@ -38,13 +34,6 @@ class AbvegaoffsetRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/abvegaoffset-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

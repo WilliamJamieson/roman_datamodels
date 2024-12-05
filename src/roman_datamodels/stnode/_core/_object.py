@@ -15,9 +15,9 @@ __all__ = [
 
 class ObjectNode(DNode, ABC):
     @classmethod
-    @abstractmethod
-    def asdf_required(cls) -> tuple[str]:
+    def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
+        return cls.asdf_schema().required
 
     @property
     def required(self) -> tuple[str]:

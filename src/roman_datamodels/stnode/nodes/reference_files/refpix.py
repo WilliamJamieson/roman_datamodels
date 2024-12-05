@@ -13,14 +13,6 @@ class RefpixRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return RefpixRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "input_units",
-            "output_units",
-        )
-
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "REFPIX")
@@ -42,15 +34,6 @@ class RefpixRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/refpix-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "gamma",
-            "zeta",
-            "alpha",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

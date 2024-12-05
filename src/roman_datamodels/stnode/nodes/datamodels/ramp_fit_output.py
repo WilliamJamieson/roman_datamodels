@@ -16,21 +16,6 @@ class RampFitOutput(_core.DataModelNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/ramp_fit_output-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "slope",
-            "sigslope",
-            "yint",
-            "sigyint",
-            "pedestal",
-            "weights",
-            "crmag",
-            "var_poisson",
-            "var_rnoise",
-        )
-
     @property
     def array_shape(self) -> tuple[int]:
         """Return the shape of the data array"""

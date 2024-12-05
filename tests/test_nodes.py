@@ -276,6 +276,7 @@ def test_node_requires(node_cls):
 
     schema = find_schema_for_node(node_cls)
     assert get_required(schema) == set(node_cls.asdf_required())
+    assert isinstance(node_cls.asdf_required(), set)
 
 
 @pytest.mark.parametrize("node_cls", nodes.NODES.values())

@@ -12,25 +12,6 @@ class L2CalStep(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/l2_cal_step-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "assign_wcs",
-            "dark",
-            "dq_init",
-            "flat_field",
-            "flux",
-            "linearity",
-            "outlier_detection",
-            "photom",
-            "source_catalog",
-            "ramp_fit",
-            "refpix",
-            "saturation",
-            "skymatch",
-            "tweakreg",
-        )
-
     @property
     def assign_wcs(self) -> str:
         return self._get_node("assign_wcs", lambda: "INCOMPLETE")

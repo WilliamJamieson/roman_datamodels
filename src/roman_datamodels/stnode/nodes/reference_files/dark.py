@@ -17,16 +17,6 @@ class DarkRef_Meta_Exposure(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return DarkRef_Meta
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "ngroups",
-            "nframes",
-            "groupgap",
-            "ma_table_name",
-            "ma_table_number",
-        )
-
     @property
     def ngroups(self) -> int:
         return self._get_node("ngroups", lambda: 6)
@@ -53,15 +43,6 @@ class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef, Ref
     def asdf_implied_by(cls) -> type:
         return DarkRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            *super(RefCommonRef, cls).asdf_required(),
-            *super(RefExposureTypeRef, cls).asdf_required(),
-            "exposure",
-        )
-
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "DARK")
@@ -79,16 +60,6 @@ class DarkRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/dark-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "dq",
-            "dark_slope",
-            "dark_slope_error",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

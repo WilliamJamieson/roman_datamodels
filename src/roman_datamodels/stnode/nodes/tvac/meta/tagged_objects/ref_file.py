@@ -8,14 +8,6 @@ class TvacRefFile_Crds(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return TvacRefFile
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return tuple()
-        # return (
-        #     "version",
-        #     "context",
-        # )
-
     @property
     def sw_version(self) -> str:
         return self._get_node("sw_version", lambda: "12.3.1")
@@ -33,23 +25,6 @@ class TvacRefFile(_core.TaggedObjectNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/ref_file-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return tuple()
-        # return (
-        #     "crds",
-        #     "dark",
-        #     "distortion",
-        #     "mask",
-        #     "flat",
-        #     "gain",
-        #     "readnoise",
-        #     "linearity",
-        #     "photom",
-        #     "area",
-        #     "saturation",
-        # )
 
     @property
     def crds(self) -> TvacRefFile_Crds:

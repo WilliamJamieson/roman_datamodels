@@ -12,16 +12,6 @@ class Resample(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/resample-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "good_bits",
-            "members",
-            "pixel_scale_ratio",
-            "pixfrac",
-            "weight_type",
-        )
-
     @property
     def good_bits(self) -> str:
         return self._get_node("good_bits", lambda: "NA")

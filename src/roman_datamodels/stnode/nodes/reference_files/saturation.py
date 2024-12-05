@@ -27,14 +27,6 @@ class SaturationRef(_core.DataModelNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/saturation-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "dq",
-        )
-
     @property
     def array_shape(self) -> tuple[int]:
         """Return the shape of the data array"""

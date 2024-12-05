@@ -16,13 +16,6 @@ class ReadnoiseRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef
     def asdf_implied_by(cls) -> type:
         return ReadnoiseRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            *super(RefCommonRef, cls).asdf_required(),
-        )
-
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "READNOISE")
@@ -36,13 +29,6 @@ class ReadnoiseRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/readnoise-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

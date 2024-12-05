@@ -12,33 +12,6 @@ class MosaicWcsinfo(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_wcsinfo-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "ra_ref",
-            "dec_ref",
-            "x_ref",
-            "y_ref",
-            "rotation_matrix",
-            "pixel_scale",
-            "pixel_scale_local",
-            "projection",
-            "s_region",
-            "pixel_shape",
-            "ra_center",
-            "dec_center",
-            "ra_corn1",
-            "dec_corn1",
-            "ra_corn2",
-            "dec_corn2",
-            "ra_corn3",
-            "dec_corn3",
-            "ra_corn4",
-            "dec_corn4",
-            "orientat_local",
-            "orientat",
-        )
-
     @property
     def ra_ref(self) -> float:
         return self._get_node("ra_ref", lambda: _default.NONUM)

@@ -12,15 +12,6 @@ class L3CalStep(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/l3_cal_step-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "flux",
-            "outlier_detection",
-            "resample",
-            "skymatch",
-        )
-
     @property
     def flux(self) -> str:
         return self._get_node("flux", lambda: "INCOMPLETE")

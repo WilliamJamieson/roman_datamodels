@@ -23,20 +23,6 @@ class Basic(_core.SchemaObjectNode):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/basic-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "calibration_software_name",
-            "calibration_software_version",
-            "filename",
-            "file_date",
-            "model_type",
-            "origin",
-            "prd_version",
-            "sdf_software_version",
-            "telescope",
-        )
-
     @property
     def calibration_software_name(self) -> CalibrationSoftwareName:
         return self._get_node("calibration_software_name", lambda: CalibrationSoftwareName("RomanCAL"))

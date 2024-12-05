@@ -14,25 +14,6 @@ class MosaicBasic(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_basic-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "time_first_mjd",
-            "time_last_mjd",
-            "time_mean_mjd",
-            "max_exposure_time",
-            "mean_exposure_time",
-            "visit",
-            "segment",
-            "pass_",
-            "program",
-            "survey",
-            "optical_element",
-            "instrument",
-            "location_name",
-            "product_type",
-        )
-
     @property
     def time_first_mjd(self) -> float:
         return self._get_node("time_first_mjd", lambda: _default.NONUM)

@@ -28,13 +28,6 @@ class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, _core.ImpliedNodeMix
     def asdf_implied_by(cls) -> type:
         return RefCommonRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "name",
-            "detector",
-        )
-
     @property
     def name(self) -> str:
         return self._get_node("name", lambda: "WFI")
@@ -48,19 +41,6 @@ class RefCommonRef(_core.SchemaObjectNode):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_common-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "reftype",
-            "author",
-            "description",
-            "pedigree",
-            "useafter",
-            "telescope",
-            "origin",
-            "instrument",
-        )
 
     @property
     def reftype(self) -> str:

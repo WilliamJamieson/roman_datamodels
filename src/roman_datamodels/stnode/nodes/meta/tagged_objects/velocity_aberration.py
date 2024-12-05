@@ -12,14 +12,6 @@ class VelocityAberration(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/velocity_aberration-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "ra_reference",
-            "dec_reference",
-            "scale_factor",
-        )
-
     @property
     def ra_reference(self) -> float:
         return self._get_node("ra_reference", lambda: _default.NONUM)

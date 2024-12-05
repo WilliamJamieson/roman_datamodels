@@ -13,14 +13,6 @@ class LinearityRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return LinearityRef
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "input_units",
-            "output_units",
-        )
-
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "LINEARITY")
@@ -42,14 +34,6 @@ class LinearityRef(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/linearity-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "coeffs",
-            "dq",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

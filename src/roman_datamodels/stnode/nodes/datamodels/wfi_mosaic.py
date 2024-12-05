@@ -26,20 +26,6 @@ class WfiMosaic_Meta(_core.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return WfiMosaic
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "asn",
-            "basic",
-            "cal_step",
-            "photometry",
-            "program",
-            "resample",
-            "wcs",
-            "wcsinfo",
-        )
-
     @property
     def asn(self) -> MosaicAssociations:
         return self._get_node("asn", MosaicAssociations)
@@ -93,19 +79,6 @@ class WfiMosaic(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "context",
-            "err",
-            "weight",
-            "var_poisson",
-            "var_rnoise",
-            "cal_logs",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

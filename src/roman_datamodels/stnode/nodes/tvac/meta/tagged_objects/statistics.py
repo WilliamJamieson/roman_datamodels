@@ -15,15 +15,6 @@ class TvacStatistics(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/statistics-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "mean_counts_per_sec",
-            "median_counts_per_sec",
-            "max_counts",
-            "min_counts",
-        )
-
     @property
     def mean_counts_per_sec(self) -> u.Quantity | None:
         return self._get_node("mean_counts_per_sec", lambda: _default.NONUM * (u.DN / u.s))

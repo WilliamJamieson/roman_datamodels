@@ -14,21 +14,6 @@ class FpsGuidestar(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/guidestar-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "gw_id",
-            "gw_fgs_mode",
-            "data_start",
-            "data_end",
-            "gw_window_xstart",
-            "gw_window_ystart",
-            "gw_window_xstop",
-            "gw_window_ystop",
-            "gw_window_xsize",
-            "gw_window_ysize",
-        )
-
     @property
     def gw_id(self) -> str:
         return self._get_node("gw_id", lambda: _default.NOSTR)

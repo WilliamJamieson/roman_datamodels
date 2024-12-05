@@ -17,15 +17,6 @@ class MosaicSourceCatalog_Meta(_core.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return MosaicSourceCatalog
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "basic",
-            "photometry",
-            "program",
-        )
-
     @property
     def basic(self) -> MosaicBasic:
         return self._get_node("basic", MosaicBasic)
@@ -47,13 +38,6 @@ class MosaicSourceCatalog(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_source_catalog-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "source_catalog",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

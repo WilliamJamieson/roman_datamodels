@@ -16,38 +16,6 @@ class Guidestar(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/guidestar-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "guide_window_id",
-            "guide_mode",
-            "data_start",
-            "data_end",
-            "window_xstart",
-            "window_ystart",
-            "window_xstop",
-            "window_ystop",
-            "window_xsize",
-            "window_ysize",
-            "guide_star_id",
-            "gsc_version",
-            "ra",
-            "dec",
-            "ra_uncertainty",
-            "dec_uncertainty",
-            "fgs_magnitude",
-            "fgs_magnitude_uncertainty",
-            "centroid_x",
-            "centroid_y",
-            "centroid_x_uncertainty",
-            "centroid_y_uncertainty",
-            "epoch",
-            "proper_motion_ra",
-            "proper_motion_dec",
-            "parallax",
-            "centroid_rms",
-        )
-
     @property
     def guide_window_id(self) -> str:
         return self._get_node("guide_window_id", lambda: _default.NOSTR)

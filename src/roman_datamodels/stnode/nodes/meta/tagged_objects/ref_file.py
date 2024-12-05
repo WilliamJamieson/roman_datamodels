@@ -8,13 +8,6 @@ class RefFile_Crds(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return RefFile
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "version",
-            "context",
-        )
-
     @property
     def version(self) -> str:
         return self._get_node("version", lambda: "12.3.1")
@@ -34,25 +27,6 @@ class RefFile(_core.TaggedObjectNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return tuple()
-        # return (
-        #     "crds",
-        #     "dark",
-        #     "distortion",
-        #     "mask",
-        #     "flat",
-        #     "gain",
-        #     "readnoise",
-        #     "linearity",
-        #     "inverse_linearity",
-        #     "photom",
-        #     "area",
-        #     "saturation",
-        #     "refpix",
-        # )
 
     @property
     def crds(self) -> RefFile_Crds:

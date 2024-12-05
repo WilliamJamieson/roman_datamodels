@@ -25,14 +25,6 @@ class WfiImage_Meta(_core.ImpliedNodeMixin, Common):
     def asdf_implied_by(cls) -> type:
         return WfiImage
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "photometry",
-            "wcs",
-        )
-
     @property
     def background(self) -> SkyBackground:
         return self._get_node("background", SkyBackground)
@@ -78,26 +70,6 @@ class WfiImage(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_image-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "data",
-            "dq",
-            "err",
-            "var_poisson",
-            "var_rnoise",
-            "amp33",
-            "border_ref_pix_left",
-            "border_ref_pix_right",
-            "border_ref_pix_top",
-            "border_ref_pix_bottom",
-            "dq_border_ref_pix_left",
-            "dq_border_ref_pix_right",
-            "dq_border_ref_pix_top",
-            "dq_border_ref_pix_bottom",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

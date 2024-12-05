@@ -21,19 +21,6 @@ class FpsBasic(_core.SchemaObjectNode):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/basic-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "calibration_software_version",
-            "filename",
-            "file_date",
-            "model_type",
-            "origin",
-            "prd_software_version",
-            "sdf_software_version",
-            "telescope",
-        )
-
     @property
     def calibration_software_version(self) -> FpsCalibrationSoftwareVersion:
         return self._get_node("calibration_software_version", lambda: FpsCalibrationSoftwareVersion("9.9.0"))

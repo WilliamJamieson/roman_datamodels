@@ -18,29 +18,6 @@ class Guidewindow_Meta(_core.ImpliedNodeMixin, Common):
     def asdf_implied_by(cls) -> type:
         return Guidewindow
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "gw_start_time",
-            "gw_end_time",
-            "gw_frame_readout_time",
-            "gw_function_start_time",
-            "gw_function_end_time",
-            "gw_acq_exec_stat",
-            "pedestal_resultant_exp_time",
-            "signal_resultant_exp_time",
-            "gw_acq_number",
-            "gw_mode",
-            "gw_window_xstart",
-            "gw_window_ystart",
-            "gw_window_xstop",
-            "gw_window_ystop",
-            "gw_window_xsize",
-            "gw_window_ysize",
-            "gw_science_file_source",
-        )
-
     @property
     def gw_start_time(self) -> Time:
         return self._get_node("gw_start_time", lambda: Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
@@ -118,15 +95,6 @@ class Guidewindow(_core.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/guidewindow-1.0.0"
-
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            "meta",
-            "pedestal_frames",
-            "signal_frames",
-            "amp33",
-        )
 
     @property
     def array_shape(self) -> tuple[int]:

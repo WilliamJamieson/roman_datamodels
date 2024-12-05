@@ -23,25 +23,6 @@ class Common(Basic):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/common-1.0.0"
 
-    @classmethod
-    def asdf_required(cls) -> tuple[str]:
-        return (
-            *super().asdf_required(),
-            "coordinates",
-            "ephemeris",
-            "exposure",
-            "guide_star",
-            "instrument",
-            "observation",
-            "pointing",
-            "program",
-            "ref_file",
-            "rcs",
-            "velocity_aberration",
-            "visit",
-            "wcsinfo",
-        )
-
     @property
     def coordinates(self) -> Coordinates:
         return self._get_node("coordinates", Coordinates)
