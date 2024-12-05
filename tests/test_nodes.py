@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 import yaml
 from astropy import units as u
-from astropy.table import Table
+from astropy.table import QTable, Table
 from astropy.time import Time
 from gwcs import WCS
 from rad import resources
@@ -338,6 +338,19 @@ def test_properties_in_schema(node_cls):
     assert get_properties(schema) == properties
 
 
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_fields(node_cls):
+    """
+    Check that the fields property returns the correct fields
+    """
+
+    properties = set(_core.get_node_fields(node_cls))
+    instance = node_cls()
+    assert instance._fields is None
+    assert properties == set(instance.fields)
+    assert properties == set(instance._fields)
+
+
 def find_property_schema(schema, property_name):
     property_name = "pass" if property_name == "pass_" else property_name
     if "properties" in schema:
@@ -530,8 +543,187 @@ def test_lazy_defaults(node_cls):
         check_type_fits_annotation(instance[stored_name], annotation)
 
 
-# RefCommonRef is a special case that cannot flush
-@pytest.mark.parametrize("node_cls", [node for node in _OBJECT_NODES.values() if node is not nodes.RefCommonRef])
+def get_value_for_coerce(default_value):
+    # Handle all the object types AND dicts
+    if isinstance(default_value, _base.DNode):
+        # Strip away the outer node
+        value = default_value.__asdf_traverse__()
+        assert type(value) is dict
+
+    # Handle all the lists
+    elif isinstance(default_value, _base.LNode):
+        # Strip away the outer node
+        value = default_value.__asdf_traverse__()
+        assert type(value) is list
+
+    elif isinstance(default_value, _core.SchemaScalarNode):
+        # Strip away the scalar node
+        value = type(default_value).__bases__[0](default_value)
+        assert type(value) is type(default_value).__bases__[0]
+
+    # Handle concrete types
+    # This will need to be extended as new types used
+
+    elif isinstance(default_value, str):
+        # Strip away the string
+        value = 25  # Pick something that is not a string but can be
+        assert type(value) is int
+
+    elif isinstance(default_value, int | float):
+        # Strip away the int
+        value = "25"  # Pick something that can be an int
+        assert type(value) is str
+
+    elif isinstance(default_value, Time):
+        # Strip away the time object
+        value = default_value.to_string()
+        assert type(value) is str
+
+    elif isinstance(default_value, Table):
+        # Strip away the table
+        value = np.arange(1, 10).reshape((3, 3))
+        assert type(value) is np.ndarray
+
+    elif isinstance(default_value, u.UnitBase):
+        # Strip away the unit
+        value = default_value.to_string()
+        assert type(value) is str
+
+    elif isinstance(default_value, u.Quantity):
+        value = default_value.value.copy()
+        assert type(value) is np.ndarray or isinstance(value, np.number)
+
+    elif isinstance(default_value, np.ndarray):
+        # Strip away the ndarray
+        value = default_value.tolist()
+        assert type(value) is list
+    else:
+        raise ValueError(f"Cannot handle coerce type {type(default_value)}")
+
+    return value
+
+
+def get_testing_default_values(node_cls, property_name) -> tuple:
+    """
+    Get clean pair of default values for testing
+    """
+    array_shape = None
+    if issubclass(node_cls, _core.DataModelNode):
+        try:
+            array_shape = node_cls().array_shape
+        except NotImplementedError:
+            array_shape = tuple()
+
+        array_shape = len(array_shape) * (1,)
+
+    settings = {"array_shape": array_shape}
+
+    # Pull the default twice and throw away the base node
+    # This is to ensure we have two different un-linked instances
+    default_value = getattr(node_cls(settings.copy()), property_name)
+    compare_value = getattr(node_cls(settings.copy()), property_name)
+
+    # Create a testing instance and show it only contains the array_shape
+    instance = node_cls(settings.copy())
+    assert instance._data == settings
+
+    return default_value, compare_value, instance
+
+
+def coerce_property_skips(node_cls, property_name):
+    """
+    Check if a property should be skipped during coercion
+    """
+    from roman_datamodels.stnode.nodes.datamodels.wfi_image import WfiImage_Meta
+    from roman_datamodels.stnode.nodes.datamodels.wfi_mosaic import WfiMosaic_Meta
+
+    return (
+        # coordinate_distortion_transform is a special case as it is an astropy
+        # model so it cannot be coerced to
+        (node_cls is nodes.DistortionRef and property_name == "coordinate_distortion_transform")
+        # wcs is a special case again as it is a WCS object which cannot be easily coerced
+        or ((node_cls is WfiImage_Meta or node_cls is WfiMosaic_Meta) and property_name == "wcs")
+    )
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_coerce_setting(node_cls):
+    """
+    Check that things get coerced to the right value during setting
+    """
+
+    properties = _core.get_node_fields(node_cls)
+
+    for property_name in properties:
+        if coerce_property_skips(node_cls, property_name):
+            continue
+
+        stored_name = "pass" if property_name == "pass_" else property_name
+        default_value, compare_value, instance = get_testing_default_values(node_cls, property_name)
+
+        # Quantities are subclasses of np.ndarray so we only need to check for the ndarray
+        context = pytest.warns(RuntimeWarning) if isinstance(default_value, np.ndarray) else nullcontext()
+
+        value = get_value_for_coerce(default_value)
+
+        # Set the value and show it now exists in _data
+        assert stored_name not in instance._data
+        with context:
+            setattr(instance, property_name, value)
+        assert stored_name in instance._data
+
+        # Check the value is coerced into the correct type for storage
+        # lookup coercion prevents checking via the methods on the node
+        # instead we have to access the raw data storage directly to
+        # check the type
+        assert isinstance(instance._data[stored_name], Table if type(compare_value) is QTable else type(compare_value))
+        assert isinstance(compare_value, type(instance._data[stored_name]))
+
+        # Double check that using the getattr method gets the right thing
+        assert isinstance(getattr(instance, property_name), Table if type(compare_value) is QTable else type(compare_value))
+        assert isinstance(compare_value, type(getattr(instance, property_name)))
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_coerce_getting(node_cls):
+    """
+    Check that things get coerced to the right value when getting
+    """
+
+    properties = _core.get_node_fields(node_cls)
+
+    for property_name in properties:
+        if coerce_property_skips(node_cls, property_name):
+            continue
+
+        stored_name = "pass" if property_name == "pass_" else property_name
+        default_value, compare_value, _ = get_testing_default_values(node_cls, property_name)
+
+        # Quantities are subclasses of np.ndarray so we only need to check for the ndarray
+        context = pytest.warns(RuntimeWarning) if isinstance(default_value, np.ndarray) else nullcontext()
+
+        value = get_value_for_coerce(default_value)
+
+        # Pass the value directly in so that it is lazy coerced
+        instance = node_cls({stored_name: value})
+        assert not isinstance(instance._data[stored_name], type(compare_value))
+
+        # Access the value and show it is now coerced
+        with context:
+            assert isinstance(getattr(instance, property_name), Table if type(compare_value) is QTable else type(compare_value))
+
+        # Check the value is coerced into the correct type for storage
+        # lookup coercion prevents checking via the methods on the node
+        # instead we have to access the raw data storage directly to
+        # check the type
+        assert isinstance(instance._data[stored_name], Table if type(compare_value) is QTable else type(compare_value))
+        assert isinstance(compare_value, type(instance._data[stored_name]))
+
+        # Context is not needed as the stored value is updated to the coerced value
+        assert isinstance(compare_value, type(getattr(instance, property_name)))
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
 def test_flush_out_required(node_cls):
     """
     Check that the `flush_out_required` method works
@@ -554,7 +746,7 @@ def test_flush_out_required(node_cls):
     assert keys == set(instance.required)
 
 
-@pytest.mark.parametrize("node_cls", [node for node in _OBJECT_NODES.values() if node is not nodes.RefCommonRef])
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
 def test_flush_out_all(node_cls):
     """
     Check that the `flush_out_all` method works

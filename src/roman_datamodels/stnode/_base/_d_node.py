@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import datetime
 from collections.abc import Callable, MutableMapping
-from typing import Annotated, Generic, TypeVar
+from inspect import signature
+from typing import Annotated, Any, Generic, TypeVar
 
 import numpy as np
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
@@ -20,6 +21,9 @@ class DNode(MutableMapping, Generic[T]):
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
 
+    _fields: tuple[str] | None = None
+    _field_signatures: dict[str, type] | None = None
+
     def __init__(self, node=None) -> None:
         # Handle if we are passed different data types
         if node is None:
@@ -34,11 +38,86 @@ class DNode(MutableMapping, Generic[T]):
 
         return Annotated[cls, item_type]
 
+    @staticmethod
+    def _handle_data_key(key: str) -> str:
+        """
+        This exists to make it so that the _data storage always
+        uses "pass" instead of "pass_" as the key.
+
+        This is a workaround for the fact that "pass" is a very
+        reserved word in Python and can't be used as function name
+        for example.
+
+        Note that this means that "pass_" and "pass" will be equivalent
+        for the purposes of DNode.
+
+        Any time we access self._data this should be used to make sure
+        pass is correctly handled.
+        """
+        return "pass" if key == "pass_" else key
+
+    @staticmethod
+    def _handle_field_key(key: str) -> str:
+        """
+        Matching to _handle_data_key, this is used to make sure that
+        when we are using keys in reference to property (fields) names that
+        "pass_" is used instead of "pass".
+
+        Anytime fields is accessed this should be used to make sure pass is correctly handled.
+        """
+
+        return "pass_" if key == "pass" else key
+
+    @property
+    def fields(self) -> tuple[str]:
+        """
+        Get the keys of the node as defined by the schema
+            Note this only works on instances
+            (not sure why I can't get it to work on the class)
+        """
+        from .._core import get_node_fields
+
+        if self._fields is None:
+            self._fields = get_node_fields(type(self))
+
+        return self._fields
+
+    def field_signature(self, key: str) -> type:
+        """
+        The field signatures for the node.
+        """
+        # Make change upfront as the key will be reused several times
+        key = self._handle_field_key(key)
+
+        # Note we cache these as inspect an be expensive
+        if key not in self.fields:
+            raise KeyError(f"{key} is not a schema field for {type(self)}")
+
+        if self._field_signatures is None:
+            self._field_signatures = {}
+
+        if key not in self._field_signatures:
+            self._field_signatures[key] = signature(getattr(type(self), key).fget).return_annotation
+
+        return self._field_signatures[key]
+
+    def _coerce(self, key: str, value: Any) -> T:
+        """
+        Coerce the value into a node if necessary
+        """
+        from .._core import coerce
+
+        if self._handle_field_key(key) in self.fields:
+            # Get the return signature for the field property
+            return coerce(value, self.field_signature(key))
+
+        return value
+
     def _has_node(self, key: str) -> bool:
         """
         Check if a node exists in the dictionary.
         """
-        return key in self._data
+        return self._handle_data_key(key) in self._data
 
     def __contains__(self, key: str) -> bool:
         return self._has_node(key)
@@ -47,9 +126,18 @@ class DNode(MutableMapping, Generic[T]):
         """
         Get a node from the dictionary, coercing it to the correct type if necessary.
         """
-
         if self._has_node(key):
-            return self._data[key]
+            value = self._data[self._handle_data_key(key)]
+            # Save currently stored value's type for comparison
+            stored_type = type(value)
+            value = self._coerce(key, value)
+
+            # If the stored type is different from the coerced type, update the stored value
+            # so coercion only happens once
+            if stored_type is not type(value):
+                self._data[self._handle_data_key(key)] = value
+
+            return value
 
         raise AttributeError(f"No such attribute ({key}) found in node")
 
@@ -77,7 +165,7 @@ class DNode(MutableMapping, Generic[T]):
         if key[0] == "_":
             self.__dict__[key] = value
         else:
-            self._data[key] = value
+            self._data[self._handle_data_key(key)] = self._coerce(key, value)
 
     def __setattr__(self, key: str, value: T) -> None:
         """
@@ -169,7 +257,7 @@ class DNode(MutableMapping, Generic[T]):
 
     def __delitem__(self, key: str) -> None:
         """Dictionary style access delete data"""
-        del self._data[key]
+        del self._data[self._handle_data_key(key)]
 
     def __iter__(self) -> iter[dict[str, T]]:
         """Define iteration"""

@@ -1,7 +1,16 @@
+import warnings
+from inspect import isclass
+from typing import Any, TypeVar, get_args
+
 import asdf
+import numpy as np
+from astropy import units as u
+
+T = TypeVar("T")
 
 __all__ = [
     "class_name_from_uri",
+    "coerce",
     "get_all_fields",
     "get_node_fields",
     "get_nodes",
@@ -247,3 +256,80 @@ def get_node_fields(cls: type) -> tuple[str]:
         for property_name in get_all_fields(cls)
         if (property_name not in (*RESERVED_FIELDS, *_get_mixin_fields(cls)) and not property_name.startswith("_"))
     )
+
+
+def coerce(value: Any, signature: T) -> T:
+    """
+    Coerce the value to match the signature.
+
+    Parameters
+    ----------
+    value : Any
+        The value to coerce.
+    signature : T
+        A type annotation
+    """
+    from .._base import DNode, LNode
+    from ._scalar import SchemaScalarNode
+
+    args = get_args(signature)
+
+    # This is a true type
+    if not args:
+        # Only coerce if the value is not already the correct type
+        if not isinstance(value, signature):
+            if signature is np.ndarray:
+                warnings.warn("Coercing to numpy array, dtype will be np.float64", RuntimeWarning, stacklevel=2)
+                return np.array(value)
+            if signature is u.Quantity:
+                warnings.warn(
+                    "Coercing to astropy Quantity, unit will be dimensionless and dtype will be np.float64",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
+
+            # u.UnitBase is the base class for astropy units, but it cannot generate a unit
+            if signature is u.UnitBase:
+                return u.Unit(value)
+            return signature(value)
+
+    if args:
+        container, value_signature = args
+
+        # This is the case where we have a "nacked" DNode -> dictionary in schema
+        if container is DNode:
+            if not isinstance(value, DNode):
+                # Coerce the dictionary to the correct type
+                node = DNode()
+                for key, sub_val in value.items():
+                    # Coerce the inner value
+                    node[key] = coerce(sub_val, value_signature)
+
+                return node
+
+        if container is LNode:
+            if not isinstance(value, LNode):
+                # Coerce the list to the correct type
+                node = LNode()
+                for sub_val in value:
+                    # Coerce the inner value
+                    node.append(coerce(sub_val, value_signature))
+
+                return node
+
+        if isclass(container) and issubclass(container, SchemaScalarNode):
+            if not isinstance(value, container):
+                return container(value)
+
+        return coerce(value, container)
+
+    # Fall back on returning the value as is
+    return value
+    # if signature_args:
+    #     container, value = signature_args
+    #     if container is DNode:
+    #         if not isinstance(value, DNode):
+    #             for key, sub_val in value.items():
+
+    # if not isinstance(value, signature):
+    #     return signature(value)

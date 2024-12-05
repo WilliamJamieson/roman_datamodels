@@ -4,6 +4,7 @@ from ._object import DataModelNode, ObjectNode, SchemaObjectNode, TaggedObjectNo
 from ._scalar import SchemaScalarNode, TaggedScalarNode
 from ._utils import (
     class_name_from_uri,
+    coerce,
     get_all_fields,
     get_node_fields,
     get_nodes,
@@ -25,6 +26,7 @@ __all__ = [
     "TaggedObjectNode",
     "TaggedScalarNode",
     "class_name_from_uri",
+    "coerce",
     "get_all_fields",
     "get_node_fields",
     "get_nodes",

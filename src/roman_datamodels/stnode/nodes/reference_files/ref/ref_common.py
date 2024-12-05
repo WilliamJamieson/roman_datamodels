@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _base, _core
+from roman_datamodels.stnode import _base, _core, _default
 
 from ...meta import (
     Telescope,
@@ -56,7 +56,7 @@ class RefCommonRef(_core.SchemaObjectNode):
 
     @property
     def reftype(self) -> str:
-        raise NotImplementedError("reftype is not implemented")
+        return self._get_node("reftype", lambda: _default.NOSTR)
 
     @property
     def pedigree(self) -> str:
