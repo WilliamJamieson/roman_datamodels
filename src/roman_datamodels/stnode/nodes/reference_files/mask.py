@@ -7,7 +7,11 @@ from .ref import RefCommonRef
 __all__ = ["MaskRef"]
 
 
-class MaskRef_Meta(RefCommonRef):
+class MaskRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return MaskRef
+
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "MASK")

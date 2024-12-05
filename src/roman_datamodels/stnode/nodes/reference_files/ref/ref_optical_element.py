@@ -5,7 +5,11 @@ from ...meta import WfiOpticalElement
 __all__ = ["RefOpticalElementRef"]
 
 
-class RefOpticalElementRef_Instrument(_core.ObjectNode):
+class RefOpticalElementRef_Instrument(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return RefOpticalElementRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return ("optical_element",)

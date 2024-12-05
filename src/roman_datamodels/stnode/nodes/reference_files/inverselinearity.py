@@ -8,7 +8,11 @@ from .ref import RefCommonRef
 __all__ = ["InverselinearityRef"]
 
 
-class InverselinearityRef_Meta(RefCommonRef):
+class InverselinearityRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return InverselinearityRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

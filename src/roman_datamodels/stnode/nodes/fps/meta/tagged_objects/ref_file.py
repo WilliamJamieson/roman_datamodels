@@ -3,7 +3,11 @@ from roman_datamodels.stnode import _core
 __all__ = ["FpsRefFile"]
 
 
-class FpsRefFile_Crds(_core.ObjectNode):
+class FpsRefFile_Crds(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return FpsRefFile
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return tuple()

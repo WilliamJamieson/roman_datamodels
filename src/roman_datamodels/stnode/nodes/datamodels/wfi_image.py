@@ -18,8 +18,12 @@ from ..meta import (
 __all__ = ["WfiImage"]
 
 
-class WfiImage_Meta(Common):
+class WfiImage_Meta(_core.ImpliedNodeMixin, Common):
     """Common metadata for WfiImage"""
+
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return WfiImage
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:

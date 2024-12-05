@@ -8,7 +8,11 @@ from .ref import RefCommonRef
 __all__ = ["GainRef"]
 
 
-class GainRef_Meta(RefCommonRef):
+class GainRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return GainRef
+
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "GAIN")

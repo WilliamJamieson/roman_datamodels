@@ -8,7 +8,11 @@ from .ref import RefCommonRef
 __all__ = ["ApcorrRef"]
 
 
-class ApcorrRef_Data(_core.ObjectNode):
+class ApcorrRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return ApcorrRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -53,7 +57,11 @@ class ApcorrRef_Data(_core.ObjectNode):
         return self._get_node("sky_background_rout", lambda: _default.NONUM)
 
 
-class ApcorrRef_Meta(RefCommonRef):
+class ApcorrRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return ApcorrRef
+
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "APCORR")

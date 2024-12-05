@@ -6,13 +6,21 @@ from .ref import RefCommonRef
 __all__ = ["AbvegaoffsetRef"]
 
 
-class AbvegaoffsetRef_Meta(RefCommonRef):
+class AbvegaoffsetRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return AbvegaoffsetRef
+
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "ABVEGAOFFSET")
 
 
-class AbvegaoffsetRef_Data(_core.ObjectNode):
+class AbvegaoffsetRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return AbvegaoffsetRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return ("abvega_offset",)

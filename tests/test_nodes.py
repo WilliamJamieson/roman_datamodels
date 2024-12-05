@@ -181,6 +181,9 @@ def test_orphan_node(node_cls):
     Test that the orphan nodes follow a consistent naming pattern
         <ContainingNodeName>_<PropertyName>
     """
+    assert issubclass(node_cls, _core.ImpliedNodeMixin)
+    assert isinstance(node_cls.asdf_implied_property(), property)
+
     containing_name, property_name = parse_orphan_name(node_cls.__name__)
 
     containing_cls = get_containing_cls(containing_name)

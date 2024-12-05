@@ -7,7 +7,11 @@ from ..meta import Common
 __all__ = ["MsosStack"]
 
 
-class MsosStack_Meta(Common):
+class MsosStack_Meta(_core.ImpliedNodeMixin, Common):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return MsosStack
+
     @property
     def image_list(self) -> str:
         return self._get_node("image_list", lambda: _default.NOSTR)

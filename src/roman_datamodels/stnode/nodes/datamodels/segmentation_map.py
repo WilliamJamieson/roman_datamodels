@@ -12,7 +12,11 @@ from ..meta import (
 __all__ = ["SegmentationMap"]
 
 
-class SegmentationMap_Meta(Basic):
+class SegmentationMap_Meta(_core.ImpliedNodeMixin, Basic):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return SegmentationMap
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

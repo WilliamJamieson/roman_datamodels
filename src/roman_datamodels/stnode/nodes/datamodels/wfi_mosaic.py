@@ -21,7 +21,11 @@ from ..meta import (
 __all__ = ["WfiMosaic"]
 
 
-class WfiMosaic_Meta(Basic):
+class WfiMosaic_Meta(_core.ImpliedNodeMixin, Basic):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return WfiMosaic
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

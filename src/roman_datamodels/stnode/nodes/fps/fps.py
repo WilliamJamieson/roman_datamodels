@@ -11,7 +11,11 @@ from .meta import (
 __all__ = ["Fps"]
 
 
-class Fps_Meta(FpsCommon):
+class Fps_Meta(_core.ImpliedNodeMixin, FpsCommon):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return Fps
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

@@ -8,7 +8,11 @@ from .ref import RefCommonRef
 __all__ = ["RefpixRef"]
 
 
-class RefpixRef_Meta(RefCommonRef):
+class RefpixRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return RefpixRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

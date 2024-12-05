@@ -11,7 +11,11 @@ from .ref import (
 __all__ = ["PixelareaRef"]
 
 
-class PixelareaRef_Meta_Photometry(_core.ObjectNode):
+class PixelareaRef_Meta_Photometry(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return PixelareaRef_Meta
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -28,7 +32,11 @@ class PixelareaRef_Meta_Photometry(_core.ObjectNode):
         return self._get_node("pixelarea_arcsecsq", lambda: float(_default.NONUM) * u.arcsec**2)
 
 
-class PixelareaRef_Meta(RefCommonRef, RefOpticalElementRef):
+class PixelareaRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return PixelareaRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

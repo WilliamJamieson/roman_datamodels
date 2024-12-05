@@ -9,6 +9,7 @@ from astropy import units as u
 T = TypeVar("T")
 
 __all__ = [
+    "camel_case_to_snake_case",
     "class_name_from_uri",
     "coerce",
     "get_all_fields",
@@ -58,6 +59,15 @@ def class_name_from_uri(uri):
         name += "Ref"
 
     return name
+
+
+def camel_case_to_snake_case(value):
+    """
+    Courtesy of https://stackoverflow.com/a/1176023
+    """
+    import re
+
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", value).lower()
 
 
 def _add_nodes(node: type, nodes: dict[str, type], sub_nodes: dict[str, type], base_cls: type) -> None:

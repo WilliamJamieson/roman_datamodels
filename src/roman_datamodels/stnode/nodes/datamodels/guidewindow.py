@@ -11,8 +11,12 @@ from ..meta import (
 __all__ = ["Guidewindow"]
 
 
-class Guidewindow_Meta(Common):
+class Guidewindow_Meta(_core.ImpliedNodeMixin, Common):
     """Metadata for the guide window"""
+
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return Guidewindow
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:

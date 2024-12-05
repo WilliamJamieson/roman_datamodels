@@ -23,7 +23,11 @@ class RefCommonRef_InstrumentMixin(_base.AdditionalNodeMixin):
         return ("optical_element",)
 
 
-class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, _core.ObjectNode):
+class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, _core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return RefCommonRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

@@ -8,13 +8,21 @@ from .ref import RefCommonRef
 __all__ = ["WfiImgPhotomRef"]
 
 
-class WfiImgPhotomRef_Meta(RefCommonRef):
+class WfiImgPhotomRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return WfiImgPhotomRef
+
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "PHOTOM")
 
 
-class WfiImgPhotomRef_PhotTable(_core.ObjectNode):
+class WfiImgPhotomRef_PhotTable(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return WfiImgPhotomRef
+
     @classmethod
     def no_phot(cls) -> "WfiImgPhotomRef_PhotTable":
         return cls(

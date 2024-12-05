@@ -10,7 +10,11 @@ from .ref import (
 __all__ = ["IpcRef"]
 
 
-class IpcRef_Meta(RefCommonRef, RefOpticalElementRef):
+class IpcRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return IpcRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

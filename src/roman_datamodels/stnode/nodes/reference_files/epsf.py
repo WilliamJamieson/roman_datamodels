@@ -10,7 +10,11 @@ from .ref import (
 __all__ = ["EpsfRef"]
 
 
-class EpsfRef_Meta(RefCommonRef, RefOpticalElementRef):
+class EpsfRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return EpsfRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

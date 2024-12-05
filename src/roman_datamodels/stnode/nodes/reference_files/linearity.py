@@ -8,7 +8,11 @@ from .ref import RefCommonRef
 __all__ = ["LinearityRef"]
 
 
-class LinearityRef_Meta(RefCommonRef):
+class LinearityRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return LinearityRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

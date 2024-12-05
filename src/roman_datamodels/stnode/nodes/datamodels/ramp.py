@@ -10,7 +10,11 @@ from ..meta import (
 __all__ = ["Ramp"]
 
 
-class Ramp_Meta(Common):
+class Ramp_Meta(_core.ImpliedNodeMixin, Common):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return Ramp
+
     @property
     def cal_step(self) -> L2CalStep:
         return self._get_node("cal_step", L2CalStep)

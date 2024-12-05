@@ -5,7 +5,11 @@ from ...meta import ExposureType
 __all__ = ["RefExposureTypeRef"]
 
 
-class RefExposureTypeRef_Exposure(_core.ObjectNode):
+class RefExposureTypeRef_Exposure(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return RefExposureTypeRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

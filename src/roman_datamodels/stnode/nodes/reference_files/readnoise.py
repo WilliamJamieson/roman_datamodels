@@ -11,7 +11,11 @@ from .ref import (
 __all__ = ["ReadnoiseRef"]
 
 
-class ReadnoiseRef_Meta(RefCommonRef, RefExposureTypeRef):
+class ReadnoiseRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return ReadnoiseRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

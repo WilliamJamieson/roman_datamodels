@@ -3,7 +3,11 @@ from roman_datamodels.stnode import _core
 __all__ = ["RefFile"]
 
 
-class RefFile_Crds(_core.ObjectNode):
+class RefFile_Crds(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return RefFile
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

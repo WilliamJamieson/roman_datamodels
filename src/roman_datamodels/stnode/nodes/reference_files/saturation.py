@@ -8,7 +8,11 @@ from .ref import RefCommonRef
 __all__ = ["SaturationRef"]
 
 
-class SaturationRef_Meta(RefCommonRef):
+class SaturationRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return SaturationRef
+
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "SATURATION")

@@ -5,7 +5,11 @@ from roman_datamodels.stnode import _base, _core, _default
 __all__ = ["Visit"]
 
 
-class Visit_Dither(_core.ObjectNode):
+class Visit_Dither(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return Visit
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

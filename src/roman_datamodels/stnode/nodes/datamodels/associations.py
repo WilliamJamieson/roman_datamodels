@@ -3,8 +3,12 @@ from roman_datamodels.stnode import _base, _core
 __all__ = ["Associations"]
 
 
-class Associations_Products_Members(_core.ObjectNode):
+class Associations_Products_Members(_core.ImpliedNodeMixin, _core.ObjectNode):
     """The members of an association"""
+
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return Associations_Products
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:
@@ -27,8 +31,12 @@ class Associations_Products_Members(_core.ObjectNode):
         return self._get_node("exptype", lambda: "SCIENCE")
 
 
-class Associations_Products(_core.ObjectNode):
+class Associations_Products(_core.ImpliedNodeMixin, _core.ObjectNode):
     """The products of an association"""
+
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return Associations
 
     @classmethod
     def asdf_required(cls) -> tuple[str]:

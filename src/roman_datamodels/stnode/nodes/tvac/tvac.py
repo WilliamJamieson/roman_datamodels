@@ -11,7 +11,11 @@ from .meta import (
 __all__ = ["Tvac"]
 
 
-class Tvac_Meta(TvacCommon):
+class Tvac_Meta(_core.ImpliedNodeMixin, TvacCommon):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return Tvac
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

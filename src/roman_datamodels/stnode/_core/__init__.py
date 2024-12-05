@@ -1,8 +1,9 @@
 from ._list import ListNode, SchemaListNode, TaggedListNode
-from ._mixins import SchemaMixin, TagMixin
+from ._mixins import ImpliedNodeMixin, SchemaMixin, TagMixin
 from ._object import DataModelNode, ObjectNode, SchemaObjectNode, TaggedObjectNode
 from ._scalar import SchemaScalarNode, TaggedScalarNode
 from ._utils import (
+    camel_case_to_snake_case,
     class_name_from_uri,
     coerce,
     get_all_fields,
@@ -15,6 +16,7 @@ from ._utils import (
 
 __all__ = [
     "DataModelNode",
+    "ImpliedNodeMixin",
     "ListNode",
     "ObjectNode",
     "SchemaListNode",
@@ -25,6 +27,7 @@ __all__ = [
     "TaggedListNode",
     "TaggedObjectNode",
     "TaggedScalarNode",
+    "camel_case_to_snake_case",
     "class_name_from_uri",
     "coerce",
     "get_all_fields",

@@ -12,7 +12,11 @@ from .ref import (
 __all__ = ["DistortionRef"]
 
 
-class DistortionRef_Meta(RefCommonRef, RefOpticalElementRef):
+class DistortionRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return DistortionRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

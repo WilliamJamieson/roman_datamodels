@@ -12,7 +12,11 @@ from .ref import (
 __all__ = ["DarkRef"]
 
 
-class DarkRef_Meta_Exposure(_core.ObjectNode):
+class DarkRef_Meta_Exposure(_core.ImpliedNodeMixin, _core.ObjectNode):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return DarkRef_Meta
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
@@ -44,7 +48,11 @@ class DarkRef_Meta_Exposure(_core.ObjectNode):
         return self._get_node("ma_table_number", lambda: _default.NOINT)
 
 
-class DarkRef_Meta(RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):
+class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return DarkRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (

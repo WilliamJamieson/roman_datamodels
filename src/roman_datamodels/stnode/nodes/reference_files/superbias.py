@@ -7,7 +7,11 @@ from .ref import RefCommonRef
 __all__ = ["SuperbiasRef"]
 
 
-class SuperbiasRef_Meta(RefCommonRef):
+class SuperbiasRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return SuperbiasRef
+
     @property
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "BIAS")

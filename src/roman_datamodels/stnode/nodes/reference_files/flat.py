@@ -10,7 +10,11 @@ from .ref import (
 __all__ = ["FlatRef"]
 
 
-class FlatRef_Meta(RefCommonRef, RefOpticalElementRef):
+class FlatRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return FlatRef
+
     @classmethod
     def asdf_required(cls) -> tuple[str]:
         return (
