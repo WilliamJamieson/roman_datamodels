@@ -13,6 +13,7 @@ from ._utils import (
     get_schema_from_tag,
     get_schema_nodes,
     get_tagged_nodes,
+    rad_field,
 )
 
 __all__ = [
@@ -38,4 +39,5 @@ __all__ = [
     "get_schema_from_tag",
     "get_schema_nodes",
     "get_tagged_nodes",
+    "rad_field",
 ]

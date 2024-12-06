@@ -13,7 +13,7 @@ class WfiImgPhotomRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "PHOTOM")
 
@@ -32,15 +32,15 @@ class WfiImgPhotomRef_PhotTable(_core.ImpliedNodeMixin, _core.ObjectNode):
             }
         )
 
-    @property
+    @_core.rad_field
     def photmjsr(self) -> u.Quantity | None:
         return self._get_node("photmjsr", lambda: 1.0e-15 * u.megajansky / u.steradian)
 
-    @property
+    @_core.rad_field
     def uncertainty(self) -> u.Quantity | None:
         return self._get_node("uncertainty", lambda: 1.0e-16 * u.megajansky / u.steradian)
 
-    @property
+    @_core.rad_field
     def pixelareasr(self) -> u.Quantity | None:
         return self._get_node("pixelareasr", lambda: 1.0e-13 * u.steradian)
 
@@ -58,11 +58,12 @@ class WfiImgPhotomRef(_core.DataModelNode):
     def array_shape(self) -> tuple[int]:
         raise NotImplementedError("array_data is not implemented")
 
-    @property
+    @_core.rad_field
     def meta(self) -> WfiImgPhotomRef_Meta:
         return self._get_node("meta", WfiImgPhotomRef_Meta)
 
-    @property
+    # TODO: Add typeguard rule to fully handle this DNode annotation
+    @_core.rad_field
     def phot_table(self) -> _base.DNode[str, WfiImgPhotomRef_PhotTable]:
         def _default():
             table = {}

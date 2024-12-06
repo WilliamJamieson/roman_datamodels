@@ -16,7 +16,7 @@ class ReadnoiseRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef
     def asdf_implied_by(cls) -> type:
         return ReadnoiseRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "READNOISE")
 
@@ -44,10 +44,10 @@ class ReadnoiseRef(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @property
+    @_core.rad_field
     def meta(self) -> ReadnoiseRef_Meta:
         return self._get_node("meta", ReadnoiseRef_Meta)
 
-    @property
+    @_core.rad_field
     def data(self) -> u.Quantity:
         return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.DN, dtype=np.float32))

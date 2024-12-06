@@ -15,18 +15,18 @@ class FpsStatistics(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/statistics-1.0.0"
 
-    @property
+    @_core.rad_field
     def mean_counts_per_sec(self) -> u.Quantity | None:
         return self._get_node("mean_counts_per_sec", lambda: _default.NONUM * (u.DN / u.s))
 
-    @property
+    @_core.rad_field
     def median_counts_per_sec(self) -> u.Quantity | None:
         return self._get_node("median_counts_per_sec", lambda: _default.NONUM * (u.DN / u.s))
 
-    @property
+    @_core.rad_field
     def max_counts(self) -> u.Quantity | None:
         return self._get_node("max_counts", lambda: u.Quantity(_default.NONUM, u.DN, dtype=np.int32))
 
-    @property
+    @_core.rad_field
     def min_counts(self) -> u.Quantity | None:
         return self._get_node("min_counts", lambda: u.Quantity(_default.NONUM, u.DN, dtype=np.int32))

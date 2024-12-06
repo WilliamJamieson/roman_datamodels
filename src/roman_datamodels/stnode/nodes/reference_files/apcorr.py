@@ -26,23 +26,23 @@ class ApcorrRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):
 
         return (10,)
 
-    @property
+    @_core.rad_field
     def ap_corrections(self) -> np.ndarray | None:
         return self._get_node("ap_corrections", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @property
+    @_core.rad_field
     def ee_fractions(self) -> np.ndarray | None:
         return self._get_node("ee_fractions", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @property
+    @_core.rad_field
     def ee_radii(self) -> np.ndarray | None:
         return self._get_node("ee_radii", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @property
+    @_core.rad_field
     def sky_background_rin(self) -> float | None:
         return self._get_node("sky_background_rin", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def sky_background_rout(self) -> float | None:
         return self._get_node("sky_background_rout", lambda: _default.NONUM)
 

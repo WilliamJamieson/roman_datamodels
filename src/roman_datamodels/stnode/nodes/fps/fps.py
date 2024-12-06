@@ -16,7 +16,7 @@ class Fps_Meta(_core.ImpliedNodeMixin, FpsCommon):
     def asdf_implied_by(cls) -> type:
         return Fps
 
-    @property
+    @_core.rad_field
     def groundtest(self) -> FpsGroundtest:
         return self._get_node("groundtest", FpsGroundtest)
 
@@ -44,15 +44,15 @@ class Fps(_core.DataModelNode):
         # default fall-back
         return (8, 4096, 4096)
 
-    @property
+    @_core.rad_field
     def meta(self) -> Fps_Meta:
         return self._get_node("meta", Fps_Meta)
 
-    @property
+    @_core.rad_field
     def data(self) -> u.Quantity:
         return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=u.DN, dtype=np.uint16))
 
-    @property
+    @_core.rad_field
     def amp33(self) -> u.Quantity:
         return self._get_node(
             "amp33",
@@ -61,7 +61,7 @@ class Fps(_core.DataModelNode):
             ),
         )
 
-    @property
+    @_core.rad_field
     def amp33_reset_reads(self) -> u.Quantity:
         return self._get_node(
             "amp33_reset_reads",
@@ -70,7 +70,7 @@ class Fps(_core.DataModelNode):
             ),
         )
 
-    @property
+    @_core.rad_field
     def amp33_reference_read(self) -> u.Quantity:
         return self._get_node(
             "amp33_reference_read",
@@ -79,7 +79,7 @@ class Fps(_core.DataModelNode):
             ),
         )
 
-    @property
+    @_core.rad_field
     def guidewindow(self) -> u.Quantity:
         return self._get_node(
             "guidewindow",
@@ -88,7 +88,7 @@ class Fps(_core.DataModelNode):
             ),
         )
 
-    @property
+    @_core.rad_field
     def reference_read(self) -> u.Quantity:
         return self._get_node(
             "reference_read",
@@ -97,7 +97,7 @@ class Fps(_core.DataModelNode):
             ),
         )
 
-    @property
+    @_core.rad_field
     def reset_reads(self) -> u.Quantity:
         return self._get_node(
             "reset_reads",

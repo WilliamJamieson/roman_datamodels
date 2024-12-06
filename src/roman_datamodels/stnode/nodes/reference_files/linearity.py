@@ -13,15 +13,15 @@ class LinearityRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return LinearityRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "LINEARITY")
 
-    @property
+    @_core.rad_field
     def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.DN)
 
-    @property
+    @_core.rad_field
     def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.DN)
 
@@ -49,14 +49,14 @@ class LinearityRef(_core.DataModelNode):
         # default fall-back
         return (2, 4096, 4096)
 
-    @property
+    @_core.rad_field
     def meta(self) -> LinearityRef_Meta:
         return self._get_node("meta", LinearityRef_Meta)
 
-    @property
+    @_core.rad_field
     def coeffs(self) -> np.ndarray:
         return self._get_node("coeffs", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @property
+    @_core.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))

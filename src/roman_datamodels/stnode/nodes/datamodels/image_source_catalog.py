@@ -19,23 +19,23 @@ class ImageSourceCatalog_Meta(_core.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return ImageSourceCatalog
 
-    @property
+    @_core.rad_field
     def optical_element(self) -> WfiOpticalElement:
         return self._get_node("optical_element", WfiOpticalElement.F158)
 
-    @property
+    @_core.rad_field
     def exposure(self) -> Exposure:
         return self._get_node("exposure", Exposure)
 
-    @property
+    @_core.rad_field
     def photometry(self) -> Photometry:
         return self._get_node("photometry", Photometry)
 
-    @property
+    @_core.rad_field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
-    @property
+    @_core.rad_field
     def visit(self) -> Visit:
         return self._get_node("visit", Visit)
 
@@ -53,10 +53,10 @@ class ImageSourceCatalog(_core.DataModelNode):
     def array_shape(self) -> tuple[int]:
         raise NotImplementedError("This node does not have an array shape")
 
-    @property
+    @_core.rad_field
     def meta(self) -> ImageSourceCatalog_Meta:
         return self._get_node("meta", ImageSourceCatalog_Meta)
 
-    @property
+    @_core.rad_field
     def source_catalog(self) -> Table:
         return self._get_node("source_catalog", lambda: Table([range(3), range(3)], names=["a", "b"]))

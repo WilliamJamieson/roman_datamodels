@@ -13,7 +13,7 @@ class GainRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return GainRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "GAIN")
 
@@ -41,11 +41,11 @@ class GainRef(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @property
+    @_core.rad_field
     def meta(self) -> GainRef_Meta:
         return self._get_node("meta", GainRef_Meta)
 
-    @property
+    @_core.rad_field
     def data(self) -> u.Quantity:
         return self._get_node(
             "data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.electron / u.DN, dtype=np.float32)

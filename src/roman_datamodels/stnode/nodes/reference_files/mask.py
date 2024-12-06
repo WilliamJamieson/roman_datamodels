@@ -12,7 +12,7 @@ class MaskRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return MaskRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "MASK")
 
@@ -40,10 +40,10 @@ class MaskRef(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @property
+    @_core.rad_field
     def meta(self) -> MaskRef_Meta:
         return self._get_node("meta", MaskRef_Meta)
 
-    @property
+    @_core.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))

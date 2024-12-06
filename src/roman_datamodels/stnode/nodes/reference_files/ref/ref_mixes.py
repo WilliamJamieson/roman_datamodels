@@ -1,3 +1,10 @@
+"""
+This module exists due to the mixing of ref_common and ref_optical_element sharing the same field,
+instrument. This meant I had to be extra careful in creating the class for this for everything to
+work properly. Since this is reused in multiple places, I decided to make it a separate class.
+It is its own module because it is a weird special case.
+"""
+
 from roman_datamodels.stnode import _core
 
 from .ref_common import RefCommonRef, RefCommonRef_Instrument
@@ -25,6 +32,6 @@ class RefCommonRefOpticalElementRef(RefCommonRef, RefOpticalElementRef):
             *RefOpticalElementRef.asdf_required(),
         }
 
-    @property
+    @_core.rad_field
     def instrument(self) -> RefCommonRefOpticalElementRef_Instrument:
         return self._get_node("instrument", RefCommonRefOpticalElementRef_Instrument)

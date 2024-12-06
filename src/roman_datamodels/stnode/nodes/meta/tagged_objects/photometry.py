@@ -12,14 +12,14 @@ class Photometry(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/photometry-1.0.0"
 
-    @property
+    @_core.rad_field
     def conversion_megajanskys(self) -> float | None:
         return self._get_node("conversion_megajanskys", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def conversion_megajanskys_uncertainty(self) -> float | None:
         return self._get_node("conversion_megajanskys_uncertainty", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def pixel_area(self) -> float | None:
         return self._get_node("pixel_area", lambda: _default.NONUM)

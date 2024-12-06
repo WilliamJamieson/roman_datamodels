@@ -17,15 +17,15 @@ class MosaicSourceCatalog_Meta(_core.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return MosaicSourceCatalog
 
-    @property
+    @_core.rad_field
     def basic(self) -> MosaicBasic:
         return self._get_node("basic", MosaicBasic)
 
-    @property
+    @_core.rad_field
     def photometry(self) -> Photometry:
         return self._get_node("photometry", Photometry)
 
-    @property
+    @_core.rad_field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
@@ -43,10 +43,10 @@ class MosaicSourceCatalog(_core.DataModelNode):
     def array_shape(self) -> tuple[int]:
         raise NotImplementedError("This node does not have an array shape")
 
-    @property
+    @_core.rad_field
     def meta(self) -> MosaicSourceCatalog_Meta:
         return self._get_node("meta", MosaicSourceCatalog_Meta)
 
-    @property
+    @_core.rad_field
     def source_catalog(self) -> Table:
         return self._get_node("source_catalog", lambda: Table([range(3), range(3)], names=["a", "b"]))

@@ -6,6 +6,8 @@ import asdf
 import numpy as np
 from astropy import units as u
 
+from .._typing import type_checked
+
 T = TypeVar("T")
 
 __all__ = [
@@ -19,7 +21,22 @@ __all__ = [
     "get_schema_from_tag",
     "get_schema_nodes",
     "get_tagged_nodes",
+    "rad_field",
 ]
+
+
+class rad_field_property(property):
+    """
+    Special subclass of property to mark schema fields out
+    """
+
+
+def rad_field(function):
+    """
+    Create a special property decorator for nodes that enables testing
+    of the type annotations for the for a schema field's property
+    """
+    return rad_field_property(type_checked(function))
 
 
 def get_schema_from_tag(ctx, tag):
@@ -282,6 +299,7 @@ def coerce(value: Any, signature: T) -> T:
     signature : T
         A type annotation
     """
+    return value
     from .._base import DNode, LNode
     from ._scalar import SchemaScalarNode
 

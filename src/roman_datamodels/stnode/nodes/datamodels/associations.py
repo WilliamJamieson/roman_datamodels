@@ -10,15 +10,15 @@ class Associations_Products_Members(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return Associations_Products
 
-    @property
+    @_core.rad_field
     def expname(self) -> str:
         return self._get_node("expname", lambda: "file_0")
 
-    @property
+    @_core.rad_field
     def exposerr(self) -> str:
         return self._get_node("exposerr", lambda: "null")
 
-    @property
+    @_core.rad_field
     def exptype(self) -> str:
         return self._get_node("exptype", lambda: "SCIENCE")
 
@@ -30,11 +30,11 @@ class Associations_Products(_core.ImpliedNodeMixin, _core.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return Associations
 
-    @property
+    @_core.rad_field
     def name(self) -> str:
         return self._get_node("name", lambda: "product0")
 
-    @property
+    @_core.rad_field
     def members(self) -> _base.LNode[Associations_Products_Members]:
         return self._get_node("members", lambda: _base.LNode([]))
 
@@ -57,43 +57,43 @@ class Associations(_core.DataModelNode):
         # default fall-back
         return (2, 3, 1)
 
-    @property
+    @_core.rad_field
     def asn_id(self) -> str:
         return self._get_node("asn_id", lambda: "o036")
 
-    @property
+    @_core.rad_field
     def asn_pool(self) -> str:
         return self._get_node("asn_pool", lambda: "r00001_20200530t023154_pool")
 
-    @property
+    @_core.rad_field
     def asn_type(self) -> str:
         return self._get_node("asn_type", lambda: "image")
 
-    @property
+    @_core.rad_field
     def asn_rule(self) -> str:
         return self._get_node("asn_rule", lambda: "candidate_Asn_Lv2Image_i2d")
 
-    @property
+    @_core.rad_field
     def version_id(self) -> str:
         return self._get_node("version_id", lambda: "null")
 
-    @property
+    @_core.rad_field
     def code_version(self) -> str:
         return self._get_node("code_version", lambda: "0.16.2.dev16+g640b0b7")
 
-    @property
+    @_core.rad_field
     def degraded_status(self) -> str:
         return self._get_node("degraded_status", lambda: "No known degraded exposures in association.")
 
-    @property
+    @_core.rad_field
     def program(self) -> int:
         return self._get_node("program", lambda: 1)
 
-    @property
+    @_core.rad_field
     def target(self) -> int:
         return self._get_node("target", lambda: 16)
 
-    @property
+    @_core.rad_field
     def constraints(self) -> str:
         return self._get_node(
             "constraints",
@@ -106,7 +106,9 @@ class Associations(_core.DataModelNode):
             ),
         )
 
-    @property
+    # TODO: need to add a rule to extend typeguard to check the argument of the decorator
+    #       currently this only checks that it is an LNode
+    @_core.rad_field
     def products(self) -> _base.LNode[Associations_Products]:
         def _default():
             file_idx = 0

@@ -13,6 +13,11 @@ __all__ = ["DarkRef"]
 
 
 class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, _core.ImpliedNodeMixin):
+    """
+    This class is the result of a very weird mixture similar to the ref_mixes but only
+    applies to the dark schema.
+    """
+
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DarkRef_Meta
@@ -24,23 +29,23 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, _core.ImpliedNodeMixin)
             *RefExposureTypeRef_Exposure.asdf_required(),
         }
 
-    @property
+    @_core.rad_field
     def ngroups(self) -> int:
         return self._get_node("ngroups", lambda: 6)
 
-    @property
+    @_core.rad_field
     def nframes(self) -> int:
         return self._get_node("nframes", lambda: 8)
 
-    @property
+    @_core.rad_field
     def groupgap(self) -> int:
         return self._get_node("groupgap", lambda: 0)
 
-    @property
+    @_core.rad_field
     def ma_table_name(self) -> str:
         return self._get_node("ma_table_name", lambda: _default.NOSTR)
 
-    @property
+    @_core.rad_field
     def ma_table_number(self) -> int:
         return self._get_node("ma_table_number", lambda: _default.NOINT)
 
@@ -58,11 +63,11 @@ class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExp
             *RefExposureTypeRef.asdf_required(),
         }
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "DARK")
 
-    @property
+    @_core.rad_field
     def exposure(self) -> DarkRef_Meta_Exposure:
         return self._get_node("exposure", DarkRef_Meta_Exposure)
 
@@ -90,27 +95,27 @@ class DarkRef(_core.DataModelNode):
         # default fall-back
         return (2, 4096, 4096)
 
-    @property
+    @_core.rad_field
     def meta(self) -> DarkRef_Meta:
         return self._get_node("meta", DarkRef_Meta)
 
-    @property
+    @_core.rad_field
     def data(self) -> u.Quantity:
         return self._get_node(
             "data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), unit=u.DN, dtype=np.float32)
         )
 
-    @property
+    @_core.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))
 
-    @property
+    @_core.rad_field
     def dark_slope(self) -> u.Quantity:
         return self._get_node(
             "dark_slope", lambda: u.Quantity(np.zeros(self.array_shape[1:], dtype=np.float32), unit=u.DN / u.s, dtype=np.float32)
         )
 
-    @property
+    @_core.rad_field
     def dark_slope_error(self) -> u.Quantity:
         return self._get_node(
             "dark_slope_error",

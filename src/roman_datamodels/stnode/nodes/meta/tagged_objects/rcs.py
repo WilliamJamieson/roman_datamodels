@@ -12,22 +12,22 @@ class Rcs(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/rcs-1.0.0"
 
-    @property
+    @_core.rad_field
     def active(self) -> bool:
         return self._get_node("active", lambda: False)
 
-    @property
+    @_core.rad_field
     def electronics(self) -> str | None:
         return self._get_node("electronics", lambda: "A")
 
-    @property
+    @_core.rad_field
     def bank(self) -> str | None:
         return self._get_node("bank", lambda: "1")
 
-    @property
+    @_core.rad_field
     def led(self) -> str | None:
         return self._get_node("led", lambda: "1")
 
-    @property
+    @_core.rad_field
     def counts(self) -> int:
         return self._get_node("counts", lambda: _default.NOINT)

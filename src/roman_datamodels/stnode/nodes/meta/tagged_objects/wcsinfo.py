@@ -12,42 +12,42 @@ class Wcsinfo(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wcsinfo-1.0.0"
 
-    @property
+    @_core.rad_field
     def aperture_name(self) -> str:
         return self._get_node("aperture_name", lambda: "WFI01_FULL")
 
-    @property
+    @_core.rad_field
     def pa_aperture(self) -> float:
         return self._get_node("pa_aperture", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def v2_ref(self) -> float:
         return self._get_node("v2_ref", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def v3_ref(self) -> float:
         return self._get_node("v3_ref", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def vparity(self) -> int:
         return self._get_node("vparity", lambda: -1)
 
-    @property
+    @_core.rad_field
     def v3yangle(self) -> float:
         return self._get_node("v3yangle", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def ra_ref(self) -> float:
         return self._get_node("ra_ref", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def dec_ref(self) -> float:
         return self._get_node("dec_ref", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def roll_ref(self) -> float:
         return self._get_node("roll_ref", lambda: _default.NONUM)
 
-    @property
+    @_core.rad_field
     def s_region(self) -> str:
         return self._get_node("s_region", lambda: _default.NOSTR)

@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _base, _default
+from roman_datamodels.stnode import _base, _core, _default
 
 from .basic import TvacBasic
 from .tagged_objects import (
@@ -16,7 +16,7 @@ __all__ = ["TvacCommon"]
 class TvacCommonMixin(_base.AdditionalNodeMixin):
     """Mixin things present in the constructors not present in the schema"""
 
-    @property
+    @_core.rad_field
     def statistics(self) -> TvacStatistics:
         return self._get_node("statistics", TvacStatistics)
 
@@ -30,34 +30,34 @@ class TvacCommon(TvacCommonMixin, TvacBasic):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0"
 
-    @property
+    @_core.rad_field
     def cal_step(self) -> TvacCalStep:
         return self._get_node("cal_step", TvacCalStep)
 
-    @property
+    @_core.rad_field
     def exposure(self) -> TvacExposure:
         return self._get_node("exposure", TvacExposure)
 
-    @property
+    @_core.rad_field
     def guidestar(self) -> TvacGuidestar:
         return self._get_node("guidestar", TvacGuidestar)
 
-    @property
+    @_core.rad_field
     def instrument(self) -> TvacWfiMode:
         return self._get_node("instrument", TvacWfiMode)
 
-    @property
+    @_core.rad_field
     def ref_file(self) -> TvacRefFile:
         return self._get_node("ref_file", TvacRefFile)
 
-    @property
+    @_core.rad_field
     def hdf5_meta(self) -> _base.DNode:
         return self._get_node("hdf5_meta", lambda: _base.DNode({"test": _default.NOSTR}))
 
-    @property
+    @_core.rad_field
     def hdf5_telemetry(self) -> str:
         return self._get_node("hdf5_telemetry", lambda: _default.NOSTR)
 
-    @property
+    @_core.rad_field
     def gw_meta(self) -> _base.DNode:
         return self._get_node("gw_meta", lambda: _base.DNode({"test": _default.NOSTR}))

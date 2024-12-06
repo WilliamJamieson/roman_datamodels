@@ -12,27 +12,27 @@ class EpsfRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     def asdf_implied_by(cls) -> type:
         return EpsfRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "EPSF")
 
-    @property
+    @_core.rad_field
     def oversample(self) -> int:
         return self._get_node("oversample", lambda: _default.NOINT)
 
-    @property
+    @_core.rad_field
     def spectral_type(self) -> _base.LNode[str]:
         return self._get_node("spectral_type", lambda: _base.LNode(["None"]))
 
-    @property
+    @_core.rad_field
     def defocus(self) -> _base.LNode[int]:
         return self._get_node("defocus", lambda: _base.LNode(list(range(1, 10))))
 
-    @property
+    @_core.rad_field
     def pixel_x(self) -> _base.LNode[float]:
         return self._get_node("pixel_x", lambda: _base.LNode([float(i) for i in range(1, 10)]))
 
-    @property
+    @_core.rad_field
     def pixel_y(self) -> _base.LNode[float]:
         return self._get_node("pixel_y", lambda: _base.LNode([float(i) for i in range(1, 10)]))
 
@@ -60,14 +60,14 @@ class EpsfRef(_core.DataModelNode):
         # default fall-back
         return (3, 6, 9, 361, 361)
 
-    @property
+    @_core.rad_field
     def meta(self) -> EpsfRef_Meta:
         return self._get_node("meta", EpsfRef_Meta)
 
-    @property
+    @_core.rad_field
     def psf(self) -> np.ndarray:
         return self._get_node("psf", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @property
+    @_core.rad_field
     def extended_psf(self) -> np.ndarray:
         return self._get_node("extended_psf", lambda: np.zeros(self.array_shape[-2:], dtype=np.float32))

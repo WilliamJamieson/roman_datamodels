@@ -12,7 +12,7 @@ class IpcRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     def asdf_implied_by(cls) -> type:
         return IpcRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "IPC")
 
@@ -40,11 +40,11 @@ class IpcRef(_core.DataModelNode):
         # default fall-back
         return (3, 3)
 
-    @property
+    @_core.rad_field
     def meta(self) -> IpcRef_Meta:
         return self._get_node("meta", IpcRef_Meta)
 
-    @property
+    @_core.rad_field
     def data(self) -> np.ndarray:
         def _default():
             data = np.zeros(self.array_shape, dtype=np.float32)

@@ -12,7 +12,7 @@ class SuperbiasRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return SuperbiasRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "BIAS")
 
@@ -39,18 +39,18 @@ class SuperbiasRef(_core.DataModelNode):
 
         return (4096, 4096)
 
-    @property
+    @_core.rad_field
     def meta(self) -> SuperbiasRef_Meta:
         return self._get_node("meta", SuperbiasRef_Meta)
 
-    @property
+    @_core.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @property
+    @_core.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))
 
-    @property
+    @_core.rad_field
     def err(self) -> np.ndarray:
         return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))

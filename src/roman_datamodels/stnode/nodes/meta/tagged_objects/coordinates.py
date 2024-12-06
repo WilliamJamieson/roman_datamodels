@@ -12,6 +12,6 @@ class Coordinates(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/coordinates-1.0.0"
 
-    @property
+    @_core.rad_field
     def reference_frame(self) -> str:
         return self._get_node("reference_frame", lambda: "ICRS")
