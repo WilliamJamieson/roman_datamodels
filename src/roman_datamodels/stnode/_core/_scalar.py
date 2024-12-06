@@ -1,6 +1,8 @@
 from abc import ABC
 from typing import Any
 
+from astropy.time import Time
+
 from .._base import FlushOptions
 from ._mixins import SchemaMixin, TagMixin
 
@@ -19,9 +21,6 @@ class SchemaScalarNode(SchemaMixin, ABC):
         return type(self).__bases__[0](self)
 
     def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
-        if isinstance(self, TagMixin):
-            return self
-
         return self.unwrap()
 
     def __asdf_traverse__(self):
@@ -38,3 +37,12 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
 
     def __asdf_traverse__(self):
         return self
+
+    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
+        tree = super().to_asdf_tree(flush, warn)
+
+        if isinstance(tree, Time):
+            converter = self.asdf_ctx().extension_manager.get_converter_for_type(Time)
+            return converter.to_yaml_tree(tree, self.tag, self.asdf_ctx())
+
+        return tree

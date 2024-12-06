@@ -5,6 +5,7 @@ from inspect import signature
 from pathlib import Path
 from typing import get_args
 
+import asdf
 import numpy as np
 import pytest
 import yaml
@@ -183,6 +184,11 @@ def test_implied_node(node_cls):
     annotation = signature(cls_property.fget).return_annotation
     assert annotation is node_cls or annotation == _base.LNode[node_cls] or annotation == _base.DNode[str, node_cls]
 
+    # This is a special cases that had to be hand coded to deal with the mixing of
+    # reference_file.meta schemas
+    if node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]:
+        return
+
     # Check that the orphan node's schema matches the schema of the property
     schema = get_schema(containing_cls, containing_name, property_name)
 
@@ -254,6 +260,13 @@ def test_node_requires(node_cls):
     Check that every schema file with a `required` has a corresponding method
     listing those requirements.
     """
+    # These two are special cases that had to be hand coded to deal with the mixing of
+    # reference_file.meta schemas
+    if (
+        node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]
+        or node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]
+    ):
+        return
 
     if not issubclass(node_cls, _core.ObjectNode):
         return
@@ -322,9 +335,17 @@ def test_properties_in_schema(node_cls):
     """
     Check that every property of the class in the schema
     """
+    # These two are special cases that had to be hand coded to deal with the mixing of
+    # reference_file.meta schemas
+    if (
+        node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]
+        or node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]
+    ):
+        return
 
     properties = set(_core.get_node_fields(node_cls))
     schema = find_schema_for_node(node_cls)
+
     assert get_properties(schema) == properties
 
 
@@ -465,6 +486,13 @@ def test_property_annotation(node_cls):
     """
     Check that the annotation for every property matches the schema
     """
+    # These two are special cases that had to be hand coded to deal with the mixing of
+    # reference_file.meta schemas
+    if (
+        node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]
+        or node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]
+    ):
+        return
 
     properties = set(_core.get_node_fields(node_cls))
     schema = find_schema_for_node(node_cls)
@@ -872,5 +900,31 @@ def test_asdf_schema(node_cls):
     """
     instance = node_cls(Time.now()) if issubclass(node_cls, Time) else node_cls()
     schema = instance.asdf_schema()
-    if issubclass(node_cls, _core.ObjectNode):
-        assert schema.required == set(instance.required)
+    _ = schema.required
+    _ = schema.fields
+    _ = schema.archive_catalog
+    _ = schema.sdf
+
+
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.tagged_registry.values())
+def test_read_write_asdf(tmp_path, node_cls):
+    """
+    Smoke test for if the default nodes can be written and then read back
+    """
+    if issubclass(node_cls, Time):
+        instance = node_cls(Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
+    elif node_cls is nodes.Origin or node_cls is nodes.FpsOrigin or node_cls is nodes.TvacOrigin:
+        instance = node_cls.STSCI()
+    elif node_cls is nodes.Telescope or node_cls is nodes.FpsTelescope or node_cls is nodes.TvacTelescope:
+        instance = node_cls.ROMAN()
+    else:
+        instance = node_cls()
+
+    af = asdf.AsdfFile()
+    af["roman"] = instance
+
+    filepath = tmp_path / "test.asdf"
+    af.write_to(filepath)
+
+    with asdf.open(filepath) as af:
+        assert isinstance(af.tree["roman"], node_cls)

@@ -12,9 +12,6 @@ __all__ = ["RadSchema"]
 
 
 class RadSchema(AsdfContextMixin, Generic[S]):
-    _required: set[str] | None = None
-    _fields: set[str] | None = None
-
     def __init__(self, schema: S):
         self._schema = schema
 
@@ -115,18 +112,11 @@ class RadSchema(AsdfContextMixin, Generic[S]):
 
     @property
     def required(self) -> set[str]:
-        if self._required is None:
-            self._required = set(self._to_field_key(key) for key in list(chain(*self.get_key("required"))))
-
-        return self._required
+        return set(self._to_field_key(key) for key in list(chain(*self.get_key("required"))))
 
     @property
     def fields(self) -> dict[str, RadSchema]:
-        if self._fields is None:
-            self._fields = {
-                self._to_field_key(key): RadSchema(value) for key, value in ChainMap(*self.get_key("properties")).items()
-            }
-        return self._fields
+        return {self._to_field_key(key): RadSchema(value) for key, value in ChainMap(*self.get_key("properties")).items()}
 
     @property
     def archive_catalog(self) -> dict[str, RadSchema]:

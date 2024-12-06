@@ -128,7 +128,7 @@ class WfiImage(_core.DataModelNode):
 
     @property
     def amp33(self) -> np.ndarray:
-        return self._get_node("amp33", lambda: np.zeros((self._n_groups, self.array_shape[0], 128), dtype=np.float32))
+        return self._get_node("amp33", lambda: np.zeros((self._n_groups, self.array_shape[0], 128), dtype=np.uint16))
 
     @property
     def border_ref_pix_left(self) -> np.ndarray:

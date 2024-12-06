@@ -2,15 +2,12 @@ import numpy as np
 
 from roman_datamodels.stnode import _core
 
-from .ref import (
-    RefCommonRef,
-    RefOpticalElementRef,
-)
+from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["IpcRef"]
 
 
-class IpcRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+class IpcRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return IpcRef

@@ -4,18 +4,25 @@ from astropy import units as u
 from roman_datamodels.stnode import _core, _default
 
 from .ref import (
-    RefCommonRef,
+    RefCommonRefOpticalElementRef,
     RefExposureTypeRef,
-    RefOpticalElementRef,
 )
+from .ref.ref_exposure_type import RefExposureTypeRef_Exposure
 
 __all__ = ["DarkRef"]
 
 
-class DarkRef_Meta_Exposure(_core.ImpliedNodeMixin, _core.ObjectNode):
+class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, _core.ImpliedNodeMixin):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DarkRef_Meta
+
+    @classmethod
+    def asdf_required(cls) -> set[str]:
+        return {
+            *super().asdf_required(),
+            *RefExposureTypeRef_Exposure.asdf_required(),
+        }
 
     @property
     def ngroups(self) -> int:
@@ -38,10 +45,18 @@ class DarkRef_Meta_Exposure(_core.ImpliedNodeMixin, _core.ObjectNode):
         return self._get_node("ma_table_number", lambda: _default.NOINT)
 
 
-class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef, RefOpticalElementRef):
+class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DarkRef
+
+    @classmethod
+    def asdf_required(cls) -> set[str]:
+        return {
+            *super().asdf_required(),
+            *RefCommonRefOpticalElementRef.asdf_required(),
+            *RefExposureTypeRef.asdf_required(),
+        }
 
     @property
     def reftype(self) -> str:

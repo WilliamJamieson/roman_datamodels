@@ -3,10 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core, _default
 
-from .ref import (
-    RefCommonRef,
-    RefOpticalElementRef,
-)
+from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["PixelareaRef"]
 
@@ -25,14 +22,14 @@ class PixelareaRef_Meta_Photometry(_core.ImpliedNodeMixin, _core.ObjectNode):
         return self._get_node("pixelarea_arcsecsq", lambda: float(_default.NONUM) * u.arcsec**2)
 
 
-class PixelareaRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+class PixelareaRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef
 
     @property
     def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "PIXELAREA")
+        return self._get_node("reftype", lambda: "AREA")
 
     @property
     def photometry(self) -> PixelareaRef_Meta_Photometry:

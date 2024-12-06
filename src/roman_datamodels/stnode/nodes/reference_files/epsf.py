@@ -2,15 +2,12 @@ import numpy as np
 
 from roman_datamodels.stnode import _base, _core, _default
 
-from .ref import (
-    RefCommonRef,
-    RefOpticalElementRef,
-)
+from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["EpsfRef"]
 
 
-class EpsfRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefOpticalElementRef):
+class EpsfRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return EpsfRef
@@ -61,7 +58,7 @@ class EpsfRef(_core.DataModelNode):
             return self._data["array_shape"]
 
         # default fall-back
-        return (2, 4096, 4096)
+        return (3, 6, 9, 361, 361)
 
     @property
     def meta(self) -> EpsfRef_Meta:

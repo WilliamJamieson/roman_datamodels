@@ -1,6 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 from enum import EnumType
 from inspect import signature
+from pathlib import Path
 from typing import get_args
 
 from .._base import AsdfNodeMixin
@@ -28,8 +29,6 @@ class RadNodeMixin(AsdfNodeMixin, ABC):
 class SchemaMixin(RadNodeMixin, ABC):
     """Mixin for nodes to support linking to a schema."""
 
-    _asdf_schema: RadSchema | None = None
-
     @classmethod
     @abstractmethod
     def asdf_schema_uri(clas) -> str:
@@ -43,10 +42,7 @@ class SchemaMixin(RadNodeMixin, ABC):
     @classmethod
     def asdf_schema(cls) -> RadSchema:
         # Pull the schema through ASDF
-        if cls._asdf_schema is None:
-            cls._asdf_schema = RadSchema(cls.get_schema(cls.asdf_schema_uri()))
-
-        return cls._asdf_schema
+        return RadSchema(cls.get_schema(cls.asdf_schema_uri()))
 
 
 class TagMixin(SchemaMixin, ABC):
@@ -65,7 +61,17 @@ class TagMixin(SchemaMixin, ABC):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         """Get the schema URI for the class using the asdf_tag"""
-        return cls.asdf_ctx().extension_manager.get_tag_definition(cls.asdf_tag()).schema_uris[0]
+        from ._scalar import TaggedScalarNode
+
+        head, tail = cls.asdf_tag().split("tags")
+
+        head = Path(head.split("asdf://")[-1]) / "schemas"  # remove the asdf:// as it gets messed up by Path
+        tail = Path(tail[1:])  # remove the leading '/' as it messes with recombination
+
+        if issubclass(cls, TaggedScalarNode):
+            tail = tail.parent / "tagged_scalars" / tail.name
+
+        return f"asdf://{head / tail}"  # recombine the paths and add the asdf:// back
 
 
 class ImpliedNodeMixin(RadNodeMixin, ABC):
@@ -75,8 +81,6 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
     These nodes should have names following the convention:
         <implying_node_name>_<camel_case(implied_property_name)>
     """
-
-    _asdf_schema: RadSchema | None = None
 
     @classmethod
     @abstractmethod
@@ -117,10 +121,7 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
     @classmethod
     def asdf_schema(cls) -> RadSchema:
         """Get the schema for the implied node"""
-        if cls._asdf_schema is None:
-            cls._asdf_schema = cls.asdf_implied_by().asdf_schema().fields[cls.asdf_implied_property_name()]
-
-        return cls._asdf_schema
+        return cls.asdf_implied_by().asdf_schema().fields[cls.asdf_implied_property_name()]
 
 
 class NodeEnumMeta(ABCMeta, EnumType):
