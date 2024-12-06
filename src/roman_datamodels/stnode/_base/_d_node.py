@@ -78,15 +78,15 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         return self._field_signatures[key]
 
-    def _coerce(self, key: str, value: Any) -> T:
+    def _wrap_into_node(self, key: str, value: Any) -> T:
         """
-        Coerce the value into a node if necessary
+        Wrap things into node containers if necessary.
         """
-        from .._core import coerce
+        from .._core import wrap_into_node
 
         if self._to_field_key(key) in self.fields:
             # Get the return signature for the field property
-            return coerce(value, self.field_signature(key))
+            return wrap_into_node(value, self.field_signature(key))
 
         return value
 
@@ -101,13 +101,13 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
     def _pull_node(self, key: str) -> T:
         """
-        Get a node from the dictionary, coercing it to the correct type if necessary.
+        Get a node from the dictionary, wrapping if necessary.
         """
         if self._has_node(key):
             value = self._data[self._to_schema_key(key)]
             # Save currently stored value's type for comparison
             stored_type = type(value)
-            value = self._coerce(key, value)
+            value = self._wrap_into_node(key, value)
 
             # If the stored type is different from the coerced type, update the stored value
             # so coercion only happens once
@@ -136,13 +136,13 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
     def _set_node(self, key: str, value: T) -> None:
         """
-        Attempt to set a value in for the node
+        Attempt to set a value in for the node, wrapping data if necessary.
         """
         # Private keys should just be in the normal __dict__
         if key[0] == "_":
             self.__dict__[key] = value
         else:
-            self._data[self._to_schema_key(key)] = self._coerce(key, value)
+            self._data[self._to_schema_key(key)] = self._wrap_into_node(key, value)
 
     def __setattr__(self, key: str, value: T) -> None:
         """
@@ -272,3 +272,10 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
     def __asdf_traverse__(self) -> dict[str, T]:
         """Asdf traverse method for things like info/search"""
         return self.unwrap()
+
+    def __eq__(self, other: Any) -> bool:
+        """Equality check"""
+        if not isinstance(other, DNode):
+            return False
+
+        return self._data == other._data

@@ -1,10 +1,6 @@
-import warnings
-from inspect import isclass
 from typing import Any, TypeVar, get_args
 
 import asdf
-import numpy as np
-from astropy import units as u
 
 from .._typing import type_checked
 
@@ -13,7 +9,6 @@ T = TypeVar("T")
 __all__ = [
     "camel_case_to_snake_case",
     "class_name_from_uri",
-    "coerce",
     "get_all_fields",
     "get_node_fields",
     "get_nodes",
@@ -22,6 +17,7 @@ __all__ = [
     "get_schema_nodes",
     "get_tagged_nodes",
     "rad_field",
+    "wrap_into_node",
 ]
 
 
@@ -288,9 +284,9 @@ def get_node_fields(cls: type) -> tuple[str]:
     )
 
 
-def coerce(value: Any, signature: T) -> T:
+def wrap_into_node(value: Any, signature: T) -> T:
     """
-    Coerce the value to match the signature.
+    Wrap things into node containers if necessary.
 
     Parameters
     ----------
@@ -298,67 +294,48 @@ def coerce(value: Any, signature: T) -> T:
         The value to coerce.
     signature : T
         A type annotation
+
+    Returns
+    -------
+    T
+        Value wrapped into the node container if T describes a node container.
     """
-    return value
     from .._base import DNode, LNode
     from ._scalar import SchemaScalarNode
 
     args = get_args(signature)
 
     # This is a true type
+    # -> signature is the type
     if not args:
-        # Only coerce if the value is not already the correct type
-        if not isinstance(value, signature):
-            if signature is np.ndarray:
-                warnings.warn("Coercing to numpy array, dtype will be np.float64", RuntimeWarning, stacklevel=2)
-                return np.array(value)
-            if signature is u.Quantity:
-                warnings.warn(
-                    "Coercing to astropy Quantity, unit will be dimensionless and dtype will be np.float64",
-                    RuntimeWarning,
-                    stacklevel=2,
-                )
+        # Only coerce nodes
+        if issubclass(signature, DNode) or issubclass(signature, LNode) or issubclass(signature, SchemaScalarNode):
+            # Skip if we are already the correct type
+            if not isinstance(value, signature):
+                return signature(value)
 
-            # u.UnitBase is the base class for astropy units, but it cannot generate a unit
-            if signature is u.UnitBase:
-                return u.Unit(value)
-            return signature(value)
-
-    # This is an annotation of some kind
+    # This is a annotated type
     if args:
-        # This is the case where we have a <type> | None annotation with value being None
-        # -> bail out early and return None
-        if value is None and type(None) in args:
-            return None
+        # These will always be a tuple (type, metadata)
+        container, metadata = args
 
-        container, value_signature = args
-
-        # This is the case where we have a "nacked" DNode -> dictionary in schema
+        # Handle DNodes
         if container is DNode:
+            # Skip if we are already a DNode
             if not isinstance(value, DNode):
-                # Coerce the dictionary to the correct type
-                node = DNode()
-                for key, sub_val in value.items():
-                    # Coerce the inner value
-                    node[key] = coerce(sub_val, value_signature)
+                # DNodes are hinted as dictionaries, so 2 metadata entries, (key, entry)
+                _, entry = metadata
 
-                return node
+                # Coerce the dictionary entries if necessary
+                return DNode({key: wrap_into_node(sub_val, entry) for key, sub_val in value.items()})
 
+        # handle LNodes
         if container is LNode:
             if not isinstance(value, LNode):
-                # Coerce the list to the correct type
-                node = LNode()
-                for sub_val in value:
-                    # Coerce the inner value
-                    node.append(coerce(sub_val, value_signature))
+                # LNodes are hinted as lists, so 1 metadata entry, entry
+                # Coerce the list entries to the correct type
+                return LNode([wrap_into_node(sub_val, metadata) for sub_val in value])
 
-                return node
+        return wrap_into_node(value, container)
 
-        if isclass(container) and issubclass(container, SchemaScalarNode):
-            if not isinstance(value, container):
-                return container(value)
-
-        return coerce(value, container)
-
-    # Fall back on returning the value as is
     return value

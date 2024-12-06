@@ -5,7 +5,9 @@ from astropy.modeling import Model
 from astropy.table import Table
 from numpy.testing import assert_array_equal
 
-from .stnode import DNode, TaggedListNode, TaggedObjectNode, TaggedScalarNode
+# from .stnode import DNode, TaggedListNode, TaggedObjectNode, TaggedScalarNode
+from .stnode._base import DNode, LNode
+from .stnode._core import SchemaScalarNode
 
 __all__ = ["assert_node_equal", "assert_node_is_copy", "wraps_hashable"]
 
@@ -27,22 +29,25 @@ def assert_node_equal(node1, node2):
     AssertionError
         If nodes are not equal.
     """
-    __tracebackhide__ = True
+    # __tracebackhide__ = True
 
     assert node1.__class__ is node2.__class__
     if isinstance(node1, DNode):
         assert set(node1.keys()) == set(node2.keys())
 
         for key in node1:
+            print(key)
             value1 = getattr(node1, key)
             value2 = getattr(node2, key)
+            print(f"start asserting {key}")
             _assert_value_equal(value1, value2)
-    elif isinstance(node1, TaggedListNode):
+            print(f"end asserting {key}")
+    elif isinstance(node1, LNode):
         assert len(node1) == len(node2)
 
         for value1, value2 in zip(node1, node2, strict=True):
             _assert_value_equal(value1, value2)
-    elif isinstance(node1, TaggedScalarNode):
+    elif isinstance(node1, SchemaScalarNode):
         value1 = node1.__class__.__bases__[0](node1)
         value2 = node2.__class__.__bases__[0](node2)
 
@@ -52,7 +57,7 @@ def assert_node_equal(node1, node2):
 
 
 def _assert_value_equal(value1, value2):
-    if isinstance(value1, TaggedObjectNode | TaggedListNode | TaggedScalarNode | DNode):
+    if isinstance(value1, LNode | DNode):
         assert_node_equal(value1, value2)
     elif isinstance(value1, np.ndarray | NDArrayType):
         assert_array_equal(value1, value2)
@@ -63,6 +68,10 @@ def _assert_value_equal(value1, value2):
     elif isinstance(value1, gwcs.WCS):
         return True
     else:
+        if value1 != value2:
+            print(f"{type(value1)}: {value1}")
+            print("\n")
+            print(f"{type(value2)}: {value2}")
         assert value1 == value2
 
 
@@ -83,17 +92,17 @@ def assert_node_is_copy(node1, node2, deepcopy=False):
     AssertionError
         If nodes are the same object.
     """
-    __tracebackhide__ = True
+    # __tracebackhide__ = True
     assert_node_equal(node1, node2)
 
-    if isinstance(node1, TaggedObjectNode):
+    if isinstance(node1, DNode):
         for key, value1 in node1.items():
             value2 = node2[key]
             _assert_value_is_copy(value1, value2, deepcopy=deepcopy)
-    elif isinstance(node1, TaggedListNode):
+    elif isinstance(node1, LNode):
         for value1, value2 in zip(node1, node2, strict=True):
             _assert_value_is_copy(value1, value2, deepcopy=deepcopy)
-    elif isinstance(node1, TaggedScalarNode):
+    elif isinstance(node1, SchemaScalarNode):
         value1 = node1.__class__.__bases__[0](node1)
         value2 = node2.__class__.__bases__[0](node2)
 
@@ -104,7 +113,7 @@ def assert_node_is_copy(node1, node2, deepcopy=False):
 
 def _assert_value_is_copy(value1, value2, deepcopy=False):
     if deepcopy:
-        if isinstance(value1, TaggedObjectNode | TaggedListNode | TaggedScalarNode):
+        if isinstance(value1, LNode | DNode | SchemaScalarNode):
             assert_node_is_copy(value1, value2)
         elif isinstance(value1, Model):
             assert value1 is not value2
@@ -125,15 +134,15 @@ def wraps_hashable(node):
     """
     Determine if the node wraps only hashable objects.
     """
-    __tracebackhide__ = True
+    # __tracebackhide__ = True
 
-    if isinstance(node, TaggedObjectNode):
+    if isinstance(node, DNode):
         return all(_wraps_hashable(value) for value in node.values())
 
-    elif isinstance(node, TaggedListNode):
+    elif isinstance(node, LNode):
         return all(_wraps_hashable(value) for value in node)
 
-    elif isinstance(node, TaggedScalarNode):
+    elif isinstance(node, SchemaScalarNode):
         return _wraps_hashable(node.__class__.__bases__[0](node))
 
     else:
@@ -141,7 +150,7 @@ def wraps_hashable(node):
 
 
 def _wraps_hashable(value):
-    if isinstance(value, TaggedObjectNode | TaggedListNode | TaggedScalarNode):
+    if isinstance(value, DNode | LNode):
         return wraps_hashable(value)
 
     # Immutable types are usually hashable

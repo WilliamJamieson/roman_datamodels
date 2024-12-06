@@ -3,6 +3,7 @@ import pytest
 from astropy.time import Time
 
 from roman_datamodels.stnode import _base, _core, _registry, _typing, nodes
+from roman_datamodels.testing import assert_node_equal
 
 
 @pytest.fixture
@@ -98,4 +99,4 @@ def test_check_defaults_against_schemas(tmp_path, node_cls):
     af.write_to(filepath)
 
     with asdf.open(filepath) as af:
-        assert isinstance(af.tree["roman"], node_cls)
+        assert_node_equal(instance, af["roman"])
