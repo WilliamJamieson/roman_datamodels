@@ -39,7 +39,7 @@ class FpsBasic(_core.SchemaObjectNode):
 
     @_core.rad_field
     def origin(self) -> FpsOrigin:
-        return self._get_node("origin", FpsOrigin.STSCI)
+        return self._get_node("origin", lambda: FpsOrigin.STSCI)
 
     @_core.rad_field
     def prd_software_version(self) -> FpsPrdSoftwareVersion:
@@ -51,4 +51,4 @@ class FpsBasic(_core.SchemaObjectNode):
 
     @_core.rad_field
     def telescope(self) -> FpsTelescope:
-        return self._get_node("telescope", FpsTelescope.ROMAN)
+        return self._get_node("telescope", lambda: FpsTelescope.ROMAN)

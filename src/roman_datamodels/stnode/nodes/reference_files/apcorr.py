@@ -2,6 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import _base, _core, _default
 
+from ..enums import RefTypeEntry
 from ..meta import OPTICAL_ELEMENTS
 from .ref import RefCommonRef
 
@@ -53,8 +54,8 @@ class ApcorrRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return ApcorrRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "APCORR")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.APCORR)
 
 
 class ApcorrRef(_core.DataModelNode):

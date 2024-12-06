@@ -102,9 +102,9 @@ def test_check_defaults_against_schemas(tmp_path, node_cls):
     if issubclass(node_cls, Time):
         instance = node_cls(Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
     elif node_cls is nodes.Origin or node_cls is nodes.FpsOrigin or node_cls is nodes.TvacOrigin:
-        instance = node_cls.STSCI()
+        instance = node_cls.STSCI
     elif node_cls is nodes.Telescope or node_cls is nodes.FpsTelescope or node_cls is nodes.TvacTelescope:
-        instance = node_cls.ROMAN()
+        instance = node_cls.ROMAN
 
     # All the non-scalar tagged nodes can simply be instantiated as they will auto fill
     else:

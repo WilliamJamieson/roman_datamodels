@@ -9,7 +9,9 @@ from ._schema import RadSchema
 from ._utils import camel_case_to_snake_case
 
 __all__ = [
+    "EnumNodeMixin",
     "ImpliedNodeMixin",
+    "NodeEnumMeta",
     "SchemaMixin",
     "TagMixin",
 ]
@@ -122,6 +124,39 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
     def asdf_schema(cls) -> RadSchema:
         """Get the schema for the implied node"""
         return cls.asdf_implied_by().asdf_schema().fields[cls.asdf_implied_property_name()]
+
+
+class EnumNodeMixin(ABC):
+    """
+    Mixin for nodes that are enums.
+
+    NOTE: due to mixins with built in classes (think str) ABC enforcement goes away.
+          asdf_schema needs to be implemented by the enum node class itself.
+          simply point this at the property that contains the enum
+    """
+
+    @classmethod
+    @abstractmethod
+    def asdf_container(cls) -> type:
+        """
+        A class which has a property that evaluates to the enum
+        """
+
+    @classmethod
+    @abstractmethod
+    def asdf_property_name(cls) -> str:
+        """
+        The name of the property that contains the enum
+        """
+
+    @classmethod
+    def asdf_schema(cls) -> RadSchema:
+        """Get the schema for the enum node"""
+        schema = cls.asdf_container().asdf_schema().fields[cls.asdf_property_name()]
+        if "anyOf" in schema.schema:
+            return RadSchema(schema.schema["anyOf"][0]["enum"])
+
+        return RadSchema(schema.get_key("enum")[0])
 
 
 class NodeEnumMeta(ABCMeta, EnumType):

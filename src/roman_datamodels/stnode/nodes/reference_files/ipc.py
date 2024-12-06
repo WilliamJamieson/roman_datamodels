@@ -2,6 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["IpcRef"]
@@ -13,8 +14,8 @@ class IpcRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return IpcRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "IPC")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.IPC)
 
 
 class IpcRef(_core.DataModelNode):

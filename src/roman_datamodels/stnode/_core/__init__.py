@@ -1,7 +1,7 @@
 from ._list import ListNode, SchemaListNode, TaggedListNode
-from ._mixins import ImpliedNodeMixin, SchemaMixin, TagMixin
+from ._mixins import EnumNodeMixin, ImpliedNodeMixin, NodeEnumMeta, SchemaMixin, TagMixin
 from ._object import DataModelNode, ObjectNode, SchemaObjectNode, TaggedObjectNode
-from ._scalar import SchemaScalarNode, TaggedScalarNode
+from ._scalar import ScalarNode, SchemaScalarNode, TaggedScalarNode
 from ._schema import RadSchema
 from ._utils import (
     camel_case_to_snake_case,
@@ -19,10 +19,13 @@ from ._utils import (
 
 __all__ = [
     "DataModelNode",
+    "EnumNodeMixin",
     "ImpliedNodeMixin",
     "ListNode",
+    "NodeEnumMeta",
     "ObjectNode",
     "RadSchema",
+    "ScalarNode",
     "SchemaListNode",
     "SchemaMixin",
     "SchemaObjectNode",

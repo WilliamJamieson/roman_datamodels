@@ -1,5 +1,7 @@
 from roman_datamodels.stnode import _core, _default
 
+from ...enums import ProgramSubcategoryEntry
+
 __all__ = ["Program"]
 
 
@@ -25,8 +27,8 @@ class Program(_core.TaggedObjectNode):
         return self._get_node("category", lambda: _default.NOSTR)
 
     @_core.rad_field
-    def subcategory(self) -> str:
-        return self._get_node("subcategory", lambda: "None")
+    def subcategory(self) -> ProgramSubcategoryEntry:
+        return self._get_node("subcategory", lambda: ProgramSubcategoryEntry.NONE)
 
     @_core.rad_field
     def science_category(self) -> str:

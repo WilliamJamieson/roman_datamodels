@@ -3,6 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRef
 
 __all__ = ["LinearityRef"]
@@ -14,8 +15,8 @@ class LinearityRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return LinearityRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "LINEARITY")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.LINEARITY)
 
     @_core.rad_field
     def input_units(self) -> u.UnitBase:

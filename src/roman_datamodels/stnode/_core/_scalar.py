@@ -1,30 +1,41 @@
 from abc import ABC
+from enum import Enum
 from typing import Any
 
 from astropy.time import Time
 
 from .._base import FlushOptions
-from ._mixins import SchemaMixin, TagMixin
+from ._mixins import RadNodeMixin, SchemaMixin, TagMixin
 
 __all__ = [
+    "ScalarNode",
     "SchemaScalarNode",
     "TaggedScalarNode",
 ]
 
 
-class SchemaScalarNode(SchemaMixin, ABC):
+class ScalarNode(RadNodeMixin, ABC):
     """
-    Base class for all scalars that are described by their own schema in RAD.
+    Base class for all scalars with descriptions in RAD
+    -> this is for enums that are not tagged
     """
 
     def unwrap(self) -> Any:
-        return type(self).__bases__[0](self)
+        base = self.value if isinstance(self, Enum) else self
+
+        return type(base).__bases__[0](base)
 
     def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
         return self.unwrap()
 
     def __asdf_traverse__(self):
         return self.unwrap()
+
+
+class SchemaScalarNode(ScalarNode, SchemaMixin, ABC):
+    """
+    Base class for all scalars that are described by their own schema in RAD.
+    """
 
 
 class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
@@ -34,9 +45,6 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
         a scalar base type, or wraps a scalar base type.
         These will all be in the tagged_scalars directory.
     """
-
-    def __asdf_traverse__(self):
-        return self
 
     def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
         tree = super().to_asdf_tree(flush, warn)

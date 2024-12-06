@@ -49,7 +49,7 @@ class Basic(_core.SchemaObjectNode):
 
     @_core.rad_field
     def origin(self) -> Origin:
-        return self._get_node("origin", Origin.STSCI_SOC)
+        return self._get_node("origin", lambda: Origin.STSCI_SOC)
 
     @_core.rad_field
     def prd_version(self) -> PrdVersion:
@@ -61,4 +61,4 @@ class Basic(_core.SchemaObjectNode):
 
     @_core.rad_field
     def telescope(self) -> Telescope:
-        return self._get_node("telescope", Telescope.ROMAN)
+        return self._get_node("telescope", lambda: Telescope.ROMAN)

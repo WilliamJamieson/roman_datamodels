@@ -2,6 +2,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _base, _core
 
+from ..enums import RefTypeEntry
 from ..meta import OPTICAL_ELEMENTS
 from .ref import RefCommonRef
 
@@ -14,8 +15,8 @@ class WfiImgPhotomRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return WfiImgPhotomRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "PHOTOM")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.PHOTOM)
 
 
 class WfiImgPhotomRef_PhotTable(_core.ImpliedNodeMixin, _core.ObjectNode):

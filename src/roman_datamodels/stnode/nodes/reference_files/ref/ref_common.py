@@ -1,7 +1,8 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _base, _core, _default
+from roman_datamodels.stnode import _base, _core
 
+from ...enums import InstrumentNameEntry, RefCommonPedigreeEntry, RefTypeEntry
 from ...meta import (
     Telescope,
     WfiDetector,
@@ -16,7 +17,7 @@ class RefCommonRef_InstrumentMixin(_base.AdditionalNodeMixin):
 
     @_core.rad_field
     def optical_element(self) -> WfiOpticalElement | str:
-        return self._get_node("optical_element", WfiOpticalElement.F158)
+        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
 
     @classmethod
     def _extra_fields(self) -> tuple[str]:
@@ -29,12 +30,12 @@ class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, _core.ImpliedNodeMix
         return RefCommonRef
 
     @_core.rad_field
-    def name(self) -> str:
-        return self._get_node("name", lambda: "WFI")
+    def name(self) -> InstrumentNameEntry:
+        return self._get_node("name", lambda: InstrumentNameEntry.WFI)
 
     @_core.rad_field
     def detector(self) -> WfiDetector:
-        return self._get_node("detector", WfiDetector.WFI01)
+        return self._get_node("detector", lambda: WfiDetector.WFI01)
 
 
 class RefCommonRef(_core.SchemaObjectNode):
@@ -43,12 +44,12 @@ class RefCommonRef(_core.SchemaObjectNode):
         return "asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_common-1.0.0"
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: _default.NOSTR)
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.NA)
 
     @_core.rad_field
-    def pedigree(self) -> str:
-        return self._get_node("pedigree", lambda: "GROUND")
+    def pedigree(self) -> RefCommonPedigreeEntry:
+        return self._get_node("pedigree", lambda: RefCommonPedigreeEntry.GROUND)
 
     @_core.rad_field
     def description(self) -> str:
@@ -64,7 +65,7 @@ class RefCommonRef(_core.SchemaObjectNode):
 
     @_core.rad_field
     def telescope(self) -> Telescope | str:
-        return self._get_node("telescope", Telescope.ROMAN)
+        return self._get_node("telescope", lambda: Telescope.ROMAN)
 
     @_core.rad_field
     def origin(self) -> str:

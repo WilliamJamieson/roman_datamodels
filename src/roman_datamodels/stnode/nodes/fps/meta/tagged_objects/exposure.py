@@ -19,7 +19,7 @@ class FpsExposure(_core.TaggedObjectNode):
 
     @_core.rad_field
     def type(self) -> FpsExposureType:
-        return self._get_node("type", FpsExposureType.WFI_IMAGE)
+        return self._get_node("type", lambda: FpsExposureType.WFI_IMAGE)
 
     @_core.rad_field
     def start_time(self) -> Time:

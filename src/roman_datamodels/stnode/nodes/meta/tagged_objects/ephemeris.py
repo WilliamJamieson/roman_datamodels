@@ -1,5 +1,7 @@
 from roman_datamodels.stnode import _core, _default
 
+from ...enums import EphemerisTypeEntry
+
 __all__ = ["Ephemeris"]
 
 
@@ -29,8 +31,8 @@ class Ephemeris(_core.TaggedObjectNode):
         return self._get_node("ephemeris_reference_frame", lambda: _default.NOSTR)
 
     @_core.rad_field
-    def type(self) -> str:
-        return self._get_node("type", lambda: "DEFINITIVE")
+    def type(self) -> EphemerisTypeEntry:
+        return self._get_node("type", lambda: EphemerisTypeEntry.DEFINITIVE)
 
     @_core.rad_field
     def time(self) -> float:

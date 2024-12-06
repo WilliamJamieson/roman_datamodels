@@ -20,7 +20,7 @@ class FpsGuidestar(_core.TaggedObjectNode):
 
     @_core.rad_field
     def gw_fgs_mode(self) -> FpsGuidewindowModes:
-        return self._get_node("gw_fgs_mode", FpsGuidewindowModes.WSM_ACQ_2)
+        return self._get_node("gw_fgs_mode", lambda: FpsGuidewindowModes.WSM_ACQ_2)
 
     @_core.rad_field
     def data_start(self) -> float:

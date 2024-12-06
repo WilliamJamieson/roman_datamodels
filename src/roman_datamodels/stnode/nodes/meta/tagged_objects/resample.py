@@ -1,5 +1,7 @@
 from roman_datamodels.stnode import _base, _core, _default
 
+from ...enums import ResampleWeightTypeEntry
+
 __all__ = ["Resample"]
 
 
@@ -37,5 +39,5 @@ class Resample(_core.TaggedObjectNode):
         return self._get_node("members", lambda: _base.LNode([]))
 
     @_core.rad_field
-    def weight_type(self) -> str:
-        return self._get_node("weight_type", lambda: "exptime")
+    def weight_type(self) -> ResampleWeightTypeEntry:
+        return self._get_node("weight_type", lambda: ResampleWeightTypeEntry.EXPTIME)

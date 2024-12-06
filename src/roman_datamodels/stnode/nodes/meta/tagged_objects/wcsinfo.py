@@ -1,5 +1,7 @@
 from roman_datamodels.stnode import _core, _default
 
+from ...enums import WcsinfoApertureNameEntry, WcsinfoVparityEntry
+
 __all__ = ["Wcsinfo"]
 
 
@@ -13,8 +15,8 @@ class Wcsinfo(_core.TaggedObjectNode):
         return "asdf://stsci.edu/datamodels/roman/tags/wcsinfo-1.0.0"
 
     @_core.rad_field
-    def aperture_name(self) -> str:
-        return self._get_node("aperture_name", lambda: "WFI01_FULL")
+    def aperture_name(self) -> WcsinfoApertureNameEntry:
+        return self._get_node("aperture_name", lambda: WcsinfoApertureNameEntry.WFI01_FULL)
 
     @_core.rad_field
     def pa_aperture(self) -> float:
@@ -29,8 +31,8 @@ class Wcsinfo(_core.TaggedObjectNode):
         return self._get_node("v3_ref", lambda: _default.NONUM)
 
     @_core.rad_field
-    def vparity(self) -> int:
-        return self._get_node("vparity", lambda: -1)
+    def vparity(self) -> WcsinfoVparityEntry:
+        return self._get_node("vparity", lambda: WcsinfoVparityEntry.REVERSED)
 
     @_core.rad_field
     def v3yangle(self) -> float:

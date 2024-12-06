@@ -1,5 +1,7 @@
 from roman_datamodels.stnode import _core
 
+from ...enums import CalStepEntry
+
 __all__ = ["L3CalStep"]
 
 
@@ -13,17 +15,17 @@ class L3CalStep(_core.TaggedObjectNode):
         return "asdf://stsci.edu/datamodels/roman/tags/l3_cal_step-1.0.0"
 
     @_core.rad_field
-    def flux(self) -> str:
-        return self._get_node("flux", lambda: "INCOMPLETE")
+    def flux(self) -> CalStepEntry:
+        return self._get_node("flux", lambda: CalStepEntry.INCOMPLETE)
 
     @_core.rad_field
-    def outlier_detection(self) -> str:
-        return self._get_node("outlier_detection", lambda: "INCOMPLETE")
+    def outlier_detection(self) -> CalStepEntry:
+        return self._get_node("outlier_detection", lambda: CalStepEntry.INCOMPLETE)
 
     @_core.rad_field
-    def skymatch(self) -> str:
-        return self._get_node("skymatch", lambda: "INCOMPLETE")
+    def skymatch(self) -> CalStepEntry:
+        return self._get_node("skymatch", lambda: CalStepEntry.INCOMPLETE)
 
     @_core.rad_field
-    def resample(self) -> str:
-        return self._get_node("resample", lambda: "INCOMPLETE")
+    def resample(self) -> CalStepEntry:
+        return self._get_node("resample", lambda: CalStepEntry.INCOMPLETE)

@@ -1,4 +1,5 @@
 from contextlib import nullcontext
+from enum import Enum
 from importlib import resources as importlib_resources
 from inspect import signature
 from typing import get_args
@@ -643,7 +644,12 @@ def test_to_asdf_tree(node_cls):
     """
     Smoke test that the to_asdf_tree method runs without error
     """
-    instance = node_cls(Time.now()) if issubclass(node_cls, Time) else node_cls()
+    if issubclass(node_cls, Time):
+        instance = node_cls(Time.now())
+    elif issubclass(node_cls, Enum):
+        instance = next(iter(node_cls))
+    else:
+        instance = node_cls()
     instance.to_asdf_tree(flush=_base.FlushOptions.EXTRA)
 
 
@@ -652,9 +658,111 @@ def test_asdf_schema(node_cls):
     """
     Smoke test that the asdf_schema method runs without error
     """
-    instance = node_cls(Time.now()) if issubclass(node_cls, Time) else node_cls()
+    if issubclass(node_cls, Time):
+        instance = node_cls(Time.now())
+    elif issubclass(node_cls, Enum):
+        instance = next(iter(node_cls))
+    else:
+        instance = node_cls()
+
     schema = instance.asdf_schema()
     _ = schema.required
     _ = schema.fields
     _ = schema.archive_catalog
     _ = schema.sdf
+
+
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.enum_nodes.values())
+def test_enum_node(node_cls):
+    """
+    Test that the enum node class matches the schema section it is pointed at
+    """
+    assert issubclass(node_cls, Enum)
+    assert issubclass(node_cls, _core.EnumNodeMixin)
+
+    # Get the enums listed in the schema
+    # These are the ones defined explicitly by their own schema file
+    if issubclass(node_cls, _core.SchemaScalarNode):
+        schema = node_cls.asdf_schema().schema
+        assert "enum" in schema
+        schema_enum_list = schema["enum"]
+
+    # These are the ones defined by a field in some schema
+    else:
+        schema_enum_list = node_cls.asdf_schema().schema
+
+    # Check that all the enums listed are in the class
+    for entry_name in schema_enum_list:
+        assert entry_name in node_cls, f"Enum entry: {entry_name} not listed in Enum: {node_cls}"
+
+    # Check that all the enums in the class are listed in the schema
+    if node_cls is _registry.RDM_NODE_REGISTRY.enum_nodes["RefTypeEntry"]:
+        # These are a special case as the are implied by a collection of schemas
+        return
+    for entry in node_cls:
+        assert entry.value in schema_enum_list, f"Enum class entry: {entry} not listed in schema for: {node_cls}"
+
+
+def test_reftype_node():
+    """
+    Test that the reftype node has entries for each of the RefFiles
+    """
+    from roman_datamodels.stnode.nodes import reference_files
+    from roman_datamodels.stnode.nodes.reference_files import ref
+
+    # Get the entry types from the registry
+    types = [value for key, value in _registry.RDM_NODE_REGISTRY.data_model_registry.items() if "reference_files" in key]
+    assert len(types) == len(reference_files.__all__) - len(ref.__all__)
+
+    # This is a fill in value for the `ref_common` which will
+    # never be used outside testing
+    enum_names = ["N/A"]
+    for entry in types:
+        entry_schema = entry.asdf_schema().fields["meta"].schema
+        assert "allOf" in entry_schema
+        entry_schema = entry_schema["allOf"]
+        for schema in entry_schema:
+            if "properties" in schema and "reftype" in schema["properties"]:
+                enum_schema = schema["properties"]["reftype"]["enum"]
+                print(enum_schema)
+                break
+        else:
+            raise ValueError(f"Could not find reftype enum in {entry}")
+
+        for enum_name in enum_schema:
+            assert enum_name in nodes.RefTypeEntry
+            enum_names.append(enum_name)
+
+    for entry in nodes.RefTypeEntry:
+        assert entry.value in enum_names, f"Extra ref_type entry: {entry}"
+
+
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_enum_exists(node_cls):
+    """
+    Test that properties that have an enum listed in the schema have an enum
+    defined in their output annotation
+    """
+    # This is a special case that is difficult to abstractly search.
+    # It should not have an enum in it which is directly exposed,
+    # That will be checked by RefExposureTypeRef_Exposure
+    if node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]:
+        return
+
+    # Only check the actual fields
+    fields = _core.get_node_fields(node_cls)
+    for field in fields:
+        # These are going to be removed shortly anyways, so I'm not going to
+        # bother making enums for them
+        if field in ("input_units", "output_units"):
+            continue
+
+        field_schema = node_cls.asdf_schema().fields[field].schema
+
+        if "$ref" in field_schema:
+            field_schema = node_cls.asdf_schema().get_schema(field_schema["$ref"])
+
+        if "enum" in field_schema:
+            field_cls = getattr(node_cls, field)
+            annotation = signature(field_cls.fget).return_annotation
+            assert issubclass(annotation, Enum), f"Annotation for {node_cls}.{field} should be an Enum"

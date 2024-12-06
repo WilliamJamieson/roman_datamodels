@@ -3,6 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRef
 
 __all__ = ["GainRef"]
@@ -14,8 +15,8 @@ class GainRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return GainRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "GAIN")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.GAIN)
 
 
 class GainRef(_core.DataModelNode):

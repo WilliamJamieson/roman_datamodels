@@ -1,5 +1,6 @@
 from roman_datamodels.stnode import _base, _core, _default
 
+from ..enums import RefTypeEntry
 from ..meta import OPTICAL_ELEMENTS
 from .ref import RefCommonRef
 
@@ -12,8 +13,8 @@ class AbvegaoffsetRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return AbvegaoffsetRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "ABVEGAOFFSET")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.ABVEGAOFFSET)
 
 
 class AbvegaoffsetRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):

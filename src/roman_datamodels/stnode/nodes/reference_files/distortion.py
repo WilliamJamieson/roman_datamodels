@@ -4,6 +4,7 @@ from astropy.modeling.models import Shift
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["DistortionRef"]
@@ -15,8 +16,8 @@ class DistortionRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return DistortionRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "DISTORTION")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.DISTORTION)
 
     @_core.rad_field
     def input_units(self) -> u.UnitBase:

@@ -19,7 +19,7 @@ class TvacExposure(_core.TaggedObjectNode):
 
     @_core.rad_field
     def type(self) -> TvacExposureType:
-        return self._get_node("type", TvacExposureType.WFI_IMAGE)
+        return self._get_node("type", lambda: TvacExposureType.WFI_IMAGE)
 
     @_core.rad_field
     def start_time(self) -> Time:

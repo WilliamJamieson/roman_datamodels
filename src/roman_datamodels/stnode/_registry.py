@@ -4,6 +4,7 @@ Hold all the registry information for the STNode classes.
     whenever they generated.
 """
 
+from enum import Enum
 from types import MappingProxyType
 
 from ._core import (
@@ -11,6 +12,7 @@ from ._core import (
     ImpliedNodeMixin,
     ListNode,
     ObjectNode,
+    ScalarNode,
     SchemaListNode,
     SchemaMixin,
     SchemaObjectNode,
@@ -40,6 +42,7 @@ class _RdmNodeRegistry:
     _all_nodes: MappingProxyType[str, type] | None = None
 
     _implied_nodes: MappingProxyType[str, type] | None = None
+    _enum_nodes: MappingProxyType[str, type] | None = None
 
     _schema_registry: MappingProxyType[str, type] | None = None
     _tagged_registry: MappingProxyType[str, type] | None = None
@@ -105,7 +108,7 @@ class _RdmNodeRegistry:
         """
         if self._scalar_nodes is None:
             self._import_nodes()
-            self._scalar_nodes = MappingProxyType({**get_nodes(SchemaScalarNode, (SchemaScalarNode, TaggedScalarNode))})
+            self._scalar_nodes = MappingProxyType({**get_nodes(ScalarNode, (ScalarNode, SchemaScalarNode, TaggedScalarNode))})
         return self._scalar_nodes
 
     @property
@@ -149,6 +152,26 @@ class _RdmNodeRegistry:
         return self._implied_nodes
 
     @property
+    def enum_nodes(self) -> MappingProxyType[str, type]:
+        """
+        Get a mapping of all the nodes that are enums
+
+        Returns
+        -------
+        MappingProxyType[str, type]
+            schema_uri -> class
+        """
+        if self._enum_nodes is None:
+            registry = {}
+            for name, node in self.all_nodes.items():
+                if issubclass(node, Enum):
+                    registry[name] = node
+
+            self._enum_nodes = MappingProxyType(registry)
+
+        return self._enum_nodes
+
+    @property
     def schema_registry(self) -> MappingProxyType[str, type]:
         """
         Get a mapping of all the nodes that are described by a schema in RAD
@@ -161,7 +184,7 @@ class _RdmNodeRegistry:
         if self._schema_registry is None:
             registry = {}
             for node in self.all_nodes.values():
-                if issubclass(node, SchemaMixin):
+                if issubclass(node, SchemaMixin) and not node.__name__.endswith("Mixin"):
                     registry[node.asdf_schema_uri()] = node
 
             self._schema_registry = MappingProxyType(registry)
@@ -181,7 +204,7 @@ class _RdmNodeRegistry:
         if self._tagged_registry is None:
             registry = {}
             for node in self.all_nodes.values():
-                if issubclass(node, TagMixin):
+                if issubclass(node, TagMixin) and not node.__name__.endswith("Mixin"):
                     registry[node.asdf_tag()] = node
 
             self._tagged_registry = MappingProxyType(registry)

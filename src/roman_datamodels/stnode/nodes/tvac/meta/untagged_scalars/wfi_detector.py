@@ -1,87 +1,38 @@
 from __future__ import annotations
 
+from enum import Enum
+
 from roman_datamodels.stnode import _core
 
 __all__ = ["TvacWfiDetector"]
 
 
-class TvacWfiDetector(str, _core.SchemaScalarNode):
+class TvacWfiDetectorMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_detector-1.0.0"
+
+
+class TvacWfiDetector(TvacWfiDetectorMixin, Enum, metaclass=_core.NodeEnumMeta):
     """
     WFI Detector
     """
 
-    @classmethod
-    def WFI01(cls) -> TvacWfiDetector:
-        return cls("WFI01")
-
-    @classmethod
-    def WFI02(cls) -> TvacWfiDetector:
-        return cls("WFI02")
-
-    @classmethod
-    def WFI03(cls) -> TvacWfiDetector:
-        return cls("WFI03")
-
-    @classmethod
-    def WFI04(cls) -> TvacWfiDetector:
-        return cls("WFI04")
-
-    @classmethod
-    def WFI05(cls) -> TvacWfiDetector:
-        return cls("WFI05")
-
-    @classmethod
-    def WFI06(cls) -> TvacWfiDetector:
-        return cls("WFI06")
-
-    @classmethod
-    def WFI07(cls) -> TvacWfiDetector:
-        return cls("WFI07")
-
-    @classmethod
-    def WFI08(cls) -> TvacWfiDetector:
-        return cls("WFI08")
-
-    @classmethod
-    def WFI09(cls) -> TvacWfiDetector:
-        return cls("WFI09")
-
-    @classmethod
-    def WFI10(cls) -> TvacWfiDetector:
-        return cls("WFI10")
-
-    @classmethod
-    def WFI11(cls) -> TvacWfiDetector:
-        return cls("WFI11")
-
-    @classmethod
-    def WFI12(cls) -> TvacWfiDetector:
-        return cls("WFI12")
-
-    @classmethod
-    def WFI13(cls) -> TvacWfiDetector:
-        return cls("WFI13")
-
-    @classmethod
-    def WFI14(cls) -> TvacWfiDetector:
-        return cls("WFI14")
-
-    @classmethod
-    def WFI15(cls) -> TvacWfiDetector:
-        return cls("WFI15")
-
-    @classmethod
-    def WFI16(cls) -> TvacWfiDetector:
-        return cls("WFI16")
-
-    @classmethod
-    def WFI17(cls) -> TvacWfiDetector:
-        return cls("WFI17")
-
-    @classmethod
-    def WFI18(cls) -> TvacWfiDetector:
-        return cls("WFI18")
-
-    @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_detector-1.0.0"
+    WFI01 = "WFI01"
+    WFI02 = "WFI02"
+    WFI03 = "WFI03"
+    WFI04 = "WFI04"
+    WFI05 = "WFI05"
+    WFI06 = "WFI06"
+    WFI07 = "WFI07"
+    WFI08 = "WFI08"
+    WFI09 = "WFI09"
+    WFI10 = "WFI10"
+    WFI11 = "WFI11"
+    WFI12 = "WFI12"
+    WFI13 = "WFI13"
+    WFI14 = "WFI14"
+    WFI15 = "WFI15"
+    WFI16 = "WFI16"
+    WFI17 = "WFI17"
+    WFI18 = "WFI18"

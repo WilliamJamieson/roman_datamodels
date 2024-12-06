@@ -3,6 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRef
 
 __all__ = ["RefpixRef"]
@@ -14,8 +15,8 @@ class RefpixRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return RefpixRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "REFPIX")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.REFPIX)
 
     @_core.rad_field
     def input_units(self) -> u.UnitBase:

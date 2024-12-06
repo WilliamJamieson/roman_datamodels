@@ -22,7 +22,7 @@ class Guidestar(_core.TaggedObjectNode):
 
     @_core.rad_field
     def guide_mode(self) -> GuidewindowModes:
-        return self._get_node("guide_mode", GuidewindowModes.WSM_ACQ_2)
+        return self._get_node("guide_mode", lambda: GuidewindowModes.WSM_ACQ_2)
 
     @_core.rad_field
     def data_start(self) -> Time:

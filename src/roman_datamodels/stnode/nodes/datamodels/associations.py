@@ -1,5 +1,7 @@
 from roman_datamodels.stnode import _base, _core
 
+from ..enums import AssociationsExptypeEntry
+
 __all__ = ["Associations"]
 
 
@@ -19,8 +21,8 @@ class Associations_Products_Members(_core.ImpliedNodeMixin, _core.ObjectNode):
         return self._get_node("exposerr", lambda: "null")
 
     @_core.rad_field
-    def exptype(self) -> str:
-        return self._get_node("exptype", lambda: "SCIENCE")
+    def exptype(self) -> AssociationsExptypeEntry:
+        return self._get_node("exptype", lambda: AssociationsExptypeEntry.SCIENCE)
 
 
 class Associations_Products(_core.ImpliedNodeMixin, _core.ObjectNode):

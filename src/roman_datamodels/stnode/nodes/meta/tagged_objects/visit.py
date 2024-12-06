@@ -2,6 +2,13 @@ from astropy.time import Time
 
 from roman_datamodels.stnode import _base, _core, _default
 
+from ...enums import (
+    VisitEngineeringQualityEntry,
+    VisitPointingEngineeringSourceEntry,
+    VisitStatusEntry,
+    VisitTypeEntry,
+)
+
 __all__ = ["Visit"]
 
 
@@ -37,16 +44,16 @@ class Visit(_core.TaggedObjectNode):
         return self._get_node("dither", Visit_Dither)
 
     @_core.rad_field
-    def engineering_quality(self) -> str:
-        return self._get_node("engineering_quality", lambda: "OK")
+    def engineering_quality(self) -> VisitEngineeringQualityEntry:
+        return self._get_node("engineering_quality", lambda: VisitEngineeringQualityEntry.OK)
 
     @_core.rad_field
-    def pointing_engineering_source(self) -> str:
-        return self._get_node("pointing_engineering_source", lambda: "CALCULATED")
+    def pointing_engineering_source(self) -> VisitPointingEngineeringSourceEntry:
+        return self._get_node("pointing_engineering_source", lambda: VisitPointingEngineeringSourceEntry.CALCULATED)
 
     @_core.rad_field
-    def type(self) -> str:
-        return self._get_node("type", lambda: "PRIME_TARGETED_FIXED")
+    def type(self) -> VisitTypeEntry:
+        return self._get_node("type", lambda: VisitTypeEntry.PRIME_TARGETED_FIXED)
 
     @_core.rad_field
     def start_time(self) -> Time:
@@ -57,8 +64,8 @@ class Visit(_core.TaggedObjectNode):
         return self._get_node("end_time", lambda: Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
 
     @_core.rad_field
-    def status(self) -> str:
-        return self._get_node("status", lambda: "UNSUCCESSFUL")
+    def status(self) -> VisitStatusEntry:
+        return self._get_node("status", lambda: VisitStatusEntry.UNSUCCESSFUL)
 
     @_core.rad_field
     def nexposures(self) -> int:

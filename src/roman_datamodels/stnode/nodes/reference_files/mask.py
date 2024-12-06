@@ -2,6 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRef
 
 __all__ = ["MaskRef"]
@@ -13,8 +14,8 @@ class MaskRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return MaskRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "MASK")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.MASK)
 
 
 class MaskRef(_core.DataModelNode):

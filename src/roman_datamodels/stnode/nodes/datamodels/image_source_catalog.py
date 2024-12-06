@@ -21,7 +21,7 @@ class ImageSourceCatalog_Meta(_core.ImpliedNodeMixin, Basic):
 
     @_core.rad_field
     def optical_element(self) -> WfiOpticalElement:
-        return self._get_node("optical_element", WfiOpticalElement.F158)
+        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
 
     @_core.rad_field
     def exposure(self) -> Exposure:

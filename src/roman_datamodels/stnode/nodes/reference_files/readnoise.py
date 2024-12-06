@@ -3,6 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import (
     RefCommonRef,
     RefExposureTypeRef,
@@ -17,8 +18,8 @@ class ReadnoiseRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef
         return ReadnoiseRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "READNOISE")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.READNOISE)
 
 
 class ReadnoiseRef(_core.DataModelNode):

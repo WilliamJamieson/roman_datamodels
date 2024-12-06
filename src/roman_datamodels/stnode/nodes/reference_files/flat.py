@@ -2,6 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["FlatRef"]
@@ -13,8 +14,8 @@ class FlatRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return FlatRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "FLAT")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.FLAT)
 
 
 class FlatRef(_core.DataModelNode):

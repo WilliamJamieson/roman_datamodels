@@ -2,6 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRef
 
 __all__ = ["SuperbiasRef"]
@@ -13,8 +14,8 @@ class SuperbiasRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return SuperbiasRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "BIAS")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.BIAS)
 
 
 class SuperbiasRef(_core.DataModelNode):

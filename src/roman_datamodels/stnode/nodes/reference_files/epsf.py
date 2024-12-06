@@ -2,6 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import _base, _core, _default
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["EpsfRef"]
@@ -13,8 +14,8 @@ class EpsfRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return EpsfRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "EPSF")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.EPSF)
 
     @_core.rad_field
     def oversample(self) -> int:

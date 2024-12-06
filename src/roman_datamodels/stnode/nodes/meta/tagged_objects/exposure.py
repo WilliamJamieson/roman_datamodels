@@ -18,7 +18,7 @@ class Exposure(_core.TaggedObjectNode):
 
     @_core.rad_field
     def type(self) -> ExposureType:
-        return self._get_node("type", ExposureType.WFI_IMAGE)
+        return self._get_node("type", lambda: ExposureType.WFI_IMAGE)
 
     @_core.rad_field
     def start_time(self) -> Time:

@@ -1,5 +1,6 @@
 from roman_datamodels.stnode import _core, _default
 
+from ...enums import InstrumentNameEntry
 from ..untagged_scalars import WfiOpticalElement
 
 __all__ = ["MosaicBasic"]
@@ -56,11 +57,11 @@ class MosaicBasic(_core.TaggedObjectNode):
 
     @_core.rad_field
     def optical_element(self) -> WfiOpticalElement:
-        return self._get_node("optical_element", WfiOpticalElement.F158)
+        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
 
     @_core.rad_field
-    def instrument(self) -> str:
-        return self._get_node("instrument", lambda: "WFI")
+    def instrument(self) -> InstrumentNameEntry:
+        return self._get_node("instrument", lambda: InstrumentNameEntry.WFI)
 
     @_core.rad_field
     def location_name(self) -> str:

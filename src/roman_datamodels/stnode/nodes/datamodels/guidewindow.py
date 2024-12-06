@@ -60,7 +60,7 @@ class Guidewindow_Meta(_core.ImpliedNodeMixin, Common):
 
     @_core.rad_field
     def gw_mode(self) -> GuidewindowModes:
-        return self._get_node("gw_mode", GuidewindowModes.WIM_ACQ)
+        return self._get_node("gw_mode", lambda: GuidewindowModes.WIM_ACQ)
 
     @_core.rad_field
     def gw_window_xstart(self) -> int:

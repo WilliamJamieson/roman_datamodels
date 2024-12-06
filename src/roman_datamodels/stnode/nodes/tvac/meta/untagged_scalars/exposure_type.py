@@ -1,39 +1,26 @@
 from __future__ import annotations
 
+from enum import Enum
+
 from roman_datamodels.stnode import _core
 
 __all__ = ["TvacExposureType"]
 
 
-class TvacExposureType(str, _core.SchemaScalarNode):
+class TvacExposureTypeMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+    @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure_type-1.0.0"
+
+
+class TvacExposureType(TvacExposureTypeMixin, Enum, metaclass=_core.NodeEnumMeta):
     """
     Exposure type
     """
 
-    @classmethod
-    def WFI_IMAGE(cls) -> TvacExposureType:
-        return cls("WFI_IMAGE")
-
-    @classmethod
-    def WFI_GRISM(cls) -> TvacExposureType:
-        return cls("WFI_GRISM")
-
-    @classmethod
-    def WFI_PRISM(cls) -> TvacExposureType:
-        return cls("WFI_PRISM")
-
-    @classmethod
-    def WFI_DARK(cls) -> TvacExposureType:
-        return cls("WFI_DARK")
-
-    @classmethod
-    def WFI_FLAT(cls) -> TvacExposureType:
-        return cls("WFI_FLAT")
-
-    @classmethod
-    def WFI_WFSC(cls) -> TvacExposureType:
-        return cls("WFI_WFSC")
-
-    @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure_type-1.0.0"
+    WFI_IMAGE = "WFI_IMAGE"
+    WFI_GRISM = "WFI_GRISM"
+    WFI_PRISM = "WFI_PRISM"
+    WFI_DARK = "WFI_DARK"
+    WFI_FLAT = "WFI_FLAT"
+    WFI_WFSC = "WFI_WFSC"

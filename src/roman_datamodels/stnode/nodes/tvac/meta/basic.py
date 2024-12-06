@@ -39,7 +39,7 @@ class TvacBasic(_core.SchemaObjectNode):
 
     @_core.rad_field
     def origin(self) -> TvacOrigin:
-        return self._get_node("origin", TvacOrigin.STSCI)
+        return self._get_node("origin", lambda: TvacOrigin.STSCI)
 
     @_core.rad_field
     def prd_software_version(self) -> TvacPrdSoftwareVersion:
@@ -51,4 +51,4 @@ class TvacBasic(_core.SchemaObjectNode):
 
     @_core.rad_field
     def telescope(self) -> TvacTelescope:
-        return self._get_node("telescope", TvacTelescope.ROMAN)
+        return self._get_node("telescope", lambda: TvacTelescope.ROMAN)

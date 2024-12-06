@@ -1,5 +1,7 @@
 from roman_datamodels.stnode import _base, _core, _default
 
+from ...enums import WcsinfoMosaicProjectionEntry
+
 __all__ = ["MosaicWcsinfo"]
 
 
@@ -49,8 +51,8 @@ class MosaicWcsinfo(_core.TaggedObjectNode):
         return self._get_node("pixel_scale_local", lambda: _default.NONUM)
 
     @_core.rad_field
-    def projection(self) -> str:
-        return self._get_node("projection", lambda: "TAN")
+    def projection(self) -> WcsinfoMosaicProjectionEntry:
+        return self._get_node("projection", lambda: WcsinfoMosaicProjectionEntry.TAN)
 
     @_core.rad_field
     def s_region(self) -> str:

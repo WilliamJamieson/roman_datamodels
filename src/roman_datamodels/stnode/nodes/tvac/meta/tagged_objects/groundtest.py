@@ -4,6 +4,8 @@ from astropy.time import Time
 
 from roman_datamodels.stnode import _base, _core, _default
 
+from ....enums import TvacGroundtestGsorcSdsDqPulseEntry, TvacGroundtestWfiOptTargettypeEntry
+
 __all__ = ["TvacGroundtest"]
 
 
@@ -151,8 +153,8 @@ class TvacGroundtest(_core.TaggedObjectNode):
         return self._get_node("srcs_led_current", lambda: _default.NONUM)
 
     @_core.rad_field
-    def wfi_opt_targettype(self) -> str:
-        return self._get_node("wfi_opt_targettype", lambda: "FLAT-sRCS")
+    def wfi_opt_targettype(self) -> TvacGroundtestWfiOptTargettypeEntry:
+        return self._get_node("wfi_opt_targettype", lambda: TvacGroundtestWfiOptTargettypeEntry.FLAT_SRCS)
 
     @_core.rad_field
     def analysis_tag(self) -> str:
@@ -187,8 +189,8 @@ class TvacGroundtest(_core.TaggedObjectNode):
         return self._get_node("gsorc_sds_active_source", lambda: _default.NOSTR)
 
     @_core.rad_field
-    def gsorc_sds_dq_pulse(self) -> str:
-        return self._get_node("gsorc_sds_dq_pulse", lambda: "pulse")
+    def gsorc_sds_dq_pulse(self) -> TvacGroundtestGsorcSdsDqPulseEntry:
+        return self._get_node("gsorc_sds_dq_pulse", lambda: TvacGroundtestGsorcSdsDqPulseEntry.PULSE)
 
     @_core.rad_field
     def gsorc_sds_daq_pw(self) -> u.Quantity:

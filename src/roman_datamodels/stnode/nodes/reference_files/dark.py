@@ -3,6 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core, _default
 
+from ..enums import RefTypeEntry
 from .ref import (
     RefCommonRefOpticalElementRef,
     RefExposureTypeRef,
@@ -64,8 +65,8 @@ class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExp
         }
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "DARK")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.DARK)
 
     @_core.rad_field
     def exposure(self) -> DarkRef_Meta_Exposure:

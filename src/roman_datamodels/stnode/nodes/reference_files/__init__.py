@@ -13,6 +13,7 @@ from .pixelarea import PixelareaRef
 from .readnoise import ReadnoiseRef
 from .ref import (
     RefCommonRef,
+    RefCommonRefOpticalElementRef,
     RefExposureTypeRef,
     RefOpticalElementRef,
 )
@@ -36,6 +37,7 @@ __all__ = [
     "PixelareaRef",
     "ReadnoiseRef",
     "RefCommonRef",
+    "RefCommonRefOpticalElementRef",
     "RefExposureTypeRef",
     "RefOpticalElementRef",
     "RefpixRef",

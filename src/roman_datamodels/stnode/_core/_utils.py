@@ -313,6 +313,9 @@ def wrap_into_node(value: Any, signature: T) -> T:
         if issubclass(signature, DNode) or issubclass(signature, LNode) or issubclass(signature, SchemaScalarNode):
             # Skip if we are already the correct type
             if not isinstance(value, signature):
+                print(value)
+                print(type(value))
+                print(signature)
                 return signature(value)
 
     # This is a annotated type

@@ -3,6 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRef
 
 __all__ = ["SaturationRef"]
@@ -14,8 +15,8 @@ class SaturationRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
         return SaturationRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "SATURATION")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.SATURATION)
 
 
 class SaturationRef(_core.DataModelNode):

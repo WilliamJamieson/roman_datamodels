@@ -3,6 +3,7 @@ from astropy import units as u
 
 from roman_datamodels.stnode import _core, _default
 
+from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
 
 __all__ = ["PixelareaRef"]
@@ -28,8 +29,8 @@ class PixelareaRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return PixelareaRef
 
     @_core.rad_field
-    def reftype(self) -> str:
-        return self._get_node("reftype", lambda: "AREA")
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.AREA)
 
     @_core.rad_field
     def photometry(self) -> PixelareaRef_Meta_Photometry:

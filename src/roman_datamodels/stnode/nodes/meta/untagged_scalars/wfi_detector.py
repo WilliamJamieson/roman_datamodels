@@ -1,87 +1,42 @@
 from __future__ import annotations
 
+from enum import Enum
+
 from roman_datamodels.stnode import _core
 
 __all__ = ["WfiDetector"]
 
 
-class WfiDetector(str, _core.SchemaScalarNode):
+class WfiDetectorMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
     """
     WFI Detector
     """
 
     @classmethod
-    def WFI01(cls) -> WfiDetector:
-        return cls("WFI01")
-
-    @classmethod
-    def WFI02(cls) -> WfiDetector:
-        return cls("WFI02")
-
-    @classmethod
-    def WFI03(cls) -> WfiDetector:
-        return cls("WFI03")
-
-    @classmethod
-    def WFI04(cls) -> WfiDetector:
-        return cls("WFI04")
-
-    @classmethod
-    def WFI05(cls) -> WfiDetector:
-        return cls("WFI05")
-
-    @classmethod
-    def WFI06(cls) -> WfiDetector:
-        return cls("WFI06")
-
-    @classmethod
-    def WFI07(cls) -> WfiDetector:
-        return cls("WFI07")
-
-    @classmethod
-    def WFI08(cls) -> WfiDetector:
-        return cls("WFI08")
-
-    @classmethod
-    def WFI09(cls) -> WfiDetector:
-        return cls("WFI09")
-
-    @classmethod
-    def WFI10(cls) -> WfiDetector:
-        return cls("WFI10")
-
-    @classmethod
-    def WFI11(cls) -> WfiDetector:
-        return cls("WFI11")
-
-    @classmethod
-    def WFI12(cls) -> WfiDetector:
-        return cls("WFI12")
-
-    @classmethod
-    def WFI13(cls) -> WfiDetector:
-        return cls("WFI13")
-
-    @classmethod
-    def WFI14(cls) -> WfiDetector:
-        return cls("WFI14")
-
-    @classmethod
-    def WFI15(cls) -> WfiDetector:
-        return cls("WFI15")
-
-    @classmethod
-    def WFI16(cls) -> WfiDetector:
-        return cls("WFI16")
-
-    @classmethod
-    def WFI17(cls) -> WfiDetector:
-        return cls("WFI17")
-
-    @classmethod
-    def WFI18(cls) -> WfiDetector:
-        return cls("WFI18")
-
-    @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/wfi_detector-1.0.0"
+
+
+class WfiDetector(WfiDetectorMixin, Enum, metaclass=_core.NodeEnumMeta):
+    """
+    WFI Detector
+    """
+
+    WFI01 = "WFI01"
+    WFI02 = "WFI02"
+    WFI03 = "WFI03"
+    WFI04 = "WFI04"
+    WFI05 = "WFI05"
+    WFI06 = "WFI06"
+    WFI07 = "WFI07"
+    WFI08 = "WFI08"
+    WFI09 = "WFI09"
+    WFI10 = "WFI10"
+    WFI11 = "WFI11"
+    WFI12 = "WFI12"
+    WFI13 = "WFI13"
+    WFI14 = "WFI14"
+    WFI15 = "WFI15"
+    WFI16 = "WFI16"
+    WFI17 = "WFI17"
+    WFI18 = "WFI18"
