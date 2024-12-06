@@ -1,3 +1,4 @@
+import re
 from contextlib import nullcontext
 from importlib import resources as importlib_resources
 from inspect import signature
@@ -13,7 +14,7 @@ from astropy.time import Time
 from gwcs import WCS
 from rad import resources
 
-from roman_datamodels.stnode import _base, _core, nodes
+from roman_datamodels.stnode import _base, _core, _registry, nodes
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -53,13 +54,13 @@ def test_node_exists_for_schema(schema_file):
     uri = schema_file["id"]
 
     # Check there is a node for this schema
-    assert uri in nodes.SCHEMA_NODES
+    assert uri in _registry.RDM_NODE_REGISTRY.schema_registry
 
     # check the class's asdf_schema_uri matches the uri
-    assert nodes.SCHEMA_NODES[uri].asdf_schema_uri() == uri
+    assert _registry.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uri() == uri
 
     # check the class name against the uri
-    assert _core.class_name_from_uri(uri) == nodes.SCHEMA_NODES[uri].__name__
+    assert _core.class_name_from_uri(uri) == _registry.RDM_NODE_REGISTRY.schema_registry[uri].__name__
 
 
 def manifest_tags():
@@ -82,19 +83,19 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
     Check that every tag in the manifest has a corresponding node class
     """
     # Check that there is a node for this tag
-    assert tag_uri in nodes.TAGGED_NODES
+    assert tag_uri in _registry.RDM_NODE_REGISTRY.tagged_registry
 
     # check the class's asdf_tag matches the tag uri
-    assert nodes.TAGGED_NODES[tag_uri].asdf_tag() == tag_uri
+    assert _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag() == tag_uri
 
     # check the class's asdf_schema_uri matches the schema uri
-    assert nodes.TAGGED_NODES[tag_uri].asdf_schema_uri() == schema_uri
+    assert _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uri() == schema_uri
 
     # check the class name against the tag uri
-    assert _core.class_name_from_uri(tag_uri) == nodes.TAGGED_NODES[tag_uri].__name__
+    assert _core.class_name_from_uri(tag_uri) == _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
 
 
-@pytest.mark.parametrize("node_cls", nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
 def test_node_can_be_instantiated(node_cls):
     """
     Check that every node class can be instantiated
@@ -105,25 +106,10 @@ def test_node_can_be_instantiated(node_cls):
         node_cls()
 
 
-def get_orphan_nodes():
-    """
-    Get all the nodes that are implied by the schemas but do not have their own one
-    """
-    orphan = nodes.NODES.copy()
-    for node_cls in nodes.SCHEMA_NODES.values():
-        del orphan[node_cls.__name__]
-
-    return orphan
-
-
-ORPHAN_NODES = get_orphan_nodes()
-
-
 def _camel_case_to_snake_case(value):
     """
     Courtesy of https://stackoverflow.com/a/1176023
     """
-    import re
 
     return re.sub(r"(?<!^)(?=[A-Z])", "_", value).lower()
 
@@ -137,8 +123,8 @@ def parse_orphan_name(name):
 
 def get_containing_cls(containing_name):
     # Get the containing class
-    assert containing_name in nodes.NODES, f"No node found for {containing_name}"
-    return nodes.NODES[containing_name]
+    assert containing_name in _registry.RDM_NODE_REGISTRY.all_nodes, f"No node found for {containing_name}"
+    return _registry.RDM_NODE_REGISTRY.all_nodes[containing_name]
 
 
 def parse_schema(schema, property_name):
@@ -162,7 +148,7 @@ def parse_schema(schema, property_name):
 
 
 def get_schema(containing_cls, containing_name, property_name):
-    if containing_cls in set(nodes.SCHEMA_NODES.values()):
+    if containing_cls in set(_registry.RDM_NODE_REGISTRY.schema_registry.values()):
         schema = SCHEMA_DICT[containing_cls.asdf_schema_uri()]
         return parse_schema(schema, property_name)
 
@@ -175,10 +161,10 @@ def get_schema(containing_cls, containing_name, property_name):
 SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
 
 
-@pytest.mark.parametrize("node_cls", ORPHAN_NODES.values())
-def test_orphan_node(node_cls):
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.implied_nodes.values())
+def test_implied_node(node_cls):
     """
-    Test that the orphan nodes follow a consistent naming pattern
+    Test that the implied nodes follow a consistent naming pattern
         <ContainingNodeName>_<PropertyName>
     """
     assert issubclass(node_cls, _core.ImpliedNodeMixin)
@@ -253,7 +239,7 @@ def get_required(schema):
 
 
 def find_schema_for_node(node_cls):
-    if node_cls.__name__ not in ORPHAN_NODES:
+    if node_cls.__name__ not in _registry.RDM_NODE_REGISTRY.implied_nodes:
         return _SCHEMA_DICT[node_cls.asdf_schema_uri()]
 
     containing_name, property_name = parse_orphan_name(node_cls.__name__)
@@ -262,7 +248,7 @@ def find_schema_for_node(node_cls):
     return get_schema(containing_cls, containing_name, property_name)
 
 
-@pytest.mark.parametrize("node_cls", nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
 def test_node_requires(node_cls):
     """
     Check that every schema file with a `required` has a corresponding method
@@ -279,7 +265,7 @@ def test_node_requires(node_cls):
     assert isinstance(node_cls.asdf_required(), set)
 
 
-@pytest.mark.parametrize("node_cls", nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
 def test_node_requires_properties(node_cls):
     """
     Check that every property listed in `asdf_required` in the node class
@@ -409,7 +395,7 @@ def build_annotation_from_schema(schema, annotation):
             case "boolean":
                 return bool
             case "object":
-                if annotation.__name__ in ORPHAN_NODES:
+                if annotation.__name__ in _registry.RDM_NODE_REGISTRY.implied_nodes:
                     # The orphan nodes are tested separately,
                     #     they are implied by the schema
                     return annotation
@@ -423,7 +409,7 @@ def build_annotation_from_schema(schema, annotation):
                     assert annotation_args[1][0] is str  # string key
 
                     # The value should be an orphan node
-                    assert annotation_args[1][1].__name__ in ORPHAN_NODES
+                    assert annotation_args[1][1].__name__ in _registry.RDM_NODE_REGISTRY.implied_nodes
 
                     # The annotation is correct in this case
                     return annotation
@@ -448,16 +434,16 @@ def build_annotation_from_schema(schema, annotation):
                 raise ValueError(f"Unknown type {schema['type']}")
 
     if "$ref" in schema:
-        if schema["$ref"] in nodes.SCHEMA_NODES:
-            return nodes.SCHEMA_NODES[schema["$ref"]]
+        if schema["$ref"] in _registry.RDM_NODE_REGISTRY.schema_registry:
+            return _registry.RDM_NODE_REGISTRY.schema_registry[schema["$ref"]]
         return build_annotation_from_schema(_SCHEMA_DICT[schema["$ref"]], annotation)
 
     if "tag" in schema:
         if schema["tag"] in _EXTERNAL_TAG_MAP:
             return _EXTERNAL_TAG_MAP[schema["tag"]]
 
-        if schema["tag"] in nodes.TAGGED_NODES:
-            return nodes.TAGGED_NODES[schema["tag"]]
+        if schema["tag"] in _registry.RDM_NODE_REGISTRY.tagged_registry:
+            return _registry.RDM_NODE_REGISTRY.tagged_registry[schema["tag"]]
 
     if "anyOf" in schema:
         sub_schemas = schema["anyOf"].copy()
@@ -468,7 +454,7 @@ def build_annotation_from_schema(schema, annotation):
 
     if "allOf" in schema:
         # These result in an orphan node which is tested elsewhere
-        assert annotation.__name__ in ORPHAN_NODES
+        assert annotation.__name__ in _registry.RDM_NODE_REGISTRY.implied_nodes
         return annotation
 
     return None
@@ -870,7 +856,7 @@ def test_ref_common_ref_instrument_mixin():
     assert type(instance)._extra_fields() == ("optical_element",)
 
 
-@pytest.mark.parametrize("node_cls", nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
 def test_to_asdf_tree(node_cls):
     """
     Smoke test that the to_asdf_tree method runs without error
@@ -879,7 +865,7 @@ def test_to_asdf_tree(node_cls):
     instance.to_asdf_tree()
 
 
-@pytest.mark.parametrize("node_cls", nodes.NODES.values())
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
 def test_asdf_schema(node_cls):
     """
     Smoke test that the asdf_schema method runs without error

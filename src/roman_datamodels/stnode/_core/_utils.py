@@ -259,12 +259,15 @@ def get_node_fields(cls: type) -> tuple[str]:
     tuple[str]
         The node fields of the class.
     """
-    from ..nodes import RESERVED_FIELDS
+    from .._registry import RDM_NODE_REGISTRY
 
     return tuple(
         property_name
         for property_name in get_all_fields(cls)
-        if (property_name not in (*RESERVED_FIELDS, *_get_mixin_fields(cls)) and not property_name.startswith("_"))
+        if (
+            property_name not in (*RDM_NODE_REGISTRY.reserved_fields, *_get_mixin_fields(cls))
+            and not property_name.startswith("_")
+        )
     )
 
 

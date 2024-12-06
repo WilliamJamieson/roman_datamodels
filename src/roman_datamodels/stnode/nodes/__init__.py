@@ -128,12 +128,7 @@ from .tvac import (
 )
 
 __all__ = [
-    "DATA_MODEL_NODES",
-    "NODES",
     "OPTICAL_ELEMENTS",
-    "RESERVED_FIELDS",
-    "SCHEMA_NODES",
-    "TAGGED_NODES",
     "AbvegaoffsetRef",
     "ApcorrRef",
     "Associations",
@@ -252,46 +247,3 @@ __all__ = [
     "WfiOpticalElement",
     "WfiScienceRaw",
 ]
-
-from .._core import (
-    DataModelNode,
-    ListNode,
-    ObjectNode,
-    SchemaListNode,
-    SchemaObjectNode,
-    SchemaScalarNode,
-    TaggedListNode,
-    TaggedObjectNode,
-    TaggedScalarNode,
-    get_all_fields,
-    get_nodes,
-    get_schema_nodes,
-    get_tagged_nodes,
-)
-
-NODES = {
-    **get_nodes(ObjectNode, (ObjectNode, SchemaObjectNode, TaggedObjectNode, DataModelNode)),
-    **get_nodes(ListNode, (ListNode, SchemaListNode, TaggedListNode)),
-    **get_nodes(SchemaScalarNode, (SchemaScalarNode, TaggedScalarNode)),
-}
-
-SCHEMA_NODES = {
-    **get_schema_nodes(SchemaObjectNode, False),
-    **get_schema_nodes(SchemaListNode, True),
-    **get_schema_nodes(SchemaScalarNode, False),
-}
-
-TAGGED_NODES = {
-    **get_tagged_nodes(TaggedObjectNode),
-    **get_tagged_nodes(TaggedListNode),
-    **get_tagged_nodes(TaggedScalarNode),
-}
-
-DATA_MODEL_NODES = get_tagged_nodes(DataModelNode)
-
-RESERVED_FIELDS = tuple(
-    get_all_fields(ObjectNode)
-    | get_all_fields(SchemaObjectNode)
-    | get_all_fields(TaggedObjectNode)
-    | get_all_fields(DataModelNode)
-)
