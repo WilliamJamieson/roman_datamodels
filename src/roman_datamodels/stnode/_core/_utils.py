@@ -17,6 +17,7 @@ __all__ = [
     "get_schema_nodes",
     "get_tagged_nodes",
     "rad_field",
+    "rad_field_property",
     "wrap_into_node",
 ]
 

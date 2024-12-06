@@ -1,16 +1,12 @@
-import re
 from contextlib import nullcontext
 from importlib import resources as importlib_resources
 from inspect import signature
-from pathlib import Path
 from typing import get_args
 
 import numpy as np
 import pytest
 import yaml
 from astropy import units as u
-
-# from astropy.table import QTable, Table
 from astropy.table import Table
 from astropy.time import Time
 from gwcs import WCS
@@ -23,35 +19,24 @@ _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
 _SCHEMAS_PATH = _RESOURCES_PATH / "schemas"
 
 
-def load_schema(file_path) -> dict:
-    """
-    Load a schema from a file path
-    """
-    file_path = Path(file_path)
-    return yaml.safe_load(file_path.read_bytes())
-
-
-def schema_files():
-    """
-    Generator for schema files
-    """
+def _schema_files():
+    """Generator to grab the RAD schema files directly"""
     for schema_file in _SCHEMAS_PATH.glob("**/**/*.yaml"):
         if schema_file.name == "rad_schema-1.0.0.yaml":
             continue
 
-        yield load_schema(schema_file)
+        yield yaml.safe_load(schema_file.read_bytes())
 
 
-SCHEMA_FILES = list(schema_files())
+SCHEMA_FILES = list(_schema_files())
 
 
 @pytest.mark.parametrize("schema_file", SCHEMA_FILES)
 def test_node_exists_for_schema(schema_file):
     """
     Check that every schema file has a corresponding node class
-
-    Note this also checks that the `asdf_schema_uri` is correctly
-    implemented.
+        Note: This also checks that the asdf_schema_uri is correctly diduced
+              from the tag uri for tagged nodes.
     """
     uri = schema_file["id"]
 
@@ -67,7 +52,7 @@ def test_node_exists_for_schema(schema_file):
 
 def manifest_tags():
     """
-    Generator for manifest tags
+    Generator that directly reads the manifest file in Rad and yields the tag_uri and schema_uri
     """
 
     manifest = yaml.safe_load(_MANIFEST_PATH.read_bytes())
@@ -97,70 +82,17 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
     assert _core.class_name_from_uri(tag_uri) == _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
 
 
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
-def test_node_can_be_instantiated(node_cls):
-    """
-    Check that every node class can be instantiated
-    """
-    if issubclass(node_cls, Time):
-        node_cls(Time.now())
-    else:
-        node_cls()
-
-
-def _camel_case_to_snake_case(value):
-    """
-    Courtesy of https://stackoverflow.com/a/1176023
-    """
-
-    return re.sub(r"(?<!^)(?=[A-Z])", "_", value).lower()
-
-
 def parse_orphan_name(name):
     split = name.split("_")
     assert len(split) > 1
 
-    return "_".join(split[:-1]), _camel_case_to_snake_case(split[-1])
+    return "_".join(split[:-1]), _core.camel_case_to_snake_case(split[-1])
 
 
 def get_containing_cls(containing_name):
     # Get the containing class
     assert containing_name in _registry.RDM_NODE_REGISTRY.all_nodes, f"No node found for {containing_name}"
     return _registry.RDM_NODE_REGISTRY.all_nodes[containing_name]
-
-
-def parse_schema(schema, property_name):
-    if "type" in schema:
-        if schema["type"] == "object":
-            if "properties" in schema:
-                if property_name in schema["properties"]:
-                    return schema["properties"][property_name]
-                return None
-        elif schema["type"] == "array":
-            return parse_schema(schema["items"], property_name)
-
-    if "allOf" in schema:
-        for sub_schema in schema["allOf"]:
-            if all_of_schema := parse_schema(sub_schema, property_name):
-                return all_of_schema
-        else:
-            raise ValueError(f"Property {property_name} not found in {schema['allOf']}")
-
-    return None
-
-
-def get_schema(containing_cls, containing_name, property_name):
-    if containing_cls in set(_registry.RDM_NODE_REGISTRY.schema_registry.values()):
-        schema = SCHEMA_DICT[containing_cls.asdf_schema_uri()]
-        return parse_schema(schema, property_name)
-
-    new_containing_name, new_property_name = parse_orphan_name(containing_name)
-    new_containing_cls = get_containing_cls(new_containing_name)
-
-    return parse_schema(get_schema(new_containing_cls, new_containing_name, new_property_name), property_name)
-
-
-SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
 
 
 @pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.implied_nodes.values())
@@ -170,123 +102,50 @@ def test_implied_node(node_cls):
         <ContainingNodeName>_<PropertyName>
     """
     assert issubclass(node_cls, _core.ImpliedNodeMixin)
-    assert isinstance(node_cls.asdf_implied_property(), property)
-
     containing_name, property_name = parse_orphan_name(node_cls.__name__)
 
     containing_cls = get_containing_cls(containing_name)
+    assert node_cls.asdf_implied_by() is containing_cls
+    assert node_cls.asdf_implied_property_name() == property_name
 
     # Check that the property exists on the containing class
     assert hasattr(containing_cls, property_name), f"Property {property_name} not found on {containing_name}"
     cls_property = getattr(containing_cls, property_name)
-    assert isinstance(cls_property, property), f"Property {property_name} is not a property"
+    assert node_cls.asdf_implied_property() is cls_property
 
     # Check that the property's return type matches the orphan node
     annotation = signature(cls_property.fget).return_annotation
     assert annotation is node_cls or annotation == _base.LNode[node_cls] or annotation == _base.DNode[str, node_cls]
 
-    # This is a special cases that had to be hand coded to deal with the mixing of
-    # reference_file.meta schemas
-    if node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]:
-        return
+    schema = node_cls.asdf_schema().schema
 
     # Check that the orphan node's schema matches the schema of the property
-    schema = get_schema(containing_cls, containing_name, property_name)
-
     if annotation is node_cls:
         assert "allOf" in schema or ("type" in schema and schema["type"] == "object")
-        return
 
-    if annotation == _base.LNode[node_cls]:
+    elif annotation == _base.LNode[node_cls]:
         assert "type" in schema and schema["type"] == "array"
         assert "items" in schema
         assert "allOf" in schema["items"] or ("type" in schema["items"] and schema["items"]["type"] == "object")
-        return
 
-    if annotation == _base.DNode[str, node_cls]:
+    elif annotation == _base.DNode[str, node_cls]:
         assert "type" in schema and schema["type"] == "object"
         assert "patternProperties" in schema
         pattern_schema = schema["patternProperties"][next(iter(schema["patternProperties"]))]
         assert "type" in pattern_schema and pattern_schema["type"] == "object"
-        return
 
-    raise ValueError(f"Annotation {annotation} not handled")
-
-
-_SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
+    else:
+        raise ValueError(f"Annotation {annotation} not handled")
 
 
-def get_required(schema):
-    if "required" in schema:
-        required = set(schema["required"])
-        if "pass" in required:
-            required.add("pass_")
-            required.remove("pass")
-        return required
-
-    if "$ref" in schema:
-        return get_required(_SCHEMA_DICT[schema["$ref"]])
-
-    if "allOf" in schema:
-        required = set()
-        for sub_schema in schema["allOf"]:
-            required.update(get_required(sub_schema))
-
-        return required
-
-    if "type" in schema:
-        if schema["type"] == "array":
-            return get_required(schema["items"])
-
-        if schema["type"] == "object" and "patternProperties" in schema:
-            sub_schema = schema["patternProperties"]
-            return get_required(sub_schema[next(iter(sub_schema))])
-
-    return set()
+SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
 
 
-def find_schema_for_node(node_cls):
-    if node_cls.__name__ not in _registry.RDM_NODE_REGISTRY.implied_nodes:
-        return _SCHEMA_DICT[node_cls.asdf_schema_uri()]
-
-    containing_name, property_name = parse_orphan_name(node_cls.__name__)
-    containing_cls = get_containing_cls(containing_name)
-
-    return get_schema(containing_cls, containing_name, property_name)
-
-
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
-def test_node_requires(node_cls):
-    """
-    Check that every schema file with a `required` has a corresponding method
-    listing those requirements.
-    """
-    # These two are special cases that had to be hand coded to deal with the mixing of
-    # reference_file.meta schemas
-    if (
-        node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]
-        or node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]
-    ):
-        return
-
-    if not issubclass(node_cls, _core.ObjectNode):
-        return
-
-    assert hasattr(node_cls, "asdf_required"), f"No `asdf_required` method found for {node_cls}"
-
-    schema = find_schema_for_node(node_cls)
-    assert get_required(schema) == set(node_cls.asdf_required())
-    assert isinstance(node_cls.asdf_required(), set)
-
-
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
+@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.object_nodes.values())
 def test_node_requires_properties(node_cls):
     """
     Check that every property listed in `asdf_required` in the node class
     """
-
-    if not issubclass(node_cls, _core.ObjectNode):
-        return
 
     for property_name in node_cls.asdf_required():
         property_name = "pass_" if property_name == "pass" else property_name
@@ -306,7 +165,7 @@ def get_properties(schema):
         return properties
 
     if "$ref" in schema:
-        return get_properties(_SCHEMA_DICT[schema["$ref"]])
+        return get_properties(SCHEMA_DICT[schema["$ref"]])
 
     if "allOf" in schema:
         required = set()
@@ -332,22 +191,18 @@ _OBJECT_NODES = _core.get_nodes(
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
-def test_properties_in_schema(node_cls):
+def test_fields_in_schema(node_cls):
     """
     Check that every property of the class in the schema
     """
-    # These two are special cases that had to be hand coded to deal with the mixing of
-    # reference_file.meta schemas
-    if (
-        node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]
-        or node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]
-    ):
-        return
+    fields = set(node_cls.asdf_schema().fields)
+    # RadSchema cannot properly traverse to nodes that are mixed classes of other
+    # implied nodes, this is the only example in RAD, it cannot traverse into the second
+    # object
+    if node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]:
+        fields = fields | {"type", "p_exptype"}
 
-    properties = set(_core.get_node_fields(node_cls))
-    schema = find_schema_for_node(node_cls)
-
-    assert get_properties(schema) == properties
+    assert fields == set(_core.get_node_fields(node_cls))
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
@@ -362,6 +217,10 @@ def test_fields(node_cls):
     assert properties == set(instance.fields)
     assert properties == set(instance._fields)
 
+    for field in properties:
+        assert hasattr(node_cls, field)
+        assert isinstance(getattr(node_cls, field), _core.rad_field_property)
+
 
 def find_property_schema(schema, property_name):
     property_name = "pass" if property_name == "pass_" else property_name
@@ -372,7 +231,7 @@ def find_property_schema(schema, property_name):
         raise ValueError(f"Property {property_name} not found in {schema['properties']}")
 
     if "$ref" in schema:
-        return find_property_schema(_SCHEMA_DICT[schema["$ref"]], property_name)
+        return find_property_schema(SCHEMA_DICT[schema["$ref"]], property_name)
 
     if "allOf" in schema:
         for sub_schema in schema["allOf"]:
@@ -458,7 +317,7 @@ def build_annotation_from_schema(schema, annotation):
     if "$ref" in schema:
         if schema["$ref"] in _registry.RDM_NODE_REGISTRY.schema_registry:
             return _registry.RDM_NODE_REGISTRY.schema_registry[schema["$ref"]]
-        return build_annotation_from_schema(_SCHEMA_DICT[schema["$ref"]], annotation)
+        return build_annotation_from_schema(SCHEMA_DICT[schema["$ref"]], annotation)
 
     if "tag" in schema:
         if schema["tag"] in _EXTERNAL_TAG_MAP:
@@ -480,86 +339,6 @@ def build_annotation_from_schema(schema, annotation):
         return annotation
 
     return None
-
-
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
-def test_property_annotation(node_cls):
-    """
-    Check that the annotation for every property matches the schema
-    """
-    # These two are special cases that had to be hand coded to deal with the mixing of
-    # reference_file.meta schemas
-    if (
-        node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["RefCommonRefOpticalElementRef_Instrument"]
-        or node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]
-    ):
-        return
-
-    properties = set(_core.get_node_fields(node_cls))
-    schema = find_schema_for_node(node_cls)
-
-    for property_name in properties:
-        property_cls = getattr(node_cls, property_name)
-        annotation = signature(property_cls.fget).return_annotation
-        schema_property = find_property_schema(schema, property_name)
-        schema_annotation = build_annotation_from_schema(schema_property, annotation)
-        # if schema_annotation is not None:
-        # This is a special case because the schemas do not specify that it
-        # is supposed to be an astropy Model
-        if property_name == "coordinate_distortion_transform":
-            assert schema_annotation is _base.DNode
-        else:
-            assert (
-                annotation == schema_annotation
-            ), f"Property {property_name} Annotation {annotation} does not match schema {schema_annotation}"
-
-
-def check_type_fits_annotation(value, annotation):
-    annotation_args = get_args(annotation)
-    if annotation_args:
-        check_type_fits_annotation(value, annotation_args[0])
-
-        if annotation_args[0] is _base.LNode:
-            assert len(annotation_args) == 2
-            for item in value:
-                check_type_fits_annotation(item, annotation_args[1])
-    else:
-        assert isinstance(value, annotation)
-
-
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
-def test_lazy_defaults(node_cls):
-    """
-    Check that every property can successfully be called into existence
-    """
-
-    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
-
-    for property_name in properties:
-        # Generate a fresh instance of the class
-        instance = node_cls()
-
-        stored_name = "pass" if property_name == "pass_" else property_name
-
-        if node_cls is nodes.RefCommonRef and stored_name == "reftype":
-            continue  # This property is not implemented until the individual meta classes
-
-        # Check the property is not in the instance
-        assert stored_name not in instance
-        assert stored_name not in instance._data
-
-        # Access via the property
-        assert property_name in dir(instance)
-        getattr(instance, property_name)
-
-        # Check the property is now in the instance
-        assert stored_name in instance
-        assert stored_name in instance._data
-
-        # Check the property has the correct type
-        property_cls = getattr(node_cls, property_name)
-        annotation = signature(property_cls.fget).return_annotation
-        check_type_fits_annotation(instance[stored_name], annotation)
 
 
 def get_value_for_coerce(default_value):
@@ -649,100 +428,74 @@ def get_testing_default_values(node_cls, property_name) -> tuple:
     return default_value, compare_value, instance
 
 
-def coerce_property_skips(node_cls, property_name):
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_wrap_into_node_setting(node_cls):
     """
-    Check if a property should be skipped during coercion
+    Check that things get coerced to the right value during setting
     """
-    from roman_datamodels.stnode.nodes.datamodels.wfi_image import WfiImage_Meta
-    from roman_datamodels.stnode.nodes.datamodels.wfi_mosaic import WfiMosaic_Meta
 
-    return (
-        # coordinate_distortion_transform is a special case as it is an astropy
-        # model so it cannot be coerced to
-        (node_cls is nodes.DistortionRef and property_name == "coordinate_distortion_transform")
-        # wcs is a special case again as it is a WCS object which cannot be easily coerced
-        or ((node_cls is WfiImage_Meta or node_cls is WfiMosaic_Meta) and property_name == "wcs")
-    )
+    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
 
+    for property_name in properties:
+        stored_name = "pass" if property_name == "pass_" else property_name
+        default_value, compare_value, instance = get_testing_default_values(node_cls, property_name)
 
-# @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
-# def test_coerce_setting(node_cls):
-#     """
-#     Check that things get coerced to the right value during setting
-#     """
+        # These only ones we care about are the nodes
+        if not isinstance(default_value, _base.DNode | _base.LNode | _core.SchemaScalarNode):
+            continue
 
-#     properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
+        value = default_value.unwrap()
 
-#     for property_name in properties:
-#         if coerce_property_skips(node_cls, property_name):
-#             continue
+        # Set the value and show it now exists in _data
+        assert stored_name not in instance._data
+        setattr(instance, property_name, value)
+        assert stored_name in instance._data
 
-#         stored_name = "pass" if property_name == "pass_" else property_name
-#         default_value, compare_value, instance = get_testing_default_values(node_cls, property_name)
+        # Check the value is coerced into the correct type for storage
+        # lookup coercion prevents checking via the methods on the node
+        # instead we have to access the raw data storage directly to
+        # check the type
+        assert isinstance(instance._data[stored_name], type(compare_value))
+        assert isinstance(compare_value, type(instance._data[stored_name]))
 
-#         # Quantities are subclasses of np.ndarray so we only need to check for the ndarray
-#         context = pytest.warns(RuntimeWarning) if isinstance(default_value, np.ndarray) else nullcontext()
-
-#         value = get_value_for_coerce(default_value)
-
-#         # Set the value and show it now exists in _data
-#         assert stored_name not in instance._data
-#         with context:
-#             setattr(instance, property_name, value)
-#         assert stored_name in instance._data
-
-#         # Check the value is coerced into the correct type for storage
-#         # lookup coercion prevents checking via the methods on the node
-#         # instead we have to access the raw data storage directly to
-#         # check the type
-#         assert isinstance(instance._data[stored_name], Table if type(compare_value) is QTable else type(compare_value))
-#         assert isinstance(compare_value, type(instance._data[stored_name]))
-
-#         # Double check that using the getattr method gets the right thing
-#         assert isinstance(getattr(instance, property_name), Table if type(compare_value) is QTable else type(compare_value))
-#         assert isinstance(compare_value, type(getattr(instance, property_name)))
+        # Double check that using the getattr method gets the right thing
+        assert isinstance(getattr(instance, property_name), type(compare_value))
+        assert isinstance(compare_value, type(getattr(instance, property_name)))
 
 
-# @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
-# def test_coerce_getting(node_cls):
-#     """
-#     Check that things get coerced to the right value when getting
-#     """
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_coerce_getting(node_cls):
+    """
+    Check that things get coerced to the right value when getting
+    """
 
-#     properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
+    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
 
-#     for property_name in properties:
-#         if coerce_property_skips(node_cls, property_name):
-#             continue
+    for property_name in properties:
+        stored_name = "pass" if property_name == "pass_" else property_name
+        default_value, compare_value, _ = get_testing_default_values(node_cls, property_name)
 
-#         stored_name = "pass" if property_name == "pass_" else property_name
-#         default_value, compare_value, _ = get_testing_default_values(node_cls, property_name)
+        # These only ones we care about are the nodes
+        if not isinstance(default_value, _base.DNode | _base.LNode | _core.SchemaScalarNode):
+            continue
+        value = default_value.unwrap()
 
-#         # Quantities are subclasses of np.ndarray so we only need to check for the ndarray
-#         context = pytest.warns(RuntimeWarning) if isinstance(default_value, np.ndarray) else nullcontext()
+        # Pass the value directly in so that it is lazy coerced
+        instance = node_cls({stored_name: value})
+        assert not isinstance(instance._data[stored_name], type(compare_value))
 
-#         value = get_value_for_coerce(default_value)
+        # Access the value and show it is now coerced
+        assert isinstance(getattr(instance, property_name), type(compare_value))
 
-#         # Pass the value directly in so that it is lazy coerced
-#         instance = node_cls({stored_name: value})
-#         assert not isinstance(instance._data[stored_name], type(compare_value))
+        # Check the value is coerced into the correct type for storage
+        # lookup coercion prevents checking via the methods on the node
+        # instead we have to access the raw data storage directly to
+        # check the type
+        assert isinstance(instance._data[stored_name], type(compare_value))
+        assert isinstance(compare_value, type(instance._data[stored_name]))
 
-#         # Access the value and show it is now coerced
-#         with context:
-#             this = getattr(instance, property_name)
-#             print(this)
-#             print(type(this))
-#             assert isinstance(getattr(instance, property_name), Table if type(compare_value) is QTable else type(compare_value))
-
-#         # Check the value is coerced into the correct type for storage
-#         # lookup coercion prevents checking via the methods on the node
-#         # instead we have to access the raw data storage directly to
-#         # check the type
-#         assert isinstance(instance._data[stored_name], Table if type(compare_value) is QTable else type(compare_value))
-#         assert isinstance(compare_value, type(instance._data[stored_name]))
-
-#         # Context is not needed as the stored value is updated to the coerced value
-#         assert isinstance(compare_value, type(getattr(instance, property_name)))
+        # Context is not needed as the stored value is updated to the coerced value
+        assert isinstance(compare_value, type(getattr(instance, property_name)))
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())

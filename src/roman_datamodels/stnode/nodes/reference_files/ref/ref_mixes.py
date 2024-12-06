@@ -15,6 +15,10 @@ __all__ = ["RefCommonRefOpticalElementRef"]
 
 class RefCommonRefOpticalElementRef_Instrument(RefCommonRef_Instrument, RefOpticalElementRef_Instrument, _core.ImpliedNodeMixin):
     @classmethod
+    def asdf_implied_by(cls):
+        return RefCommonRefOpticalElementRef
+
+    @classmethod
     def asdf_required(cls) -> tuple[str]:
         return {
             *super().asdf_required(),

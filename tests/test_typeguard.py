@@ -81,22 +81,44 @@ def test_check_defaults_against_schemas(tmp_path, node_cls):
     """
     Test that the default values for all fields in a given node class are valid relative to the RAD schemas.
         -> with test_type_annoations this confirms that all the annotations are correct
+
+    This is one of the most important tests for the nodes it integrates a lot of core functionality and
+    checks into one test. It does the following:
+        0. Check that the node can be instanticated relatively empty (except for tagged scalars)
+        1. The node is identifying its required fields correctly.
+        2. Tests that all of the required fields have a default value.
+        3. Tests the serialization process creates required fields as needed
+           during serialization itself
+        4. Tests that the node with default values can be serialized to asdf
+           -> This in particular tests that the default values have the correct type.
+           -> Combined passes here with passes of `test_type_annotations` ensures
+              that the listed type annotations for the fields are correct.
+        5. Tests that the serialized node can be read back in.
+        6. Tests that all the untagged nodes and wrappers get properly re-wrapped
+           as they are accessed.
     """
 
+    # The tagged scalars require us to pass in a value
     if issubclass(node_cls, Time):
         instance = node_cls(Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
     elif node_cls is nodes.Origin or node_cls is nodes.FpsOrigin or node_cls is nodes.TvacOrigin:
         instance = node_cls.STSCI()
     elif node_cls is nodes.Telescope or node_cls is nodes.FpsTelescope or node_cls is nodes.TvacTelescope:
         instance = node_cls.ROMAN()
+
+    # All the non-scalar tagged nodes can simply be instantiated as they will auto fill
     else:
         instance = node_cls()
 
+    # Set an instance into an asdf file object
     af = asdf.AsdfFile()
     af["roman"] = instance
 
+    # Run asdf serialization and write to a file
     filepath = tmp_path / "test.asdf"
     af.write_to(filepath)
 
+    # Deserialize the file and check that the node is equal to the original
     with asdf.open(filepath) as af:
+        # Note that this will require the lazy re-wrapping of non-tagged nodes
         assert_node_equal(instance, af["roman"])

@@ -52,7 +52,7 @@ class ApcorrRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
 
-    @property
+    @_core.rad_field
     def reftype(self) -> str:
         return self._get_node("reftype", lambda: "APCORR")
 
@@ -73,11 +73,11 @@ class ApcorrRef(_core.DataModelNode):
 
         return (10,)
 
-    @property
+    @_core.rad_field
     def meta(self) -> ApcorrRef_Meta:
         return self._get_node("meta", ApcorrRef_Meta)
 
-    @property
+    @_core.rad_field
     def data(self) -> _base.DNode[str, ApcorrRef_Data]:
         def _default():
             return _base.DNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})
