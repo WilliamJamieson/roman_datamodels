@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _default, rad
 
 __all__ = ["VelocityAberration"]
 
 
-class VelocityAberration(_core.TaggedObjectNode):
+class VelocityAberration(rad.TaggedObjectNode):
     """
     Velocity aberration information
     """
@@ -12,14 +12,14 @@ class VelocityAberration(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/velocity_aberration-1.0.0"
 
-    @_core.rad_field
+    @rad.rad_field
     def ra_reference(self) -> float:
         return self._get_node("ra_reference", lambda: _default.NONUM)
 
-    @_core.rad_field
+    @rad.rad_field
     def dec_reference(self) -> float:
         return self._get_node("dec_reference", lambda: _default.NONUM)
 
-    @_core.rad_field
+    @rad.rad_field
     def scale_factor(self) -> float:
         return self._get_node("scale_factor", lambda: 1.0)

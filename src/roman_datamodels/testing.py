@@ -6,8 +6,8 @@ from astropy.table import Table
 from numpy.testing import assert_array_equal
 
 # from .stnode import DNode, TaggedListNode, TaggedObjectNode, TaggedScalarNode
-from .stnode._base import DNode, LNode
-from .stnode._core import SchemaScalarNode
+from .stnode.core import DNode, LNode
+from .stnode.rad import SchemaScalarNode
 
 __all__ = ["assert_node_equal", "assert_node_is_copy", "wraps_hashable"]
 

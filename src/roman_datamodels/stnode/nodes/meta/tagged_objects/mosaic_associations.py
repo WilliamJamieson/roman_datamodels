@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _default, rad
 
 __all__ = ["MosaicAssociations"]
 
 
-class MosaicAssociations(_core.TaggedObjectNode):
+class MosaicAssociations(rad.TaggedObjectNode):
     """
     Mosaic associations metadata keywords
     """
@@ -12,10 +12,10 @@ class MosaicAssociations(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_associations-1.0.0"
 
-    @_core.rad_field
+    @rad.rad_field
     def pool_name(self) -> str:
         return self._get_node("pool_name", lambda: _default.NOSTR)
 
-    @_core.rad_field
+    @rad.rad_field
     def table_name(self) -> str:
         return self._get_node("table_name", lambda: _default.NOSTR)

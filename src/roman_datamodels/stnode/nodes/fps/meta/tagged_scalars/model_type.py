@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsModelType"]
 
 
-class FpsModelType(str, _core.TaggedScalarNode):
+class FpsModelType(str, rad.TaggedScalarNode):
     """
     Type of data model
     """

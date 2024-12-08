@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import (
@@ -12,17 +12,17 @@ from .ref import (
 __all__ = ["ReadnoiseRef"]
 
 
-class ReadnoiseRef_Meta(_core.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
+class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ReadnoiseRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.READNOISE)
 
 
-class ReadnoiseRef(_core.DataModelNode):
+class ReadnoiseRef(rad.DataModelNode):
     """
     Read noise reference schema
     """
@@ -45,10 +45,10 @@ class ReadnoiseRef(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> ReadnoiseRef_Meta:
         return self._get_node("meta", ReadnoiseRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> u.Quantity:
         return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.DN, dtype=np.float32))

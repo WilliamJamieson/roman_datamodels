@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _default, rad
 
 __all__ = ["Statistics"]
 
 
-class Statistics(_core.TaggedObjectNode):
+class Statistics(rad.TaggedObjectNode):
     """
     Basic Statistical Information
     """
@@ -12,18 +12,18 @@ class Statistics(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/statistics-1.0.0"
 
-    @_core.rad_field
+    @rad.rad_field
     def zodiacal_light(self) -> float:
         return self._get_node("zodiacal_light", lambda: _default.NONUM)
 
-    @_core.rad_field
+    @rad.rad_field
     def image_median(self) -> float:
         return self._get_node("image_median", lambda: _default.NONUM)
 
-    @_core.rad_field
+    @rad.rad_field
     def image_rms(self) -> float:
         return self._get_node("image_rms", lambda: _default.NONUM)
 
-    @_core.rad_field
+    @rad.rad_field
     def good_pixel_fraction(self) -> float:
         return self._get_node("good_pixel_fraction", lambda: _default.NONUM)

@@ -4,7 +4,7 @@ from collections import ChainMap
 from itertools import chain
 from typing import Generic, TypeVar
 
-from .._base import AsdfContextMixin
+from ..core import AsdfContextMixin
 
 S = TypeVar("S", bound=dict)
 

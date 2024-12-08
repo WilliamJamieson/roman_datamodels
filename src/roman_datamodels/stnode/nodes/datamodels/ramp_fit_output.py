@@ -1,13 +1,13 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..meta import Common
 
 __all__ = ["RampFitOutput"]
 
 
-class RampFitOutput(_core.DataModelNode):
+class RampFitOutput(rad.DataModelNode):
     """
     Ramp fit output schema
     """
@@ -30,42 +30,42 @@ class RampFitOutput(_core.DataModelNode):
         # default fall-back
         return (8, 4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> Common:
         return self._get_node("meta", Common)
 
-    @_core.rad_field
+    @rad.rad_field
     def slope(self) -> np.ndarray:
         return self._get_node("slope", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def sigslope(self) -> np.ndarray:
         return self._get_node("sigslope", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def yint(self) -> np.ndarray:
         return self._get_node("yint", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def sigyint(self) -> np.ndarray:
         return self._get_node("sigyint", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def pedestal(self) -> np.ndarray:
         return self._get_node("pedestal", lambda: np.zeros(self.array_shape[1:], dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def weights(self) -> np.ndarray:
         return self._get_node("weights", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def crmag(self) -> np.ndarray:
         return self._get_node("crmag", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def var_poisson(self) -> np.ndarray:
         return self._get_node("var_poisson", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def var_rnoise(self) -> np.ndarray:
         return self._get_node("var_rnoise", lambda: np.zeros(self.array_shape, dtype=np.float32))

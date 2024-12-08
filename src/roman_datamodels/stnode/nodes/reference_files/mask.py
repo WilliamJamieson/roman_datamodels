@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRef
@@ -8,17 +8,17 @@ from .ref import RefCommonRef
 __all__ = ["MaskRef"]
 
 
-class MaskRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MaskRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.MASK)
 
 
-class MaskRef(_core.DataModelNode):
+class MaskRef(rad.DataModelNode):
     """
     DQ Mask reference schema
     """
@@ -41,10 +41,10 @@ class MaskRef(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> MaskRef_Meta:
         return self._get_node("meta", MaskRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))

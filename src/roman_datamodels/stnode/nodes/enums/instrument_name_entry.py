@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["InstrumentNameEntry"]
 
 
-class InstrumentNameEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import MosaicBasic
@@ -17,7 +17,7 @@ class InstrumentNameEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "instrument"
 
 
-class InstrumentNameEntry(InstrumentNameEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class InstrumentNameEntry(InstrumentNameEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for instrument name in schemas
     """

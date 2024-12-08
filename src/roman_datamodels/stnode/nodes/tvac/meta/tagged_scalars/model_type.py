@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["TvacModelType"]
 
 
-class TvacModelType(str, _core.TaggedScalarNode):
+class TvacModelType(str, rad.TaggedScalarNode):
     """
     Type of data model
     """

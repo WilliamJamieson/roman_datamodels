@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsPrdSoftwareVersion"]
 
 
-class FpsPrdSoftwareVersion(str, _core.TaggedScalarNode):
+class FpsPrdSoftwareVersion(str, rad.TaggedScalarNode):
     """
     S&OC PRD version number used in data processing
     """

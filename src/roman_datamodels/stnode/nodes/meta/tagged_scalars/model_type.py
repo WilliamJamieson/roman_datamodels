@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["ModelType"]
 
 
-class ModelType(str, _core.TaggedScalarNode):
+class ModelType(str, rad.TaggedScalarNode):
     """
     Type of data model
     """

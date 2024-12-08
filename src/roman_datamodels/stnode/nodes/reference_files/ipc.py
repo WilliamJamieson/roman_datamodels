@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
@@ -8,17 +8,17 @@ from .ref import RefCommonRefOpticalElementRef
 __all__ = ["IpcRef"]
 
 
-class IpcRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
+class IpcRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return IpcRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.IPC)
 
 
-class IpcRef(_core.DataModelNode):
+class IpcRef(rad.DataModelNode):
     """
     IPC kernel reference schema
     """
@@ -41,11 +41,11 @@ class IpcRef(_core.DataModelNode):
         # default fall-back
         return (3, 3)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> IpcRef_Meta:
         return self._get_node("meta", IpcRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         def _default():
             data = np.zeros(self.array_shape, dtype=np.float32)

@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _base, _core, _default
+from roman_datamodels.stnode import _default, core, rad
 
 from ..enums import RefTypeEntry
 from ..meta import OPTICAL_ELEMENTS
@@ -9,7 +9,7 @@ from .ref import RefCommonRef
 __all__ = ["ApcorrRef"]
 
 
-class ApcorrRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):
+class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -27,38 +27,38 @@ class ApcorrRef_Data(_core.ImpliedNodeMixin, _core.ObjectNode):
 
         return (10,)
 
-    @_core.rad_field
+    @rad.rad_field
     def ap_corrections(self) -> np.ndarray | None:
         return self._get_node("ap_corrections", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @_core.rad_field
+    @rad.rad_field
     def ee_fractions(self) -> np.ndarray | None:
         return self._get_node("ee_fractions", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @_core.rad_field
+    @rad.rad_field
     def ee_radii(self) -> np.ndarray | None:
         return self._get_node("ee_radii", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @_core.rad_field
+    @rad.rad_field
     def sky_background_rin(self) -> float | None:
         return self._get_node("sky_background_rin", lambda: _default.NONUM)
 
-    @_core.rad_field
+    @rad.rad_field
     def sky_background_rout(self) -> float | None:
         return self._get_node("sky_background_rout", lambda: _default.NONUM)
 
 
-class ApcorrRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.APCORR)
 
 
-class ApcorrRef(_core.DataModelNode):
+class ApcorrRef(rad.DataModelNode):
     """
     Aperture correction reference schema
     """
@@ -74,13 +74,13 @@ class ApcorrRef(_core.DataModelNode):
 
         return (10,)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> ApcorrRef_Meta:
         return self._get_node("meta", ApcorrRef_Meta)
 
-    @_core.rad_field
-    def data(self) -> _base.DNode[str, ApcorrRef_Data]:
+    @rad.rad_field
+    def data(self) -> core.DNode[str, ApcorrRef_Data]:
         def _default():
-            return _base.DNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})
+            return core.DNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})
 
         return self._get_node("data", _default)

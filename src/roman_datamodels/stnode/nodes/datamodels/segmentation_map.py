@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..meta import (
     Basic,
@@ -12,25 +12,25 @@ from ..meta import (
 __all__ = ["SegmentationMap"]
 
 
-class SegmentationMap_Meta(_core.ImpliedNodeMixin, Basic):
+class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SegmentationMap
 
-    @_core.rad_field
+    @rad.rad_field
     def optical_element(self) -> WfiOpticalElement:
         return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
 
-    @_core.rad_field
+    @rad.rad_field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
-    @_core.rad_field
+    @rad.rad_field
     def visit(self) -> Visit:
         return self._get_node("visit", Visit)
 
 
-class SegmentationMap(_core.DataModelNode):
+class SegmentationMap(rad.DataModelNode):
     """
     Segmentation map computed by the Source Catalog Step
     """
@@ -53,10 +53,10 @@ class SegmentationMap(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> SegmentationMap_Meta:
         return self._get_node("meta", SegmentationMap_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint32))

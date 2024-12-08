@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRef
@@ -9,25 +9,25 @@ from .ref import RefCommonRef
 __all__ = ["InverselinearityRef"]
 
 
-class InverselinearityRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return InverselinearityRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.INVERSELINEARITY)
 
-    @_core.rad_field
+    @rad.rad_field
     def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.DN)
 
-    @_core.rad_field
+    @rad.rad_field
     def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.DN)
 
 
-class InverselinearityRef(_core.DataModelNode):
+class InverselinearityRef(rad.DataModelNode):
     """
     Inverse linearity correction reference schema
     """
@@ -50,14 +50,14 @@ class InverselinearityRef(_core.DataModelNode):
         # default fall-back
         return (2, 4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> InverselinearityRef_Meta:
         return self._get_node("meta", InverselinearityRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def coeffs(self) -> np.ndarray:
         return self._get_node("coeffs", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))

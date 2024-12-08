@@ -1,14 +1,14 @@
 import pytest
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 
 def test_abstract_SchemaScalarNode():
     # Test that SchemaScalarNode is an abstract class
     with pytest.raises(TypeError):
-        _core.SchemaScalarNode()
+        rad.SchemaScalarNode()
 
-    class ExampleSchemaScalarNode(_core.SchemaScalarNode):
+    class ExampleSchemaScalarNode(rad.SchemaScalarNode):
         @classmethod
         def asdf_schema_uri(cls):
             return "test"
@@ -20,9 +20,9 @@ def test_abstract_SchemaScalarNode():
 def test_abstract_TaggedScalarNode():
     # Test that TaggedScalarNode is an abstract class
     with pytest.raises(TypeError):
-        _core.TaggedScalarNode()
+        rad.TaggedScalarNode()
 
-    class ExampleTaggedScalarNode(_core.TaggedScalarNode):
+    class ExampleTaggedScalarNode(rad.TaggedScalarNode):
         @classmethod
         def asdf_tag(cls):
             return "test"
@@ -34,9 +34,9 @@ def test_abstract_TaggedScalarNode():
 def test_abstract_ObjectNode():
     # Test that ObjectNode is an abstract class
     with pytest.raises(TypeError):
-        _core.ObjectNode()
+        rad.ObjectNode()
 
-    class ExampleObjectNode(_core.ObjectNode):
+    class ExampleObjectNode(rad.ObjectNode):
         @classmethod
         def asdf_required(cls):
             return ("test",)
@@ -48,9 +48,9 @@ def test_abstract_ObjectNode():
 def test_abstract_SchemaObjectNode():
     # Test that SchemaObjectNode is an abstract class
     with pytest.raises(TypeError):
-        _core.SchemaObjectNode()
+        rad.SchemaObjectNode()
 
-    class ExampleSchemaObjectNodeUri(_core.SchemaObjectNode):
+    class ExampleSchemaObjectNodeUri(rad.SchemaObjectNode):
         @classmethod
         def asdf_schema_uri(cls):
             return "test"
@@ -71,9 +71,9 @@ def test_abstract_SchemaObjectNode():
 def test_abstract_TaggedObjectNode():
     # Test that TaggedObjectNode is an abstract class
     with pytest.raises(TypeError):
-        _core.TaggedObjectNode()
+        rad.TaggedObjectNode()
 
-    class ExampleTaggedObjectNodeTag(_core.TaggedObjectNode):
+    class ExampleTaggedObjectNodeTag(rad.TaggedObjectNode):
         @classmethod
         def asdf_tag(cls):
             return "test"

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = [
     "WcsinfoApertureNameEntry",
@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 
-class WcsinfoApertureNameEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class WcsinfoApertureNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Wcsinfo
@@ -21,7 +21,7 @@ class WcsinfoApertureNameEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "aperture_name"
 
 
-class WcsinfoApertureNameEntry(WcsinfoApertureNameEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class WcsinfoApertureNameEntry(WcsinfoApertureNameEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for aperture_name in wcsinfo
     """
@@ -67,7 +67,7 @@ class WcsinfoApertureNameEntry(WcsinfoApertureNameEntryMixin, Enum, metaclass=_c
     CGI_CEN = "CGI_CEN"
 
 
-class WcsinfoVparityEntryMixin(int, _core.EnumNodeMixin, _core.ScalarNode):
+class WcsinfoVparityEntryMixin(int, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Wcsinfo
@@ -79,7 +79,7 @@ class WcsinfoVparityEntryMixin(int, _core.EnumNodeMixin, _core.ScalarNode):
         return "vparity"
 
 
-class WcsinfoVparityEntry(WcsinfoVparityEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class WcsinfoVparityEntry(WcsinfoVparityEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for vparity in wcsinfo
     """
@@ -88,7 +88,7 @@ class WcsinfoVparityEntry(WcsinfoVparityEntryMixin, Enum, metaclass=_core.NodeEn
     NORMAL = 1
 
 
-class WcsinfoMosaicProjectionEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class WcsinfoMosaicProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import MosaicWcsinfo
@@ -100,7 +100,7 @@ class WcsinfoMosaicProjectionEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNo
         return "projection"
 
 
-class WcsinfoMosaicProjectionEntry(WcsinfoMosaicProjectionEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class WcsinfoMosaicProjectionEntry(WcsinfoMosaicProjectionEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for projection in wcsinfo
     """

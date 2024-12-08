@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _default, rad
 
 from ..enums import RefTypeEntry
 from .ref import (
@@ -13,7 +13,7 @@ from .ref.ref_exposure_type import RefExposureTypeRef_Exposure
 __all__ = ["DarkRef"]
 
 
-class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, _core.ImpliedNodeMixin):
+class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
     """
     This class is the result of a very weird mixture similar to the ref_mixes but only
     applies to the dark schema.
@@ -30,28 +30,28 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, _core.ImpliedNodeMixin)
             *RefExposureTypeRef_Exposure.asdf_required(),
         }
 
-    @_core.rad_field
+    @rad.rad_field
     def ngroups(self) -> int:
         return self._get_node("ngroups", lambda: 6)
 
-    @_core.rad_field
+    @rad.rad_field
     def nframes(self) -> int:
         return self._get_node("nframes", lambda: 8)
 
-    @_core.rad_field
+    @rad.rad_field
     def groupgap(self) -> int:
         return self._get_node("groupgap", lambda: 0)
 
-    @_core.rad_field
+    @rad.rad_field
     def ma_table_name(self) -> str:
         return self._get_node("ma_table_name", lambda: _default.NOSTR)
 
-    @_core.rad_field
+    @rad.rad_field
     def ma_table_number(self) -> int:
         return self._get_node("ma_table_number", lambda: _default.NOINT)
 
 
-class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):
+class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DarkRef
@@ -64,16 +64,16 @@ class DarkRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExp
             *RefExposureTypeRef.asdf_required(),
         }
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.DARK)
 
-    @_core.rad_field
+    @rad.rad_field
     def exposure(self) -> DarkRef_Meta_Exposure:
         return self._get_node("exposure", DarkRef_Meta_Exposure)
 
 
-class DarkRef(_core.DataModelNode):
+class DarkRef(rad.DataModelNode):
     """
     Dark reference schema
     """
@@ -96,27 +96,27 @@ class DarkRef(_core.DataModelNode):
         # default fall-back
         return (2, 4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> DarkRef_Meta:
         return self._get_node("meta", DarkRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> u.Quantity:
         return self._get_node(
             "data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), unit=u.DN, dtype=np.float32)
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def dark_slope(self) -> u.Quantity:
         return self._get_node(
             "dark_slope", lambda: u.Quantity(np.zeros(self.array_shape[1:], dtype=np.float32), unit=u.DN / u.s, dtype=np.float32)
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def dark_slope_error(self) -> u.Quantity:
         return self._get_node(
             "dark_slope_error",

@@ -2,7 +2,7 @@ import asdf
 import pytest
 from astropy.time import Time
 
-from roman_datamodels.stnode import _base, _core, _registry, _typing, nodes
+from roman_datamodels.stnode import _registry, _typing, core, nodes, rad
 from roman_datamodels.testing import assert_node_equal
 
 
@@ -25,12 +25,12 @@ def enable_typeguard():
 
 
 class TypeguardExample:
-    @_core.rad_field
+    @rad.rad_field
     def good(self) -> int:
         """This should not raise an error"""
         return 1
 
-    @_core.rad_field
+    @rad.rad_field
     def bad(self) -> int:
         """This should raise an error"""
         return "1"
@@ -73,7 +73,7 @@ def test_type_annotations(node_cls):
            to the RAD schemas
     """
     instance = node_cls()
-    instance.flush(flush=_base.FlushOptions.EXTRA)
+    instance.flush(flush=core.FlushOptions.EXTRA)
 
 
 @pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.tagged_registry.values())

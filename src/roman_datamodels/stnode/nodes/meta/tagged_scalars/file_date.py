@@ -1,11 +1,11 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FileDate"]
 
 
-class FileDate(Time, _core.TaggedScalarNode):
+class FileDate(Time, rad.TaggedScalarNode):
     """
     Date this file was created (UTC)
     """

@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _default, rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
@@ -9,35 +9,35 @@ from .ref import RefCommonRefOpticalElementRef
 __all__ = ["PixelareaRef"]
 
 
-class PixelareaRef_Meta_Photometry(_core.ImpliedNodeMixin, _core.ObjectNode):
+class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef_Meta
 
-    @_core.rad_field
+    @rad.rad_field
     def pixelarea_steradians(self) -> u.Quantity | None:
         return self._get_node("pixelarea_steradians", lambda: float(_default.NONUM) * u.sr)
 
-    @_core.rad_field
+    @rad.rad_field
     def pixelarea_arcsecsq(self) -> u.Quantity | None:
         return self._get_node("pixelarea_arcsecsq", lambda: float(_default.NONUM) * u.arcsec**2)
 
 
-class PixelareaRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
+class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.AREA)
 
-    @_core.rad_field
+    @rad.rad_field
     def photometry(self) -> PixelareaRef_Meta_Photometry:
         return self._get_node("photometry", PixelareaRef_Meta_Photometry)
 
 
-class PixelareaRef(_core.DataModelNode):
+class PixelareaRef(rad.DataModelNode):
     """
     Pixel area reference schema
     """
@@ -60,10 +60,10 @@ class PixelareaRef(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> PixelareaRef_Meta:
         return self._get_node("meta", PixelareaRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))

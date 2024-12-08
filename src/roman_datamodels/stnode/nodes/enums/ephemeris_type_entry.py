@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["EphemerisTypeEntry"]
 
 
-class EphemerisTypeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class EphemerisTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Ephemeris
@@ -17,7 +17,7 @@ class EphemerisTypeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "type"
 
 
-class EphemerisTypeEntry(EphemerisTypeEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class EphemerisTypeEntry(EphemerisTypeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for type in ephemeris
     """

@@ -2,7 +2,7 @@ from astropy import units as u
 from astropy.modeling import Model
 from astropy.modeling.models import Shift
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
@@ -10,25 +10,25 @@ from .ref import RefCommonRefOpticalElementRef
 __all__ = ["DistortionRef"]
 
 
-class DistortionRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
+class DistortionRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DistortionRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.DISTORTION)
 
-    @_core.rad_field
+    @rad.rad_field
     def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.pixel)
 
-    @_core.rad_field
+    @rad.rad_field
     def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.arcsec)
 
 
-class DistortionRef(_core.DataModelNode):
+class DistortionRef(rad.DataModelNode):
     """
     Distortion reference schema
     """
@@ -41,10 +41,10 @@ class DistortionRef(_core.DataModelNode):
     def array_shape(self) -> tuple[int]:
         raise NotImplementedError("array_shape is not implemented")
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> DistortionRef_Meta:
         return self._get_node("meta", DistortionRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def coordinate_distortion_transform(self) -> Model:
         return self._get_node("coordinate_distortion_transform", lambda: Shift(1) & Shift(2))

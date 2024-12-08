@@ -52,7 +52,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
             Note this only works on instances
             (not sure why I can't get it to work on the class)
         """
-        from .._core import get_node_fields
+        from ..rad import get_node_fields
 
         if self._fields is None:
             self._fields = get_node_fields(type(self)) + type(self)._extra_fields()
@@ -82,7 +82,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """
         Wrap things into node containers if necessary.
         """
-        from .._core import wrap_into_node
+        from ..rad import wrap_into_node
 
         if self._to_field_key(key) in self.fields:
             # Get the return signature for the field property
@@ -252,7 +252,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         return dict(self)
 
     def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
-        from .._core import TagMixin
+        from ..rad import TagMixin
 
         tree = self.unwrap()
 

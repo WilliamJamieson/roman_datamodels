@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["TvacGroundtestGsorcSdsDqPulseEntry", "TvacGroundtestWfiOptTargettypeEntry"]
 
 
-class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls):
         from ..tvac import TvacGroundtest
@@ -17,7 +17,7 @@ class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, _core.EnumNodeMixin, _core.Sc
         return "gsorc_sds_dq_pulse"
 
 
-class TvacGroundtestGsorcSdsDqPulseEntry(TvacGroundtestGsorcSdsDqPulseEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class TvacGroundtestGsorcSdsDqPulseEntry(TvacGroundtestGsorcSdsDqPulseEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible values of the GSORC SDS DQ Pulse
     """
@@ -26,7 +26,7 @@ class TvacGroundtestGsorcSdsDqPulseEntry(TvacGroundtestGsorcSdsDqPulseEntryMixin
     CW = "cw"
 
 
-class TvacGroundtestWfiOptTargettypeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class TvacGroundtestWfiOptTargettypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls):
         from ..tvac import TvacGroundtest
@@ -38,7 +38,7 @@ class TvacGroundtestWfiOptTargettypeEntryMixin(str, _core.EnumNodeMixin, _core.S
         return "wfi_opt_targettype"
 
 
-class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible values of the WFI Optical Target Type
     """

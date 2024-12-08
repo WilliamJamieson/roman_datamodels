@@ -1,7 +1,7 @@
 import warnings
 from abc import ABC, abstractmethod
 
-from .._base import DNode, FlushOptions
+from ..core import DNode, FlushOptions
 from ._mixins import SchemaMixin, TagMixin
 from ._utils import get_node_fields
 

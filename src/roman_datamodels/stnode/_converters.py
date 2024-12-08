@@ -11,7 +11,7 @@ from asdf.extension import Converter, ManifestExtension
 from ._registry import RDM_NODE_REGISTRY
 
 if TYPE_CHECKING:
-    from ._core import TagMixin
+    from .rad import TagMixin
 
 __all__ = ["NODE_EXTENSIONS"]
 

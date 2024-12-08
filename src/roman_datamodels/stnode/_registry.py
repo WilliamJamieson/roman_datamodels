@@ -7,7 +7,7 @@ Hold all the registry information for the STNode classes.
 from enum import Enum
 from types import MappingProxyType
 
-from ._core import (
+from .rad import (
     DataModelNode,
     ImpliedNodeMixin,
     ListNode,

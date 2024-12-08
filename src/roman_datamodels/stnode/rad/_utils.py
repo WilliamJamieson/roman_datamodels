@@ -3,6 +3,7 @@ from typing import Any, TypeVar, get_args
 import asdf
 
 from .._typing import type_checked
+from ..core import AdditionalNodeMixin, DNode, LNode
 
 T = TypeVar("T")
 
@@ -242,7 +243,6 @@ def _get_mixin_fields(cls: type) -> set[str]:
     set[str]
         The mixin fields of the class.
     """
-    from .._base import AdditionalNodeMixin
 
     mixin_fields = set()
     if issubclass(cls, AdditionalNodeMixin):
@@ -301,7 +301,6 @@ def wrap_into_node(value: Any, signature: T) -> T:
     T
         Value wrapped into the node container if T describes a node container.
     """
-    from .._base import DNode, LNode
     from ._scalar import SchemaScalarNode
 
     args = get_args(signature)

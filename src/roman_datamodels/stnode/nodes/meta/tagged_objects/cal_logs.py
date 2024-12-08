@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["CalLogs"]
 
 
-class CalLogs(_core.TaggedListNode):
+class CalLogs(rad.TaggedListNode):
     """
     Calibration log message
     """

@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["Filename"]
 
 
-class Filename(str, _core.TaggedScalarNode):
+class Filename(str, rad.TaggedScalarNode):
     """
     Name of the file for the model
     """

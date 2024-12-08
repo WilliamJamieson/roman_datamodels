@@ -1,17 +1,17 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsTelescope"]
 
 
-class FpsTelescopeMixin(str, _core.TaggedScalarNode, _core.EnumNodeMixin):
+class FpsTelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_tag(cls):
         return "asdf://stsci.edu/datamodels/roman/tags/fps/telescope-1.0.0"
 
 
-class FpsTelescope(FpsTelescopeMixin, Enum, metaclass=_core.NodeEnumMeta):
+class FpsTelescope(FpsTelescopeMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Telescope used to acquire the data
     """

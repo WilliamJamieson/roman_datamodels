@@ -4,7 +4,7 @@ from inspect import signature
 from pathlib import Path
 from typing import get_args
 
-from .._base import AsdfNodeMixin
+from ..core import AsdfNodeMixin
 from ._schema import RadSchema
 from ._utils import camel_case_to_snake_case
 

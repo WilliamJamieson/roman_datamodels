@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["OutlierDetection"]
 
 
-class OutlierDetection(_core.TaggedObjectNode):
+class OutlierDetection(rad.TaggedObjectNode):
     """
     Outlier Detection information
     """
@@ -12,6 +12,6 @@ class OutlierDetection(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/outlier_detection-1.0.0"
 
-    @_core.rad_field
+    @rad.rad_field
     def good_bits(self) -> str:
         return self._get_node("good_bits", lambda: "NA")

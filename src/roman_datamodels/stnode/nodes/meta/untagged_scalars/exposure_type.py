@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["ExposureType"]
 
 
-class ExposureTypeMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+class ExposureTypeMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/exposure_type-1.0.0"
 
 
-class ExposureType(ExposureTypeMixin, Enum, metaclass=_core.NodeEnumMeta):
+class ExposureType(ExposureTypeMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Exposure type
     """

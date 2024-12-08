@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
@@ -8,17 +8,17 @@ from .ref import RefCommonRefOpticalElementRef
 __all__ = ["FlatRef"]
 
 
-class FlatRef_Meta(_core.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
+class FlatRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return FlatRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.FLAT)
 
 
-class FlatRef(_core.DataModelNode):
+class FlatRef(rad.DataModelNode):
     """
     Flat field information
     """
@@ -41,18 +41,18 @@ class FlatRef(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> FlatRef_Meta:
         return self._get_node("meta", FlatRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def err(self) -> np.ndarray:
         return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))

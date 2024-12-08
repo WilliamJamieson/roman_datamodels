@@ -1,17 +1,17 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsGuidewindowModes"]
 
 
-class FpsGuidewindowModesMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+class FpsGuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/guidewindow_modes-1.0.0"
 
 
-class FpsGuidewindowModes(FpsGuidewindowModesMixin, Enum, metaclass=_core.NodeEnumMeta):
+class FpsGuidewindowModes(FpsGuidewindowModesMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Guidewindow modes
     """

@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from roman_datamodels.stnode import _base, _core
+from roman_datamodels.stnode import core, rad
 
 from ...enums import InstrumentNameEntry
 from ..untagged_scalars import WfiDetector, WfiOpticalElement
@@ -8,7 +8,7 @@ from ..untagged_scalars import WfiDetector, WfiOpticalElement
 __all__ = ["WfiMode"]
 
 
-class WfiModeMixin(_base.AdditionalNodeMixin):
+class WfiModeMixin(core.AdditionalNodeMixin):
     """
     Extensions to the WfiMode class.
         Adds to indication properties
@@ -40,7 +40,7 @@ class WfiModeMixin(_base.AdditionalNodeMixin):
             return None
 
 
-class WfiMode(WfiModeMixin, _core.TaggedObjectNode):
+class WfiMode(WfiModeMixin, rad.TaggedObjectNode):
     """
     Roman WFI Instrument
     """
@@ -49,14 +49,14 @@ class WfiMode(WfiModeMixin, _core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_mode-1.0.0"
 
-    @_core.rad_field
+    @rad.rad_field
     def name(self) -> InstrumentNameEntry:
         return self._get_node("name", lambda: InstrumentNameEntry.WFI)
 
-    @_core.rad_field
+    @rad.rad_field
     def detector(self) -> WfiDetector:
         return self._get_node("detector", lambda: WfiDetector.WFI01)
 
-    @_core.rad_field
+    @rad.rad_field
     def optical_element(self) -> WfiOpticalElement:
         return self._get_node("optical_element", lambda: WfiOpticalElement.F158)

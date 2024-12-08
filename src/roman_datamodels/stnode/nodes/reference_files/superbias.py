@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRef
@@ -8,17 +8,17 @@ from .ref import RefCommonRef
 __all__ = ["SuperbiasRef"]
 
 
-class SuperbiasRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SuperbiasRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.BIAS)
 
 
-class SuperbiasRef(_core.DataModelNode):
+class SuperbiasRef(rad.DataModelNode):
     """
     Super-bias reference schema
     """
@@ -40,18 +40,18 @@ class SuperbiasRef(_core.DataModelNode):
 
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> SuperbiasRef_Meta:
         return self._get_node("meta", SuperbiasRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def err(self) -> np.ndarray:
         return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))

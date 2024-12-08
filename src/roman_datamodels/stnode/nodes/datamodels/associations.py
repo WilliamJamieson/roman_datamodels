@@ -1,47 +1,47 @@
-from roman_datamodels.stnode import _base, _core
+from roman_datamodels.stnode import core, rad
 
 from ..enums import AssociationsExptypeEntry
 
 __all__ = ["Associations"]
 
 
-class Associations_Products_Members(_core.ImpliedNodeMixin, _core.ObjectNode):
+class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
     """The members of an association"""
 
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations_Products
 
-    @_core.rad_field
+    @rad.rad_field
     def expname(self) -> str:
         return self._get_node("expname", lambda: "file_0")
 
-    @_core.rad_field
+    @rad.rad_field
     def exposerr(self) -> str:
         return self._get_node("exposerr", lambda: "null")
 
-    @_core.rad_field
+    @rad.rad_field
     def exptype(self) -> AssociationsExptypeEntry:
         return self._get_node("exptype", lambda: AssociationsExptypeEntry.SCIENCE)
 
 
-class Associations_Products(_core.ImpliedNodeMixin, _core.ObjectNode):
+class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
     """The products of an association"""
 
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations
 
-    @_core.rad_field
+    @rad.rad_field
     def name(self) -> str:
         return self._get_node("name", lambda: "product0")
 
-    @_core.rad_field
-    def members(self) -> _base.LNode[Associations_Products_Members]:
-        return self._get_node("members", lambda: _base.LNode([]))
+    @rad.rad_field
+    def members(self) -> core.LNode[Associations_Products_Members]:
+        return self._get_node("members", lambda: core.LNode([]))
 
 
-class Associations(_core.DataModelNode):
+class Associations(rad.DataModelNode):
     """
     Association table
     """
@@ -59,43 +59,43 @@ class Associations(_core.DataModelNode):
         # default fall-back
         return (2, 3, 1)
 
-    @_core.rad_field
+    @rad.rad_field
     def asn_id(self) -> str:
         return self._get_node("asn_id", lambda: "o036")
 
-    @_core.rad_field
+    @rad.rad_field
     def asn_pool(self) -> str:
         return self._get_node("asn_pool", lambda: "r00001_20200530t023154_pool")
 
-    @_core.rad_field
+    @rad.rad_field
     def asn_type(self) -> str:
         return self._get_node("asn_type", lambda: "image")
 
-    @_core.rad_field
+    @rad.rad_field
     def asn_rule(self) -> str:
         return self._get_node("asn_rule", lambda: "candidate_Asn_Lv2Image_i2d")
 
-    @_core.rad_field
+    @rad.rad_field
     def version_id(self) -> str:
         return self._get_node("version_id", lambda: "null")
 
-    @_core.rad_field
+    @rad.rad_field
     def code_version(self) -> str:
         return self._get_node("code_version", lambda: "0.16.2.dev16+g640b0b7")
 
-    @_core.rad_field
+    @rad.rad_field
     def degraded_status(self) -> str:
         return self._get_node("degraded_status", lambda: "No known degraded exposures in association.")
 
-    @_core.rad_field
+    @rad.rad_field
     def program(self) -> int:
         return self._get_node("program", lambda: 1)
 
-    @_core.rad_field
+    @rad.rad_field
     def target(self) -> int:
         return self._get_node("target", lambda: 16)
 
-    @_core.rad_field
+    @rad.rad_field
     def constraints(self) -> str:
         return self._get_node(
             "constraints",
@@ -110,8 +110,8 @@ class Associations(_core.DataModelNode):
 
     # TODO: need to add a rule to extend typeguard to check the argument of the decorator
     #       currently this only checks that it is an LNode
-    @_core.rad_field
-    def products(self) -> _base.LNode[Associations_Products]:
+    @rad.rad_field
+    def products(self) -> core.LNode[Associations_Products]:
         def _default():
             file_idx = 0
             products = []
@@ -125,8 +125,8 @@ class Associations(_core.DataModelNode):
                         )
                     )
                     file_idx += 1
-                products.append(Associations_Products({"name": f"product{product_idx}", "members": _base.LNode(members_lst)}))
+                products.append(Associations_Products({"name": f"product{product_idx}", "members": core.LNode(members_lst)}))
 
-            return _base.LNode(products)
+            return core.LNode(products)
 
         return self._get_node("products", _default)

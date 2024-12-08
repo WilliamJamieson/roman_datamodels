@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["TvacWfiOpticalElement"]
 
 
-class TvacWfiOpticalElementMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+class TvacWfiOpticalElementMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_optical_element-1.0.0"
 
 
-class TvacWfiOpticalElement(TvacWfiOpticalElementMixin, Enum, metaclass=_core.NodeEnumMeta):
+class TvacWfiOpticalElement(TvacWfiOpticalElementMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     WFI Optical Element
     """

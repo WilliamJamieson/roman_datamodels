@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["CoordinatesReferenceFrameEntry"]
 
 
-class CoordinatesReferenceFrameEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class CoordinatesReferenceFrameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(self) -> type:
         from ..meta import Coordinates
@@ -17,7 +17,7 @@ class CoordinatesReferenceFrameEntryMixin(str, _core.EnumNodeMixin, _core.Scalar
         return "reference_frame"
 
 
-class CoordinatesReferenceFrameEntry(CoordinatesReferenceFrameEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class CoordinatesReferenceFrameEntry(CoordinatesReferenceFrameEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible reference_frame entries
     """

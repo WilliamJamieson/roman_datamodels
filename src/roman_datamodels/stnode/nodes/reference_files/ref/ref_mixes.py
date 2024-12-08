@@ -5,7 +5,7 @@ work properly. Since this is reused in multiple places, I decided to make it a s
 It is its own module because it is a weird special case.
 """
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from .ref_common import RefCommonRef, RefCommonRef_Instrument
 from .ref_optical_element import RefOpticalElementRef, RefOpticalElementRef_Instrument
@@ -13,7 +13,7 @@ from .ref_optical_element import RefOpticalElementRef, RefOpticalElementRef_Inst
 __all__ = ["RefCommonRefOpticalElementRef"]
 
 
-class RefCommonRefOpticalElementRef_Instrument(RefCommonRef_Instrument, RefOpticalElementRef_Instrument, _core.ImpliedNodeMixin):
+class RefCommonRefOpticalElementRef_Instrument(RefCommonRef_Instrument, RefOpticalElementRef_Instrument, rad.ImpliedNodeMixin):
     @classmethod
     def asdf_implied_by(cls):
         return RefCommonRefOpticalElementRef
@@ -36,6 +36,6 @@ class RefCommonRefOpticalElementRef(RefCommonRef, RefOpticalElementRef):
             *RefOpticalElementRef.asdf_required(),
         }
 
-    @_core.rad_field
+    @rad.rad_field
     def instrument(self) -> RefCommonRefOpticalElementRef_Instrument:
         return self._get_node("instrument", RefCommonRefOpticalElementRef_Instrument)

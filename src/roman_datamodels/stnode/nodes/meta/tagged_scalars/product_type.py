@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["ProductType"]
 
 
-class ProductType(str, _core.TaggedScalarNode):
+class ProductType(str, rad.TaggedScalarNode):
     """
     Type of data product
     """

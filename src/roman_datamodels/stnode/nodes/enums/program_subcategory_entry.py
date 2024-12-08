@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["ProgramSubcategoryEntry"]
 
 
-class ProgramSubcategoryEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class ProgramSubcategoryEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Program
@@ -17,7 +17,7 @@ class ProgramSubcategoryEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "subcategory"
 
 
-class ProgramSubcategoryEntry(ProgramSubcategoryEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class ProgramSubcategoryEntry(ProgramSubcategoryEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible program subcategories
     """

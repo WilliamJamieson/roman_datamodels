@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["CalibrationSoftwareName"]
 
 
-class CalibrationSoftwareName(str, _core.TaggedScalarNode):
+class CalibrationSoftwareName(str, rad.TaggedScalarNode):
     """
     Name of the calibration software used
     """

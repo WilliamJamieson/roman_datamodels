@@ -1,17 +1,17 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsWfiDetector"]
 
 
-class FpsWfiDetectorMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+class FpsWfiDetectorMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_detector-1.0.0"
 
 
-class FpsWfiDetector(FpsWfiDetectorMixin, Enum, metaclass=_core.NodeEnumMeta):
+class FpsWfiDetector(FpsWfiDetectorMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     WFI Detector
     """

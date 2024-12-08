@@ -1,13 +1,13 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..meta import Common
 
 __all__ = ["WfiScienceRaw"]
 
 
-class WfiScienceRaw(_core.DataModelNode):
+class WfiScienceRaw(rad.DataModelNode):
     """
     Basic Roman Raw Science
     """
@@ -30,18 +30,18 @@ class WfiScienceRaw(_core.DataModelNode):
         # default fall-back
         return (8, 4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> Common:
         return self._get_node("meta", Common)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint16))
 
-    @_core.rad_field
+    @rad.rad_field
     def amp33(self) -> np.ndarray:
         return self._get_node("amp33", lambda: np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16))
 
-    @_core.rad_field
+    @rad.rad_field
     def resultantdq(self) -> np.ndarray:
         return self._get_node("resultantdq", lambda: np.zeros(self.array_shape, dtype=np.uint8))

@@ -37,7 +37,7 @@ class LNode(AsdfNodeMixin, UserList, Generic[T]):
         return list(self)
 
     def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> list:
-        from .._core import TagMixin
+        from ..rad import TagMixin
 
         tree = self.unwrap()
         for i, item in enumerate(tree):

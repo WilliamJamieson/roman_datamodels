@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["SkyBackgroundMethodEntry"]
 
 
-class SkyBackgroundMethodEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class SkyBackgroundMethodEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import SkyBackground
@@ -17,7 +17,7 @@ class SkyBackgroundMethodEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "method"
 
 
-class SkyBackgroundMethodEntry(SkyBackgroundMethodEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class SkyBackgroundMethodEntry(SkyBackgroundMethodEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for method in sky_background
     """

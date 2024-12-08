@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsCalibrationSoftwareVersion"]
 
 
-class FpsCalibrationSoftwareVersion(str, _core.TaggedScalarNode):
+class FpsCalibrationSoftwareVersion(str, rad.TaggedScalarNode):
     """
     Version of the calibration software used
     """

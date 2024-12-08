@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["RcsBankEntry", "RcsElectronicsEntry", "RcsLedEntry"]
 
 
-class RcsElectronicsEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class RcsElectronicsEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Rcs
@@ -17,7 +17,7 @@ class RcsElectronicsEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "electronics"
 
 
-class RcsElectronicsEntry(RcsElectronicsEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class RcsElectronicsEntry(RcsElectronicsEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible electronics in rcs
     """
@@ -27,7 +27,7 @@ class RcsElectronicsEntry(RcsElectronicsEntryMixin, Enum, metaclass=_core.NodeEn
     NONE = "None"
 
 
-class RcsBankEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class RcsBankEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Rcs
@@ -39,7 +39,7 @@ class RcsBankEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "bank"
 
 
-class RcsBankEntry(RcsBankEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class RcsBankEntry(RcsBankEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible banks in rcs
     """
@@ -49,7 +49,7 @@ class RcsBankEntry(RcsBankEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
     NONE = "None"
 
 
-class RcsLedEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class RcsLedEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Rcs
@@ -61,7 +61,7 @@ class RcsLedEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "led"
 
 
-class RcsLedEntry(RcsLedEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class RcsLedEntry(RcsLedEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible leds in rcs
     """

@@ -1,6 +1,6 @@
 from astropy.table import Table
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..meta import (
     Basic,
@@ -12,25 +12,25 @@ from ..meta import (
 __all__ = ["MosaicSourceCatalog"]
 
 
-class MosaicSourceCatalog_Meta(_core.ImpliedNodeMixin, Basic):
+class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MosaicSourceCatalog
 
-    @_core.rad_field
+    @rad.rad_field
     def basic(self) -> MosaicBasic:
         return self._get_node("basic", MosaicBasic)
 
-    @_core.rad_field
+    @rad.rad_field
     def photometry(self) -> Photometry:
         return self._get_node("photometry", Photometry)
 
-    @_core.rad_field
+    @rad.rad_field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
 
-class MosaicSourceCatalog(_core.DataModelNode):
+class MosaicSourceCatalog(rad.DataModelNode):
     """
     Photometry and astrometry computed by the Source Catalog Step
     """
@@ -43,10 +43,10 @@ class MosaicSourceCatalog(_core.DataModelNode):
     def array_shape(self) -> tuple[int]:
         raise NotImplementedError("This node does not have an array shape")
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> MosaicSourceCatalog_Meta:
         return self._get_node("meta", MosaicSourceCatalog_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def source_catalog(self) -> Table:
         return self._get_node("source_catalog", lambda: Table([range(3), range(3)], names=["a", "b"]))

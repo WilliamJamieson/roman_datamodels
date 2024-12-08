@@ -4,7 +4,7 @@ from typing import Any
 
 from astropy.time import Time
 
-from .._base import FlushOptions
+from ..core import FlushOptions
 from ._mixins import RadNodeMixin, SchemaMixin, TagMixin
 
 __all__ = [

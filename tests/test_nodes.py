@@ -13,7 +13,7 @@ from astropy.time import Time
 from gwcs import WCS
 from rad import resources
 
-from roman_datamodels.stnode import _base, _core, _registry, nodes
+from roman_datamodels.stnode import _registry, core, nodes, rad
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -48,7 +48,7 @@ def test_node_exists_for_schema(schema_file):
     assert _registry.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uri() == uri
 
     # check the class name against the uri
-    assert _core.class_name_from_uri(uri) == _registry.RDM_NODE_REGISTRY.schema_registry[uri].__name__
+    assert rad.class_name_from_uri(uri) == _registry.RDM_NODE_REGISTRY.schema_registry[uri].__name__
 
 
 def manifest_tags():
@@ -80,14 +80,14 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
     assert _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uri() == schema_uri
 
     # check the class name against the tag uri
-    assert _core.class_name_from_uri(tag_uri) == _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
+    assert rad.class_name_from_uri(tag_uri) == _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
 
 
 def parse_orphan_name(name):
     split = name.split("_")
     assert len(split) > 1
 
-    return "_".join(split[:-1]), _core.camel_case_to_snake_case(split[-1])
+    return "_".join(split[:-1]), rad.camel_case_to_snake_case(split[-1])
 
 
 def get_containing_cls(containing_name):
@@ -102,7 +102,7 @@ def test_implied_node(node_cls):
     Test that the implied nodes follow a consistent naming pattern
         <ContainingNodeName>_<PropertyName>
     """
-    assert issubclass(node_cls, _core.ImpliedNodeMixin)
+    assert issubclass(node_cls, rad.ImpliedNodeMixin)
     containing_name, property_name = parse_orphan_name(node_cls.__name__)
 
     containing_cls = get_containing_cls(containing_name)
@@ -116,7 +116,7 @@ def test_implied_node(node_cls):
 
     # Check that the property's return type matches the orphan node
     annotation = signature(cls_property.fget).return_annotation
-    assert annotation is node_cls or annotation == _base.LNode[node_cls] or annotation == _base.DNode[str, node_cls]
+    assert annotation is node_cls or annotation == core.LNode[node_cls] or annotation == core.DNode[str, node_cls]
 
     schema = node_cls.asdf_schema().schema
 
@@ -124,12 +124,12 @@ def test_implied_node(node_cls):
     if annotation is node_cls:
         assert "allOf" in schema or ("type" in schema and schema["type"] == "object")
 
-    elif annotation == _base.LNode[node_cls]:
+    elif annotation == core.LNode[node_cls]:
         assert "type" in schema and schema["type"] == "array"
         assert "items" in schema
         assert "allOf" in schema["items"] or ("type" in schema["items"] and schema["items"]["type"] == "object")
 
-    elif annotation == _base.DNode[str, node_cls]:
+    elif annotation == core.DNode[str, node_cls]:
         assert "type" in schema and schema["type"] == "object"
         assert "patternProperties" in schema
         pattern_schema = schema["patternProperties"][next(iter(schema["patternProperties"]))]
@@ -186,9 +186,7 @@ def get_properties(schema):
     return set()
 
 
-_OBJECT_NODES = _core.get_nodes(
-    _core.ObjectNode, (_core.ObjectNode, _core.SchemaObjectNode, _core.TaggedObjectNode, _core.DataModelNode)
-)
+_OBJECT_NODES = rad.get_nodes(rad.ObjectNode, (rad.ObjectNode, rad.SchemaObjectNode, rad.TaggedObjectNode, rad.DataModelNode))
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
@@ -203,7 +201,7 @@ def test_fields_in_schema(node_cls):
     if node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]:
         fields = fields | {"type", "p_exptype"}
 
-    assert fields == set(_core.get_node_fields(node_cls))
+    assert fields == set(rad.get_node_fields(node_cls))
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
@@ -212,7 +210,7 @@ def test_fields(node_cls):
     Check that the fields property returns the correct fields
     """
 
-    properties = set(_core.get_node_fields(node_cls)) | set(node_cls._extra_fields())
+    properties = set(rad.get_node_fields(node_cls)) | set(node_cls._extra_fields())
     instance = node_cls()
     assert instance._fields is None
     assert properties == set(instance.fields)
@@ -220,7 +218,7 @@ def test_fields(node_cls):
 
     for field in properties:
         assert hasattr(node_cls, field)
-        assert isinstance(getattr(node_cls, field), _core.rad_field_property)
+        assert isinstance(getattr(node_cls, field), rad.rad_field_property)
 
 
 def find_property_schema(schema, property_name):
@@ -286,7 +284,7 @@ def build_annotation_from_schema(schema, annotation):
                     # check that the annotation is for string key dictionary
                     annotation_args = get_args(annotation)
                     assert len(annotation_args) == 2  # base_type, value_type
-                    assert annotation_args[0] is _base.DNode
+                    assert annotation_args[0] is core.DNode
                     assert len(annotation_args[1]) == 2  # key_type, value_type
                     assert annotation_args[1][0] is str  # string key
 
@@ -296,7 +294,7 @@ def build_annotation_from_schema(schema, annotation):
                     # The annotation is correct in this case
                     return annotation
 
-                return _base.DNode
+                return core.DNode
             case "array":
                 if "items" in schema:
                     annotation_args = get_args(annotation)
@@ -304,10 +302,10 @@ def build_annotation_from_schema(schema, annotation):
                     assert len(annotation_args) == 2
                     if len(get_args(annotation_args[0])) > 1:
                         annotation_args = get_args(annotation_args[0])
-                    assert annotation_args[0] is _base.LNode
+                    assert annotation_args[0] is core.LNode
                     base_annotation = build_annotation_from_schema(schema["items"], annotation_args[1])
 
-                    return _base.LNode[base_annotation]
+                    return core.LNode[base_annotation]
 
                 raise ValueError(f"Array schema {schema} does not have items")
             case "null" | None:
@@ -344,18 +342,18 @@ def build_annotation_from_schema(schema, annotation):
 
 def get_value_for_coerce(default_value):
     # Handle all the object types AND dicts
-    if isinstance(default_value, _base.DNode):
+    if isinstance(default_value, core.DNode):
         # Strip away the outer node
         value = default_value.__asdf_traverse__()
         assert type(value) is dict
 
     # Handle all the lists
-    elif isinstance(default_value, _base.LNode):
+    elif isinstance(default_value, core.LNode):
         # Strip away the outer node
         value = default_value.__asdf_traverse__()
         assert type(value) is list
 
-    elif isinstance(default_value, _core.SchemaScalarNode):
+    elif isinstance(default_value, rad.SchemaScalarNode):
         # Strip away the scalar node
         value = type(default_value).__bases__[0](default_value)
         assert type(value) is type(default_value).__bases__[0]
@@ -407,7 +405,7 @@ def get_testing_default_values(node_cls, property_name) -> tuple:
     Get clean pair of default values for testing
     """
     array_shape = None
-    if issubclass(node_cls, _core.DataModelNode):
+    if issubclass(node_cls, rad.DataModelNode):
         try:
             array_shape = node_cls().array_shape
         except NotImplementedError:
@@ -435,14 +433,14 @@ def test_wrap_into_node_setting(node_cls):
     Check that things get coerced to the right value during setting
     """
 
-    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
+    properties = rad.get_node_fields(node_cls) + node_cls._extra_fields()
 
     for property_name in properties:
         stored_name = "pass" if property_name == "pass_" else property_name
         default_value, compare_value, instance = get_testing_default_values(node_cls, property_name)
 
         # These only ones we care about are the nodes
-        if not isinstance(default_value, _base.DNode | _base.LNode | _core.SchemaScalarNode):
+        if not isinstance(default_value, core.DNode | core.LNode | rad.SchemaScalarNode):
             continue
 
         value = default_value.unwrap()
@@ -470,14 +468,14 @@ def test_coerce_getting(node_cls):
     Check that things get coerced to the right value when getting
     """
 
-    properties = _core.get_node_fields(node_cls) + node_cls._extra_fields()
+    properties = rad.get_node_fields(node_cls) + node_cls._extra_fields()
 
     for property_name in properties:
         stored_name = "pass" if property_name == "pass_" else property_name
         default_value, compare_value, _ = get_testing_default_values(node_cls, property_name)
 
         # These only ones we care about are the nodes
-        if not isinstance(default_value, _base.DNode | _base.LNode | _core.SchemaScalarNode):
+        if not isinstance(default_value, core.DNode | core.LNode | rad.SchemaScalarNode):
             continue
         value = default_value.unwrap()
 
@@ -508,7 +506,7 @@ def test_flush_none(node_cls):
     instance = node_cls()
     assert instance._data == {}
 
-    instance.flush(flush=_base.FlushOptions.NONE, warn=True)
+    instance.flush(flush=core.FlushOptions.NONE, warn=True)
     assert instance._data == {}  # Nothing should have changed
 
 
@@ -545,14 +543,14 @@ def test_flush_all(node_cls):
 
     # Check that the instance can be brought into a valid state
     with pytest.warns(UserWarning):
-        instance.flush(flush=_base.FlushOptions.ALL, warn=True)
+        instance.flush(flush=core.FlushOptions.ALL, warn=True)
 
     keys = set(instance._data.keys())
     if "pass" in keys:
         keys.add("pass_")
         keys.remove("pass")
 
-    assert keys == set(_core.get_node_fields(node_cls))
+    assert keys == set(rad.get_node_fields(node_cls))
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
@@ -565,14 +563,14 @@ def test_flush_extra(node_cls):
 
     # Check that the instance can be brought into a valid state
     with pytest.warns(UserWarning):
-        instance.flush(flush=_base.FlushOptions.EXTRA, warn=True)
+        instance.flush(flush=core.FlushOptions.EXTRA, warn=True)
 
     keys = set(instance._data.keys())
     if "pass" in keys:
         keys.add("pass_")
         keys.remove("pass")
 
-    assert keys == set(_core.get_node_fields(node_cls)) | set(node_cls._extra_fields())
+    assert keys == set(rad.get_node_fields(node_cls)) | set(node_cls._extra_fields())
 
 
 def test_wfi_mode_mixin():
@@ -650,7 +648,7 @@ def test_to_asdf_tree(node_cls):
         instance = next(iter(node_cls))
     else:
         instance = node_cls()
-    instance.to_asdf_tree(flush=_base.FlushOptions.EXTRA)
+    instance.to_asdf_tree(flush=core.FlushOptions.EXTRA)
 
 
 @pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
@@ -678,11 +676,11 @@ def test_enum_node(node_cls):
     Test that the enum node class matches the schema section it is pointed at
     """
     assert issubclass(node_cls, Enum)
-    assert issubclass(node_cls, _core.EnumNodeMixin)
+    assert issubclass(node_cls, rad.EnumNodeMixin)
 
     # Get the enums listed in the schema
     # These are the ones defined explicitly by their own schema file
-    if issubclass(node_cls, _core.SchemaScalarNode):
+    if issubclass(node_cls, rad.SchemaScalarNode):
         schema = node_cls.asdf_schema().schema
         assert "enum" in schema
         schema_enum_list = schema["enum"]
@@ -750,7 +748,7 @@ def test_enum_exists(node_cls):
         return
 
     # Only check the actual fields
-    fields = _core.get_node_fields(node_cls)
+    fields = rad.get_node_fields(node_cls)
     for field in fields:
         # These are going to be removed shortly anyways, so I'm not going to
         # bother making enums for them

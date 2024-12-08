@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRef
@@ -9,25 +9,25 @@ from .ref import RefCommonRef
 __all__ = ["RefpixRef"]
 
 
-class RefpixRef_Meta(_core.ImpliedNodeMixin, RefCommonRef):
+class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefpixRef
 
-    @_core.rad_field
+    @rad.rad_field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.REFPIX)
 
-    @_core.rad_field
+    @rad.rad_field
     def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.DN)
 
-    @_core.rad_field
+    @rad.rad_field
     def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.DN)
 
 
-class RefpixRef(_core.DataModelNode):
+class RefpixRef(rad.DataModelNode):
     """
     Reference pixel correction reference schema
     """
@@ -50,18 +50,18 @@ class RefpixRef(_core.DataModelNode):
         # default fall-back
         return (32, 286721)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> RefpixRef_Meta:
         return self._get_node("meta", RefpixRef_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def gamma(self) -> np.ndarray:
         return self._get_node("gamma", lambda: np.zeros(self.array_shape, dtype=np.complex128))
 
-    @_core.rad_field
+    @rad.rad_field
     def zeta(self) -> np.ndarray:
         return self._get_node("zeta", lambda: np.zeros(self.array_shape, dtype=np.complex128))
 
-    @_core.rad_field
+    @rad.rad_field
     def alpha(self) -> np.ndarray:
         return self._get_node("alpha", lambda: np.zeros(self.array_shape, dtype=np.complex128))

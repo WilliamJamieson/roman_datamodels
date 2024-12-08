@@ -1,17 +1,17 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["RefTypeEntry"]
 
 
-class RefTypeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_schema(cls) -> _core.RadSchema:
-        return _core.RadSchema([])
+    def asdf_schema(cls) -> rad.RadSchema:
+        return rad.RadSchema([])
 
 
-class RefTypeEntry(RefTypeEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class RefTypeEntry(RefTypeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible ref_type entries
     -> this one doesn't actually exist but it is impled by each of the reftype entries

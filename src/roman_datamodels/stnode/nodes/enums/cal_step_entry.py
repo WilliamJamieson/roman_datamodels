@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["CalStepEntry"]
 
 
-class CalStepEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class CalStepEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import L2CalStep
@@ -17,7 +17,7 @@ class CalStepEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "assign_wcs"
 
 
-class CalStepEntry(CalStepEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class CalStepEntry(CalStepEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible CalStep entries
     """

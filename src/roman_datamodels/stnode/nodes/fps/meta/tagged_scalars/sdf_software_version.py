@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsSdfSoftwareVersion"]
 
 
-class FpsSdfSoftwareVersion(str, _core.TaggedScalarNode):
+class FpsSdfSoftwareVersion(str, rad.TaggedScalarNode):
     """
     SDF software version number
     """

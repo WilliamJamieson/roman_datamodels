@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["ResampleWeightTypeEntry"]
 
 
-class ResampleWeightTypeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class ResampleWeightTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..meta import Resample
@@ -17,7 +17,7 @@ class ResampleWeightTypeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "weight_type"
 
 
-class ResampleWeightTypeEntry(ResampleWeightTypeEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class ResampleWeightTypeEntry(ResampleWeightTypeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for resample weight type
     """

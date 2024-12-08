@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["TvacTelescope"]
 
 
-class TvacTelescopeMixin(str, _core.TaggedScalarNode, _core.EnumNodeMixin):
+class TvacTelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
     """
     Telescope used to acquire the data
     """
@@ -17,7 +17,7 @@ class TvacTelescopeMixin(str, _core.TaggedScalarNode, _core.EnumNodeMixin):
         return "asdf://stsci.edu/datamodels/roman/tags/tvac/telescope-1.0.0"
 
 
-class TvacTelescope(TvacTelescopeMixin, Enum, metaclass=_core.NodeEnumMeta):
+class TvacTelescope(TvacTelescopeMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enumerate the telescopes
     """

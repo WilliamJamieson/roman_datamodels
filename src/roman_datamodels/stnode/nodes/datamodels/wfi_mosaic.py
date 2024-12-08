@@ -1,7 +1,7 @@
 import numpy as np
 from gwcs import WCS
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _default, rad
 
 from ..meta import (
     Basic,
@@ -21,57 +21,57 @@ from ..meta import (
 __all__ = ["WfiMosaic"]
 
 
-class WfiMosaic_Meta(_core.ImpliedNodeMixin, Basic):
+class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiMosaic
 
-    @_core.rad_field
+    @rad.rad_field
     def asn(self) -> MosaicAssociations:
         return self._get_node("asn", MosaicAssociations)
 
-    @_core.rad_field
+    @rad.rad_field
     def basic(self) -> MosaicBasic:
         return self._get_node("basic", MosaicBasic)
 
-    @_core.rad_field
+    @rad.rad_field
     def cal_step(self) -> L3CalStep:
         return self._get_node("cal_step", L3CalStep)
 
-    @_core.rad_field
+    @rad.rad_field
     def coordinates(self) -> Coordinates:
         return self._get_node("coordinates", Coordinates)
 
-    @_core.rad_field
+    @rad.rad_field
     def individual_image_meta(self) -> IndividualImageMeta:
         return self._get_node("individual_image_meta", IndividualImageMeta)
 
-    @_core.rad_field
+    @rad.rad_field
     def photometry(self) -> Photometry:
         return self._get_node("photometry", Photometry)
 
-    @_core.rad_field
+    @rad.rad_field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
-    @_core.rad_field
+    @rad.rad_field
     def ref_file(self) -> RefFile:
         return self._get_node("ref_file", RefFile)
 
-    @_core.rad_field
+    @rad.rad_field
     def resample(self) -> Resample:
         return self._get_node("resample", Resample)
 
-    @_core.rad_field
+    @rad.rad_field
     def wcs(self) -> WCS | None:
         return self._get_node("wcs", _default.Wcs)
 
-    @_core.rad_field
+    @rad.rad_field
     def wcsinfo(self) -> MosaicWcsinfo:
         return self._get_node("wcsinfo", MosaicWcsinfo)
 
 
-class WfiMosaic(_core.DataModelNode):
+class WfiMosaic(rad.DataModelNode):
     """
     WFI Level 3 mosaics data
     """
@@ -107,38 +107,38 @@ class WfiMosaic(_core.DataModelNode):
         # default fall-back
         return 2
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> WfiMosaic_Meta:
         return self._get_node("meta", WfiMosaic_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def err(self) -> np.ndarray:
         return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def context(self) -> np.ndarray:
         return self._get_node("context", lambda: np.zeros((self._n_images, *self.array_shape), dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def weight(self) -> np.ndarray:
         return self._get_node("weight", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def var_poisson(self) -> np.ndarray:
         return self._get_node("var_poisson", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def var_rnoise(self) -> np.ndarray:
         return self._get_node("var_rnoise", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def var_flat(self) -> np.ndarray:
         return self._get_node("var_flat", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def cal_logs(self) -> CalLogs:
         return self._get_node("cal_logs", CalLogs.default)

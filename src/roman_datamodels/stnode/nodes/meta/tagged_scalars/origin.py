@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["Origin"]
 
 
-class OriginMixin(str, _core.TaggedScalarNode, _core.EnumNodeMixin):
+class OriginMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/origin-1.0.0"
 
 
-class Origin(OriginMixin, Enum, metaclass=_core.NodeEnumMeta):
+class Origin(OriginMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Organization responsible for creating file
     """

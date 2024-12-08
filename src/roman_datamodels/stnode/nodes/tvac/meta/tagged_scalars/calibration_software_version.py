@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["TvacCalibrationSoftwareVersion"]
 
 
-class TvacCalibrationSoftwareVersion(str, _core.TaggedScalarNode):
+class TvacCalibrationSoftwareVersion(str, rad.TaggedScalarNode):
     """
     Version of the calibration software used
     """

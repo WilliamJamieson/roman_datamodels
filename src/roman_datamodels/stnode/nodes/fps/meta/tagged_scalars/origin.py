@@ -1,17 +1,17 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsOrigin"]
 
 
-class FpsOriginMixin(str, _core.TaggedScalarNode, _core.EnumNodeMixin):
+class FpsOriginMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/origin-1.0.0"
 
 
-class FpsOrigin(FpsOriginMixin, Enum, metaclass=_core.NodeEnumMeta):
+class FpsOrigin(FpsOriginMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Organization responsible for creating file
     """

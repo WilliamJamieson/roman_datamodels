@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..meta import (
     Basic,
@@ -11,21 +11,21 @@ from ..meta import (
 __all__ = ["MosaicSegmentationMap"]
 
 
-class MosaicSegmentationMap_Meta(_core.ImpliedNodeMixin, Basic):
+class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MosaicSegmentationMap
 
-    @_core.rad_field
+    @rad.rad_field
     def basic(self) -> MosaicBasic:
         return self._get_node("basic", MosaicBasic)
 
-    @_core.rad_field
+    @rad.rad_field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
 
-class MosaicSegmentationMap(_core.DataModelNode):
+class MosaicSegmentationMap(rad.DataModelNode):
     """
     Segmentation map computed by the Source Catalog Step
     """
@@ -48,10 +48,10 @@ class MosaicSegmentationMap(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> MosaicSegmentationMap_Meta:
         return self._get_node("meta", MosaicSegmentationMap_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint32))

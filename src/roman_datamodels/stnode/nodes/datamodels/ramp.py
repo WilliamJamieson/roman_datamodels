@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from ..meta import (
     Common,
@@ -10,17 +10,17 @@ from ..meta import (
 __all__ = ["Ramp"]
 
 
-class Ramp_Meta(_core.ImpliedNodeMixin, Common):
+class Ramp_Meta(rad.ImpliedNodeMixin, Common):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Ramp
 
-    @_core.rad_field
+    @rad.rad_field
     def cal_step(self) -> L2CalStep:
         return self._get_node("cal_step", L2CalStep)
 
 
-class Ramp(_core.DataModelNode):
+class Ramp(rad.DataModelNode):
     """
     Ramp schema
     """
@@ -43,66 +43,66 @@ class Ramp(_core.DataModelNode):
         # default fall-back
         return (8, 4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> Ramp_Meta:
         return self._get_node("meta", Ramp_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.full(self.array_shape, 1.0, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def pixeldq(self) -> np.ndarray:
         return self._get_node("pixeldq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def groupdq(self) -> np.ndarray:
         return self._get_node("groupdq", lambda: np.zeros(self.array_shape, dtype=np.uint8))
 
-    @_core.rad_field
+    @rad.rad_field
     def err(self) -> np.ndarray:
         return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @_core.rad_field
+    @rad.rad_field
     def amp33(self) -> np.ndarray:
         return self._get_node("amp33", lambda: np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16))
 
-    @_core.rad_field
+    @rad.rad_field
     def border_ref_pix_left(self) -> np.ndarray:
         return self._get_node(
             "border_ref_pix_left", lambda: np.zeros((self.array_shape[0], self.array_shape[1], 4), dtype=np.float32)
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def border_ref_pix_right(self) -> np.ndarray:
         return self._get_node(
             "border_ref_pix_right", lambda: np.zeros((self.array_shape[0], self.array_shape[1], 4), dtype=np.float32)
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def border_ref_pix_top(self) -> np.ndarray:
         return self._get_node(
             "border_ref_pix_top", lambda: np.zeros((self.array_shape[0], 4, self.array_shape[2]), dtype=np.float32)
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def border_ref_pix_bottom(self) -> np.ndarray:
         return self._get_node(
             "border_ref_pix_bottom", lambda: np.zeros((self.array_shape[0], 4, self.array_shape[2]), dtype=np.float32)
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def dq_border_ref_pix_left(self) -> np.ndarray:
         return self._get_node("dq_border_ref_pix_left", lambda: np.zeros((self.array_shape[1], 4), dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def dq_border_ref_pix_right(self) -> np.ndarray:
         return self._get_node("dq_border_ref_pix_right", lambda: np.zeros((self.array_shape[1], 4), dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def dq_border_ref_pix_top(self) -> np.ndarray:
         return self._get_node("dq_border_ref_pix_top", lambda: np.zeros((4, self.array_shape[2]), dtype=np.uint32))
 
-    @_core.rad_field
+    @rad.rad_field
     def dq_border_ref_pix_bottom(self) -> np.ndarray:
         return self._get_node("dq_border_ref_pix_bottom", lambda: np.zeros((4, self.array_shape[2]), dtype=np.uint32))

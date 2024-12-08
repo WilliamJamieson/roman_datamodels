@@ -1,6 +1,6 @@
 from abc import ABC
 
-from .._base import LNode
+from ..core import LNode
 from ._mixins import SchemaMixin, TagMixin
 
 __all__ = [

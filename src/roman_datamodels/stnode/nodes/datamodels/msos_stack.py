@@ -1,23 +1,23 @@
 import numpy as np
 
-from roman_datamodels.stnode import _core, _default
+from roman_datamodels.stnode import _default, rad
 
 from ..meta import Common
 
 __all__ = ["MsosStack"]
 
 
-class MsosStack_Meta(_core.ImpliedNodeMixin, Common):
+class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MsosStack
 
-    @_core.rad_field
+    @rad.rad_field
     def image_list(self) -> str:
         return self._get_node("image_list", lambda: _default.NOSTR)
 
 
-class MsosStack(_core.DataModelNode):
+class MsosStack(rad.DataModelNode):
     """
     Level 3 schema for SSC's MSOS stack products
     """
@@ -40,22 +40,22 @@ class MsosStack(_core.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> MsosStack_Meta:
         return self._get_node("meta", MsosStack_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @_core.rad_field
+    @rad.rad_field
     def uncertainty(self) -> np.ndarray:
         return self._get_node("uncertainty", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @_core.rad_field
+    @rad.rad_field
     def mask(self) -> np.ndarray:
         return self._get_node("mask", lambda: np.zeros(self.array_shape, dtype=np.uint8))
 
-    @_core.rad_field
+    @rad.rad_field
     def coverage(self) -> np.ndarray:
         return self._get_node("coverage", lambda: np.zeros(self.array_shape, dtype=np.uint8))

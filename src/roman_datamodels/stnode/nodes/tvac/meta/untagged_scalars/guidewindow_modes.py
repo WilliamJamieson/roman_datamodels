@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["TvacGuidewindowModes"]
 
 
-class TvacGuidewindowModesMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+class TvacGuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/guidewindow_modes-1.0.0"
 
 
-class TvacGuidewindowModes(TvacGuidewindowModesMixin, Enum, metaclass=_core.NodeEnumMeta):
+class TvacGuidewindowModes(TvacGuidewindowModesMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Guidewindow modes
     """

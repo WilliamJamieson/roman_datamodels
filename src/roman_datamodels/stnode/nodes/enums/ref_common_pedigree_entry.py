@@ -1,11 +1,11 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["RefCommonPedigreeEntry"]
 
 
-class RefCommonPedigreeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
+class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         from ..reference_files import RefCommonRef
@@ -17,7 +17,7 @@ class RefCommonPedigreeEntryMixin(str, _core.EnumNodeMixin, _core.ScalarNode):
         return "pedigree"
 
 
-class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, Enum, metaclass=_core.NodeEnumMeta):
+class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for pedigree in ref_common
     """

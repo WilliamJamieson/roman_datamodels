@@ -1,9 +1,9 @@
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["SourceCatalog"]
 
 
-class SourceCatalog(_core.TaggedObjectNode):
+class SourceCatalog(rad.TaggedObjectNode):
     """
     Source detection catalog for TweakReg
     """
@@ -12,6 +12,6 @@ class SourceCatalog(_core.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/source_catalog-1.0.0"
 
-    @_core.rad_field
+    @rad.rad_field
     def tweakreg_catalog_name(self) -> str:
         return self._get_node("tweakreg_catalog_name", lambda: "catalog")

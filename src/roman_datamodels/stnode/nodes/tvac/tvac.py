@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 from .meta import (
     TvacCommon,
@@ -11,17 +11,17 @@ from .meta import (
 __all__ = ["Tvac"]
 
 
-class Tvac_Meta(_core.ImpliedNodeMixin, TvacCommon):
+class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Tvac
 
-    @_core.rad_field
+    @rad.rad_field
     def groundtest(self) -> TvacGroundtest:
         return self._get_node("groundtest", TvacGroundtest)
 
 
-class Tvac(_core.DataModelNode):
+class Tvac(rad.DataModelNode):
     """
     Tvac test data
     """
@@ -44,15 +44,15 @@ class Tvac(_core.DataModelNode):
         # default fall-back
         return (8, 4096, 4096)
 
-    @_core.rad_field
+    @rad.rad_field
     def meta(self) -> Tvac_Meta:
         return self._get_node("meta", Tvac_Meta)
 
-    @_core.rad_field
+    @rad.rad_field
     def data(self) -> u.Quantity:
         return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=u.DN, dtype=np.uint16))
 
-    @_core.rad_field
+    @rad.rad_field
     def amp33(self) -> u.Quantity:
         return self._get_node(
             "amp33",
@@ -61,7 +61,7 @@ class Tvac(_core.DataModelNode):
             ),
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def amp33_reset_reads(self) -> u.Quantity:
         return self._get_node(
             "amp33_reset_reads",
@@ -70,7 +70,7 @@ class Tvac(_core.DataModelNode):
             ),
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def amp33_reference_read(self) -> u.Quantity:
         return self._get_node(
             "amp33_reference_read",
@@ -79,7 +79,7 @@ class Tvac(_core.DataModelNode):
             ),
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def guidewindow(self) -> u.Quantity:
         return self._get_node(
             "guidewindow",
@@ -88,7 +88,7 @@ class Tvac(_core.DataModelNode):
             ),
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def reference_read(self) -> u.Quantity:
         return self._get_node(
             "reference_read",
@@ -97,7 +97,7 @@ class Tvac(_core.DataModelNode):
             ),
         )
 
-    @_core.rad_field
+    @rad.rad_field
     def reset_reads(self) -> u.Quantity:
         return self._get_node(
             "reset_reads",

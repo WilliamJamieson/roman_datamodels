@@ -1,17 +1,17 @@
 from enum import Enum
 
-from roman_datamodels.stnode import _core
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsExposureType"]
 
 
-class FpsExposureTypeMixin(str, _core.SchemaScalarNode, _core.EnumNodeMixin):
+class FpsExposureTypeMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/fps/exposure_type-1.0.0"
 
 
-class FpsExposureType(FpsExposureTypeMixin, Enum, metaclass=_core.NodeEnumMeta):
+class FpsExposureType(FpsExposureTypeMixin, Enum, metaclass=rad.NodeEnumMeta):
     """
     Exposure type
     """
