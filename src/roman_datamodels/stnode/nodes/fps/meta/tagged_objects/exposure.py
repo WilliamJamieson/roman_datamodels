@@ -1,7 +1,7 @@
 import numpy as np
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, core, rad
+from roman_datamodels.stnode import core, rad
 
 from ..untagged_scalars import FpsExposureType
 
@@ -39,7 +39,7 @@ class FpsExposure(rad.TaggedObjectNode):
 
     @rad.field
     def frame_divisor(self) -> int:
-        return self._get_node("frame_divisor", lambda: _default.NOINT)
+        return self._get_node("frame_divisor", lambda: rad.NOINT)
 
     @rad.field
     def groupgap(self) -> int:
@@ -47,23 +47,23 @@ class FpsExposure(rad.TaggedObjectNode):
 
     @rad.field
     def frame_time(self) -> float:
-        return self._get_node("frame_time", lambda: _default.NONUM)
+        return self._get_node("frame_time", lambda: rad.NONUM)
 
     @rad.field
     def group_time(self) -> float:
-        return self._get_node("group_time", lambda: _default.NONUM)
+        return self._get_node("group_time", lambda: rad.NONUM)
 
     @rad.field
     def exposure_time(self) -> float:
-        return self._get_node("exposure_time", lambda: _default.NONUM)
+        return self._get_node("exposure_time", lambda: rad.NONUM)
 
     @rad.field
     def ma_table_name(self) -> str:
-        return self._get_node("ma_table_name", lambda: _default.NOSTR)
+        return self._get_node("ma_table_name", lambda: rad.NOSTR)
 
     @rad.field
     def ma_table_number(self) -> int:
-        return self._get_node("ma_table_number", lambda: _default.NOINT)
+        return self._get_node("ma_table_number", lambda: rad.NOINT)
 
     @rad.field
     def read_pattern(self) -> core.LNode[core.LNode[int]]:

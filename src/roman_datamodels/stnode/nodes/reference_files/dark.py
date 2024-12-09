@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import (
@@ -44,11 +44,11 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
 
     @rad.field
     def ma_table_name(self) -> str:
-        return self._get_node("ma_table_name", lambda: _default.NOSTR)
+        return self._get_node("ma_table_name", lambda: rad.NOSTR)
 
     @rad.field
     def ma_table_number(self) -> int:
-        return self._get_node("ma_table_number", lambda: _default.NOINT)
+        return self._get_node("ma_table_number", lambda: rad.NOINT)
 
 
 class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):

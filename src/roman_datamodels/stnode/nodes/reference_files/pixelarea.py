@@ -1,7 +1,7 @@
 import numpy as np
 from astropy import units as u
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
@@ -16,11 +16,11 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def pixelarea_steradians(self) -> u.Quantity | None:
-        return self._get_node("pixelarea_steradians", lambda: float(_default.NONUM) * u.sr)
+        return self._get_node("pixelarea_steradians", lambda: float(rad.NONUM) * u.sr)
 
     @rad.field
     def pixelarea_arcsecsq(self) -> u.Quantity | None:
-        return self._get_node("pixelarea_arcsecsq", lambda: float(_default.NONUM) * u.arcsec**2)
+        return self._get_node("pixelarea_arcsecsq", lambda: float(rad.NONUM) * u.arcsec**2)
 
 
 class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):

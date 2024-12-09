@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from .tagged_scalars import (
     FpsCalibrationSoftwareVersion,
@@ -27,7 +27,7 @@ class FpsBasic(rad.SchemaObjectNode):
 
     @rad.field
     def filename(self) -> FpsFilename:
-        return self._get_node("filename", lambda: FpsFilename(_default.NOFN))
+        return self._get_node("filename", lambda: FpsFilename(rad.NOFN))
 
     @rad.field
     def file_date(self) -> FpsFileDate:
@@ -35,7 +35,7 @@ class FpsBasic(rad.SchemaObjectNode):
 
     @rad.field
     def model_type(self) -> FpsModelType:
-        return self._get_node("model_type", lambda: FpsModelType(_default.NOSTR))
+        return self._get_node("model_type", lambda: FpsModelType(rad.NOSTR))
 
     @rad.field
     def origin(self) -> FpsOrigin:

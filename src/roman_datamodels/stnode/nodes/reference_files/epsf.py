@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _default, core, rad
+from roman_datamodels.stnode import core, rad
 
 from ..enums import RefTypeEntry
 from .ref import RefCommonRefOpticalElementRef
@@ -19,7 +19,7 @@ class EpsfRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
     @rad.field
     def oversample(self) -> int:
-        return self._get_node("oversample", lambda: _default.NOINT)
+        return self._get_node("oversample", lambda: rad.NOINT)
 
     @rad.field
     def spectral_type(self) -> core.LNode[str]:

@@ -1,7 +1,7 @@
 import numpy as np
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ..meta import (
     Common,
@@ -28,7 +28,7 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
 
     @rad.field
     def gw_frame_readout_time(self) -> float:
-        return self._get_node("gw_frame_readout_time", lambda: _default.NONUM)
+        return self._get_node("gw_frame_readout_time", lambda: rad.NONUM)
 
     @rad.field
     def gw_function_start_time(self) -> Time:
@@ -44,19 +44,19 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
 
     @rad.field
     def pedestal_resultant_exp_time(self) -> float:
-        return self._get_node("pedestal_resultant_exp_time", lambda: _default.NONUM)
+        return self._get_node("pedestal_resultant_exp_time", lambda: rad.NONUM)
 
     @rad.field
     def signal_resultant_exp_time(self) -> float:
-        return self._get_node("signal_resultant_exp_time", lambda: _default.NONUM)
+        return self._get_node("signal_resultant_exp_time", lambda: rad.NONUM)
 
     @rad.field
     def gw_acq_number(self) -> int:
-        return self._get_node("gw_acq_number", lambda: _default.NOINT)
+        return self._get_node("gw_acq_number", lambda: rad.NOINT)
 
     @rad.field
     def gw_science_file_source(self) -> str:
-        return self._get_node("gw_science_file_source", lambda: _default.NOSTR)
+        return self._get_node("gw_science_file_source", lambda: rad.NOSTR)
 
     @rad.field
     def gw_mode(self) -> GuidewindowModes:
@@ -64,11 +64,11 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
 
     @rad.field
     def gw_window_xstart(self) -> int:
-        return self._get_node("gw_window_xstart", lambda: _default.NOINT)
+        return self._get_node("gw_window_xstart", lambda: rad.NOINT)
 
     @rad.field
     def gw_window_ystart(self) -> int:
-        return self._get_node("gw_window_ystart", lambda: _default.NOINT)
+        return self._get_node("gw_window_ystart", lambda: rad.NOINT)
 
     @rad.field
     def gw_window_xstop(self) -> int:

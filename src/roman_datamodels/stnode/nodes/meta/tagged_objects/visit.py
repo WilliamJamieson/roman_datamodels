@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, core, rad
+from roman_datamodels.stnode import core, rad
 
 from ...enums import (
     VisitEngineeringQualityEntry,
@@ -69,7 +69,7 @@ class Visit(rad.TaggedObjectNode):
 
     @rad.field
     def nexposures(self) -> int:
-        return self._get_node("nexposures", lambda: _default.NOINT)
+        return self._get_node("nexposures", lambda: rad.NOINT)
 
     @rad.field
     def internal_target(self) -> bool:

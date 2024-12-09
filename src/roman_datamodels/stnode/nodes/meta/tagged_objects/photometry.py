@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 __all__ = ["Photometry"]
 
@@ -14,12 +14,12 @@ class Photometry(rad.TaggedObjectNode):
 
     @rad.field
     def conversion_megajanskys(self) -> float | None:
-        return self._get_node("conversion_megajanskys", lambda: _default.NONUM)
+        return self._get_node("conversion_megajanskys", lambda: rad.NONUM)
 
     @rad.field
     def conversion_megajanskys_uncertainty(self) -> float | None:
-        return self._get_node("conversion_megajanskys_uncertainty", lambda: _default.NONUM)
+        return self._get_node("conversion_megajanskys_uncertainty", lambda: rad.NONUM)
 
     @rad.field
     def pixel_area(self) -> float | None:
-        return self._get_node("pixel_area", lambda: _default.NONUM)
+        return self._get_node("pixel_area", lambda: rad.NONUM)

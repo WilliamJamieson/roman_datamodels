@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 __all__ = ["Observation"]
 
@@ -14,11 +14,11 @@ class Observation(rad.TaggedObjectNode):
 
     @rad.field
     def observation_id(self) -> str:
-        return self._get_node("observation_id", lambda: _default.NOSTR)
+        return self._get_node("observation_id", lambda: rad.NOSTR)
 
     @rad.field
     def visit_id(self) -> str:
-        return self._get_node("visit_id", lambda: _default.NOSTR)
+        return self._get_node("visit_id", lambda: rad.NOSTR)
 
     @rad.field
     def program(self) -> int:

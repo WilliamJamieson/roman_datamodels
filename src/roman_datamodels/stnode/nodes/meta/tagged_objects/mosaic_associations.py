@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 __all__ = ["MosaicAssociations"]
 
@@ -14,8 +14,8 @@ class MosaicAssociations(rad.TaggedObjectNode):
 
     @rad.field
     def pool_name(self) -> str:
-        return self._get_node("pool_name", lambda: _default.NOSTR)
+        return self._get_node("pool_name", lambda: rad.NOSTR)
 
     @rad.field
     def table_name(self) -> str:
-        return self._get_node("table_name", lambda: _default.NOSTR)
+        return self._get_node("table_name", lambda: rad.NOSTR)

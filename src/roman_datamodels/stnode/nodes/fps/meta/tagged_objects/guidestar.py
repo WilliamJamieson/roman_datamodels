@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ..untagged_scalars import FpsGuidewindowModes
 
@@ -16,7 +16,7 @@ class FpsGuidestar(rad.TaggedObjectNode):
 
     @rad.field
     def gw_id(self) -> str:
-        return self._get_node("gw_id", lambda: _default.NOSTR)
+        return self._get_node("gw_id", lambda: rad.NOSTR)
 
     @rad.field
     def gw_fgs_mode(self) -> FpsGuidewindowModes:
@@ -24,19 +24,19 @@ class FpsGuidestar(rad.TaggedObjectNode):
 
     @rad.field
     def data_start(self) -> float:
-        return self._get_node("data_start", lambda: _default.NONUM)
+        return self._get_node("data_start", lambda: rad.NONUM)
 
     @rad.field
     def data_end(self) -> float:
-        return self._get_node("data_end", lambda: _default.NONUM)
+        return self._get_node("data_end", lambda: rad.NONUM)
 
     @rad.field
     def gw_window_xstart(self) -> int:
-        return self._get_node("gw_window_xstart", lambda: _default.NOINT)
+        return self._get_node("gw_window_xstart", lambda: rad.NOINT)
 
     @rad.field
     def gw_window_ystart(self) -> int:
-        return self._get_node("gw_window_ystart", lambda: _default.NOINT)
+        return self._get_node("gw_window_ystart", lambda: rad.NOINT)
 
     @rad.field
     def gw_window_xstop(self) -> int:

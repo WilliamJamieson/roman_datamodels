@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, core, rad
+from roman_datamodels.stnode import core, rad
 
 from ..enums import RefTypeEntry
 from ..meta import OPTICAL_ELEMENTS
@@ -24,7 +24,7 @@ class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def abvega_offset(self) -> float | None:
-        return self._get_node("abvega_offset", lambda: _default.NONUM)
+        return self._get_node("abvega_offset", lambda: rad.NONUM)
 
 
 class AbvegaoffsetRef(rad.DataModelNode):

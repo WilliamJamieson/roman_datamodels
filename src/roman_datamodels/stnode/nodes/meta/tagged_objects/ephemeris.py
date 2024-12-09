@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ...enums import EphemerisTypeEntry
 
@@ -16,19 +16,19 @@ class Ephemeris(rad.TaggedObjectNode):
 
     @rad.field
     def earth_angle(self) -> float:
-        return self._get_node("earth_angle", lambda: _default.NONUM)
+        return self._get_node("earth_angle", lambda: rad.NONUM)
 
     @rad.field
     def moon_angle(self) -> float:
-        return self._get_node("moon_angle", lambda: _default.NONUM)
+        return self._get_node("moon_angle", lambda: rad.NONUM)
 
     @rad.field
     def sun_angle(self) -> float:
-        return self._get_node("sun_angle", lambda: _default.NONUM)
+        return self._get_node("sun_angle", lambda: rad.NONUM)
 
     @rad.field
     def ephemeris_reference_frame(self) -> str:
-        return self._get_node("ephemeris_reference_frame", lambda: _default.NOSTR)
+        return self._get_node("ephemeris_reference_frame", lambda: rad.NOSTR)
 
     @rad.field
     def type(self) -> EphemerisTypeEntry:
@@ -36,28 +36,28 @@ class Ephemeris(rad.TaggedObjectNode):
 
     @rad.field
     def time(self) -> float:
-        return self._get_node("time", lambda: _default.NONUM)
+        return self._get_node("time", lambda: rad.NONUM)
 
     @rad.field
     def spatial_x(self) -> float:
-        return self._get_node("spatial_x", lambda: _default.NONUM)
+        return self._get_node("spatial_x", lambda: rad.NONUM)
 
     @rad.field
     def spatial_y(self) -> float:
-        return self._get_node("spatial_y", lambda: _default.NONUM)
+        return self._get_node("spatial_y", lambda: rad.NONUM)
 
     @rad.field
     def spatial_z(self) -> float:
-        return self._get_node("spatial_z", lambda: _default.NONUM)
+        return self._get_node("spatial_z", lambda: rad.NONUM)
 
     @rad.field
     def velocity_x(self) -> float:
-        return self._get_node("velocity_x", lambda: _default.NONUM)
+        return self._get_node("velocity_x", lambda: rad.NONUM)
 
     @rad.field
     def velocity_y(self) -> float:
-        return self._get_node("velocity_y", lambda: _default.NONUM)
+        return self._get_node("velocity_y", lambda: rad.NONUM)
 
     @rad.field
     def velocity_z(self) -> float:
-        return self._get_node("velocity_z", lambda: _default.NONUM)
+        return self._get_node("velocity_z", lambda: rad.NONUM)

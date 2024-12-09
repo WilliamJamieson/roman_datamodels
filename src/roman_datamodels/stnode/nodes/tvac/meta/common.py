@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, core, rad
+from roman_datamodels.stnode import core, rad
 
 from .basic import TvacBasic
 from .tagged_objects import (
@@ -52,12 +52,12 @@ class TvacCommon(TvacCommonMixin, TvacBasic):
 
     @rad.field
     def hdf5_meta(self) -> core.DNode:
-        return self._get_node("hdf5_meta", lambda: core.DNode({"test": _default.NOSTR}))
+        return self._get_node("hdf5_meta", lambda: core.DNode({"test": rad.NOSTR}))
 
     @rad.field
     def hdf5_telemetry(self) -> str:
-        return self._get_node("hdf5_telemetry", lambda: _default.NOSTR)
+        return self._get_node("hdf5_telemetry", lambda: rad.NOSTR)
 
     @rad.field
     def gw_meta(self) -> core.DNode:
-        return self._get_node("gw_meta", lambda: core.DNode({"test": _default.NOSTR}))
+        return self._get_node("gw_meta", lambda: core.DNode({"test": rad.NOSTR}))

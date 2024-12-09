@@ -2,7 +2,7 @@ import numpy as np
 from astropy import units as u
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 __all__ = ["FpsGroundtest"]
 
@@ -18,19 +18,19 @@ class FpsGroundtest(rad.TaggedObjectNode):
 
     @rad.field
     def test_name(self) -> str:
-        return self._get_node("test_name", lambda: _default.NOSTR)
+        return self._get_node("test_name", lambda: rad.NOSTR)
 
     @rad.field
     def test_phase(self) -> str:
-        return self._get_node("test_phase", lambda: _default.NOSTR)
+        return self._get_node("test_phase", lambda: rad.NOSTR)
 
     @rad.field
     def test_environment(self) -> str:
-        return self._get_node("test_environment", lambda: _default.NOSTR)
+        return self._get_node("test_environment", lambda: rad.NOSTR)
 
     @rad.field
     def test_script(self) -> str:
-        return self._get_node("test_script", lambda: _default.NOSTR)
+        return self._get_node("test_script", lambda: rad.NOSTR)
 
     @rad.field
     def product_date(self) -> Time:
@@ -38,7 +38,7 @@ class FpsGroundtest(rad.TaggedObjectNode):
 
     @rad.field
     def product_version(self) -> str:
-        return self._get_node("product_version", lambda: _default.NOSTR)
+        return self._get_node("product_version", lambda: rad.NOSTR)
 
     @rad.field
     def conversion_date(self) -> Time:
@@ -46,27 +46,27 @@ class FpsGroundtest(rad.TaggedObjectNode):
 
     @rad.field
     def conversion_version(self) -> str:
-        return self._get_node("conversion_version", lambda: _default.NOSTR)
+        return self._get_node("conversion_version", lambda: rad.NOSTR)
 
     @rad.field
     def filename_pnt5(self) -> str:
-        return self._get_node("filename_pnt5", lambda: _default.NOSTR)
+        return self._get_node("filename_pnt5", lambda: rad.NOSTR)
 
     @rad.field
     def filepath_level_pnt5(self) -> str:
-        return self._get_node("filepath_level_pnt5", lambda: _default.NOSTR)
+        return self._get_node("filepath_level_pnt5", lambda: rad.NOSTR)
 
     @rad.field
     def filename_l1a(self) -> str:
-        return self._get_node("filename_l1a", lambda: _default.NOSTR)
+        return self._get_node("filename_l1a", lambda: rad.NOSTR)
 
     @rad.field
     def detector_id(self) -> str:
-        return self._get_node("detector_id", lambda: _default.NOSTR)
+        return self._get_node("detector_id", lambda: rad.NOSTR)
 
     @rad.field
     def detector_temp(self) -> float:
-        return self._get_node("detector_temp", lambda: _default.NONUM)
+        return self._get_node("detector_temp", lambda: rad.NONUM)
 
     @rad.field
     def frames_temp(self) -> np.ndarray:
@@ -74,7 +74,7 @@ class FpsGroundtest(rad.TaggedObjectNode):
 
     @rad.field
     def ota_temp(self) -> float:
-        return self._get_node("ota_temp", lambda: _default.NONUM)
+        return self._get_node("ota_temp", lambda: rad.NONUM)
 
     @rad.field
     def rcs_on(self) -> bool:
@@ -82,7 +82,7 @@ class FpsGroundtest(rad.TaggedObjectNode):
 
     @rad.field
     def readout_col_num(self) -> int:
-        return self._get_node("readout_col_num", lambda: _default.NOINT)
+        return self._get_node("readout_col_num", lambda: rad.NOINT)
 
     @rad.field
     def detector_pixel_size(self) -> u.Quantity:

@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ..meta import Common
 
@@ -14,7 +14,7 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
 
     @rad.field
     def image_list(self) -> str:
-        return self._get_node("image_list", lambda: _default.NOSTR)
+        return self._get_node("image_list", lambda: rad.NOSTR)
 
 
 class MsosStack(rad.DataModelNode):

@@ -1,7 +1,7 @@
 import numpy as np
 from gwcs import WCS
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ..meta import (
     Basic,
@@ -64,7 +64,7 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
 
     @rad.field
     def wcs(self) -> WCS | None:
-        return self._get_node("wcs", _default.Wcs)
+        return self._get_node("wcs", rad.Wcs)
 
     @rad.field
     def wcsinfo(self) -> MosaicWcsinfo:

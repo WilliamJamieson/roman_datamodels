@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ...enums import WcsinfoApertureNameEntry, WcsinfoVparityEntry
 
@@ -20,15 +20,15 @@ class Wcsinfo(rad.TaggedObjectNode):
 
     @rad.field
     def pa_aperture(self) -> float:
-        return self._get_node("pa_aperture", lambda: _default.NONUM)
+        return self._get_node("pa_aperture", lambda: rad.NONUM)
 
     @rad.field
     def v2_ref(self) -> float:
-        return self._get_node("v2_ref", lambda: _default.NONUM)
+        return self._get_node("v2_ref", lambda: rad.NONUM)
 
     @rad.field
     def v3_ref(self) -> float:
-        return self._get_node("v3_ref", lambda: _default.NONUM)
+        return self._get_node("v3_ref", lambda: rad.NONUM)
 
     @rad.field
     def vparity(self) -> WcsinfoVparityEntry:
@@ -36,20 +36,20 @@ class Wcsinfo(rad.TaggedObjectNode):
 
     @rad.field
     def v3yangle(self) -> float:
-        return self._get_node("v3yangle", lambda: _default.NONUM)
+        return self._get_node("v3yangle", lambda: rad.NONUM)
 
     @rad.field
     def ra_ref(self) -> float:
-        return self._get_node("ra_ref", lambda: _default.NONUM)
+        return self._get_node("ra_ref", lambda: rad.NONUM)
 
     @rad.field
     def dec_ref(self) -> float:
-        return self._get_node("dec_ref", lambda: _default.NONUM)
+        return self._get_node("dec_ref", lambda: rad.NONUM)
 
     @rad.field
     def roll_ref(self) -> float:
-        return self._get_node("roll_ref", lambda: _default.NONUM)
+        return self._get_node("roll_ref", lambda: rad.NONUM)
 
     @rad.field
     def s_region(self) -> str:
-        return self._get_node("s_region", lambda: _default.NOSTR)
+        return self._get_node("s_region", lambda: rad.NOSTR)

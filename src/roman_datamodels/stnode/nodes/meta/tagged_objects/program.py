@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ...enums import ProgramSubcategoryEntry
 
@@ -16,15 +16,15 @@ class Program(rad.TaggedObjectNode):
 
     @rad.field
     def title(self) -> str:
-        return self._get_node("title", lambda: _default.NOSTR)
+        return self._get_node("title", lambda: rad.NOSTR)
 
     @rad.field
     def investigator_name(self) -> str:
-        return self._get_node("investigator_name", lambda: _default.NOSTR)
+        return self._get_node("investigator_name", lambda: rad.NOSTR)
 
     @rad.field
     def category(self) -> str:
-        return self._get_node("category", lambda: _default.NOSTR)
+        return self._get_node("category", lambda: rad.NOSTR)
 
     @rad.field
     def subcategory(self) -> ProgramSubcategoryEntry:
@@ -32,8 +32,8 @@ class Program(rad.TaggedObjectNode):
 
     @rad.field
     def science_category(self) -> str:
-        return self._get_node("science_category", lambda: _default.NOSTR)
+        return self._get_node("science_category", lambda: rad.NOSTR)
 
     @rad.field
     def continuation_id(self) -> int:
-        return self._get_node("continuation_id", lambda: _default.NOINT)
+        return self._get_node("continuation_id", lambda: rad.NOINT)

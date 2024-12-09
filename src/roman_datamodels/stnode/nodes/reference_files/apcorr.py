@@ -1,6 +1,6 @@
 import numpy as np
 
-from roman_datamodels.stnode import _default, core, rad
+from roman_datamodels.stnode import core, rad
 
 from ..enums import RefTypeEntry
 from ..meta import OPTICAL_ELEMENTS
@@ -41,11 +41,11 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def sky_background_rin(self) -> float | None:
-        return self._get_node("sky_background_rin", lambda: _default.NONUM)
+        return self._get_node("sky_background_rin", lambda: rad.NONUM)
 
     @rad.field
     def sky_background_rout(self) -> float | None:
-        return self._get_node("sky_background_rout", lambda: _default.NONUM)
+        return self._get_node("sky_background_rout", lambda: rad.NONUM)
 
 
 class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):

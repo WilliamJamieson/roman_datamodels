@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ...enums import RcsBankEntry, RcsElectronicsEntry, RcsLedEntry
 
@@ -32,4 +32,4 @@ class Rcs(rad.TaggedObjectNode):
 
     @rad.field
     def counts(self) -> int:
-        return self._get_node("counts", lambda: _default.NOINT)
+        return self._get_node("counts", lambda: rad.NOINT)

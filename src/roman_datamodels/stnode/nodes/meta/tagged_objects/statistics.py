@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 __all__ = ["Statistics"]
 
@@ -14,16 +14,16 @@ class Statistics(rad.TaggedObjectNode):
 
     @rad.field
     def zodiacal_light(self) -> float:
-        return self._get_node("zodiacal_light", lambda: _default.NONUM)
+        return self._get_node("zodiacal_light", lambda: rad.NONUM)
 
     @rad.field
     def image_median(self) -> float:
-        return self._get_node("image_median", lambda: _default.NONUM)
+        return self._get_node("image_median", lambda: rad.NONUM)
 
     @rad.field
     def image_rms(self) -> float:
-        return self._get_node("image_rms", lambda: _default.NONUM)
+        return self._get_node("image_rms", lambda: rad.NONUM)
 
     @rad.field
     def good_pixel_fraction(self) -> float:
-        return self._get_node("good_pixel_fraction", lambda: _default.NONUM)
+        return self._get_node("good_pixel_fraction", lambda: rad.NONUM)

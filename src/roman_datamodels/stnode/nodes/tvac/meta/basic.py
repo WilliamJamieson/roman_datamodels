@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from .tagged_scalars import (
     TvacCalibrationSoftwareVersion,
@@ -27,7 +27,7 @@ class TvacBasic(rad.SchemaObjectNode):
 
     @rad.field
     def filename(self) -> TvacFilename:
-        return self._get_node("filename", lambda: TvacFilename(_default.NOSTR))
+        return self._get_node("filename", lambda: TvacFilename(rad.NOSTR))
 
     @rad.field
     def file_date(self) -> TvacFileDate:
@@ -35,7 +35,7 @@ class TvacBasic(rad.SchemaObjectNode):
 
     @rad.field
     def model_type(self) -> TvacModelType:
-        return self._get_node("model_type", lambda: TvacModelType(_default.NOSTR))
+        return self._get_node("model_type", lambda: TvacModelType(rad.NOSTR))
 
     @rad.field
     def origin(self) -> TvacOrigin:

@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ..untagged_scalars import GuidewindowModes
 
@@ -18,7 +18,7 @@ class Guidestar(rad.TaggedObjectNode):
 
     @rad.field
     def guide_window_id(self) -> str:
-        return self._get_node("guide_window_id", lambda: _default.NOSTR)
+        return self._get_node("guide_window_id", lambda: rad.NOSTR)
 
     @rad.field
     def guide_mode(self) -> GuidewindowModes:
@@ -34,11 +34,11 @@ class Guidestar(rad.TaggedObjectNode):
 
     @rad.field
     def window_xstart(self) -> int:
-        return self._get_node("window_xstart", lambda: _default.NOINT)
+        return self._get_node("window_xstart", lambda: rad.NOINT)
 
     @rad.field
     def window_ystart(self) -> int:
-        return self._get_node("window_ystart", lambda: _default.NOINT)
+        return self._get_node("window_ystart", lambda: rad.NOINT)
 
     @rad.field
     def window_xstop(self) -> int:
@@ -58,68 +58,68 @@ class Guidestar(rad.TaggedObjectNode):
 
     @rad.field
     def guide_star_id(self) -> str:
-        return self._get_node("guide_star_id", lambda: _default.NOSTR)
+        return self._get_node("guide_star_id", lambda: rad.NOSTR)
 
     @rad.field
     def gsc_version(self) -> str:
-        return self._get_node("gsc_version", lambda: _default.NOSTR)
+        return self._get_node("gsc_version", lambda: rad.NOSTR)
 
     @rad.field
     def ra(self) -> float:
-        return self._get_node("ra", lambda: _default.NONUM)
+        return self._get_node("ra", lambda: rad.NONUM)
 
     @rad.field
     def dec(self) -> float:
-        return self._get_node("dec", lambda: _default.NONUM)
+        return self._get_node("dec", lambda: rad.NONUM)
 
     @rad.field
     def ra_uncertainty(self) -> float:
-        return self._get_node("ra_uncertainty", lambda: _default.NONUM)
+        return self._get_node("ra_uncertainty", lambda: rad.NONUM)
 
     @rad.field
     def dec_uncertainty(self) -> float:
-        return self._get_node("dec_uncertainty", lambda: _default.NONUM)
+        return self._get_node("dec_uncertainty", lambda: rad.NONUM)
 
     @rad.field
     def fgs_magnitude(self) -> float:
-        return self._get_node("fgs_magnitude", lambda: _default.NONUM)
+        return self._get_node("fgs_magnitude", lambda: rad.NONUM)
 
     @rad.field
     def fgs_magnitude_uncertainty(self) -> float:
-        return self._get_node("fgs_magnitude_uncertainty", lambda: _default.NONUM)
+        return self._get_node("fgs_magnitude_uncertainty", lambda: rad.NONUM)
 
     @rad.field
     def centroid_x(self) -> float:
-        return self._get_node("centroid_x", lambda: _default.NONUM)
+        return self._get_node("centroid_x", lambda: rad.NONUM)
 
     @rad.field
     def centroid_y(self) -> float:
-        return self._get_node("centroid_y", lambda: _default.NONUM)
+        return self._get_node("centroid_y", lambda: rad.NONUM)
 
     @rad.field
     def centroid_x_uncertainty(self) -> float:
-        return self._get_node("centroid_x_uncertainty", lambda: _default.NONUM)
+        return self._get_node("centroid_x_uncertainty", lambda: rad.NONUM)
 
     @rad.field
     def centroid_y_uncertainty(self) -> float:
-        return self._get_node("centroid_y_uncertainty", lambda: _default.NONUM)
+        return self._get_node("centroid_y_uncertainty", lambda: rad.NONUM)
 
     @rad.field
     def epoch(self) -> str:
-        return self._get_node("epoch", lambda: _default.NOSTR)
+        return self._get_node("epoch", lambda: rad.NOSTR)
 
     @rad.field
     def proper_motion_ra(self) -> float:
-        return self._get_node("proper_motion_ra", lambda: _default.NONUM)
+        return self._get_node("proper_motion_ra", lambda: rad.NONUM)
 
     @rad.field
     def proper_motion_dec(self) -> float:
-        return self._get_node("proper_motion_dec", lambda: _default.NONUM)
+        return self._get_node("proper_motion_dec", lambda: rad.NONUM)
 
     @rad.field
     def parallax(self) -> float:
-        return self._get_node("parallax", lambda: _default.NONUM)
+        return self._get_node("parallax", lambda: rad.NONUM)
 
     @rad.field
     def centroid_rms(self) -> float:
-        return self._get_node("centroid_rms", lambda: _default.NONUM)
+        return self._get_node("centroid_rms", lambda: rad.NONUM)

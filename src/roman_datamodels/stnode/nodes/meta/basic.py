@@ -1,6 +1,6 @@
 from astropy.time import Time
 
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from .tagged_scalars import (
     CalibrationSoftwareName,
@@ -37,7 +37,7 @@ class Basic(rad.SchemaObjectNode):
 
     @rad.field
     def filename(self) -> Filename:
-        return self._get_node("filename", lambda: Filename(_default.NOFN))
+        return self._get_node("filename", lambda: Filename(rad.NOFN))
 
     @rad.field
     def file_date(self) -> FileDate:
@@ -45,7 +45,7 @@ class Basic(rad.SchemaObjectNode):
 
     @rad.field
     def model_type(self) -> ModelType:
-        return self._get_node("model_type", lambda: ModelType(_default.NOSTR))
+        return self._get_node("model_type", lambda: ModelType(rad.NOSTR))
 
     @rad.field
     def origin(self) -> Origin:

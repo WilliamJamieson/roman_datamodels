@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, rad
+from roman_datamodels.stnode import rad
 
 from ...enums import SkyBackgroundMethodEntry
 
@@ -16,7 +16,7 @@ class SkyBackground(rad.TaggedObjectNode):
 
     @rad.field
     def level(self) -> float | None:
-        return self._get_node("level", lambda: _default.NONUM)
+        return self._get_node("level", lambda: rad.NONUM)
 
     @rad.field
     def method(self) -> SkyBackgroundMethodEntry:

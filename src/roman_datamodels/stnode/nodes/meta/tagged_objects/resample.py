@@ -1,4 +1,4 @@
-from roman_datamodels.stnode import _default, core, rad
+from roman_datamodels.stnode import core, rad
 
 from ...enums import ResampleWeightTypeEntry
 
@@ -20,19 +20,19 @@ class Resample(rad.TaggedObjectNode):
 
     @rad.field
     def pixel_scale_ratio(self) -> float:
-        return self._get_node("pixel_scale_ratio", lambda: _default.NONUM)
+        return self._get_node("pixel_scale_ratio", lambda: rad.NONUM)
 
     @rad.field
     def pixfrac(self) -> float:
-        return self._get_node("pixfrac", lambda: _default.NONUM)
+        return self._get_node("pixfrac", lambda: rad.NONUM)
 
     @rad.field
     def pointings(self) -> int:
-        return self._get_node("pointings", lambda: _default.NOINT)
+        return self._get_node("pointings", lambda: rad.NOINT)
 
     @rad.field
     def product_exposure_time(self) -> float:
-        return self._get_node("product_exposure_time", lambda: _default.NONUM)
+        return self._get_node("product_exposure_time", lambda: rad.NONUM)
 
     @rad.field
     def members(self) -> core.LNode[str]:
