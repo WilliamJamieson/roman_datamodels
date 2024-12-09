@@ -1,21 +1,22 @@
 import warnings
-from abc import ABC, abstractmethod
+from abc import ABC
+from enum import Enum
+from typing import Any
 
 from asdf import AsdfFile
 
-from ..core import DNode, FlushOptions, get_config
-from ._mixins import SchemaMixin, TagMixin
+from ..core import DNode, FlushOptions, LNode
+from ._base import RadNodeMixin
 from ._utils import get_node_fields
 
 __all__ = [
-    "DataModelNode",
+    "ListNode",
     "ObjectNode",
-    "SchemaObjectNode",
-    "TaggedObjectNode",
+    "ScalarNode",
 ]
 
 
-class ObjectNode(DNode, ABC):
+class ObjectNode(DNode, RadNodeMixin, ABC):
     @classmethod
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
@@ -65,63 +66,25 @@ class ObjectNode(DNode, ABC):
         return super().to_asdf_tree(ctx, flush=flush, warn=warn)
 
 
-class SchemaObjectNode(ObjectNode, SchemaMixin, ABC):
+class ListNode(LNode, RadNodeMixin, ABC):
     """
-    Base class for all objects described by their own schema in RAD.
-    """
-
-
-class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):
-    """
-    Base class for all objects that are tagged in RAD.
+    Base class for all list nodes
     """
 
 
-class DataModelNode(TaggedObjectNode, ABC):
+class ScalarNode(RadNodeMixin, ABC):
     """
-    Base class for all objects in RAD that are marked as data models
+    Base class for all scalars with descriptions in RAD
+    -> this is for enums that are not tagged
     """
 
-    @property
-    def primary_array_name(self) -> str:
-        """
-        Returns the name "primary" array for this model, which
-        controls the size of other arrays that are implicitly created.
-        This is intended to be overridden in the subclasses if the
-        primary array's name is not "data".
-        """
-        if "data" in self.asdf_required():
-            return "data"
+    def unwrap(self) -> Any:
+        base = self.value if isinstance(self, Enum) else self
 
-        raise NotImplementedError("Primary array name not defined")
+        return type(base).__bases__[0](base)
 
-    @property
-    def primary_array_shape(self) -> tuple[int] | None:
-        """Shape of the primary array."""
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
+        return self.unwrap()
 
-        if self._has_node(name := self.primary_array_name):
-            return getattr(self, name).shape
-
-        return None
-
-    @property
-    @abstractmethod
-    def default_array_shape(self) -> tuple[int]:
-        """Default shape of the data array."""
-
-    @property
-    @abstractmethod
-    def testing_array_shape(self) -> tuple[int]:
-        """Shape of the data array for testing."""
-
-    @property
-    def array_shape(self) -> tuple[int]:
-        """Shape of the data array."""
-
-        if get_config().use_test_array_shape:
-            return self.testing_array_shape
-
-        if shape := self.primary_array_shape:
-            return shape
-
-        return self.default_array_shape
+    def __asdf_traverse__(self):
+        return self.unwrap()

@@ -1,7 +1,5 @@
 from typing import Any, TypeVar, get_args
 
-import asdf
-
 from ..core import AdditionalNodeMixin, DNode, LNode, type_checked
 
 T = TypeVar("T")
@@ -14,10 +12,6 @@ __all__ = [
     "get_all_fields",
     "get_node_fields",
     "get_nodes",
-    "get_nodes",
-    "get_schema_from_tag",
-    "get_schema_nodes",
-    "get_tagged_nodes",
     "wrap_into_node",
 ]
 
@@ -34,22 +28,6 @@ def field(function):
     of the type annotations for the for a schema field's property
     """
     return field_property(type_checked(function))
-
-
-def get_schema_from_tag(ctx, tag):
-    """
-    Look up and load ASDF's schema corresponding to the tag_uri.
-
-    Parameters
-    ----------
-    ctx :
-        An ASDF file context.
-    tag : str
-        The tag_uri of the schema to load.
-    """
-    schema_uri = ctx.extension_manager.get_tag_definition(tag).schema_uris[0]
-
-    return asdf.schema.load_schema(schema_uri, resolve_references=True)
 
 
 def class_name_from_uri(uri):
@@ -134,80 +112,6 @@ def get_nodes(cls: type, filter_types: tuple[type]) -> dict[str, type]:
         return nodes
 
     return _get_nodes(cls, cls, filter_types)
-
-
-def get_schema_nodes(cls: type, no_subcls: bool) -> dict[str, type]:
-    """
-    Get all the schema nodes from the class. Starting from the base class.
-
-    Parameters
-    ----------
-    cls : type
-        The class to get the schema nodes from.
-    no_subcls : bool
-        If True, raise an error if the class is subclassed.
-
-    Returns
-    -------
-    dict[str, type]
-        schema_uri -> class mapping
-    """
-
-    def _get_schema_nodes(cls: type, base_cls: type, no_subcls: bool) -> dict[str, type]:
-        nodes = {}
-        for node in cls.__subclasses__():
-            _add_nodes(node, nodes, _get_schema_nodes(node, base_cls, no_subcls), base_cls)
-
-            try:
-                uri = node.asdf_schema_uri()
-            except KeyError:
-                continue
-
-            if node.__name__ == class_name_from_uri(uri):
-                nodes[uri] = node
-                continue
-
-            if no_subcls:
-                raise RuntimeError(f"{base_cls.__name__} class '{node.__name__}' should not be subclassed")
-
-        return nodes
-
-    return _get_schema_nodes(cls, cls, no_subcls)
-
-
-def get_tagged_nodes(cls: type) -> dict[str, type]:
-    """
-    Get all the tagged nodes from the class. Starting from the base class.
-
-    Parameters
-    ----------
-    cls : type
-        The class to get the tagged nodes from.
-    base_cls : type
-        The base class to start from.
-
-    Returns
-    -------
-    dict[str, type]
-        tag_uri -> class mapping
-    """
-
-    def _get_tagged_nodes(cls: type, base_cls: type) -> dict[str, type]:
-        nodes = {}
-        for node in cls.__subclasses__():
-            _add_nodes(node, nodes, _get_tagged_nodes(node, base_cls), base_cls)
-
-            # Filter out the abstract classes
-            if uri := node.asdf_tag():
-                # tagged node names should match with the tag uri
-                if node.__name__ != class_name_from_uri(uri):
-                    raise RuntimeError(f"{base_cls.__name__} class '{node.__name__}' has incorrect tag '{uri}'")
-
-                nodes[uri] = node
-
-        return nodes
-
-    return _get_tagged_nodes(cls, cls)
 
 
 def get_all_fields(cls: type) -> set[str]:
@@ -300,7 +204,7 @@ def wrap_into_node(value: Any, signature: T) -> T:
     T
         Value wrapped into the node container if T describes a node container.
     """
-    from ._scalar import SchemaScalarNode
+    from ._node import ScalarNode
 
     args = get_args(signature)
 
@@ -308,12 +212,9 @@ def wrap_into_node(value: Any, signature: T) -> T:
     # -> signature is the type
     if not args:
         # Only coerce nodes
-        if issubclass(signature, DNode) or issubclass(signature, LNode) or issubclass(signature, SchemaScalarNode):
+        if issubclass(signature, DNode) or issubclass(signature, LNode) or issubclass(signature, ScalarNode):
             # Skip if we are already the correct type
             if not isinstance(value, signature):
-                print(value)
-                print(type(value))
-                print(signature)
                 return signature(value)
 
     # This is a annotated type
