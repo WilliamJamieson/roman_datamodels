@@ -2,7 +2,8 @@ import asdf
 import pytest
 from astropy.time import Time
 
-from roman_datamodels.stnode import _typing, core, nodes, rad
+from roman_datamodels.stnode import core, nodes, rad
+from roman_datamodels.stnode.core import _typing
 from roman_datamodels.testing import assert_node_equal
 
 
@@ -15,7 +16,7 @@ def enable_typeguard():
     assert _typing._TYPEGUARD_ENABLED is False
 
     # Enable typeguard
-    with _typing.enable_typeguard():
+    with core.enable_typeguard():
         assert _typing._TYPEGUARD_ENABLED is True
 
         yield

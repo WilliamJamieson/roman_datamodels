@@ -2,8 +2,7 @@ from typing import Any, TypeVar, get_args
 
 import asdf
 
-from .._typing import type_checked
-from ..core import AdditionalNodeMixin, DNode, LNode
+from ..core import AdditionalNodeMixin, DNode, LNode, type_checked
 
 T = TypeVar("T")
 
