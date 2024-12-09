@@ -18,24 +18,12 @@ the test.
 """
 
 import sys
-from contextlib import contextmanager
 from functools import wraps
 from typing import TypeVar
 
-__all__ = ["enable_typeguard", "type_checked"]
+from ._config import get_config
 
-_TYPEGUARD_ENABLED = False
-
-
-@contextmanager
-def enable_typeguard():
-    """
-    Context manager to temporarily enable typeguard for testing.
-    """
-    global _TYPEGUARD_ENABLED
-    _TYPEGUARD_ENABLED = True
-    yield
-    _TYPEGUARD_ENABLED = False
+__all__ = ["type_checked"]
 
 
 _T = TypeVar("_T")
@@ -61,10 +49,9 @@ if "pytest" in sys.modules:
             @wraps(function)
             def wrapper(*args, **kwargs):
                 """Pull the global flag to determine if we should suppress type checks"""
-                global _TYPEGUARD_ENABLED
 
                 # If typeguard is not enabled, suppress the type checks
-                if not _TYPEGUARD_ENABLED:
+                if not get_config().TYPEGUARD_ENABLED:
                     with suppress_type_checks():
                         return function(*args, **kwargs)
 

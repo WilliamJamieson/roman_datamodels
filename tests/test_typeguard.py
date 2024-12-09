@@ -3,7 +3,6 @@ import pytest
 from astropy.time import Time
 
 from roman_datamodels.stnode import core, nodes, rad
-from roman_datamodels.stnode.core import _typing
 from roman_datamodels.testing import assert_node_equal
 
 
@@ -12,17 +11,14 @@ def enable_typeguard():
     """
     Fixture to enable typeguard for testing.
     """
-    # Ensure typeguard is disabled (will catch issues that it is accidentally perminantly enabled)
-    assert _typing._TYPEGUARD_ENABLED is False
+    assert core.get_config().TYPEGUARD_ENABLED is False
 
-    # Enable typeguard
-    with core.enable_typeguard():
-        assert _typing._TYPEGUARD_ENABLED is True
+    with core.get_config().enable_typeguard():
+        assert core.get_config().TYPEGUARD_ENABLED is True
 
         yield
 
-    # Ensure typeguard is disabled
-    assert _typing._TYPEGUARD_ENABLED is False
+    assert core.get_config().TYPEGUARD_ENABLED is False
 
 
 class TypeguardExample:
@@ -45,6 +41,8 @@ def test_typeguard_is_functioning():
     """
     from typeguard import TypeCheckError
 
+    assert core.get_config().TYPEGUARD_ENABLED is True
+
     instance = TypeguardExample()
     assert instance.good == 1
 
@@ -57,7 +55,7 @@ def test_typeguard_decorator():
     This checks that we don't get an error when typeguard is not enabled.
     -> This smokes out getting a typeguard error when it is not enabled.
     """
-    assert _typing._TYPEGUARD_ENABLED is False
+    assert core.get_config().TYPEGUARD_ENABLED is False
 
     instance = TypeguardExample()
     assert instance.good == 1  # always fine
