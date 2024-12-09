@@ -13,13 +13,6 @@ from ._object import DataModelNode, ObjectNode, SchemaObjectNode, TaggedObjectNo
 from ._scalar import ScalarNode, SchemaScalarNode, TaggedScalarNode
 from ._utils import get_all_fields, get_nodes
 
-OBJECT_NODE_CLASSES_BY_TAG = {}
-LIST_NODE_CLASSES_BY_TAG = {}
-SCALAR_NODE_CLASSES_BY_TAG = {}
-SCALAR_NODE_CLASSES_BY_KEY = {}
-NODE_CONVERTERS = {}
-
-
 __all__ = ["RDM_NODE_REGISTRY"]
 
 

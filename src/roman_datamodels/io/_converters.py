@@ -8,10 +8,10 @@ from typing import TYPE_CHECKING
 
 from asdf.extension import Converter, ManifestExtension
 
-from .rad._registry import RDM_NODE_REGISTRY
+from roman_datamodels.stnode.rad import RDM_NODE_REGISTRY
 
 if TYPE_CHECKING:
-    from .rad import TagMixin
+    from roman_datamodels.stnode.rad import TagMixin
 
 __all__ = ["NODE_EXTENSIONS"]
 
