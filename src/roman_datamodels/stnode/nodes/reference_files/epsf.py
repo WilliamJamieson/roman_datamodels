@@ -48,18 +48,16 @@ class EpsfRef(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/epsf-1.0.0"
 
     @property
-    def array_shape(self) -> tuple[int]:
-        """Return the shape of the data array"""
-        # The datamodel shape is based of the data array
-        if self._has_node("psf"):
-            return self.psf.shape
+    def primary_array_name(self) -> str:
+        return "psf"
 
-        # Allow for one to shrink the data size default
-        if self._has_node("array_shape"):
-            return self._data["array_shape"]
-
-        # default fall-back
+    @property
+    def default_array_shape(self) -> tuple[int]:
         return (3, 6, 9, 361, 361)
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        return (2, 2, 2, 2, 2)
 
     @rad.field
     def meta(self) -> EpsfRef_Meta:

@@ -404,29 +404,19 @@ def get_testing_default_values(node_cls, property_name) -> tuple:
     """
     Get clean pair of default values for testing
     """
-    array_shape = None
-    if issubclass(node_cls, rad.DataModelNode):
-        try:
-            array_shape = node_cls().array_shape
-        except NotImplementedError:
-            array_shape = tuple()
-
-        array_shape = len(array_shape) * (1,)
-
-    settings = {"array_shape": array_shape}
-
     # Pull the default twice and throw away the base node
     # This is to ensure we have two different un-linked instances
-    default_value = getattr(node_cls(settings.copy()), property_name)
-    compare_value = getattr(node_cls(settings.copy()), property_name)
+    default_value = getattr(node_cls(), property_name)
+    compare_value = getattr(node_cls(), property_name)
 
     # Create a testing instance and show it only contains the array_shape
-    instance = node_cls(settings.copy())
-    assert instance._data == settings
+    instance = node_cls()
+    assert instance._data == {}
 
     return default_value, compare_value, instance
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
 def test_wrap_into_node_setting(node_cls):
     """
@@ -462,6 +452,7 @@ def test_wrap_into_node_setting(node_cls):
         assert isinstance(compare_value, type(getattr(instance, property_name)))
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
 def test_coerce_getting(node_cls):
     """
@@ -555,6 +546,7 @@ def test_flush_all(node_cls):
     assert keys == set(rad.get_node_fields(node_cls))
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
 def test_flush_extra(node_cls):
     """
@@ -575,6 +567,7 @@ def test_flush_extra(node_cls):
     assert keys == set(rad.get_node_fields(node_cls)) | set(node_cls._extra_fields())
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 def test_wfi_mode_mixin():
     """
     Test the the wfi mode mixin class works
@@ -595,6 +588,7 @@ def test_wfi_mode_mixin():
     assert instance.grating == "GRISM"
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 def test_fps_common_mixin():
     """
     Test that the fps common mixin class works
@@ -609,6 +603,7 @@ def test_fps_common_mixin():
     assert type(instance)._extra_fields() == ("statistics",)
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 def test_tvac_common_mixin():
     """
     Test that the tvac common mixin class works
@@ -623,6 +618,7 @@ def test_tvac_common_mixin():
     assert type(instance)._extra_fields() == ("statistics",)
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 def test_ref_common_ref_instrument_mixin():
     """
     Test that the ref common ref instrument mixin class works

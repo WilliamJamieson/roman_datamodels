@@ -17,6 +17,7 @@ class _StNodeConfig:
 
     def __init__(self):
         self._typeguard_enabled = False
+        self._use_test_array_shape = False
         self._asdf_ctx = None
         self._asdf_config = None
 
@@ -24,6 +25,29 @@ class _StNodeConfig:
     def typeguard_enabled(self) -> bool:
         """Access the typeguard enabled flag"""
         return self._typeguard_enabled
+
+    @contextmanager
+    def enable_typeguard(self) -> Generator[None, None, None]:
+        """
+        Context manager to temporarily enable typeguard for testing.
+        """
+        self._typeguard_enabled = True
+        yield
+        self._typeguard_enabled = False
+
+    @property
+    def use_test_array_shape(self) -> bool:
+        """Access the use test array shape flag"""
+        return self._use_test_array_shape
+
+    @contextmanager
+    def enable_test_array_shape(self) -> Generator[None, None, None]:
+        """
+        Context manager to temporarily enable the test array shape.
+        """
+        self._use_test_array_shape = True
+        yield
+        self._use_test_array_shape = False
 
     @property
     def asdf_ctx(self) -> asdf.AsdfFile:
@@ -56,15 +80,6 @@ class _StNodeConfig:
         The raw schema dictionary for the given URI
         """
         return yaml.safe_load(self.asdf_config.resource_manager[uri])
-
-    @contextmanager
-    def enable_typeguard(self) -> Generator[None, None, None]:
-        """
-        Context manager to temporarily enable typeguard for testing.
-        """
-        self._typeguard_enabled = True
-        yield
-        self._typeguard_enabled = False
 
 
 class _ConfigLocal(threading.local):

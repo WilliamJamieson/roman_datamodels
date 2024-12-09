@@ -40,8 +40,12 @@ class MosaicSourceCatalog(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_source_catalog-1.0.0"
 
     @property
-    def array_shape(self) -> tuple[int]:
-        raise NotImplementedError("This node does not have an array shape")
+    def default_array_shape(self) -> tuple[int]:
+        raise NotImplementedError("Array shape is not defined for MosaicSourceCatalog")
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        return self.default_array_shape
 
     @rad.field
     def meta(self) -> MosaicSourceCatalog_Meta:

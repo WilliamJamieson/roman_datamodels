@@ -38,8 +38,12 @@ class DistortionRef(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/distortion-1.0.0"
 
     @property
-    def array_shape(self) -> tuple[int]:
-        raise NotImplementedError("array_shape is not implemented")
+    def default_array_shape(self) -> tuple[int]:
+        raise NotImplementedError("Array shape is not defined for ImageSourceCatalog")
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        return self.default_array_shape
 
     @rad.field
     def meta(self) -> DistortionRef_Meta:

@@ -83,18 +83,12 @@ class DarkRef(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/dark-1.0.0"
 
     @property
-    def array_shape(self) -> tuple[int]:
-        """Return the shape of the data array"""
-        # The datamodel shape is based of the data array
-        if self._has_node("data"):
-            return self.data.shape
-
-        # Allow for one to shrink the data size default
-        if self._has_node("array_shape"):
-            return self._data["array_shape"]
-
-        # default fall-back
+    def default_array_shape(self) -> tuple[int]:
         return (2, 4096, 4096)
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        return (8, 8, 8)
 
     @rad.field
     def meta(self) -> DarkRef_Meta:

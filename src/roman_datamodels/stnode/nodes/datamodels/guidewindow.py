@@ -97,6 +97,21 @@ class Guidewindow(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/guidewindow-1.0.0"
 
     @property
+    def primary_array_name(self) -> str:
+        """Primary array name"""
+        return "signal_frames"
+
+    @property
+    def default_array_shape(self) -> tuple[int]:
+        """Default shape of the data array"""
+        return (2, 8, 16, 32, 32)
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        """Shape of the data array for testing"""
+        return (2, 2, 2, 2, 2)
+
+    @property
     def array_shape(self) -> tuple[int]:
         """Return the shape of the data array"""
         # The datamodel shape is based of the data array

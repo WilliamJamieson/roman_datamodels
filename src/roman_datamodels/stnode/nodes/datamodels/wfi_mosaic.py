@@ -81,6 +81,14 @@ class WfiMosaic(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-1.0.0"
 
     @property
+    def default_array_shape(self) -> tuple[int]:
+        return (4088, 4088)
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        return (8, 8)
+
+    @property
     def array_shape(self) -> tuple[int]:
         """Return the shape of the data array"""
         # The datamodel shape is based of the data array

@@ -6,21 +6,6 @@ from roman_datamodels.stnode import core, nodes, rad
 from roman_datamodels.testing import assert_node_equal
 
 
-@pytest.fixture
-def enable_typeguard():
-    """
-    Fixture to enable typeguard for testing.
-    """
-    assert core.get_config().typeguard_enabled is False
-
-    with core.get_config().enable_typeguard():
-        assert core.get_config().typeguard_enabled is True
-
-        yield
-
-    assert core.get_config().typeguard_enabled is False
-
-
 class TypeguardExample:
     @rad.field
     def good(self) -> int:
@@ -75,6 +60,7 @@ def test_type_annotations(node_cls):
     instance.flush(flush=core.FlushOptions.EXTRA)
 
 
+@pytest.mark.usefixtures("use_testing_shape")
 @pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.tagged_registry.values())
 def test_check_defaults_against_schemas(tmp_path, node_cls):
     """

@@ -51,6 +51,21 @@ class Associations(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/associations-1.0.0"
 
     @property
+    def primary_array_shape(self) -> tuple[int] | None:
+        """
+        Override the default primary array shape as it does not have one
+        """
+        return None
+
+    @property
+    def default_array_shape(self) -> tuple[int]:
+        return (2, 3, 1)
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        return self.default_array_shape
+
+    @property
     def array_shape(self) -> tuple[int]:
         # Allow for one to shrink the data size default
         if self._has_node("array_shape"):

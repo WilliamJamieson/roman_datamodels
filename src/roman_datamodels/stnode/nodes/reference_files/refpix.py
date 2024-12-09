@@ -37,6 +37,18 @@ class RefpixRef(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/refpix-1.0.0"
 
     @property
+    def primary_array_name(self) -> str:
+        return "gamma"
+
+    @property
+    def default_array_shape(self) -> tuple[int]:
+        return (32, 286721)
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
+        return (32, 840)
+
+    @property
     def array_shape(self) -> tuple[int]:
         """Return the shape of the data array"""
         # The datamodel shape is based of the data array

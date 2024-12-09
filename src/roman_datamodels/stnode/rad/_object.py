@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 from asdf import AsdfFile
 
-from ..core import DNode, FlushOptions
+from ..core import DNode, FlushOptions, get_config
 from ._mixins import SchemaMixin, TagMixin
 from ._utils import get_node_fields
 
@@ -83,6 +83,45 @@ class DataModelNode(TaggedObjectNode, ABC):
     """
 
     @property
+    def primary_array_name(self) -> str:
+        """
+        Returns the name "primary" array for this model, which
+        controls the size of other arrays that are implicitly created.
+        This is intended to be overridden in the subclasses if the
+        primary array's name is not "data".
+        """
+        if "data" in self.asdf_required():
+            return "data"
+
+        raise NotImplementedError("Primary array name not defined")
+
+    @property
+    def primary_array_shape(self) -> tuple[int] | None:
+        """Shape of the primary array."""
+
+        if self._has_node(name := self.primary_array_name):
+            return getattr(self, name).shape
+
+        return None
+
+    @property
     @abstractmethod
+    def default_array_shape(self) -> tuple[int]:
+        """Default shape of the data array."""
+
+    @property
+    @abstractmethod
+    def testing_array_shape(self) -> tuple[int]:
+        """Shape of the data array for testing."""
+
+    @property
     def array_shape(self) -> tuple[int]:
         """Shape of the data array."""
+
+        if get_config().use_test_array_shape:
+            return self.testing_array_shape
+
+        if shape := self.primary_array_shape:
+            return shape
+
+        return self.default_array_shape

@@ -68,10 +68,18 @@ class ApcorrRef(rad.DataModelNode):
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/apcorr-1.0.0"
 
     @property
-    def array_shape(self) -> tuple[int]:
+    def primary_array_shape(self) -> tuple[int]:
         if self._has_node("data") and len(data := self._data["data"]) > 0:
             return next(iter(data.values())).array_shape
 
+        return None
+
+    @property
+    def default_array_shape(self) -> tuple[int]:
+        return (10,)
+
+    @property
+    def testing_array_shape(self) -> tuple[int]:
         return (10,)
 
     @rad.field
