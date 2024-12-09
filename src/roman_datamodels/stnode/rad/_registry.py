@@ -7,23 +7,11 @@ Hold all the registry information for the STNode classes.
 from enum import Enum
 from types import MappingProxyType
 
-from .rad import (
-    DataModelNode,
-    ImpliedNodeMixin,
-    ListNode,
-    ObjectNode,
-    ScalarNode,
-    SchemaListNode,
-    SchemaMixin,
-    SchemaObjectNode,
-    SchemaScalarNode,
-    TaggedListNode,
-    TaggedObjectNode,
-    TaggedScalarNode,
-    TagMixin,
-    get_all_fields,
-    get_nodes,
-)
+from ._list import ListNode, SchemaListNode, TaggedListNode
+from ._mixins import ImpliedNodeMixin, SchemaMixin, TagMixin
+from ._object import DataModelNode, ObjectNode, SchemaObjectNode, TaggedObjectNode
+from ._scalar import ScalarNode, SchemaScalarNode, TaggedScalarNode
+from ._utils import get_all_fields, get_nodes
 
 OBJECT_NODE_CLASSES_BY_TAG = {}
 LIST_NODE_CLASSES_BY_TAG = {}

@@ -2,6 +2,7 @@ from ._default import NOFN, NOINT, NONUM, NOSTR, Wcs
 from ._list import ListNode, SchemaListNode, TaggedListNode
 from ._mixins import EnumNodeMixin, ImpliedNodeMixin, NodeEnumMeta, SchemaMixin, TagMixin
 from ._object import DataModelNode, ObjectNode, SchemaObjectNode, TaggedObjectNode
+from ._registry import RDM_NODE_REGISTRY
 from ._scalar import ScalarNode, SchemaScalarNode, TaggedScalarNode
 from ._schema import RadSchema
 from ._utils import (
@@ -23,6 +24,7 @@ __all__ = [
     "NOINT",
     "NONUM",
     "NOSTR",
+    "RDM_NODE_REGISTRY",
     "DataModelNode",
     "EnumNodeMixin",
     "ImpliedNodeMixin",

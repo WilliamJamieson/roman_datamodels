@@ -273,7 +273,7 @@ def get_node_fields(cls: type) -> tuple[str]:
     tuple[str]
         The node fields of the class.
     """
-    from .._registry import RDM_NODE_REGISTRY
+    from ._registry import RDM_NODE_REGISTRY
 
     return tuple(
         property_name

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from asdf.extension import Converter, ManifestExtension
 
-from ._registry import RDM_NODE_REGISTRY
+from .rad._registry import RDM_NODE_REGISTRY
 
 if TYPE_CHECKING:
     from .rad import TagMixin

@@ -12,7 +12,7 @@ Dynamic creation of STNode classes from the RAD manifest.
 # from rad import resources
 
 # from ._factories import stnode_factory
-from ._registry import LIST_NODE_CLASSES_BY_TAG, OBJECT_NODE_CLASSES_BY_TAG, SCALAR_NODE_CLASSES_BY_TAG
+from .rad._registry import LIST_NODE_CLASSES_BY_TAG, OBJECT_NODE_CLASSES_BY_TAG, SCALAR_NODE_CLASSES_BY_TAG
 
 __all__ = [
     "NODE_CLASSES",

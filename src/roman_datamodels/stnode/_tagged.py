@@ -8,13 +8,13 @@ import copy
 
 import asdf
 
-from ._registry import (
+from .core import DNode, LNode
+from .rad._registry import (
     LIST_NODE_CLASSES_BY_TAG,
     OBJECT_NODE_CLASSES_BY_TAG,
     SCALAR_NODE_CLASSES_BY_KEY,
     SCALAR_NODE_CLASSES_BY_TAG,
 )
-from .core import DNode, LNode
 
 __all__ = [
     "TaggedListNode",

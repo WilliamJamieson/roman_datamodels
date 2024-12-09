@@ -2,7 +2,7 @@ import asdf
 import pytest
 from astropy.time import Time
 
-from roman_datamodels.stnode import _registry, _typing, core, nodes, rad
+from roman_datamodels.stnode import _typing, core, nodes, rad
 from roman_datamodels.testing import assert_node_equal
 
 
@@ -64,7 +64,7 @@ def test_typeguard_decorator():
 
 
 @pytest.mark.usefixtures("enable_typeguard")
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.object_nodes.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_type_annotations(node_cls):
     """
     This will test all @fields's in the given node class.
@@ -76,7 +76,7 @@ def test_type_annotations(node_cls):
     instance.flush(flush=core.FlushOptions.EXTRA)
 
 
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.tagged_registry.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.tagged_registry.values())
 def test_check_defaults_against_schemas(tmp_path, node_cls):
     """
     Test that the default values for all fields in a given node class are valid relative to the RAD schemas.

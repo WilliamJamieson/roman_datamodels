@@ -13,7 +13,7 @@ from astropy.time import Time
 from gwcs import WCS
 from rad import resources
 
-from roman_datamodels.stnode import _registry, core, nodes, rad
+from roman_datamodels.stnode import core, nodes, rad
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -42,13 +42,13 @@ def test_node_exists_for_schema(schema_file):
     uri = schema_file["id"]
 
     # Check there is a node for this schema
-    assert uri in _registry.RDM_NODE_REGISTRY.schema_registry
+    assert uri in rad.RDM_NODE_REGISTRY.schema_registry
 
     # check the class's asdf_schema_uri matches the uri
-    assert _registry.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uri() == uri
+    assert rad.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uri() == uri
 
     # check the class name against the uri
-    assert rad.class_name_from_uri(uri) == _registry.RDM_NODE_REGISTRY.schema_registry[uri].__name__
+    assert rad.class_name_from_uri(uri) == rad.RDM_NODE_REGISTRY.schema_registry[uri].__name__
 
 
 def manifest_tags():
@@ -71,16 +71,16 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
     Check that every tag in the manifest has a corresponding node class
     """
     # Check that there is a node for this tag
-    assert tag_uri in _registry.RDM_NODE_REGISTRY.tagged_registry
+    assert tag_uri in rad.RDM_NODE_REGISTRY.tagged_registry
 
     # check the class's asdf_tag matches the tag uri
-    assert _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag() == tag_uri
+    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag() == tag_uri
 
     # check the class's asdf_schema_uri matches the schema uri
-    assert _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uri() == schema_uri
+    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uri() == schema_uri
 
     # check the class name against the tag uri
-    assert rad.class_name_from_uri(tag_uri) == _registry.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
+    assert rad.class_name_from_uri(tag_uri) == rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
 
 
 def parse_orphan_name(name):
@@ -92,11 +92,11 @@ def parse_orphan_name(name):
 
 def get_containing_cls(containing_name):
     # Get the containing class
-    assert containing_name in _registry.RDM_NODE_REGISTRY.all_nodes, f"No node found for {containing_name}"
-    return _registry.RDM_NODE_REGISTRY.all_nodes[containing_name]
+    assert containing_name in rad.RDM_NODE_REGISTRY.all_nodes, f"No node found for {containing_name}"
+    return rad.RDM_NODE_REGISTRY.all_nodes[containing_name]
 
 
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.implied_nodes.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.implied_nodes.values())
 def test_implied_node(node_cls):
     """
     Test that the implied nodes follow a consistent naming pattern
@@ -142,7 +142,7 @@ def test_implied_node(node_cls):
 SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
 
 
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.object_nodes.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_node_requires_properties(node_cls):
     """
     Check that every property listed in `asdf_required` in the node class
@@ -198,7 +198,7 @@ def test_fields_in_schema(node_cls):
     # RadSchema cannot properly traverse to nodes that are mixed classes of other
     # implied nodes, this is the only example in RAD, it cannot traverse into the second
     # object
-    if node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]:
+    if node_cls is rad.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]:
         fields = fields | {"type", "p_exptype"}
 
     assert fields == set(rad.get_node_fields(node_cls))
@@ -275,7 +275,7 @@ def build_annotation_from_schema(schema, annotation):
             case "boolean":
                 return bool
             case "object":
-                if annotation.__name__ in _registry.RDM_NODE_REGISTRY.implied_nodes:
+                if annotation.__name__ in rad.RDM_NODE_REGISTRY.implied_nodes:
                     # The orphan nodes are tested separately,
                     #     they are implied by the schema
                     return annotation
@@ -289,7 +289,7 @@ def build_annotation_from_schema(schema, annotation):
                     assert annotation_args[1][0] is str  # string key
 
                     # The value should be an orphan node
-                    assert annotation_args[1][1].__name__ in _registry.RDM_NODE_REGISTRY.implied_nodes
+                    assert annotation_args[1][1].__name__ in rad.RDM_NODE_REGISTRY.implied_nodes
 
                     # The annotation is correct in this case
                     return annotation
@@ -314,16 +314,16 @@ def build_annotation_from_schema(schema, annotation):
                 raise ValueError(f"Unknown type {schema['type']}")
 
     if "$ref" in schema:
-        if schema["$ref"] in _registry.RDM_NODE_REGISTRY.schema_registry:
-            return _registry.RDM_NODE_REGISTRY.schema_registry[schema["$ref"]]
+        if schema["$ref"] in rad.RDM_NODE_REGISTRY.schema_registry:
+            return rad.RDM_NODE_REGISTRY.schema_registry[schema["$ref"]]
         return build_annotation_from_schema(SCHEMA_DICT[schema["$ref"]], annotation)
 
     if "tag" in schema:
         if schema["tag"] in _EXTERNAL_TAG_MAP:
             return _EXTERNAL_TAG_MAP[schema["tag"]]
 
-        if schema["tag"] in _registry.RDM_NODE_REGISTRY.tagged_registry:
-            return _registry.RDM_NODE_REGISTRY.tagged_registry[schema["tag"]]
+        if schema["tag"] in rad.RDM_NODE_REGISTRY.tagged_registry:
+            return rad.RDM_NODE_REGISTRY.tagged_registry[schema["tag"]]
 
     if "anyOf" in schema:
         sub_schemas = schema["anyOf"].copy()
@@ -334,7 +334,7 @@ def build_annotation_from_schema(schema, annotation):
 
     if "allOf" in schema:
         # These result in an orphan node which is tested elsewhere
-        assert annotation.__name__ in _registry.RDM_NODE_REGISTRY.implied_nodes
+        assert annotation.__name__ in rad.RDM_NODE_REGISTRY.implied_nodes
         return annotation
 
     return None
@@ -637,7 +637,7 @@ def test_ref_common_ref_instrument_mixin():
     assert type(instance)._extra_fields() == ("optical_element",)
 
 
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.all_nodes.values())
 def test_to_asdf_tree(node_cls):
     """
     Smoke test that the to_asdf_tree method runs without error
@@ -651,7 +651,7 @@ def test_to_asdf_tree(node_cls):
     instance.to_asdf_tree(flush=core.FlushOptions.EXTRA)
 
 
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.all_nodes.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.all_nodes.values())
 def test_asdf_schema(node_cls):
     """
     Smoke test that the asdf_schema method runs without error
@@ -670,7 +670,7 @@ def test_asdf_schema(node_cls):
     _ = schema.sdf
 
 
-@pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.enum_nodes.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.enum_nodes.values())
 def test_enum_node(node_cls):
     """
     Test that the enum node class matches the schema section it is pointed at
@@ -694,7 +694,7 @@ def test_enum_node(node_cls):
         assert entry_name in node_cls, f"Enum entry: {entry_name} not listed in Enum: {node_cls}"
 
     # Check that all the enums in the class are listed in the schema
-    if node_cls is _registry.RDM_NODE_REGISTRY.enum_nodes["RefTypeEntry"]:
+    if node_cls is rad.RDM_NODE_REGISTRY.enum_nodes["RefTypeEntry"]:
         # These are a special case as the are implied by a collection of schemas
         return
     for entry in node_cls:
@@ -709,7 +709,7 @@ def test_reftype_node():
     from roman_datamodels.stnode.nodes.reference_files import ref
 
     # Get the entry types from the registry
-    types = [value for key, value in _registry.RDM_NODE_REGISTRY.data_model_registry.items() if "reference_files" in key]
+    types = [value for key, value in rad.RDM_NODE_REGISTRY.data_model_registry.items() if "reference_files" in key]
     assert len(types) == len(reference_files.__all__) - len(ref.__all__)
 
     # This is a fill in value for the `ref_common` which will
@@ -744,7 +744,7 @@ def test_enum_exists(node_cls):
     # This is a special case that is difficult to abstractly search.
     # It should not have an enum in it which is directly exposed,
     # That will be checked by RefExposureTypeRef_Exposure
-    if node_cls is _registry.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]:
+    if node_cls is rad.RDM_NODE_REGISTRY.all_nodes["DarkRef_Meta_Exposure"]:
         return
 
     # Only check the actual fields
