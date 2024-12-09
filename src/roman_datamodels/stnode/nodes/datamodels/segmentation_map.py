@@ -17,15 +17,15 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return SegmentationMap
 
-    @rad.rad_field
+    @rad.field
     def optical_element(self) -> WfiOpticalElement:
         return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
 
-    @rad.rad_field
+    @rad.field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
-    @rad.rad_field
+    @rad.field
     def visit(self) -> Visit:
         return self._get_node("visit", Visit)
 
@@ -53,10 +53,10 @@ class SegmentationMap(rad.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> SegmentationMap_Meta:
         return self._get_node("meta", SegmentationMap_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint32))

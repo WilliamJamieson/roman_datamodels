@@ -14,26 +14,26 @@ class Program(rad.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/program-1.0.0"
 
-    @rad.rad_field
+    @rad.field
     def title(self) -> str:
         return self._get_node("title", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def investigator_name(self) -> str:
         return self._get_node("investigator_name", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def category(self) -> str:
         return self._get_node("category", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def subcategory(self) -> ProgramSubcategoryEntry:
         return self._get_node("subcategory", lambda: ProgramSubcategoryEntry.NONE)
 
-    @rad.rad_field
+    @rad.field
     def science_category(self) -> str:
         return self._get_node("science_category", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def continuation_id(self) -> int:
         return self._get_node("continuation_id", lambda: _default.NOINT)

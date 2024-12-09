@@ -23,42 +23,42 @@ class Basic(rad.SchemaObjectNode):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/basic-1.0.0"
 
-    @rad.rad_field
+    @rad.field
     def calibration_software_name(self) -> CalibrationSoftwareName:
         return self._get_node("calibration_software_name", lambda: CalibrationSoftwareName("RomanCAL"))
 
-    @rad.rad_field
+    @rad.field
     def calibration_software_version(self) -> CalibrationSoftwareVersion:
         return self._get_node("calibration_software_version", lambda: CalibrationSoftwareVersion("9.9.0"))
 
-    @rad.rad_field
+    @rad.field
     def product_type(self) -> ProductType:
         return self._get_node("product_type", lambda: ProductType("l2"))
 
-    @rad.rad_field
+    @rad.field
     def filename(self) -> Filename:
         return self._get_node("filename", lambda: Filename(_default.NOFN))
 
-    @rad.rad_field
+    @rad.field
     def file_date(self) -> FileDate:
         return self._get_node("file_date", lambda: FileDate(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")))
 
-    @rad.rad_field
+    @rad.field
     def model_type(self) -> ModelType:
         return self._get_node("model_type", lambda: ModelType(_default.NOSTR))
 
-    @rad.rad_field
+    @rad.field
     def origin(self) -> Origin:
         return self._get_node("origin", lambda: Origin.STSCI_SOC)
 
-    @rad.rad_field
+    @rad.field
     def prd_version(self) -> PrdVersion:
         return self._get_node("prd_version", lambda: PrdVersion("8.8.8"))
 
-    @rad.rad_field
+    @rad.field
     def sdf_software_version(self) -> SdfSoftwareVersion:
         return self._get_node("sdf_software_version", lambda: SdfSoftwareVersion("7.7.7"))
 
-    @rad.rad_field
+    @rad.field
     def telescope(self) -> Telescope:
         return self._get_node("telescope", lambda: Telescope.ROMAN)

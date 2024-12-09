@@ -21,34 +21,34 @@ class TvacBasic(rad.SchemaObjectNode):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/basic-1.0.0"
 
-    @rad.rad_field
+    @rad.field
     def calibration_software_version(self) -> TvacCalibrationSoftwareVersion:
         return self._get_node("calibration_software_version", lambda: TvacCalibrationSoftwareVersion("9.9.0"))
 
-    @rad.rad_field
+    @rad.field
     def filename(self) -> TvacFilename:
         return self._get_node("filename", lambda: TvacFilename(_default.NOSTR))
 
-    @rad.rad_field
+    @rad.field
     def file_date(self) -> TvacFileDate:
         return self._get_node("file_date", lambda: TvacFileDate(Time("2020-01-01T00:00:00.0", format="isot", scale="utc")))
 
-    @rad.rad_field
+    @rad.field
     def model_type(self) -> TvacModelType:
         return self._get_node("model_type", lambda: TvacModelType(_default.NOSTR))
 
-    @rad.rad_field
+    @rad.field
     def origin(self) -> TvacOrigin:
         return self._get_node("origin", lambda: TvacOrigin.STSCI)
 
-    @rad.rad_field
+    @rad.field
     def prd_software_version(self) -> TvacPrdSoftwareVersion:
         return self._get_node("prd_software_version", lambda: TvacPrdSoftwareVersion("8.8.8"))
 
-    @rad.rad_field
+    @rad.field
     def sdf_software_version(self) -> TvacSdfSoftwareVersion:
         return self._get_node("sdf_software_version", lambda: TvacSdfSoftwareVersion("7.7.7"))
 
-    @rad.rad_field
+    @rad.field
     def telescope(self) -> TvacTelescope:
         return self._get_node("telescope", lambda: TvacTelescope.ROMAN)

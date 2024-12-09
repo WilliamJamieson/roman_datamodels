@@ -30,18 +30,18 @@ class WfiScienceRaw(rad.DataModelNode):
         # default fall-back
         return (8, 4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> Common:
         return self._get_node("meta", Common)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint16))
 
-    @rad.rad_field
+    @rad.field
     def amp33(self) -> np.ndarray:
         return self._get_node("amp33", lambda: np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16))
 
-    @rad.rad_field
+    @rad.field
     def resultantdq(self) -> np.ndarray:
         return self._get_node("resultantdq", lambda: np.zeros(self.array_shape, dtype=np.uint8))

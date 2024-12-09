@@ -15,15 +15,15 @@ class DistortionRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     def asdf_implied_by(cls) -> type:
         return DistortionRef
 
-    @rad.rad_field
+    @rad.field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.DISTORTION)
 
-    @rad.rad_field
+    @rad.field
     def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.pixel)
 
-    @rad.rad_field
+    @rad.field
     def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.arcsec)
 
@@ -41,10 +41,10 @@ class DistortionRef(rad.DataModelNode):
     def array_shape(self) -> tuple[int]:
         raise NotImplementedError("array_shape is not implemented")
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> DistortionRef_Meta:
         return self._get_node("meta", DistortionRef_Meta)
 
-    @rad.rad_field
+    @rad.field
     def coordinate_distortion_transform(self) -> Model:
         return self._get_node("coordinate_distortion_transform", lambda: Shift(1) & Shift(2))

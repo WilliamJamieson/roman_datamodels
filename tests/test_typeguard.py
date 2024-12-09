@@ -25,12 +25,12 @@ def enable_typeguard():
 
 
 class TypeguardExample:
-    @rad.rad_field
+    @rad.field
     def good(self) -> int:
         """This should not raise an error"""
         return 1
 
-    @rad.rad_field
+    @rad.field
     def bad(self) -> int:
         """This should raise an error"""
         return "1"
@@ -67,7 +67,7 @@ def test_typeguard_decorator():
 @pytest.mark.parametrize("node_cls", _registry.RDM_NODE_REGISTRY.object_nodes.values())
 def test_type_annotations(node_cls):
     """
-    This will test all @rad_fields's in the given node class.
+    This will test all @fields's in the given node class.
         -> flush(EXTRA) will cause all of the fields to have their default values set.
         -> test_check_defaults_against_schemas will check that the default values are valid relative
            to the RAD schemas

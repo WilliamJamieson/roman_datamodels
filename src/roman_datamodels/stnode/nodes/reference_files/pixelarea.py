@@ -14,11 +14,11 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return PixelareaRef_Meta
 
-    @rad.rad_field
+    @rad.field
     def pixelarea_steradians(self) -> u.Quantity | None:
         return self._get_node("pixelarea_steradians", lambda: float(_default.NONUM) * u.sr)
 
-    @rad.rad_field
+    @rad.field
     def pixelarea_arcsecsq(self) -> u.Quantity | None:
         return self._get_node("pixelarea_arcsecsq", lambda: float(_default.NONUM) * u.arcsec**2)
 
@@ -28,11 +28,11 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     def asdf_implied_by(cls) -> type:
         return PixelareaRef
 
-    @rad.rad_field
+    @rad.field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.AREA)
 
-    @rad.rad_field
+    @rad.field
     def photometry(self) -> PixelareaRef_Meta_Photometry:
         return self._get_node("photometry", PixelareaRef_Meta_Photometry)
 
@@ -60,10 +60,10 @@ class PixelareaRef(rad.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> PixelareaRef_Meta:
         return self._get_node("meta", PixelareaRef_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))

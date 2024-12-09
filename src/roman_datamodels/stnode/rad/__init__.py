@@ -6,14 +6,14 @@ from ._schema import RadSchema
 from ._utils import (
     camel_case_to_snake_case,
     class_name_from_uri,
+    field,
+    field_property,
     get_all_fields,
     get_node_fields,
     get_nodes,
     get_schema_from_tag,
     get_schema_nodes,
     get_tagged_nodes,
-    rad_field,
-    rad_field_property,
     wrap_into_node,
 )
 
@@ -36,13 +36,13 @@ __all__ = [
     "TaggedScalarNode",
     "camel_case_to_snake_case",
     "class_name_from_uri",
+    "field",
+    "field_property",
     "get_all_fields",
     "get_node_fields",
     "get_nodes",
     "get_schema_from_tag",
     "get_schema_nodes",
     "get_tagged_nodes",
-    "rad_field",
-    "rad_field_property",
     "wrap_into_node",
 ]

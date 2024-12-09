@@ -14,7 +14,7 @@ class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return SaturationRef
 
-    @rad.rad_field
+    @rad.field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.SATURATION)
 
@@ -42,14 +42,14 @@ class SaturationRef(rad.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> SaturationRef_Meta:
         return self._get_node("meta", SaturationRef_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> u.Quantity:
         return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.DN, dtype=np.float32))
 
-    @rad.rad_field
+    @rad.field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))

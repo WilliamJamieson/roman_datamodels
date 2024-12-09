@@ -36,6 +36,6 @@ class RefCommonRefOpticalElementRef(RefCommonRef, RefOpticalElementRef):
             *RefOpticalElementRef.asdf_required(),
         }
 
-    @rad.rad_field
+    @rad.field
     def instrument(self) -> RefCommonRefOpticalElementRef_Instrument:
         return self._get_node("instrument", RefCommonRefOpticalElementRef_Instrument)

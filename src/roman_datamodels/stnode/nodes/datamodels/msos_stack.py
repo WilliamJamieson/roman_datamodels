@@ -12,7 +12,7 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
     def asdf_implied_by(cls) -> type:
         return MsosStack
 
-    @rad.rad_field
+    @rad.field
     def image_list(self) -> str:
         return self._get_node("image_list", lambda: _default.NOSTR)
 
@@ -40,22 +40,22 @@ class MsosStack(rad.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> MsosStack_Meta:
         return self._get_node("meta", MsosStack_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @rad.rad_field
+    @rad.field
     def uncertainty(self) -> np.ndarray:
         return self._get_node("uncertainty", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @rad.rad_field
+    @rad.field
     def mask(self) -> np.ndarray:
         return self._get_node("mask", lambda: np.zeros(self.array_shape, dtype=np.uint8))
 
-    @rad.rad_field
+    @rad.field
     def coverage(self) -> np.ndarray:
         return self._get_node("coverage", lambda: np.zeros(self.array_shape, dtype=np.uint8))

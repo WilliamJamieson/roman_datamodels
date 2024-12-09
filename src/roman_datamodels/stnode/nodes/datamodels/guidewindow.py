@@ -18,71 +18,71 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
     def asdf_implied_by(cls) -> type:
         return Guidewindow
 
-    @rad.rad_field
+    @rad.field
     def gw_start_time(self) -> Time:
         return self._get_node("gw_start_time", lambda: Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
 
-    @rad.rad_field
+    @rad.field
     def gw_end_time(self) -> Time:
         return self._get_node("gw_end_time", lambda: Time("2020-01-01T10:00:00.0", format="isot", scale="utc"))
 
-    @rad.rad_field
+    @rad.field
     def gw_frame_readout_time(self) -> float:
         return self._get_node("gw_frame_readout_time", lambda: _default.NONUM)
 
-    @rad.rad_field
+    @rad.field
     def gw_function_start_time(self) -> Time:
         return self._get_node("gw_function_start_time", lambda: Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
 
-    @rad.rad_field
+    @rad.field
     def gw_function_end_time(self) -> Time:
         return self._get_node("gw_function_end_time", lambda: Time("2020-01-01T00:00:00.0", format="isot", scale="utc"))
 
-    @rad.rad_field
+    @rad.field
     def gw_acq_exec_stat(self) -> str:
         return self._get_node("gw_acq_exec_stat", lambda: "StatusRMTest619")
 
-    @rad.rad_field
+    @rad.field
     def pedestal_resultant_exp_time(self) -> float:
         return self._get_node("pedestal_resultant_exp_time", lambda: _default.NONUM)
 
-    @rad.rad_field
+    @rad.field
     def signal_resultant_exp_time(self) -> float:
         return self._get_node("signal_resultant_exp_time", lambda: _default.NONUM)
 
-    @rad.rad_field
+    @rad.field
     def gw_acq_number(self) -> int:
         return self._get_node("gw_acq_number", lambda: _default.NOINT)
 
-    @rad.rad_field
+    @rad.field
     def gw_science_file_source(self) -> str:
         return self._get_node("gw_science_file_source", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def gw_mode(self) -> GuidewindowModes:
         return self._get_node("gw_mode", lambda: GuidewindowModes.WIM_ACQ)
 
-    @rad.rad_field
+    @rad.field
     def gw_window_xstart(self) -> int:
         return self._get_node("gw_window_xstart", lambda: _default.NOINT)
 
-    @rad.rad_field
+    @rad.field
     def gw_window_ystart(self) -> int:
         return self._get_node("gw_window_ystart", lambda: _default.NOINT)
 
-    @rad.rad_field
+    @rad.field
     def gw_window_xstop(self) -> int:
         return self._get_node("gw_window_xstop", lambda: self.gw_window_xstart + self.gw_window_xsize)
 
-    @rad.rad_field
+    @rad.field
     def gw_window_ystop(self) -> int:
         return self._get_node("gw_window_ystop", lambda: self.gw_window_xstart + self.gw_window_ysize)
 
-    @rad.rad_field
+    @rad.field
     def gw_window_xsize(self) -> int:
         return self._get_node("gw_window_xsize", lambda: 170)
 
-    @rad.rad_field
+    @rad.field
     def gw_window_ysize(self) -> int:
         return self._get_node("gw_window_ysize", lambda: 24)
 
@@ -110,18 +110,18 @@ class Guidewindow(rad.DataModelNode):
         # default fall-back
         return (2, 8, 16, 32, 32)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> Guidewindow_Meta:
         return self._get_node("meta", Guidewindow_Meta)
 
-    @rad.rad_field
+    @rad.field
     def pedestal_frames(self) -> np.ndarray:
         return self._get_node("pedestal_frames", lambda: np.zeros(self.array_shape, dtype=np.uint16))
 
-    @rad.rad_field
+    @rad.field
     def signal_frames(self) -> np.ndarray:
         return self._get_node("signal_frames", lambda: np.zeros(self.array_shape, dtype=np.uint16))
 
-    @rad.rad_field
+    @rad.field
     def amp33(self) -> np.ndarray:
         return self._get_node("amp33", lambda: np.zeros(self.array_shape, dtype=np.uint16))

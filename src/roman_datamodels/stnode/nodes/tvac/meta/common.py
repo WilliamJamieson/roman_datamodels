@@ -16,7 +16,7 @@ __all__ = ["TvacCommon"]
 class TvacCommonMixin(core.AdditionalNodeMixin):
     """Mixin things present in the constructors not present in the schema"""
 
-    @rad.rad_field
+    @rad.field
     def statistics(self) -> TvacStatistics:
         return self._get_node("statistics", TvacStatistics)
 
@@ -30,34 +30,34 @@ class TvacCommon(TvacCommonMixin, TvacBasic):
     def asdf_schema_uri(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0"
 
-    @rad.rad_field
+    @rad.field
     def cal_step(self) -> TvacCalStep:
         return self._get_node("cal_step", TvacCalStep)
 
-    @rad.rad_field
+    @rad.field
     def exposure(self) -> TvacExposure:
         return self._get_node("exposure", TvacExposure)
 
-    @rad.rad_field
+    @rad.field
     def guidestar(self) -> TvacGuidestar:
         return self._get_node("guidestar", TvacGuidestar)
 
-    @rad.rad_field
+    @rad.field
     def instrument(self) -> TvacWfiMode:
         return self._get_node("instrument", TvacWfiMode)
 
-    @rad.rad_field
+    @rad.field
     def ref_file(self) -> TvacRefFile:
         return self._get_node("ref_file", TvacRefFile)
 
-    @rad.rad_field
+    @rad.field
     def hdf5_meta(self) -> core.DNode:
         return self._get_node("hdf5_meta", lambda: core.DNode({"test": _default.NOSTR}))
 
-    @rad.rad_field
+    @rad.field
     def hdf5_telemetry(self) -> str:
         return self._get_node("hdf5_telemetry", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def gw_meta(self) -> core.DNode:
         return self._get_node("gw_meta", lambda: core.DNode({"test": _default.NOSTR}))

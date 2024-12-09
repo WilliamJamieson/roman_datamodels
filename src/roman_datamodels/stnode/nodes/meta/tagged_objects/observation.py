@@ -12,51 +12,51 @@ class Observation(rad.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/observation-1.0.0"
 
-    @rad.rad_field
+    @rad.field
     def observation_id(self) -> str:
         return self._get_node("observation_id", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def visit_id(self) -> str:
         return self._get_node("visit_id", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def program(self) -> int:
         return self._get_node("program", lambda: 1)
 
-    @rad.rad_field
+    @rad.field
     def execution_plan(self) -> int:
         return self._get_node("execution_plan", lambda: 1)
 
     # Note cannot use "pass" as a property name due to reserved keyword
-    @rad.rad_field
+    @rad.field
     def pass_(self) -> int:
         return self._get_node("pass", lambda: 1)
 
-    @rad.rad_field
+    @rad.field
     def segment(self) -> int:
         return self._get_node("segment", lambda: 1)
 
-    @rad.rad_field
+    @rad.field
     def observation(self) -> int:
         return self._get_node("observation", lambda: 1)
 
-    @rad.rad_field
+    @rad.field
     def visit(self) -> int:
         return self._get_node("visit", lambda: 1)
 
-    @rad.rad_field
+    @rad.field
     def visit_file_group(self) -> int:
         return self._get_node("visit_file_group", lambda: 1)
 
-    @rad.rad_field
+    @rad.field
     def visit_file_sequence(self) -> int:
         return self._get_node("visit_file_sequence", lambda: 1)
 
-    @rad.rad_field
+    @rad.field
     def visit_file_activity(self) -> str:
         return self._get_node("visit_file_activity", lambda: "01")
 
-    @rad.rad_field
+    @rad.field
     def exposure(self) -> int:
         return self._get_node("exposure", lambda: 1)

@@ -10,6 +10,8 @@ T = TypeVar("T")
 __all__ = [
     "camel_case_to_snake_case",
     "class_name_from_uri",
+    "field",
+    "field_property",
     "get_all_fields",
     "get_node_fields",
     "get_nodes",
@@ -17,24 +19,22 @@ __all__ = [
     "get_schema_from_tag",
     "get_schema_nodes",
     "get_tagged_nodes",
-    "rad_field",
-    "rad_field_property",
     "wrap_into_node",
 ]
 
 
-class rad_field_property(property):
+class field_property(property):
     """
     Special subclass of property to mark schema fields out
     """
 
 
-def rad_field(function):
+def field(function):
     """
     Create a special property decorator for nodes that enables testing
     of the type annotations for the for a schema field's property
     """
-    return rad_field_property(type_checked(function))
+    return field_property(type_checked(function))
 
 
 def get_schema_from_tag(ctx, tag):

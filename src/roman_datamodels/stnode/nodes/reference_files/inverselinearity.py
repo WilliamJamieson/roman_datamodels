@@ -14,15 +14,15 @@ class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return InverselinearityRef
 
-    @rad.rad_field
+    @rad.field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.INVERSELINEARITY)
 
-    @rad.rad_field
+    @rad.field
     def input_units(self) -> u.UnitBase:
         return self._get_node("input_units", lambda: u.DN)
 
-    @rad.rad_field
+    @rad.field
     def output_units(self) -> u.UnitBase:
         return self._get_node("output_units", lambda: u.DN)
 
@@ -50,14 +50,14 @@ class InverselinearityRef(rad.DataModelNode):
         # default fall-back
         return (2, 4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> InverselinearityRef_Meta:
         return self._get_node("meta", InverselinearityRef_Meta)
 
-    @rad.rad_field
+    @rad.field
     def coeffs(self) -> np.ndarray:
         return self._get_node("coeffs", lambda: np.zeros(self.array_shape, dtype=np.float32))
 
-    @rad.rad_field
+    @rad.field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))

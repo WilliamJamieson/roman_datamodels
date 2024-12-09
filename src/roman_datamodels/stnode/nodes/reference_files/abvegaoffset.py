@@ -12,7 +12,7 @@ class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
-    @rad.rad_field
+    @rad.field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.ABVEGAOFFSET)
 
@@ -22,7 +22,7 @@ class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
-    @rad.rad_field
+    @rad.field
     def abvega_offset(self) -> float | None:
         return self._get_node("abvega_offset", lambda: _default.NONUM)
 
@@ -40,11 +40,11 @@ class AbvegaoffsetRef(rad.DataModelNode):
     def array_shape(self) -> tuple[int]:
         raise NotImplementedError("array_data is not implemented")
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> AbvegaoffsetRef_Meta:
         return self._get_node("meta", AbvegaoffsetRef_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> core.DNode[str, AbvegaoffsetRef_Data]:
         def _default():
             return core.DNode({element: AbvegaoffsetRef_Data() for element in OPTICAL_ELEMENTS})

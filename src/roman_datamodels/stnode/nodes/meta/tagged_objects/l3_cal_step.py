@@ -14,18 +14,18 @@ class L3CalStep(rad.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/l3_cal_step-1.0.0"
 
-    @rad.rad_field
+    @rad.field
     def flux(self) -> CalStepEntry:
         return self._get_node("flux", lambda: CalStepEntry.INCOMPLETE)
 
-    @rad.rad_field
+    @rad.field
     def outlier_detection(self) -> CalStepEntry:
         return self._get_node("outlier_detection", lambda: CalStepEntry.INCOMPLETE)
 
-    @rad.rad_field
+    @rad.field
     def skymatch(self) -> CalStepEntry:
         return self._get_node("skymatch", lambda: CalStepEntry.INCOMPLETE)
 
-    @rad.rad_field
+    @rad.field
     def resample(self) -> CalStepEntry:
         return self._get_node("resample", lambda: CalStepEntry.INCOMPLETE)

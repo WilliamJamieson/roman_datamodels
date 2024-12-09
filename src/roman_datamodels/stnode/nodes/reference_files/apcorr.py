@@ -27,23 +27,23 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
 
         return (10,)
 
-    @rad.rad_field
+    @rad.field
     def ap_corrections(self) -> np.ndarray | None:
         return self._get_node("ap_corrections", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @rad.rad_field
+    @rad.field
     def ee_fractions(self) -> np.ndarray | None:
         return self._get_node("ee_fractions", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @rad.rad_field
+    @rad.field
     def ee_radii(self) -> np.ndarray | None:
         return self._get_node("ee_radii", lambda: np.zeros(self.array_shape, dtype=np.float64))
 
-    @rad.rad_field
+    @rad.field
     def sky_background_rin(self) -> float | None:
         return self._get_node("sky_background_rin", lambda: _default.NONUM)
 
-    @rad.rad_field
+    @rad.field
     def sky_background_rout(self) -> float | None:
         return self._get_node("sky_background_rout", lambda: _default.NONUM)
 
@@ -53,7 +53,7 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
 
-    @rad.rad_field
+    @rad.field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.APCORR)
 
@@ -74,11 +74,11 @@ class ApcorrRef(rad.DataModelNode):
 
         return (10,)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> ApcorrRef_Meta:
         return self._get_node("meta", ApcorrRef_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> core.DNode[str, ApcorrRef_Data]:
         def _default():
             return core.DNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})

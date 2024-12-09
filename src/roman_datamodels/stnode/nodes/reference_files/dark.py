@@ -30,23 +30,23 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
             *RefExposureTypeRef_Exposure.asdf_required(),
         }
 
-    @rad.rad_field
+    @rad.field
     def ngroups(self) -> int:
         return self._get_node("ngroups", lambda: 6)
 
-    @rad.rad_field
+    @rad.field
     def nframes(self) -> int:
         return self._get_node("nframes", lambda: 8)
 
-    @rad.rad_field
+    @rad.field
     def groupgap(self) -> int:
         return self._get_node("groupgap", lambda: 0)
 
-    @rad.rad_field
+    @rad.field
     def ma_table_name(self) -> str:
         return self._get_node("ma_table_name", lambda: _default.NOSTR)
 
-    @rad.rad_field
+    @rad.field
     def ma_table_number(self) -> int:
         return self._get_node("ma_table_number", lambda: _default.NOINT)
 
@@ -64,11 +64,11 @@ class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExpos
             *RefExposureTypeRef.asdf_required(),
         }
 
-    @rad.rad_field
+    @rad.field
     def reftype(self) -> RefTypeEntry:
         return self._get_node("reftype", lambda: RefTypeEntry.DARK)
 
-    @rad.rad_field
+    @rad.field
     def exposure(self) -> DarkRef_Meta_Exposure:
         return self._get_node("exposure", DarkRef_Meta_Exposure)
 
@@ -96,27 +96,27 @@ class DarkRef(rad.DataModelNode):
         # default fall-back
         return (2, 4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> DarkRef_Meta:
         return self._get_node("meta", DarkRef_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> u.Quantity:
         return self._get_node(
             "data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), unit=u.DN, dtype=np.float32)
         )
 
-    @rad.rad_field
+    @rad.field
     def dq(self) -> np.ndarray:
         return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))
 
-    @rad.rad_field
+    @rad.field
     def dark_slope(self) -> u.Quantity:
         return self._get_node(
             "dark_slope", lambda: u.Quantity(np.zeros(self.array_shape[1:], dtype=np.float32), unit=u.DN / u.s, dtype=np.float32)
         )
 
-    @rad.rad_field
+    @rad.field
     def dark_slope_error(self) -> u.Quantity:
         return self._get_node(
             "dark_slope_error",

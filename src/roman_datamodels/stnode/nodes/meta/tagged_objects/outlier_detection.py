@@ -12,6 +12,6 @@ class OutlierDetection(rad.TaggedObjectNode):
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/outlier_detection-1.0.0"
 
-    @rad.rad_field
+    @rad.field
     def good_bits(self) -> str:
         return self._get_node("good_bits", lambda: "NA")

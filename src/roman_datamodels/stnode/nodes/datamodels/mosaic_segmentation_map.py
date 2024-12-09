@@ -16,11 +16,11 @@ class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
     def asdf_implied_by(cls) -> type:
         return MosaicSegmentationMap
 
-    @rad.rad_field
+    @rad.field
     def basic(self) -> MosaicBasic:
         return self._get_node("basic", MosaicBasic)
 
-    @rad.rad_field
+    @rad.field
     def program(self) -> Program:
         return self._get_node("program", Program)
 
@@ -48,10 +48,10 @@ class MosaicSegmentationMap(rad.DataModelNode):
         # default fall-back
         return (4096, 4096)
 
-    @rad.rad_field
+    @rad.field
     def meta(self) -> MosaicSegmentationMap_Meta:
         return self._get_node("meta", MosaicSegmentationMap_Meta)
 
-    @rad.rad_field
+    @rad.field
     def data(self) -> np.ndarray:
         return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint32))
