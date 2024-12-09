@@ -44,7 +44,7 @@ class SchemaMixin(RadNodeMixin, ABC):
     @classmethod
     def asdf_schema(cls) -> RadSchema:
         # Pull the schema through ASDF
-        return RadSchema(cls.get_schema(cls.asdf_schema_uri()))
+        return RadSchema.from_class(cls.asdf_schema_uri())
 
 
 class TagMixin(SchemaMixin, ABC):
@@ -104,7 +104,7 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
     @classmethod
     def asdf_property_container(cls) -> type | None:
         """The container class used by the property that implies this node."""
-        from .._base import DNode, LNode
+        from ..core import DNode, LNode
 
         sig = signature(cls.asdf_implied_property().fget).return_annotation
 

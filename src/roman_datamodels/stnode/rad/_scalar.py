@@ -2,6 +2,7 @@ from abc import ABC
 from enum import Enum
 from typing import Any
 
+from asdf import AsdfFile
 from astropy.time import Time
 
 from ..core import FlushOptions
@@ -25,7 +26,7 @@ class ScalarNode(RadNodeMixin, ABC):
 
         return type(base).__bases__[0](base)
 
-    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
         return self.unwrap()
 
     def __asdf_traverse__(self):
@@ -46,11 +47,13 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
         These will all be in the tagged_scalars directory.
     """
 
-    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
-        tree = super().to_asdf_tree(flush, warn)
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
+        tree = super().to_asdf_tree(ctx, flush, warn)
 
+        # Special handling for Time objects
+        # -> others maybe needed in the future
         if isinstance(tree, Time):
-            converter = self.asdf_ctx().extension_manager.get_converter_for_type(Time)
-            return converter.to_yaml_tree(tree, self.tag, self.asdf_ctx())
+            converter = ctx.extension_manager.get_converter_for_type(Time)
+            return converter.to_yaml_tree(tree, self.tag, ctx)
 
         return tree

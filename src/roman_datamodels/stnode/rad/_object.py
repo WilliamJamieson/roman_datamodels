@@ -1,6 +1,8 @@
 import warnings
 from abc import ABC, abstractmethod
 
+from asdf import AsdfFile
+
 from ..core import DNode, FlushOptions
 from ._mixins import SchemaMixin, TagMixin
 from ._utils import get_node_fields
@@ -18,10 +20,6 @@ class ObjectNode(DNode, ABC):
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
         return cls.asdf_schema().required
-
-    @property
-    def required(self) -> tuple[str]:
-        return self.asdf_required()
 
     def flush(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> None:
         """
@@ -46,7 +44,7 @@ class ObjectNode(DNode, ABC):
             case FlushOptions.NONE:
                 return
             case FlushOptions.REQUIRED:
-                fields = self.required
+                fields = self.asdf_required()
             case FlushOptions.ALL:
                 fields = get_node_fields(type(self))
             case FlushOptions.EXTRA:
@@ -61,10 +59,10 @@ class ObjectNode(DNode, ABC):
                 # access the field to trigger its default value
                 getattr(self, field)
 
-    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
         # Flush out any required fields
         self.flush(flush, warn)
-        return super().to_asdf_tree(flush=flush, warn=warn)
+        return super().to_asdf_tree(ctx, flush=flush, warn=warn)
 
 
 class SchemaObjectNode(ObjectNode, SchemaMixin, ABC):

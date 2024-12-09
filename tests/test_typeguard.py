@@ -11,14 +11,14 @@ def enable_typeguard():
     """
     Fixture to enable typeguard for testing.
     """
-    assert core.get_config().TYPEGUARD_ENABLED is False
+    assert core.get_config().typeguard_enabled is False
 
     with core.get_config().enable_typeguard():
-        assert core.get_config().TYPEGUARD_ENABLED is True
+        assert core.get_config().typeguard_enabled is True
 
         yield
 
-    assert core.get_config().TYPEGUARD_ENABLED is False
+    assert core.get_config().typeguard_enabled is False
 
 
 class TypeguardExample:
@@ -41,7 +41,7 @@ def test_typeguard_is_functioning():
     """
     from typeguard import TypeCheckError
 
-    assert core.get_config().TYPEGUARD_ENABLED is True
+    assert core.get_config().typeguard_enabled is True
 
     instance = TypeguardExample()
     assert instance.good == 1
@@ -55,7 +55,7 @@ def test_typeguard_decorator():
     This checks that we don't get an error when typeguard is not enabled.
     -> This smokes out getting a typeguard error when it is not enabled.
     """
-    assert core.get_config().TYPEGUARD_ENABLED is False
+    assert core.get_config().typeguard_enabled is False
 
     instance = TypeguardExample()
     assert instance.good == 1  # always fine

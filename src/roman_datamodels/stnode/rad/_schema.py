@@ -4,16 +4,25 @@ from collections import ChainMap
 from itertools import chain
 from typing import Generic, TypeVar
 
-from ..core import AsdfContextMixin
+from ..core import NodeKeyMixin, get_config
 
 S = TypeVar("S", bound=dict)
+
 
 __all__ = ["RadSchema"]
 
 
-class RadSchema(AsdfContextMixin, Generic[S]):
+class RadSchema(NodeKeyMixin, Generic[S]):
     def __init__(self, schema: S):
         self._schema = schema
+
+    @classmethod
+    def get_schema(cls, uri: str) -> dict:
+        return get_config().get_schema(uri)
+
+    @classmethod
+    def from_class(cls, uri: str) -> RadSchema:
+        return cls(cls.get_schema(uri))
 
     @property
     def schema(self) -> S:

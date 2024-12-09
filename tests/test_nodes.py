@@ -518,8 +518,10 @@ def test_flush_required(node_cls):
 
     instance = node_cls()
     assert instance._data == {}
+    assert isinstance(instance, rad.ObjectNode)
+    required = instance.asdf_required()
 
-    context = pytest.warns(UserWarning) if instance.required else nullcontext()
+    context = pytest.warns(UserWarning) if required else nullcontext()
 
     # Check that the instance can be brought into a valid state
     with context:
@@ -530,7 +532,7 @@ def test_flush_required(node_cls):
         keys.add("pass_")
         keys.remove("pass")
 
-    assert keys == set(instance.required)
+    assert keys == set(required)
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
@@ -648,7 +650,7 @@ def test_to_asdf_tree(node_cls):
         instance = next(iter(node_cls))
     else:
         instance = node_cls()
-    instance.to_asdf_tree(flush=core.FlushOptions.EXTRA)
+    instance.to_asdf_tree(core.get_config().asdf_ctx, flush=core.FlushOptions.EXTRA)
 
 
 @pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.all_nodes.values())

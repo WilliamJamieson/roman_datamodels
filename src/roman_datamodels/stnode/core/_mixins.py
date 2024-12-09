@@ -1,57 +1,21 @@
 from abc import ABC, abstractmethod
 from enum import StrEnum, auto
 
-import asdf
-import yaml
-from asdf.config import AsdfConfig, get_config
+from asdf import AsdfFile
 
 __all__ = [
     "AdditionalNodeMixin",
-    "AsdfContextMixin",
     "AsdfNodeMixin",
     "FlushOptions",
+    "NodeKeyMixin",
 ]
 
 
-class AsdfContextMixin:
+class NodeKeyMixin:
     """
-    Provides the ability to access ASDF file context and configuration features.
+    Mixin to enable correct handling of node keys vs field keys
+    -> pass vs pass_ issue
     """
-
-    _ctx: asdf.AsdfFile | None = None
-    _asdf_config: AsdfConfig | None = None
-
-    @classmethod
-    def asdf_ctx(cls) -> asdf.AsdfFile:
-        """Get the asdf context for the class."""
-        if cls._ctx is None:
-            cls._ctx = asdf.AsdfFile()
-
-        return cls._ctx
-
-    @classmethod
-    def asdf_config(cls) -> AsdfConfig:
-        """Get the asdf config for the class."""
-        if cls._asdf_config is None:
-            cls._asdf_config = get_config()
-
-        return cls._asdf_config
-
-    @classmethod
-    def get_schema(cls, uri: str) -> dict:
-        """
-        Get the schema for the given URI
-
-        Parameters
-        ----------
-        uri : str
-            The URI of the schema to get
-
-        Returns
-        -------
-        The raw schema dictionary for the given URI
-        """
-        return yaml.safe_load(cls.asdf_config().resource_manager[uri])
 
     @staticmethod
     def _to_schema_key(key: str) -> str:
@@ -106,7 +70,7 @@ class FlushOptions(StrEnum):
     EXTRA = auto()
 
 
-class AsdfNodeMixin(AsdfContextMixin, ABC):
+class AsdfNodeMixin(NodeKeyMixin, ABC):
     """Mixin so that Nodes can have an asdf context."""
 
     @abstractmethod
@@ -127,7 +91,7 @@ class AsdfNodeMixin(AsdfContextMixin, ABC):
         """
 
     @abstractmethod
-    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False):
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False):
         """
         Convert the object into a form that can be written to an ASDF file.
             -> flush out any required fields
@@ -135,6 +99,8 @@ class AsdfNodeMixin(AsdfContextMixin, ABC):
 
         Parameters
         ----------
+        ctx : AsdfFile
+            The ASDF context to use for the conversion
         flush : FlushOptions
             Options for flushing out required fields, see FlushOptions for more info
         warn : bool

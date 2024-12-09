@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import UserList
 from typing import Annotated, Generic, TypeVar
 
+from asdf import AsdfFile
 from asdf.lazy_nodes import AsdfListNode
 
 from ._mixins import AsdfNodeMixin, FlushOptions
@@ -36,7 +37,7 @@ class LNode(AsdfNodeMixin, UserList, Generic[T]):
     def unwrap(self) -> list:
         return list(self)
 
-    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> list:
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> list:
         from ..rad import TagMixin
 
         tree = self.unwrap()
@@ -47,7 +48,7 @@ class LNode(AsdfNodeMixin, UserList, Generic[T]):
 
             # Recursively convert not-tagged nodes
             if isinstance(item, AsdfNodeMixin):
-                tree[i] = item.to_asdf_tree(flush=flush, warn=warn)
+                tree[i] = item.to_asdf_tree(ctx, flush=flush, warn=warn)
 
             # Don't need to touch anything else
 

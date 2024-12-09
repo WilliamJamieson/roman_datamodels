@@ -6,6 +6,7 @@ from inspect import signature
 from typing import Annotated, Any, Generic, TypeVar
 
 import numpy as np
+from asdf import AsdfFile
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from asdf.tags.core import ndarray
 from astropy.time import Time
@@ -251,7 +252,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
     def unwrap(self) -> dict:
         return dict(self)
 
-    def to_asdf_tree(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
         from ..rad import TagMixin
 
         tree = self.unwrap()
@@ -263,7 +264,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
             # Recursively convert not-tagged nodes
             if isinstance(value, AsdfNodeMixin):
-                tree[key] = value.to_asdf_tree(flush=flush, warn=warn)
+                tree[key] = value.to_asdf_tree(ctx, flush=flush, warn=warn)
 
             # Don't need to touch anything else
 

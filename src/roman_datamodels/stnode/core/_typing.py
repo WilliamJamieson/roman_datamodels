@@ -51,7 +51,7 @@ if "pytest" in sys.modules:
                 """Pull the global flag to determine if we should suppress type checks"""
 
                 # If typeguard is not enabled, suppress the type checks
-                if not get_config().TYPEGUARD_ENABLED:
+                if not get_config().typeguard_enabled:
                     with suppress_type_checks():
                         return function(*args, **kwargs)
 

@@ -3,6 +3,10 @@ import threading
 from collections.abc import Generator
 from contextlib import contextmanager
 
+import asdf
+import yaml
+from asdf import config as _asdf_config
+
 __all__ = ["config_context", "get_config"]
 
 
@@ -12,21 +16,55 @@ class _StNodeConfig:
     """
 
     def __init__(self):
-        self._TYPEGUARD_ENABLED = False
+        self._typeguard_enabled = False
+        self._asdf_ctx = None
+        self._asdf_config = None
 
     @property
-    def TYPEGUARD_ENABLED(self) -> bool:
+    def typeguard_enabled(self) -> bool:
         """Access the typeguard enabled flag"""
-        return self._TYPEGUARD_ENABLED
+        return self._typeguard_enabled
+
+    @property
+    def asdf_ctx(self) -> asdf.AsdfFile:
+        """Get the asdf context for the class."""
+
+        if self._asdf_ctx is None:
+            self._asdf_ctx = asdf.AsdfFile()
+
+        return self._asdf_ctx
+
+    @property
+    def asdf_config(cls) -> _asdf_config.AsdfConfig:
+        """Get the asdf config for the class."""
+        if cls._asdf_config is None:
+            cls._asdf_config = _asdf_config.get_config()
+
+        return cls._asdf_config
+
+    def get_schema(self, uri: str) -> dict:
+        """
+        Get the schema for the given URI
+
+        Parameters
+        ----------
+        uri : str
+            The URI of the schema to get
+
+        Returns
+        -------
+        The raw schema dictionary for the given URI
+        """
+        return yaml.safe_load(self.asdf_config.resource_manager[uri])
 
     @contextmanager
     def enable_typeguard(self) -> Generator[None, None, None]:
         """
         Context manager to temporarily enable typeguard for testing.
         """
-        self._TYPEGUARD_ENABLED = True
+        self._typeguard_enabled = True
         yield
-        self._TYPEGUARD_ENABLED = False
+        self._typeguard_enabled = False
 
 
 class _ConfigLocal(threading.local):

@@ -36,7 +36,7 @@ class _NodeConverter(Converter):
         return obj.tag
 
     def to_yaml_tree(self, obj: TagMixin, tag, ctx):
-        return obj.to_asdf_tree()
+        return obj.to_asdf_tree(ctx)
 
     def from_yaml_tree(self, node, tag, ctx):
         return RDM_NODE_REGISTRY.tagged_registry[tag](node)
