@@ -54,6 +54,6 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
         # -> others maybe needed in the future
         if isinstance(tree, Time):
             converter = ctx.extension_manager.get_converter_for_type(Time)
-            return converter.to_yaml_tree(tree, self.tag, ctx)
+            return converter.to_yaml_tree(tree, self.asdf_tag(), ctx)
 
         return tree

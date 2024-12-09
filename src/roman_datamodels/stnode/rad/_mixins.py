@@ -36,11 +36,6 @@ class SchemaMixin(RadNodeMixin, ABC):
     def asdf_schema_uri(clas) -> str:
         """URI of the schema that defines this node."""
 
-    @property
-    def schema_uri(self):
-        """Get the URI for this instance"""
-        return self.asdf_schema_uri()
-
     @classmethod
     def asdf_schema(cls) -> RadSchema:
         # Pull the schema through ASDF
@@ -54,11 +49,6 @@ class TagMixin(SchemaMixin, ABC):
     @abstractmethod
     def asdf_tag(cls) -> str:
         """Tag of the node."""
-
-    @property
-    def tag(self) -> str:
-        """Get the tag for this instance."""
-        return self.asdf_tag()
 
     @classmethod
     def asdf_schema_uri(cls) -> str:
