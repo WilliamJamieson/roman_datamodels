@@ -10,7 +10,7 @@ def test_abstract_SchemaScalarNode():
 
     class ExampleSchemaScalarNode(rad.SchemaScalarNode):
         @classmethod
-        def asdf_schema_uri(cls):
+        def asdf_schema_uris(cls):
             return "test"
 
     # Show no type error when correct methods are implemented
@@ -52,7 +52,7 @@ def test_abstract_SchemaObjectNode():
 
     class ExampleSchemaObjectNodeUri(rad.SchemaObjectNode):
         @classmethod
-        def asdf_schema_uri(cls):
+        def asdf_schema_uris(cls):
             return "test"
 
     # Test that SchemaObjectNode needs more than a URI

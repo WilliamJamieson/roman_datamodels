@@ -7,8 +7,8 @@ __all__ = ["FpsExposureType"]
 
 class FpsExposureTypeMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/fps/exposure_type-1.0.0"
+    def asdf_schema_uris(self) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/exposure_type-1.0.0",)
 
 
 class FpsExposureType(FpsExposureTypeMixin, Enum, metaclass=rad.NodeEnumMeta):

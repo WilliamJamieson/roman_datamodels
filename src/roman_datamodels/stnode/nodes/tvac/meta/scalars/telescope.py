@@ -11,8 +11,8 @@ class TvacTelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
     """
 
     @classmethod
-    def asdf_schema_uri(cls):
-        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/telescope-1.0.0"
+    def asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/telescope-1.0.0",)
 
     @classmethod
     def asdf_tag(cls) -> str:

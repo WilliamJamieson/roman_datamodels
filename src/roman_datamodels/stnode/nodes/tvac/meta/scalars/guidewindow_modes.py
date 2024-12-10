@@ -9,8 +9,8 @@ __all__ = ["TvacGuidewindowModes"]
 
 class TvacGuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/guidewindow_modes-1.0.0"
+    def asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/guidewindow_modes-1.0.0",)
 
 
 class TvacGuidewindowModes(TvacGuidewindowModesMixin, Enum, metaclass=rad.NodeEnumMeta):

@@ -79,8 +79,8 @@ class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
 
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0"
+    def asdf_schema_uris(self) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0",)
 
     @classmethod
     def asdf_tag(cls) -> str:

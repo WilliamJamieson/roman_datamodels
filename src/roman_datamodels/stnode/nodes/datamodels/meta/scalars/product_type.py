@@ -9,8 +9,8 @@ class ProductType(str, rad.TaggedScalarNode):
     """
 
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/product_type-1.0.0"
+    def asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/product_type-1.0.0",)
 
     @classmethod
     def asdf_tag(cls) -> str:

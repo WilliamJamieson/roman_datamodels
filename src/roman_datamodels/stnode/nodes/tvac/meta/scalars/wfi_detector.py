@@ -7,8 +7,8 @@ __all__ = ["TvacWfiDetector"]
 
 class TvacWfiDetectorMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_detector-1.0.0"
+    def asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_detector-1.0.0",)
 
 
 class TvacWfiDetector(TvacWfiDetectorMixin, Enum, metaclass=rad.NodeEnumMeta):

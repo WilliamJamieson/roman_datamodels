@@ -27,8 +27,8 @@ class FpsCommonMixin(core.AdditionalNodeMixin):
 
 class FpsCommon(FpsCommonMixin, FpsBasic):
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0"
+    def asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0",)
 
     @rad.field
     def cal_step(self) -> FpsCalStep:

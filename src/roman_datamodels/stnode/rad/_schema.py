@@ -17,12 +17,21 @@ class SchemaMixin(RadNodeMixin, ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_schema_uri(clas) -> str:
+    def asdf_schema_uris(cls) -> tuple[str]:
         """URI of the schema that defines this node."""
 
     @classmethod
+    def asdf_schema_uri(cls) -> str:
+        """
+        The latest schema for this class.
+        """
+        return cls.asdf_schema_uris()[-1]
+
+    @classmethod
     def asdf_schema(cls) -> RadSchema:
-        # Pull the schema through ASDF
+        """
+        The latest schema for this class.
+        """
         return RadSchema.from_class(cls.asdf_schema_uri())
 
 

@@ -31,8 +31,8 @@ class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
 
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/mosaic_segmentation_map-1.0.0"
+    def asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_segmentation_map-1.0.0",)
 
     @classmethod
     def asdf_tag(cls) -> str:

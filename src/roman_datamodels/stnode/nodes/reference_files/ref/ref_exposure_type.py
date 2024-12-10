@@ -21,8 +21,8 @@ class RefExposureTypeRef_Exposure(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class RefExposureTypeRef(rad.SchemaObjectNode):
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_exposure_type-1.0.0"
+    def asdf_schema_uris(self) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_exposure_type-1.0.0",)
 
     @rad.field
     def exposure(self) -> RefExposureTypeRef_Exposure:

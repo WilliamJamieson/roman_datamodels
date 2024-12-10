@@ -7,8 +7,8 @@ __all__ = ["FpsGuidewindowModes"]
 
 class FpsGuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/fps/guidewindow_modes-1.0.0"
+    def asdf_schema_uris(self) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/guidewindow_modes-1.0.0",)
 
 
 class FpsGuidewindowModes(FpsGuidewindowModesMixin, Enum, metaclass=rad.NodeEnumMeta):

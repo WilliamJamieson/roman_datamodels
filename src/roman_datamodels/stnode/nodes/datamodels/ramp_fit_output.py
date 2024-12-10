@@ -13,8 +13,8 @@ class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
 
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/ramp_fit_output-1.0.0"
+    def asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/ramp_fit_output-1.0.0",)
 
     @classmethod
     def asdf_tag(cls) -> str:

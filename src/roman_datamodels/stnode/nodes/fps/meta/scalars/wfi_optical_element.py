@@ -7,8 +7,8 @@ __all__ = ["FpsWfiOpticalElement"]
 
 class FpsWfiOpticalElementMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uri(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_optical_element-1.0.0"
+    def asdf_schema_uris(self) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_optical_element-1.0.0",)
 
 
 class FpsWfiOpticalElement(FpsWfiOpticalElementMixin, Enum, metaclass=rad.NodeEnumMeta):

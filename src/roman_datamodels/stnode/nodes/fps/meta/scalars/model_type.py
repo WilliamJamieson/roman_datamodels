@@ -9,8 +9,8 @@ class FpsModelType(str, rad.TaggedScalarNode):
     """
 
     @classmethod
-    def asdf_schema_uri(clas):
-        return "asdf://stsci.edu/datamodels/roman/schemas/fps/tagged_scalars/model_type-1.0.0"
+    def asdf_schema_uris(self) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/tagged_scalars/model_type-1.0.0",)
 
     @classmethod
     def asdf_tag(cls) -> str:
