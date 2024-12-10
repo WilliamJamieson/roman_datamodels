@@ -30,6 +30,7 @@ def _schema_files():
 
 
 SCHEMA_FILES = list(_schema_files())
+SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
 
 
 @pytest.mark.parametrize("schema_file", SCHEMA_FILES)
@@ -49,6 +50,10 @@ def test_node_exists_for_schema(schema_file):
 
     # check the class name against the uri
     assert rad.class_name_from_uri(uri) == rad.RDM_NODE_REGISTRY.schema_registry[uri].__name__
+
+    # check all the schema uris listed by the node are in the schema files
+    for schema_uri in rad.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uris():
+        assert schema_uri in SCHEMA_DICT
 
 
 def manifest_tags():
@@ -74,13 +79,17 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
     assert tag_uri in rad.RDM_NODE_REGISTRY.tagged_registry
 
     # check the class's asdf_tag matches the tag uri
-    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag() == tag_uri
+    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag_uri() == tag_uri
 
     # check the class's asdf_schema_uri matches the schema uri
     assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uri() == schema_uri
 
     # check the class name against the tag uri
     assert rad.class_name_from_uri(tag_uri) == rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
+
+    # check that the listed schema uri is listed by the type
+    for tag_schema_uri in rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag_uris().values():
+        assert tag_schema_uri in rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uris()
 
 
 def parse_orphan_name(name):
@@ -137,9 +146,6 @@ def test_implied_node(node_cls):
 
     else:
         raise ValueError(f"Annotation {annotation} not handled")
-
-
-SCHEMA_DICT = {schema["id"]: schema for schema in SCHEMA_FILES}
 
 
 @pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())

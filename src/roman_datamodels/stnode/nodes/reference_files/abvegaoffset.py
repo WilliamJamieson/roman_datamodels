@@ -1,3 +1,5 @@
+from types import MappingProxyType
+
 from roman_datamodels.stnode import core, rad
 
 from ..datamodels import OPTICAL_ELEMENTS
@@ -36,8 +38,12 @@ class AbvegaoffsetRef(rad.TaggedObjectNode):
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/reference_files/abvegaoffset-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/reference_files/abvegaoffset-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0"
+            }
+        )
 
     @rad.field
     def meta(self) -> AbvegaoffsetRef_Meta:

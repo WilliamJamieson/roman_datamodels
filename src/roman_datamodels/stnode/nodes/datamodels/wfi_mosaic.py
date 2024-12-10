@@ -1,3 +1,5 @@
+from types import MappingProxyType
+
 import numpy as np
 from gwcs import WCS
 
@@ -81,8 +83,12 @@ class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mosaic-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/wfi_mosaic-1.0.0"
+            }
+        )
 
     @property
     def default_array_shape(self) -> tuple[int]:

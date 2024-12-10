@@ -1,4 +1,5 @@
 from enum import Enum
+from types import MappingProxyType
 
 from roman_datamodels.stnode import rad
 
@@ -84,8 +85,10 @@ class Rcs(rad.TaggedObjectNode):
         return ("asdf://stsci.edu/datamodels/roman/schemas/rcs-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/rcs-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {"asdf://stsci.edu/datamodels/roman/tags/rcs-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/rcs-1.0.0"}
+        )
 
     @rad.field
     def active(self) -> bool:

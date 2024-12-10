@@ -1,3 +1,5 @@
+from types import MappingProxyType
+
 import numpy as np
 from astropy import units as u
 
@@ -31,8 +33,10 @@ class Fps(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/fps-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {"asdf://stsci.edu/datamodels/roman/tags/fps-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/fps-1.0.0"}
+        )
 
     @property
     def default_array_shape(self) -> tuple[int]:

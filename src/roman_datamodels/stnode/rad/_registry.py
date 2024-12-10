@@ -185,7 +185,8 @@ class _RdmNodeRegistry:
             registry = {}
             for node in self.all_nodes.values():
                 if issubclass(node, TagMixin) and not node.__name__.endswith("Mixin"):
-                    registry[node.asdf_tag()] = node
+                    for uri in node.asdf_tag_uris():
+                        registry[uri] = node
 
             self._tagged_registry = MappingProxyType(registry)
 

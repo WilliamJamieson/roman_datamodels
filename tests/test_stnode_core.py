@@ -24,7 +24,7 @@ def test_abstract_TaggedScalarNode():
 
     class ExampleTaggedScalarNode(rad.TaggedScalarNode):
         @classmethod
-        def asdf_tag(cls):
+        def asdf_tag_uris(cls):
             return "test"
 
     # Show no type error when correct methods are implemented
@@ -75,7 +75,7 @@ def test_abstract_TaggedObjectNode():
 
     class ExampleTaggedObjectNodeTag(rad.TaggedObjectNode):
         @classmethod
-        def asdf_tag(cls):
+        def asdf_tag_uris(cls):
             return "test"
 
     # Test that TaggedObjectNode needs more than a tag

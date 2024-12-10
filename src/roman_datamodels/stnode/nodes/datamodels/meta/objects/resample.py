@@ -1,4 +1,5 @@
 from enum import Enum
+from types import MappingProxyType
 
 from roman_datamodels.stnode import core, rad
 
@@ -37,8 +38,12 @@ class Resample(rad.TaggedObjectNode):
         return ("asdf://stsci.edu/datamodels/roman/schemas/resample-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/resample-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/resample-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/resample-1.0.0",
+            }
+        )
 
     @rad.field
     def good_bits(self) -> str:

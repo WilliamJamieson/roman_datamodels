@@ -33,7 +33,7 @@ class _NodeConverter(Converter):
         return list(RDM_NODE_REGISTRY.tagged_registry.values())
 
     def select_tag(self, obj: TagMixin, tags, ctx):
-        return obj.asdf_tag()
+        return obj.asdf_tag_uri()
 
     def to_yaml_tree(self, obj: TagMixin, tag, ctx):
         return obj.to_asdf_tree(ctx)

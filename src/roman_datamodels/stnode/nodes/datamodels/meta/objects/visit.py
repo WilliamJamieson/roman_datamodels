@@ -1,4 +1,5 @@
 from enum import Enum
+from types import MappingProxyType
 
 from astropy.time import Time
 
@@ -121,8 +122,12 @@ class Visit(rad.TaggedObjectNode):
         return ("asdf://stsci.edu/datamodels/roman/schemas/visit-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/visit-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/visit-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/visit-1.0.0",
+            }
+        )
 
     @rad.field
     def dither(self) -> Visit_Dither:

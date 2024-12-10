@@ -1,3 +1,5 @@
+from types import MappingProxyType
+
 import numpy as np
 from astropy.time import Time
 
@@ -97,8 +99,12 @@ class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/guidewindow-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/guidewindow-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",
+            }
+        )
 
     @property
     def primary_array_name(self) -> str:

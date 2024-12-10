@@ -1,3 +1,5 @@
+from types import MappingProxyType
+
 import numpy as np
 from astropy import units as u
 from astropy.time import Time
@@ -17,8 +19,12 @@ class FpsGroundtest(rad.TaggedObjectNode):
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/groundtest-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/fps/groundtest-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/fps/groundtest-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/fps/groundtest-1.0.0"
+            }
+        )
 
     @rad.field
     def test_name(self) -> str:

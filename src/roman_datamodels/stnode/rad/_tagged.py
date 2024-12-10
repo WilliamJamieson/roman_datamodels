@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from types import MappingProxyType
 from typing import Any
 
 from asdf import AsdfFile
@@ -20,8 +21,13 @@ class TagMixin(SchemaMixin, ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_tag(cls) -> str:
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
         """Tag of the node."""
+
+    @classmethod
+    def asdf_tag_uri(cls) -> str:
+        """Get the tag URI for the node."""
+        return list(cls.asdf_tag_uris())[-1]
 
 
 class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):
@@ -54,6 +60,6 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
         # -> others maybe needed in the future
         if isinstance(tree, Time):
             converter = ctx.extension_manager.get_converter_for_type(Time)
-            return converter.to_yaml_tree(tree, self.asdf_tag(), ctx)
+            return converter.to_yaml_tree(tree, self.asdf_tag_uris(), ctx)
 
         return tree

@@ -1,3 +1,5 @@
+from types import MappingProxyType
+
 from roman_datamodels.stnode import rad
 
 from ..scalars import WfiOpticalElement
@@ -16,8 +18,12 @@ class MosaicBasic(rad.TaggedObjectNode):
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_basic-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/mosaic_basic-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/mosaic_basic-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/mosaic_basic-1.0.0"
+            }
+        )
 
     @rad.field
     def time_first_mjd(self) -> float:

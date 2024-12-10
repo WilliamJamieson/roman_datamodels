@@ -1,4 +1,5 @@
 from enum import Enum
+from types import MappingProxyType
 from typing import ClassVar
 
 from roman_datamodels.stnode import core, rad
@@ -68,8 +69,12 @@ class WfiMode(WfiModeMixin, rad.TaggedObjectNode):
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mode-1.0.0",)
 
     @classmethod
-    def asdf_tag(cls) -> str:
-        return "asdf://stsci.edu/datamodels/roman/tags/wfi_mode-1.0.0"
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        return MappingProxyType(
+            {
+                "asdf://stsci.edu/datamodels/roman/tags/wfi_mode-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/wfi_mode-1.0.0",
+            }
+        )
 
     @rad.field
     def name(self) -> InstrumentNameEntry:
