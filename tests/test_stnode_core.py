@@ -22,10 +22,18 @@ def test_abstract_TaggedScalarNode():
     with pytest.raises(TypeError):
         rad.TaggedScalarNode()
 
-    class ExampleTaggedScalarNode(rad.TaggedScalarNode):
+    class ExampleTaggedScalarNodeSchema(rad.TaggedScalarNode):
+        @classmethod
+        def asdf_schema_uris(cls):
+            return ("test",)
+
+    with pytest.raises(TypeError):
+        ExampleTaggedScalarNodeSchema()
+
+    class ExampleTaggedScalarNode(ExampleTaggedScalarNodeSchema):
         @classmethod
         def asdf_tag_uris(cls):
-            return "test"
+            return {"test": "test"}
 
     # Show no type error when correct methods are implemented
     _ = ExampleTaggedScalarNode()
@@ -38,8 +46,8 @@ def test_abstract_ObjectNode():
 
     class ExampleObjectNode(rad.ObjectNode):
         @classmethod
-        def asdf_required(cls):
-            return ("test",)
+        def asdf_schema(cls):
+            return {"test": "test"}
 
     # Show no type error when correct methods are implemented
     _ = ExampleObjectNode()
@@ -50,18 +58,9 @@ def test_abstract_SchemaObjectNode():
     with pytest.raises(TypeError):
         rad.SchemaObjectNode()
 
-    class ExampleSchemaObjectNodeUri(rad.SchemaObjectNode):
+    class ExampleSchemaObjectNodeRequired(rad.SchemaObjectNode):
         @classmethod
         def asdf_schema_uris(cls):
-            return "test"
-
-    # Test that SchemaObjectNode needs more than a URI
-    with pytest.raises(TypeError):
-        ExampleSchemaObjectNodeUri()
-
-    class ExampleSchemaObjectNodeRequired(ExampleSchemaObjectNodeUri):
-        @classmethod
-        def asdf_required(cls):
             return ("test",)
 
     # Show no type error when correct methods are implemented
@@ -73,19 +72,19 @@ def test_abstract_TaggedObjectNode():
     with pytest.raises(TypeError):
         rad.TaggedObjectNode()
 
-    class ExampleTaggedObjectNodeTag(rad.TaggedObjectNode):
+    class ExampleTaggedObjectNodeSchema(rad.TaggedObjectNode):
         @classmethod
-        def asdf_tag_uris(cls):
-            return "test"
+        def asdf_schema_uris(cls):
+            return ("test",)
 
     # Test that TaggedObjectNode needs more than a tag
     with pytest.raises(TypeError):
-        ExampleTaggedObjectNodeTag()
+        ExampleTaggedObjectNodeSchema()
 
-    class ExampleTaggedObjectNodeRequired(ExampleTaggedObjectNodeTag):
+    class ExampleTaggedObjectNodeTag(ExampleTaggedObjectNodeSchema):
         @classmethod
-        def asdf_required(cls):
-            return ("test",)
+        def asdf_tag_uris(cls):
+            return {"test": "test"}
 
     # Show no type error when correct methods are implemented
-    _ = ExampleTaggedObjectNodeRequired()
+    _ = ExampleTaggedObjectNodeTag()

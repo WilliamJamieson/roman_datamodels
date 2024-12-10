@@ -126,7 +126,10 @@ def test_implied_node(node_cls):
 
     # Check that the property's return type matches the orphan node
     annotation = signature(cls_property.fget).return_annotation
-    assert annotation is node_cls or annotation == core.LNode[node_cls] or annotation == core.DNode[str, node_cls]
+    if annotation is not node_cls and annotation != core.LNode[node_cls]:
+        base, metadata = get_args(annotation)
+        assert issubclass(base, core.PatternDNode)
+        assert metadata == (str, node_cls)
 
     schema = node_cls.asdf_schema().schema
 
@@ -145,6 +148,14 @@ def test_implied_node(node_cls):
         pattern_schema = schema["patternProperties"][next(iter(schema["patternProperties"]))]
         assert "type" in pattern_schema and pattern_schema["type"] == "object"
 
+    elif issubclass(base := get_args(annotation)[0], core.PatternDNode):
+        assert "type" in schema and schema["type"] == "object"
+        assert "patternProperties" in schema
+        pattern_schema = schema["patternProperties"][next(iter(schema["patternProperties"]))]
+        assert "allOf" in pattern_schema or ("type" in pattern_schema and pattern_schema["type"] == "object")
+
+        # check key pattern
+        assert base.asdf_key_pattern() == next(iter(schema["patternProperties"].keys()))
     else:
         raise ValueError(f"Annotation {annotation} not handled")
 

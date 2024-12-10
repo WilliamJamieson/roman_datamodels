@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import datetime
+import re
+from abc import ABC, abstractmethod
 from collections.abc import Callable, MutableMapping
 from inspect import signature
 from typing import Annotated, Any, Generic, TypeVar
@@ -13,7 +15,7 @@ from astropy.time import Time
 
 from ._mixins import AsdfNodeMixin, FlushOptions
 
-__all__ = ["DNode"]
+__all__ = ["DNode", "PatternDNode"]
 
 T = TypeVar("T")
 
@@ -135,7 +137,13 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """Dictionary style access data"""
         return self._pull_node(key)
 
-    def _set_node(self, key: str, value: T) -> None:
+    def _check_key(self, key: str) -> bool:
+        """
+        Check if the key is settable
+        """
+        return self._to_schema_key(key) in self._data or self._to_field_key(key) in self.fields
+
+    def _set_node(self, key: str, value: T, check: bool = True) -> None:
         """
         Attempt to set a value in for the node, wrapping data if necessary.
         """
@@ -143,6 +151,9 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         if key[0] == "_":
             self.__dict__[key] = value
         else:
+            if check and not self._check_key(key):
+                raise AttributeError(f"No such attribute ({key}) found in node")
+
             self._data[self._to_schema_key(key)] = self._wrap_into_node(key, value)
 
     def __setattr__(self, key: str, value: T) -> None:
@@ -153,7 +164,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
     def __setitem__(self, key: str, value: T) -> None:
         """Dictionary style access set data"""
-        self._set_node(key, value)
+        self._set_node(key, value, check=False)
 
     def _get_node(self, key: str, default: Callable[[], T]) -> T:
         """
@@ -280,3 +291,22 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
             return False
 
         return self._data == other._data
+
+
+class PatternDNode(DNode, ABC):
+    """
+    Support for pattern nodes.
+    """
+
+    @classmethod
+    @abstractmethod
+    def asdf_key_pattern(cls) -> str:
+        """
+        Get the key pattern for the node.
+        """
+
+    def _check_key(self, key):
+        if re.match(self.asdf_key_pattern(), key):
+            return True
+
+        return super()._check_key(key)

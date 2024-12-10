@@ -36,12 +36,9 @@ def assert_node_equal(node1, node2):
         assert set(node1.keys()) == set(node2.keys())
 
         for key in node1:
-            print(key)
             value1 = getattr(node1, key)
             value2 = getattr(node2, key)
-            print(f"start asserting {key}")
             _assert_value_equal(value1, value2)
-            print(f"end asserting {key}")
     elif isinstance(node1, LNode):
         assert len(node1) == len(node2)
 
@@ -68,10 +65,6 @@ def _assert_value_equal(value1, value2):
     elif isinstance(value1, gwcs.WCS):
         return True
     else:
-        if value1 != value2:
-            print(f"{type(value1)}: {value1}")
-            print("\n")
-            print(f"{type(value2)}: {value2}")
         assert value1 == value2
 
 

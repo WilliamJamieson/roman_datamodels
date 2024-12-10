@@ -87,4 +87,4 @@ class ScalarNode(RadNodeMixin, ABC):
         return self.unwrap()
 
     def __asdf_traverse__(self):
-        return self.unwrap()
+        return self

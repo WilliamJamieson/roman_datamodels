@@ -10,6 +10,16 @@ from .ref import RefCommonRef, RefTypeEntry
 __all__ = ["ApcorrRef"]
 
 
+class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
+    @classmethod
+    def asdf_implied_by(cls) -> type:
+        return ApcorrRef
+
+    @rad.field
+    def reftype(self) -> RefTypeEntry:
+        return self._get_node("reftype", lambda: RefTypeEntry.APCORR)
+
+
 class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
@@ -49,14 +59,18 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
         return self._get_node("sky_background_rout", lambda: rad.NONUM)
 
 
-class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
+class ApcorrRef_Data_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
 
-    @rad.field
-    def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.APCORR)
+    @classmethod
+    def asdf_implied_property_name(cls) -> str:
+        return "data"
+
+    @classmethod
+    def asdf_key_pattern(cls):
+        return "^(F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK)$"
 
 
 class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -96,8 +110,8 @@ class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return self._get_node("meta", ApcorrRef_Meta)
 
     @rad.field
-    def data(self) -> core.DNode[str, ApcorrRef_Data]:
+    def data(self) -> ApcorrRef_Data_PatternNode[str, ApcorrRef_Data]:
         def _default():
-            return core.DNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})
+            return ApcorrRef_Data_PatternNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})
 
         return self._get_node("data", _default)

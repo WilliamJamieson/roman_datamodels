@@ -1,6 +1,7 @@
+from inspect import isclass
 from typing import Any, TypeVar, get_args
 
-from ..core import AdditionalNodeMixin, DNode, LNode, type_checked
+from ..core import AdditionalNodeMixin, DNode, LNode, PatternDNode, type_checked
 
 T = TypeVar("T")
 
@@ -222,15 +223,15 @@ def wrap_into_node(value: Any, signature: T) -> T:
         # These will always be a tuple (type, metadata)
         container, metadata = args
 
-        # Handle DNodes
-        if container is DNode:
+        # Handle DNodes and pattern nodes
+        if container is DNode or (isclass(container) and issubclass(container, PatternDNode)):
             # Skip if we are already a DNode
-            if not isinstance(value, DNode):
+            if not isinstance(value, container):
                 # DNodes are hinted as dictionaries, so 2 metadata entries, (key, entry)
                 _, entry = metadata
 
                 # Coerce the dictionary entries if necessary
-                return DNode({key: wrap_into_node(sub_val, entry) for key, sub_val in value.items()})
+                return container({key: wrap_into_node(sub_val, entry) for key, sub_val in value.items()})
 
         # handle LNodes
         if container is LNode:

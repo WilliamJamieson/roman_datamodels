@@ -47,6 +47,20 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
         return self._get_node("pixelareasr", lambda: 1.0e-13 * u.steradian)
 
 
+class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
+    @classmethod
+    def asdf_implied_by(cls):
+        return WfiImgPhotomRef
+
+    @classmethod
+    def asdf_implied_property_name(cls) -> str:
+        return "phot_table"
+
+    @classmethod
+    def asdf_key_pattern(cls):
+        return "^(F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK)$"
+
+
 class WfiImgPhotomRef(rad.TaggedObjectNode):
     """
     WFI imaging photometric flux conversion data model
@@ -70,7 +84,7 @@ class WfiImgPhotomRef(rad.TaggedObjectNode):
 
     # TODO: Add typeguard rule to fully handle this DNode annotation
     @rad.field
-    def phot_table(self) -> core.DNode[str, WfiImgPhotomRef_PhotTable]:
+    def phot_table(self) -> WfiImgPhotomRef_PhotTable_PatternNode[str, WfiImgPhotomRef_PhotTable]:
         def _default():
             table = {}
             for element in OPTICAL_ELEMENTS:
@@ -78,6 +92,6 @@ class WfiImgPhotomRef(rad.TaggedObjectNode):
                     table[element] = WfiImgPhotomRef_PhotTable.no_phot()
                 else:
                     table[element] = WfiImgPhotomRef_PhotTable()
-            return core.DNode(table)
+            return WfiImgPhotomRef_PhotTable_PatternNode(table)
 
         return self._get_node("phot_table", _default)
