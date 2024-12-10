@@ -11,6 +11,10 @@ class FpsCalStep(rad.TaggedObjectNode):
     """
 
     @classmethod
+    def asdf_schema_uri(self) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/fps/cal_step-1.0.0"
+
+    @classmethod
     def asdf_tag(self) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/fps/cal_step-1.0.0"
 

@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from pathlib import Path
 from typing import Any
 
 from asdf import AsdfFile
@@ -23,20 +22,6 @@ class TagMixin(SchemaMixin, ABC):
     @abstractmethod
     def asdf_tag(cls) -> str:
         """Tag of the node."""
-
-    @classmethod
-    def asdf_schema_uri(cls) -> str:
-        """Get the schema URI for the class using the asdf_tag"""
-
-        head, tail = cls.asdf_tag().split("tags")
-
-        head = Path(head.split("asdf://")[-1]) / "schemas"  # remove the asdf:// as it gets messed up by Path
-        tail = Path(tail[1:])  # remove the leading '/' as it messes with recombination
-
-        if issubclass(cls, TaggedScalarNode):
-            tail = tail.parent / "tagged_scalars" / tail.name
-
-        return f"asdf://{head / tail}"  # recombine the paths and add the asdf:// back
 
 
 class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):

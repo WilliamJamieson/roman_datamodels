@@ -11,5 +11,9 @@ class FileDate(Time, rad.TaggedScalarNode):
     """
 
     @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/file_date-1.0.0"
+
+    @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/file_date-1.0.0"

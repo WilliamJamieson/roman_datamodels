@@ -9,6 +9,10 @@ class Pointing(rad.TaggedObjectNode):
     """
 
     @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/pointing-1.0.0"
+
+    @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/pointing-1.0.0"
 

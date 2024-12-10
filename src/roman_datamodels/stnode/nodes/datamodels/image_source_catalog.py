@@ -46,6 +46,10 @@ class ImageSourceCatalog(rad.TaggedObjectNode):
     """
 
     @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/image_source_catalog-1.0.0"
+
+    @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/image_source_catalog-1.0.0"
 

@@ -70,6 +70,10 @@ class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
 
     @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0"
+
+    @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/associations-1.0.0"
 

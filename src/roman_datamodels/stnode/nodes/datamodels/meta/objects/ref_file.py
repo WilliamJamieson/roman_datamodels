@@ -23,6 +23,10 @@ class RefFile(rad.TaggedObjectNode):
     """
 
     @classmethod
+    def asdf_schema_uri(cls) -> str:
+        return "asdf://stsci.edu/datamodels/roman/schemas/ref_file-1.0.0"
+
+    @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0"
 

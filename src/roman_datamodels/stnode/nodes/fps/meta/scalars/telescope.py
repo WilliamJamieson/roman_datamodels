@@ -7,6 +7,10 @@ __all__ = ["FpsTelescope"]
 
 class FpsTelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
     @classmethod
+    def asdf_schema_uri(cls):
+        return "asdf://stsci.edu/datamodels/roman/schemas/fps/tagged_scalars/telescope-1.0.0"
+
+    @classmethod
     def asdf_tag(cls):
         return "asdf://stsci.edu/datamodels/roman/tags/fps/telescope-1.0.0"
 
