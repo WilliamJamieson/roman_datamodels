@@ -38,7 +38,7 @@ class _RdmNodeRegistry:
         # Import the nodes here to avoid importing importing all of them
         # until ASDF actually needs them for deserialization they all need
         # to be imported in order for them to exist and be found
-        from roman_datamodels.stnode import nodes  # noqa: F401
+        from roman_datamodels import nodes  # noqa: F401
 
     @property
     def object_nodes(self) -> MappingProxyType[str, type]:

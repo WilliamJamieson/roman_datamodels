@@ -13,7 +13,8 @@ from astropy.time import Time
 from gwcs import WCS
 from rad import resources
 
-from roman_datamodels.stnode import core, nodes, rad
+from roman_datamodels import nodes
+from roman_datamodels.stnode import core, rad
 
 _RESOURCES_PATH = importlib_resources.files(resources)
 _MANIFEST_PATH = _RESOURCES_PATH / "manifests" / "datamodels-1.0.yaml"
@@ -709,8 +710,8 @@ def test_reftype_node():
     """
     Test that the reftype node has entries for each of the RefFiles
     """
-    from roman_datamodels.stnode.nodes import reference_files
-    from roman_datamodels.stnode.nodes.reference_files import ref
+    from roman_datamodels.nodes import reference_files
+    from roman_datamodels.nodes.reference_files import ref
 
     # Get the entry types from the registry
     types = [value for key, value in rad.RDM_NODE_REGISTRY.tagged_registry.items() if "reference_files" in key]

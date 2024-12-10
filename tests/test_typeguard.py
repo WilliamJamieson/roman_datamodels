@@ -2,7 +2,8 @@ import asdf
 import pytest
 from astropy.time import Time
 
-from roman_datamodels.stnode import core, nodes, rad
+from roman_datamodels import nodes
+from roman_datamodels.stnode import core, rad
 from roman_datamodels.testing import assert_node_equal
 
 
