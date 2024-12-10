@@ -19,7 +19,7 @@ class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("reftype", lambda: RefTypeEntry.SATURATION)
 
 
-class SaturationRef(rad.DataModelNode):
+class SaturationRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Saturation reference schema
     """

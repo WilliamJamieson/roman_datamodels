@@ -25,7 +25,7 @@ class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
         return self._get_node("program", Program)
 
 
-class MosaicSegmentationMap(rad.DataModelNode):
+class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Segmentation map computed by the Source Catalog Step
     """

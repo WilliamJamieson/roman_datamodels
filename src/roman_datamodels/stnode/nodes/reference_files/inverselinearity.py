@@ -27,7 +27,7 @@ class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("output_units", lambda: u.DN)
 
 
-class InverselinearityRef(rad.DataModelNode):
+class InverselinearityRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Inverse linearity correction reference schema
     """

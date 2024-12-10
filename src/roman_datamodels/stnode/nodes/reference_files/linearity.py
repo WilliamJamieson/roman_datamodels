@@ -27,7 +27,7 @@ class LinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("output_units", lambda: u.DN)
 
 
-class LinearityRef(rad.DataModelNode):
+class LinearityRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Linearity correction reference schema
     """

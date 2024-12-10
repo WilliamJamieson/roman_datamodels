@@ -30,7 +30,7 @@ class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
         return self._get_node("program", Program)
 
 
-class MosaicSourceCatalog(rad.DataModelNode):
+class MosaicSourceCatalog(rad.TaggedObjectNode):
     """
     Photometry and astrometry computed by the Source Catalog Step
     """
@@ -38,14 +38,6 @@ class MosaicSourceCatalog(rad.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/mosaic_source_catalog-1.0.0"
-
-    @property
-    def default_array_shape(self) -> tuple[int]:
-        raise NotImplementedError("Array shape is not defined for MosaicSourceCatalog")
-
-    @property
-    def testing_array_shape(self) -> tuple[int]:
-        return self.default_array_shape
 
     @rad.field
     def meta(self) -> MosaicSourceCatalog_Meta:

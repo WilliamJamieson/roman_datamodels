@@ -87,7 +87,7 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
         return self._get_node("gw_window_ysize", lambda: 24)
 
 
-class Guidewindow(rad.DataModelNode):
+class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Guide window schema
     """

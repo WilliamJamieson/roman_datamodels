@@ -62,7 +62,7 @@ class WfiImage_Meta(rad.ImpliedNodeMixin, Common):
         return self._get_node("wcsinfo", Wcsinfo)
 
 
-class WfiImage(rad.DataModelNode):
+class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Wfi level 2 image information
     """

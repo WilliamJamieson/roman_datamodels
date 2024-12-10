@@ -20,7 +20,7 @@ class Ramp_Meta(rad.ImpliedNodeMixin, Common):
         return self._get_node("cal_step", L2CalStep)
 
 
-class Ramp(rad.DataModelNode):
+class Ramp(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Ramp schema
     """

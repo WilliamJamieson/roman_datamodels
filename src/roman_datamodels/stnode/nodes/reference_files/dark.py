@@ -73,7 +73,7 @@ class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExpos
         return self._get_node("exposure", DarkRef_Meta_Exposure)
 
 
-class DarkRef(rad.DataModelNode):
+class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Dark reference schema
     """

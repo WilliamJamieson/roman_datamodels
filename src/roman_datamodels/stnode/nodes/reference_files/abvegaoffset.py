@@ -27,7 +27,7 @@ class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
         return self._get_node("abvega_offset", lambda: rad.NONUM)
 
 
-class AbvegaoffsetRef(rad.DataModelNode):
+class AbvegaoffsetRef(rad.TaggedObjectNode):
     """
     AB Vega Offset reference schema
     """
@@ -35,14 +35,6 @@ class AbvegaoffsetRef(rad.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/abvegaoffset-1.0.0"
-
-    @property
-    def default_array_shape(self) -> tuple[int]:
-        raise NotImplementedError("Array shape is not defined for ImageSourceCatalog")
-
-    @property
-    def testing_array_shape(self) -> tuple[int]:
-        return self.default_array_shape
 
     @rad.field
     def meta(self) -> AbvegaoffsetRef_Meta:

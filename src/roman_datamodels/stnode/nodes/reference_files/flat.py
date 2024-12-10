@@ -18,7 +18,7 @@ class FlatRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return self._get_node("reftype", lambda: RefTypeEntry.FLAT)
 
 
-class FlatRef(rad.DataModelNode):
+class FlatRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Flat field information
     """

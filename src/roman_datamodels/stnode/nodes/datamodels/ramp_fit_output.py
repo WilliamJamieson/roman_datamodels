@@ -7,7 +7,7 @@ from ..meta import Common
 __all__ = ["RampFitOutput"]
 
 
-class RampFitOutput(rad.DataModelNode):
+class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Ramp fit output schema
     """

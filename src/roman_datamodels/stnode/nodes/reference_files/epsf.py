@@ -38,7 +38,7 @@ class EpsfRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return self._get_node("pixel_y", lambda: core.LNode([float(i) for i in range(1, 10)]))
 
 
-class EpsfRef(rad.DataModelNode):
+class EpsfRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     ePSF reference schema
     """

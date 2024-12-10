@@ -18,7 +18,7 @@ class IpcRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return self._get_node("reftype", lambda: RefTypeEntry.IPC)
 
 
-class IpcRef(rad.DataModelNode):
+class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     IPC kernel reference schema
     """

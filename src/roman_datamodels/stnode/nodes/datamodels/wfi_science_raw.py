@@ -7,7 +7,7 @@ from ..meta import Common
 __all__ = ["WfiScienceRaw"]
 
 
-class WfiScienceRaw(rad.DataModelNode):
+class WfiScienceRaw(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Basic Roman Raw Science
     """

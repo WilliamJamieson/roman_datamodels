@@ -1,6 +1,5 @@
 from ._asdf_schema import RadSchema
-from ._base import RadNodeMixin
-from ._datamodel import DataModelNode
+from ._base import ArrayFieldMixin, RadNodeMixin
 from ._default import NOFN, NOINT, NONUM, NOSTR, Wcs
 from ._enum import EnumNodeMixin, NodeEnumMeta
 from ._implied import ImpliedNodeMixin
@@ -25,7 +24,7 @@ __all__ = [
     "NONUM",
     "NOSTR",
     "RDM_NODE_REGISTRY",
-    "DataModelNode",
+    "ArrayFieldMixin",
     "EnumNodeMixin",
     "ImpliedNodeMixin",
     "ListNode",

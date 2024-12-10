@@ -7,7 +7,7 @@ Hold all the registry information for the STNode classes.
 from enum import Enum
 from types import MappingProxyType
 
-from ._datamodel import DataModelNode
+from ._base import ArrayFieldMixin
 from ._implied import ImpliedNodeMixin
 from ._node import ListNode, ObjectNode, ScalarNode
 from ._schema import SchemaListNode, SchemaMixin, SchemaObjectNode, SchemaScalarNode
@@ -28,7 +28,6 @@ class _RdmNodeRegistry:
 
     _schema_registry: MappingProxyType[str, type] | None = None
     _tagged_registry: MappingProxyType[str, type] | None = None
-    _data_model_registry: MappingProxyType[str, type] | None = None
 
     _reseved_fields: tuple[str] | None = None
 
@@ -55,9 +54,7 @@ class _RdmNodeRegistry:
         """
         if self._object_nodes is None:
             self._import_nodes()
-            self._object_nodes = MappingProxyType(
-                {**get_nodes(ObjectNode, (ObjectNode, SchemaObjectNode, TaggedObjectNode, DataModelNode))}
-            )
+            self._object_nodes = MappingProxyType({**get_nodes(ObjectNode, (ObjectNode, SchemaObjectNode, TaggedObjectNode))})
         return self._object_nodes
 
     @property
@@ -194,26 +191,6 @@ class _RdmNodeRegistry:
         return self._tagged_registry
 
     @property
-    def data_model_registry(self) -> MappingProxyType[str, type]:
-        """
-        Get a mapping of all the nodes that are data models
-
-        Returns
-        -------
-        MappingProxyType[str, type]
-            tag_uri -> class
-        """
-        if self._data_model_registry is None:
-            registry = {}
-            for node in self.all_nodes.values():
-                if issubclass(node, DataModelNode):
-                    registry[node.asdf_tag()] = node
-
-            self._data_model_registry = MappingProxyType(registry)
-
-        return self._data_model_registry
-
-    @property
     def reserved_fields(self) -> tuple[str]:
         """
         Get a tuple of all the names that are reserved from being a field in a node
@@ -225,7 +202,7 @@ class _RdmNodeRegistry:
                 get_all_fields(ObjectNode)
                 | get_all_fields(SchemaObjectNode)
                 | get_all_fields(TaggedObjectNode)
-                | get_all_fields(DataModelNode)
+                | get_all_fields(ArrayFieldMixin)
             )
 
         return self._reseved_fields

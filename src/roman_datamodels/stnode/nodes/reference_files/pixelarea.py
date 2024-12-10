@@ -37,7 +37,7 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return self._get_node("photometry", PixelareaRef_Meta_Photometry)
 
 
-class PixelareaRef(rad.DataModelNode):
+class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Pixel area reference schema
     """

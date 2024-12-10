@@ -27,7 +27,7 @@ class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("output_units", lambda: u.DN)
 
 
-class RefpixRef(rad.DataModelNode):
+class RefpixRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Reference pixel correction reference schema
     """

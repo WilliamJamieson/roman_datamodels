@@ -21,7 +21,7 @@ class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon):
         return self._get_node("groundtest", FpsGroundtest)
 
 
-class Fps(rad.DataModelNode):
+class Fps(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     FPS test data
     """

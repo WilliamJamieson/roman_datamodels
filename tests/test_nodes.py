@@ -186,7 +186,7 @@ def get_properties(schema):
     return set()
 
 
-_OBJECT_NODES = rad.get_nodes(rad.ObjectNode, (rad.ObjectNode, rad.SchemaObjectNode, rad.TaggedObjectNode, rad.DataModelNode))
+_OBJECT_NODES = rad.get_nodes(rad.ObjectNode, (rad.ObjectNode, rad.SchemaObjectNode, rad.TaggedObjectNode))
 
 
 @pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
@@ -707,7 +707,7 @@ def test_reftype_node():
     from roman_datamodels.stnode.nodes.reference_files import ref
 
     # Get the entry types from the registry
-    types = [value for key, value in rad.RDM_NODE_REGISTRY.data_model_registry.items() if "reference_files" in key]
+    types = [value for key, value in rad.RDM_NODE_REGISTRY.tagged_registry.items() if "reference_files" in key]
     assert len(types) == len(reference_files.__all__) - len(ref.__all__)
 
     # This is a fill in value for the `ref_common` which will

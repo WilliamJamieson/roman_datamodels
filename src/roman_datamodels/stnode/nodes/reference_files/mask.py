@@ -18,7 +18,7 @@ class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("reftype", lambda: RefTypeEntry.MASK)
 
 
-class MaskRef(rad.DataModelNode):
+class MaskRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     DQ Mask reference schema
     """

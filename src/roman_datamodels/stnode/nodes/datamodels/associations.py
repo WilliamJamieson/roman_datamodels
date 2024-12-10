@@ -41,7 +41,7 @@ class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
         return self._get_node("members", lambda: core.LNode([]))
 
 
-class Associations(rad.DataModelNode):
+class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Association table
     """
@@ -64,15 +64,6 @@ class Associations(rad.DataModelNode):
     @property
     def testing_array_shape(self) -> tuple[int]:
         return self.default_array_shape
-
-    @property
-    def array_shape(self) -> tuple[int]:
-        # Allow for one to shrink the data size default
-        if self._has_node("array_shape"):
-            return self._data["array_shape"]
-
-        # default fall-back
-        return (2, 3, 1)
 
     @rad.field
     def asn_id(self) -> str:

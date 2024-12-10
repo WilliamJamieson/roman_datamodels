@@ -22,7 +22,7 @@ class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
         return self._get_node("reftype", lambda: RefTypeEntry.READNOISE)
 
 
-class ReadnoiseRef(rad.DataModelNode):
+class ReadnoiseRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Read noise reference schema
     """

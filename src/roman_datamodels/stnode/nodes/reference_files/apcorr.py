@@ -58,7 +58,7 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("reftype", lambda: RefTypeEntry.APCORR)
 
 
-class ApcorrRef(rad.DataModelNode):
+class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Aperture correction reference schema
     """

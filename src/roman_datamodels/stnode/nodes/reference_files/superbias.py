@@ -18,7 +18,7 @@ class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("reftype", lambda: RefTypeEntry.BIAS)
 
 
-class SuperbiasRef(rad.DataModelNode):
+class SuperbiasRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Super-bias reference schema
     """

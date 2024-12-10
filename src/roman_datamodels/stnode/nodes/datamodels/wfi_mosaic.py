@@ -71,7 +71,7 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
         return self._get_node("wcsinfo", MosaicWcsinfo)
 
 
-class WfiMosaic(rad.DataModelNode):
+class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     WFI Level 3 mosaics data
     """

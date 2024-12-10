@@ -30,7 +30,7 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
         return self._get_node("visit", Visit)
 
 
-class SegmentationMap(rad.DataModelNode):
+class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Segmentation map computed by the Source Catalog Step
     """

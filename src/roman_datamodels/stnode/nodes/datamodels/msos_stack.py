@@ -17,7 +17,7 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
         return self._get_node("image_list", lambda: rad.NOSTR)
 
 
-class MsosStack(rad.DataModelNode):
+class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Level 3 schema for SSC's MSOS stack products
     """

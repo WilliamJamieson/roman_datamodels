@@ -21,7 +21,7 @@ class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon):
         return self._get_node("groundtest", TvacGroundtest)
 
 
-class Tvac(rad.DataModelNode):
+class Tvac(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Tvac test data
     """

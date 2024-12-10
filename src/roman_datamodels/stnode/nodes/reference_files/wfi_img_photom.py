@@ -46,7 +46,7 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
         return self._get_node("pixelareasr", lambda: 1.0e-13 * u.steradian)
 
 
-class WfiImgPhotomRef(rad.DataModelNode):
+class WfiImgPhotomRef(rad.TaggedObjectNode):
     """
     WFI imaging photometric flux conversion data model
     """
@@ -54,14 +54,6 @@ class WfiImgPhotomRef(rad.DataModelNode):
     @classmethod
     def asdf_tag(cls) -> str:
         return "asdf://stsci.edu/datamodels/roman/tags/reference_files/wfi_img_photom-1.0.0"
-
-    @property
-    def default_array_shape(self) -> tuple[int]:
-        raise NotImplementedError("Array shape is not defined for ImageSourceCatalog")
-
-    @property
-    def testing_array_shape(self) -> tuple[int]:
-        return self.default_array_shape
 
     @rad.field
     def meta(self) -> WfiImgPhotomRef_Meta:

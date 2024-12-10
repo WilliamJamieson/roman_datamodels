@@ -19,7 +19,7 @@ class GainRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return self._get_node("reftype", lambda: RefTypeEntry.GAIN)
 
 
-class GainRef(rad.DataModelNode):
+class GainRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     """
     Gain reference schema
     """
