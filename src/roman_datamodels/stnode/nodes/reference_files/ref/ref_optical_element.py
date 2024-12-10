@@ -1,6 +1,6 @@
 from roman_datamodels.stnode import rad
 
-from ...meta import WfiOpticalElement
+from ...datamodels import WfiOpticalElement
 
 __all__ = ["RefOpticalElementRef"]
 

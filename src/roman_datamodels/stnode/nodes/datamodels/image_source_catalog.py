@@ -2,7 +2,7 @@ from astropy.table import Table
 
 from roman_datamodels.stnode import rad
 
-from ..meta import (
+from .meta import (
     Basic,
     Exposure,
     Photometry,

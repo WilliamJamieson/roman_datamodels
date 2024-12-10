@@ -12,10 +12,12 @@ from .mask import MaskRef
 from .pixelarea import PixelareaRef
 from .readnoise import ReadnoiseRef
 from .ref import (
+    RefCommonPedigreeEntry,
     RefCommonRef,
     RefCommonRefOpticalElementRef,
     RefExposureTypeRef,
     RefOpticalElementRef,
+    RefTypeEntry,
 )
 from .refpix import RefpixRef
 from .saturation import SaturationRef
@@ -36,10 +38,12 @@ __all__ = [
     "MaskRef",
     "PixelareaRef",
     "ReadnoiseRef",
+    "RefCommonPedigreeEntry",
     "RefCommonRef",
     "RefCommonRefOpticalElementRef",
     "RefExposureTypeRef",
     "RefOpticalElementRef",
+    "RefTypeEntry",
     "RefpixRef",
     "SaturationRef",
     "SuperbiasRef",

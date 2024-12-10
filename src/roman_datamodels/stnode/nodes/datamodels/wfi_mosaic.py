@@ -3,7 +3,7 @@ from gwcs import WCS
 
 from roman_datamodels.stnode import rad
 
-from ..meta import (
+from .meta import (
     Basic,
     CalLogs,
     Coordinates,

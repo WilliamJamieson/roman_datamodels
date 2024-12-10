@@ -2,7 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import rad
 
-from ..meta import Common
+from .meta import Common
 
 __all__ = ["MsosStack"]
 

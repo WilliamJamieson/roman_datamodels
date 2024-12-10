@@ -1,8 +1,31 @@
+from enum import Enum
+
 from roman_datamodels.stnode import core, rad
 
-from ..enums import AssociationsExptypeEntry
+__all__ = [
+    "Associations",
+    "AssociationsExptypeEntry",
+]
 
-__all__ = ["Associations"]
+
+class AssociationsExptypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+    @classmethod
+    def asdf_container(cls) -> type:
+        return Associations_Products_Members
+
+    @classmethod
+    def asdf_property_name(cls) -> str:
+        return "exptype"
+
+
+class AssociationsExptypeEntry(AssociationsExptypeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible entries for exptype in associations
+    """
+
+    SCIENCE = "SCIENCE"
+    CALIBRATION = "CALIBRATION"
+    ENGINEERING = "ENGINEERING"
 
 
 class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):

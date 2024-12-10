@@ -1,6 +1,6 @@
 from .basic import FpsBasic
 from .common import FpsCommon
-from .tagged_objects import (
+from .objects import (
     FpsCalStep,
     FpsExposure,
     FpsGroundtest,
@@ -9,19 +9,17 @@ from .tagged_objects import (
     FpsStatistics,
     FpsWfiMode,
 )
-from .tagged_scalars import (
+from .scalars import (
     FpsCalibrationSoftwareVersion,
+    FpsExposureType,
     FpsFileDate,
     FpsFilename,
+    FpsGuidewindowModes,
     FpsModelType,
     FpsOrigin,
     FpsPrdSoftwareVersion,
     FpsSdfSoftwareVersion,
     FpsTelescope,
-)
-from .untagged_scalars import (
-    FpsExposureType,
-    FpsGuidewindowModes,
     FpsWfiDetector,
     FpsWfiOpticalElement,
 )

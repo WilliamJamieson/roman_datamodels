@@ -1,15 +1,70 @@
+from enum import Enum
+
 from astropy.time import Time
 
 from roman_datamodels.stnode import core, rad
 
-from ...enums import InstrumentNameEntry, RefCommonPedigreeEntry, RefTypeEntry
-from ...meta import (
-    Telescope,
-    WfiDetector,
-    WfiOpticalElement,
-)
+from ...datamodels import InstrumentNameEntry, Telescope, WfiDetector, WfiOpticalElement
 
-__all__ = ["RefCommonRef"]
+__all__ = [
+    "RefCommonPedigreeEntry",
+    "RefCommonRef",
+    "RefTypeEntry",
+]
+
+
+class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+    @classmethod
+    def asdf_schema(cls) -> rad.RadSchema:
+        return rad.RadSchema([])
+
+
+class RefTypeEntry(RefTypeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible ref_type entries
+    -> this one doesn't actually exist but it is impled by each of the reftype entries
+       in the reference_files schemas
+    """
+
+    ABVEGAOFFSET = "ABVEGAOFFSET"
+    APCORR = "APCORR"
+    DARK = "DARK"
+    DISTORTION = "DISTORTION"
+    EPSF = "EPSF"
+    FLAT = "FLAT"
+    GAIN = "GAIN"
+    INVERSELINEARITY = "INVERSELINEARITY"
+    IPC = "IPC"
+    LINEARITY = "LINEARITY"
+    MASK = "MASK"
+    AREA = "AREA"  # for pixelarea
+    READNOISE = "READNOISE"
+    REFPIX = "REFPIX"
+    SATURATION = "SATURATION"
+    BIAS = "BIAS"  # for superbias
+    PHOTOM = "PHOTOM"  # for wfi_img_photom
+    NA = "N/A"  # for a default value in ref_common
+
+
+class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+    @classmethod
+    def asdf_container(cls) -> type:
+        return RefCommonRef
+
+    @classmethod
+    def asdf_property_name(cls) -> str:
+        return "pedigree"
+
+
+class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, Enum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible entries for pedigree in ref_common
+    """
+
+    GROUND = "GROUND"
+    MODEL = "MODEL"
+    DUMMY = "DUMMY"
+    SIMULATION = "SIMULATION"
 
 
 class RefCommonRef_InstrumentMixin(core.AdditionalNodeMixin):

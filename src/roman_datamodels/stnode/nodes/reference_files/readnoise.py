@@ -3,10 +3,10 @@ from astropy import units as u
 
 from roman_datamodels.stnode import rad
 
-from ..enums import RefTypeEntry
 from .ref import (
     RefCommonRef,
     RefExposureTypeRef,
+    RefTypeEntry,
 )
 
 __all__ = ["ReadnoiseRef"]

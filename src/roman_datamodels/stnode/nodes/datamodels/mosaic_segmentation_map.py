@@ -2,7 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import rad
 
-from ..meta import (
+from .meta import (
     Basic,
     MosaicBasic,
     Program,

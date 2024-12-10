@@ -1,27 +1,27 @@
 from .basic import TvacBasic
 from .common import TvacCommon
-from .tagged_objects import (
+from .objects import (
     TvacCalStep,
     TvacExposure,
     TvacGroundtest,
+    TvacGroundtestGsorcSdsDqPulseEntry,
+    TvacGroundtestWfiOptTargettypeEntry,
     TvacGuidestar,
     TvacRefFile,
     TvacStatistics,
     TvacWfiMode,
 )
-from .tagged_scalars import (
+from .scalars import (
     TvacCalibrationSoftwareVersion,
+    TvacExposureType,
     TvacFileDate,
     TvacFilename,
+    TvacGuidewindowModes,
     TvacModelType,
     TvacOrigin,
     TvacPrdSoftwareVersion,
     TvacSdfSoftwareVersion,
     TvacTelescope,
-)
-from .untagged_scalars import (
-    TvacExposureType,
-    TvacGuidewindowModes,
     TvacWfiDetector,
     TvacWfiOpticalElement,
 )
@@ -36,6 +36,8 @@ __all__ = [
     "TvacFileDate",
     "TvacFilename",
     "TvacGroundtest",
+    "TvacGroundtestGsorcSdsDqPulseEntry",
+    "TvacGroundtestWfiOptTargettypeEntry",
     "TvacGuidestar",
     "TvacGuidewindowModes",
     "TvacModelType",

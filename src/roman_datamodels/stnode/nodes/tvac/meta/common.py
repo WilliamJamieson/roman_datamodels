@@ -1,7 +1,7 @@
 from roman_datamodels.stnode import core, rad
 
 from .basic import TvacBasic
-from .tagged_objects import (
+from .objects import (
     TvacCalStep,
     TvacExposure,
     TvacGuidestar,

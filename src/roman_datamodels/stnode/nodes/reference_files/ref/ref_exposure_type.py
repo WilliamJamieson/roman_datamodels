@@ -1,6 +1,6 @@
 from roman_datamodels.stnode import rad
 
-from ...meta import ExposureType
+from ...datamodels import ExposureType
 
 __all__ = ["RefExposureTypeRef"]
 

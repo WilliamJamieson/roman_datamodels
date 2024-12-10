@@ -2,8 +2,7 @@ import numpy as np
 
 from roman_datamodels.stnode import rad
 
-from ..enums import RefTypeEntry
-from .ref import RefCommonRef
+from .ref import RefCommonRef, RefTypeEntry
 
 __all__ = ["MaskRef"]
 

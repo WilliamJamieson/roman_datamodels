@@ -3,7 +3,7 @@ from astropy.time import Time
 
 from roman_datamodels.stnode import rad
 
-from ..meta import (
+from .meta import (
     Common,
     GuidewindowModes,
 )

@@ -1,8 +1,7 @@
 from roman_datamodels.stnode import core, rad
 
-from ..enums import RefTypeEntry
-from ..meta import OPTICAL_ELEMENTS
-from .ref import RefCommonRef
+from ..datamodels import OPTICAL_ELEMENTS
+from .ref import RefCommonRef, RefTypeEntry
 
 __all__ = ["AbvegaoffsetRef"]
 

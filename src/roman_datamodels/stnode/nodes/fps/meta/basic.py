@@ -2,7 +2,7 @@ from astropy.time import Time
 
 from roman_datamodels.stnode import rad
 
-from .tagged_scalars import (
+from .scalars import (
     FpsCalibrationSoftwareVersion,
     FpsFileDate,
     FpsFilename,

@@ -3,10 +3,10 @@ from astropy import units as u
 
 from roman_datamodels.stnode import rad
 
-from ..enums import RefTypeEntry
 from .ref import (
     RefCommonRefOpticalElementRef,
     RefExposureTypeRef,
+    RefTypeEntry,
 )
 from .ref.ref_exposure_type import RefExposureTypeRef_Exposure
 

@@ -1,7 +1,7 @@
 from roman_datamodels.stnode import core, rad
 
 from .basic import FpsBasic
-from .tagged_objects import (
+from .objects import (
     FpsCalStep,
     FpsExposure,
     FpsGuidestar,

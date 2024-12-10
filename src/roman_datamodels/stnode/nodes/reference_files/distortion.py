@@ -4,8 +4,7 @@ from astropy.modeling.models import Shift
 
 from roman_datamodels.stnode import rad
 
-from ..enums import RefTypeEntry
-from .ref import RefCommonRefOpticalElementRef
+from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
 
 __all__ = ["DistortionRef"]
 
