@@ -1,55 +1,153 @@
-"""
-This module provides all the specific datamodels used by the Roman pipeline.
-    These models are what will be read and written by the pipeline to ASDF files.
-    Note that we require each model to specify a _node_type, which corresponds to
-    the top-level STNode type that the datamodel wraps. This STNode type is derived
-    from the schema manifest defined by RAD.
-"""
+from __future__ import annotations
 
 from collections.abc import Mapping
+from enum import Enum
 
 import asdf
 import numpy as np
 from astropy.table import QTable
 
-from roman_datamodels import stnode
+from roman_datamodels import nodes, stnode
 
 from ._core import DataModel
 
-__all__ = []
 
-
-class _DataModel(DataModel):
+class AssociationsModel(DataModel, nodes.Associations):
     """
-    Exists only to populate the __all__ for this file automatically
-        This is something which is easily missed, but is important for the automatic
-        documentation generation to work properly.
+    A model for the Roman associations file
     """
 
-    def __init_subclass__(cls, **kwargs):
-        """Register each subclass in the __all__ for this module"""
-        super().__init_subclass__(**kwargs)
+    @classmethod
+    def is_association(cls, asn_data):
+        """
+        Test if an object is an association by checking for required fields
 
-        # Don't register private classes
-        if cls.__name__.startswith("_"):
-            return
-
-        if cls.__name__ in __all__:
-            raise ValueError(f"Duplicate model type {cls.__name__}")
-
-        __all__.append(cls.__name__)
-
-
-class _RomanDataModel(_DataModel):
-    def __init__(self, init=None, **kwargs):
-        super().__init__(init, **kwargs)
-
-        if init is not None:
-            self.meta.model_type = self.__class__.__name__
+        Parameters
+        ----------
+        asn_data :
+            The data to be tested.
+        """
+        return isinstance(asn_data, dict) and "asn_id" in asn_data and "asn_pool" in asn_data
 
 
-class MosaicModel(_RomanDataModel):
-    _node_type = stnode.WfiMosaic
+class GuidewindowModel(DataModel, nodes.Guidewindow):
+    """
+    A model for the Roman guide window file
+    """
+
+
+class ImageSourceCatalogModel(DataModel, nodes.ImageSourceCatalog):
+    """
+    A model for the Roman image source catalog file
+    """
+
+
+class MosaicSegmentationMapModel(DataModel, nodes.MosaicSegmentationMap):
+    """
+    A model for the Roman mosaic segmentation map file
+    """
+
+
+class MosaicSourceCatalogModel(DataModel, nodes.MosaicSourceCatalog):
+    """
+    A model for the Roman mosaic source catalog file
+    """
+
+
+class MsosStackModel(DataModel, nodes.MsosStack):
+    """
+    A model for the Roman MSOS stack file
+    """
+
+
+class RampFitOutputModel(DataModel, nodes.RampFitOutput):
+    """
+    A model for the Roman ramp fit output file
+    """
+
+
+class RampModel(DataModel, nodes.Ramp):
+    """
+    A model for the Roman ramp file
+    """
+
+    @classmethod
+    def from_science_raw(cls, model) -> RampModel:
+        """
+        Attempt to construct a RampModel from a DataModel
+
+        If the model has a resultantdq attribute, this is copied into
+        the RampModel.groupdq attribute.
+
+        Parameters
+        ----------
+        model : ScienceRawModel, TvacModel
+            The input data model (a RampModel will also work).
+
+        Returns
+        -------
+        ramp_model : RampModel
+            The RampModel built from the input model. If the input is already
+            a RampModel, it is simply returned.
+        """
+        ALLOWED_MODELS = (FpsModel, RampModel, ScienceRawModel, TvacModel)
+
+        if isinstance(model, cls):
+            return model
+        if not isinstance(model, ALLOWED_MODELS):
+            raise ValueError(f"Input must be one of {ALLOWED_MODELS}")
+
+        # Create base ramp node with dummy values (for validation)
+        ramp = nodes.Ramp()
+
+        # check if the input model has a resultantdq from SDF
+        if hasattr(model, "resultantdq"):
+            ramp.groupdq = model.resultantdq.copy()
+
+        # Define how to recursively copy all attributes.
+        def node_update(ramp, other):
+            """Implement update to directly access each value"""
+            for key in other.keys():
+                if key == "resultantdq":
+                    continue
+                if key in ramp:
+                    if isinstance(ramp[key], Mapping):
+                        node_update(getattr(ramp, key), getattr(other, key))
+                    elif isinstance(ramp[key], list):
+                        setattr(ramp, key, getattr(other, key).data)
+                    elif isinstance(ramp[key], np.ndarray):
+                        setattr(ramp, key, getattr(other, key).astype(ramp[key].dtype))
+                    else:
+                        setattr(ramp, key, getattr(other, key))
+                else:
+                    ramp[key] = other[key]
+
+        node_update(ramp, model)
+
+        # Create model from node
+        ramp_model = RampModel(ramp)
+        return ramp_model
+
+
+class SegmentationMapModel(DataModel, nodes.SegmentationMap):
+    """
+    A model for the Roman segmentation map file
+    """
+
+
+class ImageModel(DataModel, nodes.WfiImage):
+    """
+    A model for the Roman WFI image file
+    """
+
+
+WfiImageModel = ImageModel
+
+
+class MosaicModel(DataModel, nodes.WfiMosaic):
+    """
+    A model for the Roman WFI mosaic file
+    """
 
     def append_individual_image_meta(self, meta):
         """
@@ -93,10 +191,14 @@ class MosaicModel(_RomanDataModel):
                     if isinstance(subvalue, asdf.tags.core.ndarray.NDArrayType | QTable):
                         continue
 
+                    # Unwrap Enum values
+                    subvalue = subvalue.value if isinstance(subvalue, Enum) else subvalue
                     subtable_cols.append(subkey)
                     subtable_vals.append(
                         [str(subvalue)]
-                        if isinstance(subvalue, list | dict | asdf.lazy_nodes.AsdfDictNode | asdf.lazy_nodes.AsdfListNode)
+                        if isinstance(
+                            subvalue, list | dict | asdf.lazy_nodes.AsdfDictNode | asdf.lazy_nodes.AsdfListNode | stnode.LNode
+                        )
                         else [subvalue]
                     )
 
@@ -123,220 +225,127 @@ class MosaicModel(_RomanDataModel):
             self.meta.individual_image_meta.basic.add_row(basic_vals)
 
 
-class ImageModel(_RomanDataModel):
-    _node_type = stnode.WfiImage
+WfiMosaicModel = MosaicModel
 
 
-class ScienceRawModel(_RomanDataModel):
-    _node_type = stnode.WfiScienceRaw
+class ScienceRawModel(DataModel, nodes.WfiScienceRaw):
+    """
+    A model for the Roman WFI science raw file
+    """
 
 
-class MsosStackModel(_RomanDataModel):
-    _node_type = stnode.MsosStack
+WfiScienceRawModel = ScienceRawModel
 
 
-class RampModel(_RomanDataModel):
-    _node_type = stnode.Ramp
+class FpsModel(DataModel, nodes.Fps):
+    """
+    A model for the Roman FPS file
+    """
 
-    @classmethod
-    def from_science_raw(cls, model):
-        """
-        Attempt to construct a RampModel from a DataModel
 
-        If the model has a resultantdq attribute, this is copied into
-        the RampModel.groupdq attribute.
+class AbvegaoffsetRefModel(DataModel, nodes.AbvegaoffsetRef):
+    """
+    A model for the Roman ABVegaOffset file
+    """
 
-        Parameters
-        ----------
-        model : ScienceRawModel, TvacModel
-            The input data model (a RampModel will also work).
 
-        Returns
-        -------
-        ramp_model : RampModel
-            The RampModel built from the input model. If the input is already
-            a RampModel, it is simply returned.
-        """
-        ALLOWED_MODELS = (FpsModel, RampModel, ScienceRawModel, TvacModel)
+class ApcorrRefModel(DataModel, nodes.ApcorrRef):
+    """
+    A model for the Roman APCorr reference file
+    """
 
-        if isinstance(model, cls):
-            return model
-        if not isinstance(model, ALLOWED_MODELS):
-            raise ValueError(f"Input must be one of {ALLOWED_MODELS}")
 
-        # Create base ramp node with dummy values (for validation)
-        from roman_datamodels.maker_utils import mk_ramp
+class DarkRefModel(DataModel, nodes.DarkRef):
+    """
+    A model for the Roman dark reference file
+    """
 
-        ramp = mk_ramp(shape=model.shape)
 
-        # check if the input model has a resultantdq from SDF
-        if hasattr(model, "resultantdq"):
-            ramp.groupdq = model.resultantdq.copy()
+class DistortionRefModel(DataModel, nodes.DistortionRef):
+    """
+    A model for the Roman distortion reference file
+    """
 
-        # Define how to recursively copy all attributes.
-        def node_update(ramp, other):
-            """Implement update to directly access each value"""
-            for key in other.keys():
-                if key == "resultantdq":
-                    continue
-                if key in ramp:
-                    if isinstance(ramp[key], Mapping):
-                        node_update(getattr(ramp, key), getattr(other, key))
-                    elif isinstance(ramp[key], list):
-                        setattr(ramp, key, getattr(other, key).data)
-                    elif isinstance(ramp[key], np.ndarray):
-                        setattr(ramp, key, getattr(other, key).astype(ramp[key].dtype))
-                    else:
-                        setattr(ramp, key, getattr(other, key))
-                else:
-                    ramp[key] = other[key]
 
-        node_update(ramp, model)
+class EpsfRefModel(DataModel, nodes.EpsfRef):
+    """
+    A model for the Roman EPSF reference file
+    """
 
-        # Create model from node
-        ramp_model = RampModel(ramp)
-        return ramp_model
 
+class FlatRefModel(DataModel, nodes.FlatRef):
+    """
+    A model for the Roman flat reference file
+    """
 
-class RampFitOutputModel(_RomanDataModel):
-    _node_type = stnode.RampFitOutput
 
+class GainRefModel(DataModel, nodes.GainRef):
+    """
+    A model for the Roman gain reference file
+    """
 
-class AssociationsModel(_DataModel):
-    # Need an init to allow instantiation from a JSON file
-    _node_type = stnode.Associations
 
-    @classmethod
-    def is_association(cls, asn_data):
-        """
-        Test if an object is an association by checking for required fields
+class InverselinearityRefModel(DataModel, nodes.InverselinearityRef):
+    """
+    A model for the Roman Inverse Linearity reference file
+    """
 
-        Parameters
-        ----------
-        asn_data :
-            The data to be tested.
-        """
-        return isinstance(asn_data, dict) and "asn_id" in asn_data and "asn_pool" in asn_data
 
+class IpcRefModel(DataModel, nodes.IpcRef):
+    """
+    A model for the Roman IPC reference file
+    """
 
-class GuidewindowModel(_RomanDataModel):
-    _node_type = stnode.Guidewindow
 
+class LinearityRefModel(DataModel, nodes.LinearityRef):
+    """
+    A model for the Roman Linearity reference file
+    """
 
-class FlatRefModel(_DataModel):
-    _node_type = stnode.FlatRef
 
+class MaskRefModel(DataModel, nodes.MaskRef):
+    """
+    A model for the Roman mask reference file
+    """
 
-class AbvegaoffsetRefModel(_DataModel):
-    _node_type = stnode.AbvegaoffsetRef
 
+class PixelareaRefModel(DataModel, nodes.PixelareaRef):
+    """
+    A model for the Roman pixel area reference file
+    """
 
-class ApcorrRefModel(_DataModel):
-    _node_type = stnode.ApcorrRef
 
+class ReadnoiseRefModel(DataModel, nodes.ReadnoiseRef):
+    """
+    A model for the Roman readnoise reference file
+    """
 
-class DarkRefModel(_DataModel):
-    _node_type = stnode.DarkRef
 
+class RefpixRefModel(DataModel, nodes.RefpixRef):
+    """
+    A model for the Roman Refpix reference file
+    """
 
-class DistortionRefModel(_DataModel):
-    _node_type = stnode.DistortionRef
 
+class SaturationRefModel(DataModel, nodes.SaturationRef):
+    """
+    A model for the Roman saturation reference file
+    """
 
-class EpsfRefModel(_DataModel):
-    _node_type = stnode.EpsfRef
 
+class SuperbiasRefModel(DataModel, nodes.SuperbiasRef):
+    """
+    A model for the Roman superbias reference file
+    """
 
-class GainRefModel(_DataModel):
-    _node_type = stnode.GainRef
 
+class WfiImgPhotomRefModel(DataModel, nodes.WfiImgPhotomRef):
+    """
+    A model for the Roman WFI IMG photom reference file
+    """
 
-class IpcRefModel(_DataModel):
-    _node_type = stnode.IpcRef
 
-
-class LinearityRefModel(_DataModel):
-    _node_type = stnode.LinearityRef
-
-    def get_primary_array_name(self):
-        """
-        Returns the name "primary" array for this model, which
-        controls the size of other arrays that are implicitly created.
-        This is intended to be overridden in the subclasses if the
-        primary array's name is not "data".
-        """
-        return "coeffs"
-
-
-class InverselinearityRefModel(_DataModel):
-    _node_type = stnode.InverselinearityRef
-
-    def get_primary_array_name(self):
-        """
-        Returns the name "primary" array for this model, which
-        controls the size of other arrays that are implicitly created.
-        This is intended to be overridden in the subclasses if the
-        primary array's name is not "data".
-        """
-        return "coeffs"
-
-
-class MaskRefModel(_DataModel):
-    _node_type = stnode.MaskRef
-
-    def get_primary_array_name(self):
-        """
-        Returns the name "primary" array for this model, which
-        controls the size of other arrays that are implicitly created.
-        This is intended to be overridden in the subclasses if the
-        primary array's name is not "data".
-        """
-        return "dq"
-
-
-class PixelareaRefModel(_DataModel):
-    _node_type = stnode.PixelareaRef
-
-
-class ReadnoiseRefModel(_DataModel):
-    _node_type = stnode.ReadnoiseRef
-
-
-class SuperbiasRefModel(_DataModel):
-    _node_type = stnode.SuperbiasRef
-
-
-class SaturationRefModel(_DataModel):
-    _node_type = stnode.SaturationRef
-
-
-class WfiImgPhotomRefModel(_DataModel):
-    _node_type = stnode.WfiImgPhotomRef
-
-
-class RefpixRefModel(_DataModel):
-    _node_type = stnode.RefpixRef
-
-
-class FpsModel(_DataModel):
-    _node_type = stnode.Fps
-
-
-class TvacModel(_DataModel):
-    _node_type = stnode.Tvac
-
-
-class MosaicSourceCatalogModel(_RomanDataModel):
-    _node_type = stnode.MosaicSourceCatalog
-
-
-class MosaicSegmentationMapModel(_RomanDataModel):
-    _node_type = stnode.MosaicSegmentationMap
-
-
-class ImageSourceCatalogModel(_RomanDataModel):
-    _node_type = stnode.ImageSourceCatalog
-
-
-class SegmentationMapModel(_RomanDataModel):
-    _node_type = stnode.SegmentationMap
+class TvacModel(DataModel, nodes.Tvac):
+    """
+    A model for the Roman TVAC file
+    """

@@ -11,7 +11,8 @@ import asdf
 
 from roman_datamodels import validate
 
-from ._core import MODEL_REGISTRY, DataModel
+# from ._core import MODEL_REGISTRY, DataModel
+from ._core import DataModel
 
 __all__ = ["FilenameMismatchWarning", "rdm_open"]
 
@@ -87,6 +88,8 @@ def rdm_open(init, memmap=False, **kwargs):
     -------
     `DataModel`
     """
+    from roman_datamodels.stnode import RDM_NODE_REGISTRY
+
     if isinstance(init, str | Path):
         if Path(init).suffix.lower() == ".json":
             try:
@@ -105,8 +108,8 @@ def rdm_open(init, memmap=False, **kwargs):
             del kwargs["asn_n_members"]
 
         asdf_file = init if isinstance(init, asdf.AsdfFile) else _open_path_like(init, memmap=memmap, **kwargs)
-        if (model_type := type(asdf_file.tree["roman"])) in MODEL_REGISTRY:
-            return MODEL_REGISTRY[model_type](asdf_file, **kwargs)
+        if (model_type := type(asdf_file.tree["roman"])) in RDM_NODE_REGISTRY.node_datamodel_mapping:
+            return RDM_NODE_REGISTRY.node_datamodel_mapping[model_type](asdf_file, **kwargs)
 
         asdf_file.close()
         raise TypeError(f"Unknown datamodel type: {model_type}")
