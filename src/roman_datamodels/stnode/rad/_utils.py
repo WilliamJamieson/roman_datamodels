@@ -1,34 +1,18 @@
 from inspect import isclass
 from typing import Any, TypeVar, get_args
 
-from ..core import AdditionalNodeMixin, DNode, LNode, PatternDNode, type_checked
+from ..core import AdditionalNodeMixin, DNode, LNode, PatternDNode
 
 T = TypeVar("T")
 
 __all__ = [
     "camel_case_to_snake_case",
     "class_name_from_uri",
-    "field",
-    "field_property",
     "get_all_fields",
     "get_node_fields",
     "get_nodes",
     "wrap_into_node",
 ]
-
-
-class field_property(property):
-    """
-    Special subclass of property to mark schema fields out
-    """
-
-
-def field(function):
-    """
-    Create a special property decorator for nodes that enables testing
-    of the type annotations for the for a schema field's property
-    """
-    return field_property(type_checked(function))
 
 
 def class_name_from_uri(uri) -> str:
