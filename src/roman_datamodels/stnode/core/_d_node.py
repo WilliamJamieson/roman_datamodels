@@ -15,8 +15,7 @@ from asdf.tags.core import ndarray
 from astropy.time import Time
 
 from ._mixins import AsdfNodeMixin, FlushOptions
-
-# from ._typing import type_checked
+from ._typing import type_checked
 
 __all__ = [
     "DNode",
@@ -396,6 +395,6 @@ def field(function: Callable[[DNode], T]) -> field_property:
         # Note the lambda is used to delay the evaluation of the default value all the way
         # until the default is actually needed. This is important for things like numpy arrays
         # which can be expensive to create (memory and time wise).
-        return self._get_node(function.__name__, lambda: function(self, *args, **kwargs))
+        return self._get_node(function.__name__, lambda: type_checked(function)(self, *args, **kwargs))
 
     return field_property(wrapper)
