@@ -10,10 +10,6 @@ class TvacWfiOpticalElementMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
 
 
 class TvacWfiOpticalElement(TvacWfiOpticalElementMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    WFI Optical Element
-    """
-
     F062 = "F062"
     F087 = "F087"
     F106 = "F106"

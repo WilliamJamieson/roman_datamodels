@@ -12,10 +12,6 @@ __all__ = ["FpsWfiMode"]
 
 
 class FpsWfiMode(rad.TaggedObjectNode):
-    """
-    FPS Roman WFI Instrument
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_mode-1.0.0",)

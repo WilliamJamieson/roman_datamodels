@@ -39,10 +39,6 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
 
 class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Pixel area reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/pixelarea-1.0.0",)

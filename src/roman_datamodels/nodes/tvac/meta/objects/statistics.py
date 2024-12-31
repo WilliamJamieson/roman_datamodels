@@ -9,10 +9,6 @@ __all__ = ["TvacStatistics"]
 
 
 class TvacStatistics(rad.TaggedObjectNode):
-    """
-    Tvac Summary Statistics
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/statistics-1.0.0",)

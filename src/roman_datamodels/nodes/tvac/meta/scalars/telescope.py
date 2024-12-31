@@ -26,10 +26,6 @@ class TvacTelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
 
 
 class TvacTelescope(TvacTelescopeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enumerate the telescopes
-    """
-
     ROMAN = "ROMAN"
 
     @classmethod

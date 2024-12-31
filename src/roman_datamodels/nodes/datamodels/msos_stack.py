@@ -20,10 +20,6 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
 
 
 class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Level 3 schema for SSC's MSOS stack products
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/msos_stack-1.0.0",)

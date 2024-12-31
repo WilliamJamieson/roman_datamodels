@@ -8,10 +8,6 @@ __all__ = ["FpsCalStep"]
 
 
 class FpsCalStep(rad.TaggedObjectNode):
-    """
-    FPS Level 2 Calibration Step status information
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/cal_step-1.0.0",)

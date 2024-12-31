@@ -8,10 +8,6 @@ __all__ = ["TvacCalStep"]
 
 
 class TvacCalStep(rad.TaggedObjectNode):
-    """
-    Tvac Level 2 Calibration Step status information
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/cal_step-1.0.0",)

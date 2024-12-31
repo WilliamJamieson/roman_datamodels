@@ -74,10 +74,6 @@ class ApcorrRef_Data_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
 
 
 class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Aperture correction reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0",)

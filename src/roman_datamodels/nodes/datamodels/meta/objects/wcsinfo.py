@@ -85,10 +85,6 @@ class WcsinfoVparityEntry(WcsinfoVparityEntryMixin, rad.RadEnum, metaclass=rad.N
 
 
 class Wcsinfo(rad.TaggedObjectNode):
-    """
-    Wcsinfo information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wcsinfo-1.0.0",)

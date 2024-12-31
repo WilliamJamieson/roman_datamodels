@@ -25,10 +25,6 @@ class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
 
 
 class ReadnoiseRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Read noise reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/readnoise-1.0.0",)

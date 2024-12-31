@@ -8,10 +8,6 @@ __all__ = ["IndividualImageMeta"]
 
 
 class IndividualImageMeta(rad.TaggedObjectNode):
-    """
-    Combined level 2 metadata
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/individual_image_meta-1.0.0",)

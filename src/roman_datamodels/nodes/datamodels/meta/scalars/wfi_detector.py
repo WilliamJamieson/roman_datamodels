@@ -4,20 +4,12 @@ __all__ = ["WfiDetector"]
 
 
 class WfiDetectorMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
-    """
-    WFI Detector
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_detector-1.0.0",)
 
 
 class WfiDetector(WfiDetectorMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    WFI Detector
-    """
-
     WFI01 = "WFI01"
     WFI02 = "WFI02"
     WFI03 = "WFI03"

@@ -10,10 +10,6 @@ __all__ = ["FileDate"]
 
 
 class FileDate(Time, rad.TaggedScalarNode):
-    """
-    Date this file was created (UTC)
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/file_date-1.0.0",)

@@ -8,10 +8,6 @@ __all__ = ["TvacModelType"]
 
 
 class TvacModelType(str, rad.TaggedScalarNode):
-    """
-    Type of data model
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/model_type-1.0.0",)

@@ -69,10 +69,6 @@ class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMix
 
 
 class TvacGroundtest(rad.TaggedObjectNode):
-    """
-    Tvac Ground test description.
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/groundtest-1.0.0",)

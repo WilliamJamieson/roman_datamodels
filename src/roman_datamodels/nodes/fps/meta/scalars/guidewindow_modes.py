@@ -10,10 +10,6 @@ class FpsGuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
 
 
 class FpsGuidewindowModes(FpsGuidewindowModesMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Guidewindow modes
-    """
-
     WIM_ACQ = "WIM-ACQ"
     WIM_TRACK = "WIM-TRACK"
     WSM_ACQ_1 = "WSM-ACQ-1"

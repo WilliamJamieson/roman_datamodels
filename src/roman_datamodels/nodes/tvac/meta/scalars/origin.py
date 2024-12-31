@@ -22,10 +22,6 @@ class TvacOriginMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
 
 
 class TvacOrigin(TvacOriginMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Organization responsible for creating file
-    """
-
     STSCI = "STSCI"
     IPAC_SSC = "IPAC/SSC"
 

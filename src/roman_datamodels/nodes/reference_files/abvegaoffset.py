@@ -43,10 +43,6 @@ class AbvedgaoffsetRef_Data_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin)
 
 
 class AbvegaoffsetRef(rad.TaggedObjectNode):
-    """
-    AB Vega Offset reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0",)

@@ -20,10 +20,6 @@ class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 
 class SuperbiasRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Super-bias reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/superbias-1.0.0",)

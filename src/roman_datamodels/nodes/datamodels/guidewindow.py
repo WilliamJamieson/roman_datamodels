@@ -14,8 +14,6 @@ __all__ = ["Guidewindow"]
 
 
 class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
-    """Metadata for the guide window"""
-
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Guidewindow
@@ -90,10 +88,6 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
 
 
 class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Guide window schema
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",)

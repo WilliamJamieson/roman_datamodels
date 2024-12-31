@@ -28,10 +28,6 @@ class EphemerisTypeEntry(EphemerisTypeEntryMixin, rad.RadEnum, metaclass=rad.Nod
 
 
 class Ephemeris(rad.TaggedObjectNode):
-    """
-    Ephemeris information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ephemeris-1.0.0",)

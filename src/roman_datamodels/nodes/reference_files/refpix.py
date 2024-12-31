@@ -29,10 +29,6 @@ class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 
 class RefpixRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Reference pixel correction reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/refpix-1.0.0",)

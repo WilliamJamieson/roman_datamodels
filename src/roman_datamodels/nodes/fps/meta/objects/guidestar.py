@@ -8,10 +8,6 @@ __all__ = ["FpsGuidestar"]
 
 
 class FpsGuidestar(rad.TaggedObjectNode):
-    """
-    FPS Guidestar information
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/guidestar-1.0.0",)

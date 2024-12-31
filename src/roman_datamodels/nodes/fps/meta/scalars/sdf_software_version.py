@@ -8,10 +8,6 @@ __all__ = ["FpsSdfSoftwareVersion"]
 
 
 class FpsSdfSoftwareVersion(str, rad.TaggedScalarNode):
-    """
-    SDF software version number
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/tagged_scalars/sdf_software_version-1.0.0",)

@@ -8,10 +8,6 @@ __all__ = ["CalibrationSoftwareVersion"]
 
 
 class CalibrationSoftwareVersion(str, rad.TaggedScalarNode):
-    """
-    Version of the calibration software used
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/calibration_software_version-1.0.0",)

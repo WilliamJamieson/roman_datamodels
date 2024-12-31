@@ -20,10 +20,6 @@ class FlatRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
 
 class FlatRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Flat field information
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/flat-1.0.0",)

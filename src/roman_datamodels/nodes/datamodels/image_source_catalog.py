@@ -43,10 +43,6 @@ class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
 
 
 class ImageSourceCatalog(rad.TaggedObjectNode):
-    """
-    Photometry and astrometry computed by the Source Catalog Step
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/image_source_catalog-1.0.0",)

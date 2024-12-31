@@ -24,10 +24,6 @@ class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon):
 
 
 class Fps(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    FPS test data
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps-1.0.0",)

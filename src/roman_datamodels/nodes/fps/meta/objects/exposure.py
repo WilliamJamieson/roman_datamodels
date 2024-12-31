@@ -11,10 +11,6 @@ __all__ = ["FpsExposure"]
 
 
 class FpsExposure(rad.TaggedObjectNode):
-    """
-    FPS Exposure information
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/exposure-1.0.0",)

@@ -6,10 +6,6 @@ __all__ = ["Photometry"]
 
 
 class Photometry(rad.TaggedObjectNode):
-    """
-    Photometry information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/photometry-1.0.0",)

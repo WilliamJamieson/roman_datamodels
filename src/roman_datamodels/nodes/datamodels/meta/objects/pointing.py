@@ -6,10 +6,6 @@ __all__ = ["Pointing"]
 
 
 class Pointing(rad.TaggedObjectNode):
-    """
-    Spacecraft Pointing information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/pointing-1.0.0",)

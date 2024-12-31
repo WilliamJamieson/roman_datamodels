@@ -40,10 +40,6 @@ class EpsfRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
 
 class EpsfRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    ePSF reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/epsf-1.0.0",)

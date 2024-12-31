@@ -21,10 +21,6 @@ class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 
 class SaturationRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Saturation reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/saturation-1.0.0",)

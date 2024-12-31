@@ -20,10 +20,6 @@ class RefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 
 class RefFile(rad.TaggedObjectNode):
-    """
-    Calibration reference file names.
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ref_file-1.0.0",)
