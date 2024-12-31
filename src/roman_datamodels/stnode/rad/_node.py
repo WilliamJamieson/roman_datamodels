@@ -1,11 +1,13 @@
 import warnings
 from abc import ABC
+from collections.abc import Callable
 from enum import Enum
-from typing import Any
+from functools import wraps
+from typing import Any, TypeVar
 
 from asdf import AsdfFile
 
-from ..core import DNode, FlushOptions, LNode, get_config
+from ..core import DNode, FlushOptions, LNode, get_config, type_checked
 from ._base import RadNodeMixin
 from ._utils import get_node_fields
 
@@ -13,7 +15,11 @@ __all__ = [
     "ListNode",
     "ObjectNode",
     "ScalarNode",
+    "field",
+    "field_property",
 ]
+
+T = TypeVar("T")
 
 
 class ObjectNode(DNode, RadNodeMixin, ABC):
@@ -95,3 +101,39 @@ class ScalarNode(RadNodeMixin, ABC):
 
     def __asdf_traverse__(self):
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
+
+
+class field_property(property):
+    """
+    Special subclass of property to mark schema fields out
+    """
+
+
+def field(function: Callable[[DNode], T]) -> field_property:
+    """
+    Create a special property decorator for node methods that does several
+    things:
+        1. Marks them out as `field_property` so that they can be identified as
+           schema fields.
+        2. Wraps the method itself so that it acts a a pure default value
+           producer, using the value in the node before falling back on the method
+           itself to get the default value.
+        3. Adds a type check wrapper method which is only active during certain
+           testing conditions (falling back on a no-op identity decorator when
+           not testing).
+    """
+
+    @wraps(function)
+    def wrapper(self: DNode, *args, **kwargs):
+        """
+        Wrap the function (which is defined on the node) to handle getting the value
+        from the node and then falling back on evaluating the function itself to
+        get, set, and then return the default value.
+        """
+
+        # Note the lambda is used to delay the evaluation of the default value all the way
+        # until the default is actually needed. This is important for things like numpy arrays
+        # which can be expensive to create (memory and time wise).
+        return self._get_node(function.__name__, lambda: type_checked(function)(self, *args, **kwargs))
+
+    return field_property(wrapper)
