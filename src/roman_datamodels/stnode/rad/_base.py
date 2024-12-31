@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from ..core import AsdfNodeMixin, get_config
+from ._asdf_schema import RadSchema
 
 __all__ = ["ArrayFieldMixin", "RadNodeMixin"]
 
@@ -12,8 +13,13 @@ class RadNodeMixin(AsdfNodeMixin, ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_schema(cls) -> dict:
+    def asdf_schema(cls) -> RadSchema:
         """Get the schema in rad for this class."""
+
+    @classmethod
+    def fill_docs(cls) -> None:
+        """Fill in the docstrings for the class."""
+        cls.__doc__ = cls.asdf_schema().docstring
 
 
 class ArrayFieldMixin(ABC):

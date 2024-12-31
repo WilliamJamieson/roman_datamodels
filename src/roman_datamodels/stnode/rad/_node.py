@@ -28,6 +28,14 @@ class ObjectNode(DNode, RadNodeMixin, ABC):
         """List of required fields in this node."""
         return cls.asdf_schema().required
 
+    @classmethod
+    def fill_docs(cls) -> None:
+        super().fill_docs()
+
+        # Add field docstrings
+        for name, schema in cls.asdf_schema().fields.items():
+            getattr(cls, name).__doc__ = schema.docstring
+
     def flush(self, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False, recurse: bool = False) -> None:
         """
         Flush out the object.
