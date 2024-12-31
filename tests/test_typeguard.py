@@ -7,7 +7,7 @@ from roman_datamodels.stnode import core, rad
 from roman_datamodels.testing import assert_node_equal
 
 
-class TypeguardExample:
+class TypeguardExample(core.DNode):
     @rad.field
     def good(self) -> int:
         """This should not raise an error"""
