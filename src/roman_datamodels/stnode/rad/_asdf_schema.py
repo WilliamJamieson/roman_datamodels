@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import ChainMap
 from itertools import chain
+from textwrap import indent
 from typing import Generic, TypeVar
 
 from ..core import NodeKeyMixin, get_config
@@ -28,6 +29,25 @@ class RadSchema(NodeKeyMixin, Generic[S]):
     def schema(self) -> S:
         """Access schema, so its read-only"""
         return self._schema
+
+    @property
+    def title(self) -> str:
+        """Title of the schema"""
+        return self.schema.get("title", "")
+
+    @property
+    def description(self) -> str:
+        """Description of the schema"""
+        return self.schema.get("description", "")
+
+    @property
+    def docstring(self) -> str:
+        """Generate a docstring from the schema"""
+        docstring = f"{self.title}"
+        if self.description:
+            docstring += f"\n\n{indent(self.description, '    ')}"
+
+        return docstring
 
     def __repr__(self) -> str:
         return repr(self.schema)
