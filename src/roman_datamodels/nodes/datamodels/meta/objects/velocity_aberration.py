@@ -6,10 +6,6 @@ __all__ = ["VelocityAberration"]
 
 
 class VelocityAberration(rad.TaggedObjectNode):
-    """
-    Velocity aberration information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/velocity_aberration-1.0.0",)

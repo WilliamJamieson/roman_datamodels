@@ -20,10 +20,6 @@ class FpsRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 
 class FpsRefFile(rad.TaggedObjectNode):
-    """
-    FPS Calibration reference file names.
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/ref_file-1.0.0",)

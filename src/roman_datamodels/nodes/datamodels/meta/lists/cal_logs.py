@@ -8,10 +8,6 @@ __all__ = ["CalLogs"]
 
 
 class CalLogs(rad.TaggedListNode):
-    """
-    Calibration log message
-    """
-
     @classmethod
     def default(cls) -> CalLogs:
         return cls(

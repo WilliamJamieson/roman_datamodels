@@ -10,10 +10,6 @@ __all__ = ["FpsGroundtest"]
 
 
 class FpsGroundtest(rad.TaggedObjectNode):
-    """
-    FPS Ground test description.
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/groundtest-1.0.0",)

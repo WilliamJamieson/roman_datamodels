@@ -10,10 +10,6 @@ __all__ = ["Exposure"]
 
 
 class Exposure(rad.TaggedObjectNode):
-    """
-    Exposure information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/exposure-1.0.0",)

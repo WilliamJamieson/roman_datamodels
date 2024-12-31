@@ -8,10 +8,6 @@ __all__ = ["TvacGuidestar"]
 
 
 class TvacGuidestar(rad.TaggedObjectNode):
-    """
-    Tvac Guidestar information
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/guidestar-1.0.0",)

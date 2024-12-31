@@ -9,10 +9,6 @@ __all__ = ["MosaicBasic"]
 
 
 class MosaicBasic(rad.TaggedObjectNode):
-    """
-    Basic mosaic metadata keywords
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_basic-1.0.0",)

@@ -29,8 +29,6 @@ class AssociationsExptypeEntry(AssociationsExptypeEntryMixin, rad.RadEnum, metac
 
 
 class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
-    """The members of an association"""
-
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations_Products
@@ -49,8 +47,6 @@ class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 
 class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
-    """The products of an association"""
-
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations
@@ -65,10 +61,6 @@ class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 
 class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Association table
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",)

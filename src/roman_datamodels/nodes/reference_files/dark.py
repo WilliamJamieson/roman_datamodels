@@ -76,10 +76,6 @@ class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExpos
 
 
 class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Dark reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0",)

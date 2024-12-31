@@ -21,8 +21,6 @@ __all__ = ["WfiImage"]
 
 
 class WfiImage_Meta(rad.ImpliedNodeMixin, Common):
-    """Common metadata for WfiImage"""
-
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImage
@@ -65,10 +63,6 @@ class WfiImage_Meta(rad.ImpliedNodeMixin, Common):
 
 
 class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Wfi level 2 image information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_image-1.0.0",)

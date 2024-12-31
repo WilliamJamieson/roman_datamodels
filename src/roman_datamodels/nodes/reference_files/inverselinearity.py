@@ -29,10 +29,6 @@ class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 
 class InverselinearityRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Inverse linearity correction reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/inverselinearity-1.0.0",)

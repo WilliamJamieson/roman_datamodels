@@ -22,10 +22,6 @@ class OriginMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
 
 
 class Origin(OriginMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Organization responsible for creating file
-    """
-
     STSCI = "STSCI"
     STSCI_SOC = "STSCI/SOC"
     IPAC_SSC = "IPAC/SSC"

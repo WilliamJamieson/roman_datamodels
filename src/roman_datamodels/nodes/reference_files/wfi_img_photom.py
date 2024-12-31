@@ -62,10 +62,6 @@ class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode, rad.ImpliedNodeMi
 
 
 class WfiImgPhotomRef(rad.TaggedObjectNode):
-    """
-    WFI imaging photometric flux conversion data model
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/wfi_img_photom-1.0.0",)

@@ -28,10 +28,6 @@ class ResampleWeightTypeEntry(ResampleWeightTypeEntryMixin, rad.RadEnum, metacla
 
 
 class Resample(rad.TaggedObjectNode):
-    """
-    Resample information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/resample-1.0.0",)

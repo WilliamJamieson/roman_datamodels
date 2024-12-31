@@ -29,10 +29,6 @@ class LinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 
 class LinearityRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Linearity correction reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/linearity-1.0.0",)

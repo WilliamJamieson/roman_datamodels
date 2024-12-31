@@ -10,10 +10,6 @@ class FpsWfiDetectorMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
 
 
 class FpsWfiDetector(FpsWfiDetectorMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    WFI Detector
-    """
-
     WFI01 = "WFI01"
     WFI02 = "WFI02"
     WFI03 = "WFI03"

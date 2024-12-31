@@ -11,10 +11,6 @@ __all__ = ["TvacExposure"]
 
 
 class TvacExposure(rad.TaggedObjectNode):
-    """
-    Tvac Exposure information
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure-1.0.0",)

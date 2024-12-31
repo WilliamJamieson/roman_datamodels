@@ -74,10 +74,6 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
 
 
 class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    WFI Level 3 mosaics data
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mosaic-1.0.0",)

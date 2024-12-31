@@ -30,10 +30,6 @@ class DistortionRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
 
 class DistortionRef(rad.TaggedObjectNode):
-    """
-    Distortion reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/distortion-1.0.0",)

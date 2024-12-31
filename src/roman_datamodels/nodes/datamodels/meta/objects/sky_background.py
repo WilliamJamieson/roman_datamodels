@@ -31,10 +31,6 @@ class SkyBackgroundMethodEntry(SkyBackgroundMethodEntryMixin, rad.RadEnum, metac
 
 
 class SkyBackground(rad.TaggedObjectNode):
-    """
-    Sky Background Information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/sky_background-1.0.0",)

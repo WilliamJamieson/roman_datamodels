@@ -6,10 +6,6 @@ __all__ = ["MosaicAssociations"]
 
 
 class MosaicAssociations(rad.TaggedObjectNode):
-    """
-    Mosaic associations metadata keywords
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_associations-1.0.0",)

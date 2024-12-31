@@ -10,10 +10,6 @@ __all__ = ["Guidestar"]
 
 
 class Guidestar(rad.TaggedObjectNode):
-    """
-    Guidestar information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidestar-1.0.0",)
@@ -25,7 +21,6 @@ class Guidestar(rad.TaggedObjectNode):
                 "asdf://stsci.edu/datamodels/roman/tags/guidestar-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/guidestar-1.0.0"
             }
         )
-        return "asdf://stsci.edu/datamodels/roman/tags/guidestar-1.0.0"
 
     @rad.field
     def guide_window_id(self) -> str:

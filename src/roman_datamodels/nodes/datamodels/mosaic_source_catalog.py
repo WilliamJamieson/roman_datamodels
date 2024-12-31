@@ -33,10 +33,6 @@ class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
 
 
 class MosaicSourceCatalog(rad.TaggedObjectNode):
-    """
-    Photometry and astrometry computed by the Source Catalog Step
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_source_catalog-1.0.0",)

@@ -8,10 +8,6 @@ __all__ = ["PrdVersion"]
 
 
 class PrdVersion(str, rad.TaggedScalarNode):
-    """
-    S&OC PRD version number used in data processing
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/prd_version-1.0.0",)

@@ -20,10 +20,6 @@ class IpcRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
 
 class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    IPC kernel reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ipc-1.0.0",)

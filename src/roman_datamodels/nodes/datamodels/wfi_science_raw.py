@@ -21,10 +21,6 @@ class WfiScienceRaw_Meta(rad.ImpliedNodeMixin, Common):
 
 
 class WfiScienceRaw(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    Basic Roman Raw Science
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_science_raw-1.0.0",)

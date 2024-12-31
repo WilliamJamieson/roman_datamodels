@@ -8,10 +8,6 @@ __all__ = ["FpsFilename"]
 
 
 class FpsFilename(str, rad.TaggedScalarNode):
-    """
-    Name of the file for the model
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/tagged_scalars/filename-1.0.0",)

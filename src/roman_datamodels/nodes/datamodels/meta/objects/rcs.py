@@ -75,10 +75,6 @@ class RcsLedEntry(RcsLedEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
 
 
 class Rcs(rad.TaggedObjectNode):
-    """
-    Relative Calibration System Information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/rcs-1.0.0",)

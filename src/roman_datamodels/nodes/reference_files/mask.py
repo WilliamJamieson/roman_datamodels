@@ -20,10 +20,6 @@ class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 
 class MaskRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
-    """
-    DQ Mask reference schema
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/mask-1.0.0",)

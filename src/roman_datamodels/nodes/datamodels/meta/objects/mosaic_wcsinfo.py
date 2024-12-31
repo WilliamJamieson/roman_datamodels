@@ -24,10 +24,6 @@ class MosaicWcsinfoProjectionEntry(MosaicWcsinfoProjectionEntryMixin, rad.RadEnu
 
 
 class MosaicWcsinfo(rad.TaggedObjectNode):
-    """
-    Mosaic WCS parameters
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_wcsinfo-1.0.0",)

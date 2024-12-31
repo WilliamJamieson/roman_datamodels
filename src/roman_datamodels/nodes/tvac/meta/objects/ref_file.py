@@ -20,10 +20,6 @@ class TvacRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 
 class TvacRefFile(rad.TaggedObjectNode):
-    """
-    Tvac Calibration reference file names.
-    """
-
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/ref_file-1.0.0",)

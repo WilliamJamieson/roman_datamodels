@@ -22,10 +22,6 @@ class FpsOriginMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
 
 
 class FpsOrigin(FpsOriginMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Organization responsible for creating file
-    """
-
     STSCI = "STSCI"
     IPAC_SSC = "IPAC/SSC"
 

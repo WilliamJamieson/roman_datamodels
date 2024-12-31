@@ -37,10 +37,6 @@ class ProgramSubcategoryEntry(ProgramSubcategoryEntryMixin, rad.RadEnum, metacla
 
 
 class Program(rad.TaggedObjectNode):
-    """
-    Program information
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/program-1.0.0",)

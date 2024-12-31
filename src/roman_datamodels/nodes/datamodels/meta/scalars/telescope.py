@@ -22,10 +22,6 @@ class TelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
 
 
 class Telescope(TelescopeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Telescope used to acquire the data
-    """
-
     ROMAN = "ROMAN"
 
     @classmethod

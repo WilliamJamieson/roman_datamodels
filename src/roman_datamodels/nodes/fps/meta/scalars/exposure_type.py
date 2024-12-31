@@ -10,10 +10,6 @@ class FpsExposureTypeMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
 
 
 class FpsExposureType(FpsExposureTypeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Exposure type
-    """
-
     WFI_IMAGE = "WFI_IMAGE"
     WFI_GRISM = "WFI_GRISM"
     WFI_PRISM = "WFI_PRISM"
