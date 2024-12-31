@@ -32,32 +32,32 @@ class FpsCommon(FpsCommonMixin, FpsBasic):
 
     @rad.field
     def cal_step(self) -> FpsCalStep:
-        return self._get_node("cal_step", FpsCalStep)
+        return FpsCalStep()
 
     @rad.field
     def exposure(self) -> FpsExposure:
-        return self._get_node("exposure", FpsExposure)
+        return FpsExposure()
 
     @rad.field
     def guidestar(self) -> FpsGuidestar:
-        return self._get_node("guidestar", FpsGuidestar)
+        return FpsGuidestar()
 
     @rad.field
     def instrument(self) -> FpsWfiMode:
-        return self._get_node("instrument", FpsWfiMode)
+        return FpsWfiMode()
 
     @rad.field
     def ref_file(self) -> FpsRefFile:
-        return self._get_node("ref_file", FpsRefFile)
+        return FpsRefFile()
 
     @rad.field
     def hdf5_meta(self) -> core.DNode:
-        return self._get_node("hdf5_meta", lambda: core.DNode({"test": rad.NOSTR}))
+        return core.DNode({"test": rad.NOSTR})
 
     @rad.field
     def hdf5_telemetry(self) -> str:
-        return self._get_node("hdf5_telemetry", lambda: rad.NOSTR)
+        return rad.NOSTR
 
     @rad.field
     def gw_meta(self) -> core.DNode:
-        return self._get_node("gw_meta", lambda: core.DNode({"test": rad.NOSTR}))
+        return core.DNode({"test": rad.NOSTR})

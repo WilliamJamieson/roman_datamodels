@@ -24,8 +24,8 @@ class MosaicAssociations(rad.TaggedObjectNode):
 
     @rad.field
     def pool_name(self) -> str:
-        return self._get_node("pool_name", lambda: rad.NOSTR)
+        return rad.NOSTR
 
     @rad.field
     def table_name(self) -> str:
-        return self._get_node("table_name", lambda: rad.NOSTR)
+        return rad.NOSTR

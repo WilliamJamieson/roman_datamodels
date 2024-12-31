@@ -12,11 +12,11 @@ class RefExposureTypeRef_Exposure(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def type(self) -> ExposureType:
-        return self._get_node("type", lambda: ExposureType.WFI_IMAGE)
+        return ExposureType.WFI_IMAGE
 
     @rad.field
     def p_exptype(self) -> str:
-        return self._get_node("p_exptype", lambda: "WFI_IMAGE|WFI_GRISM|WFI_PRISM|")
+        return "WFI_IMAGE|WFI_GRISM|WFI_PRISM|"
 
 
 class RefExposureTypeRef(rad.SchemaObjectNode):
@@ -26,4 +26,4 @@ class RefExposureTypeRef(rad.SchemaObjectNode):
 
     @rad.field
     def exposure(self) -> RefExposureTypeRef_Exposure:
-        return self._get_node("exposure", RefExposureTypeRef_Exposure)
+        return RefExposureTypeRef_Exposure()

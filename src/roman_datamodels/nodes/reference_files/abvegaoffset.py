@@ -15,7 +15,7 @@ class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.ABVEGAOFFSET)
+        return RefTypeEntry.ABVEGAOFFSET
 
 
 class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
@@ -25,7 +25,7 @@ class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def abvega_offset(self) -> float | None:
-        return self._get_node("abvega_offset", lambda: rad.NONUM)
+        return rad.NONUM
 
 
 class AbvedgaoffsetRef_Data_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
@@ -61,11 +61,8 @@ class AbvegaoffsetRef(rad.TaggedObjectNode):
 
     @rad.field
     def meta(self) -> AbvegaoffsetRef_Meta:
-        return self._get_node("meta", AbvegaoffsetRef_Meta)
+        return AbvegaoffsetRef_Meta()
 
     @rad.field
     def data(self) -> AbvedgaoffsetRef_Data_PatternNode[str, AbvegaoffsetRef_Data]:
-        def _default():
-            return AbvedgaoffsetRef_Data_PatternNode({element: AbvegaoffsetRef_Data() for element in OPTICAL_ELEMENTS})
-
-        return self._get_node("data", _default)
+        return AbvedgaoffsetRef_Data_PatternNode({element: AbvegaoffsetRef_Data() for element in OPTICAL_ELEMENTS})

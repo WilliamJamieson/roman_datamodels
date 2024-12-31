@@ -26,16 +26,16 @@ class L3CalStep(rad.TaggedObjectNode):
 
     @rad.field
     def flux(self) -> CalStepEntry:
-        return self._get_node("flux", lambda: CalStepEntry.INCOMPLETE)
+        return CalStepEntry.INCOMPLETE
 
     @rad.field
     def outlier_detection(self) -> CalStepEntry:
-        return self._get_node("outlier_detection", lambda: CalStepEntry.INCOMPLETE)
+        return CalStepEntry.INCOMPLETE
 
     @rad.field
     def skymatch(self) -> CalStepEntry:
-        return self._get_node("skymatch", lambda: CalStepEntry.INCOMPLETE)
+        return CalStepEntry.INCOMPLETE
 
     @rad.field
     def resample(self) -> CalStepEntry:
-        return self._get_node("resample", lambda: CalStepEntry.INCOMPLETE)
+        return CalStepEntry.INCOMPLETE

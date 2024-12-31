@@ -12,7 +12,7 @@ class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def optical_element(self) -> WfiOpticalElement:
-        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
+        return WfiOpticalElement.F158
 
 
 class RefOpticalElementRef(rad.SchemaObjectNode):
@@ -22,4 +22,4 @@ class RefOpticalElementRef(rad.SchemaObjectNode):
 
     @rad.field
     def instrument(self) -> RefOpticalElementRef_Instrument:
-        return self._get_node("instrument", RefOpticalElementRef_Instrument)
+        return RefOpticalElementRef_Instrument()

@@ -29,39 +29,39 @@ class WfiImage_Meta(rad.ImpliedNodeMixin, Common):
 
     @rad.field
     def background(self) -> SkyBackground:
-        return self._get_node("background", SkyBackground)
+        return SkyBackground()
 
     @rad.field
     def cal_logs(self) -> CalLogs:
-        return self._get_node("cal_logs", CalLogs.default)
+        return CalLogs.default()
 
     @rad.field
     def cal_step(self) -> L2CalStep:
-        return self._get_node("cal_step", L2CalStep)
+        return L2CalStep()
 
     @rad.field
     def outlier_detection(self) -> OutlierDetection:
-        return self._get_node("outlier_detection", OutlierDetection)
+        return OutlierDetection()
 
     @rad.field
     def photometry(self) -> Photometry:
-        return self._get_node("photometry", Photometry)
+        return Photometry()
 
     @rad.field
     def source_catalog(self) -> SourceCatalog:
-        return self._get_node("source_catalog", SourceCatalog)
+        return SourceCatalog()
 
     @rad.field
     def statistics(self) -> Statistics:
-        return self._get_node("statistics", Statistics)
+        return Statistics()
 
     @rad.field
     def wcs(self) -> WCS | None:
-        return self._get_node("wcs", rad.Wcs)
+        return rad.Wcs()
 
     @rad.field
     def wcsinfo(self) -> Wcsinfo:
-        return self._get_node("wcsinfo", Wcsinfo)
+        return Wcsinfo()
 
 
 class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -104,73 +104,65 @@ class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> WfiImage_Meta:
-        return self._get_node("meta", WfiImage_Meta)
+        return WfiImage_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def dq(self) -> np.ndarray:
-        return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))
+        return np.zeros(self.array_shape, dtype=np.uint32)
 
     @rad.field
     def err(self) -> np.ndarray:
-        return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_poisson(self) -> np.ndarray:
-        return self._get_node("var_poisson", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_rnoise(self) -> np.ndarray:
-        return self._get_node("var_rnoise", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_flat(self) -> np.ndarray:
-        return self._get_node("var_flat", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def amp33(self) -> np.ndarray:
-        return self._get_node("amp33", lambda: np.zeros((self._n_groups, self.array_shape[0], 128), dtype=np.uint16))
+        return np.zeros((self._n_groups, self.array_shape[0], 128), dtype=np.uint16)
 
     @rad.field
     def border_ref_pix_left(self) -> np.ndarray:
-        return self._get_node(
-            "border_ref_pix_left", lambda: np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
-        )
+        return np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
 
     @rad.field
     def border_ref_pix_right(self) -> np.ndarray:
-        return self._get_node(
-            "border_ref_pix_right", lambda: np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
-        )
+        return np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
 
     @rad.field
     def border_ref_pix_top(self) -> np.ndarray:
-        return self._get_node(
-            "border_ref_pix_top", lambda: np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
-        )
+        return np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
 
     @rad.field
     def border_ref_pix_bottom(self) -> np.ndarray:
         # I think it should be 4, self.array_shape[1] + 8
-        return self._get_node(
-            "border_ref_pix_bottom", lambda: np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
-        )
+        return np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
 
     @rad.field
     def dq_border_ref_pix_left(self) -> np.ndarray:
-        return self._get_node("dq_border_ref_pix_left", lambda: np.zeros((self.array_shape[0] + 8, 4), dtype=np.uint32))
+        return np.zeros((self.array_shape[0] + 8, 4), dtype=np.uint32)
 
     @rad.field
     def dq_border_ref_pix_right(self) -> np.ndarray:
-        return self._get_node("dq_border_ref_pix_right", lambda: np.zeros((self.array_shape[0] + 8, 4), dtype=np.uint32))
+        return np.zeros((self.array_shape[0] + 8, 4), dtype=np.uint32)
 
     @rad.field
     def dq_border_ref_pix_top(self) -> np.ndarray:
-        return self._get_node("dq_border_ref_pix_top", lambda: np.zeros((4, self.array_shape[1] + 8), dtype=np.uint32))
+        return np.zeros((4, self.array_shape[1] + 8), dtype=np.uint32)
 
     @rad.field
     def dq_border_ref_pix_bottom(self) -> np.ndarray:
-        return self._get_node("dq_border_ref_pix_bottom", lambda: np.zeros((4, self.array_shape[1] + 8), dtype=np.uint32))
+        return np.zeros((4, self.array_shape[1] + 8), dtype=np.uint32)

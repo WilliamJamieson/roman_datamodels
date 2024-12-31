@@ -16,7 +16,7 @@ class IpcRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.IPC)
+        return RefTypeEntry.IPC
 
 
 class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -46,13 +46,10 @@ class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> IpcRef_Meta:
-        return self._get_node("meta", IpcRef_Meta)
+        return IpcRef_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        def _default():
-            data = np.zeros(self.array_shape, dtype=np.float32)
-            data[int(np.floor(self.array_shape[0] / 2))][int(np.floor(self.array_shape[1] / 2))] = 1.0
-            return data
-
-        return self._get_node("data", _default)
+        data = np.zeros(self.array_shape, dtype=np.float32)
+        data[int(np.floor(self.array_shape[0] / 2))][int(np.floor(self.array_shape[1] / 2))] = 1.0
+        return data

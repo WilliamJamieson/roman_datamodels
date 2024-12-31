@@ -23,23 +23,23 @@ class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
 
     @rad.field
     def optical_element(self) -> WfiOpticalElement:
-        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
+        return WfiOpticalElement.F158
 
     @rad.field
     def exposure(self) -> Exposure:
-        return self._get_node("exposure", Exposure)
+        return Exposure()
 
     @rad.field
     def photometry(self) -> Photometry:
-        return self._get_node("photometry", Photometry)
+        return Photometry()
 
     @rad.field
     def program(self) -> Program:
-        return self._get_node("program", Program)
+        return Program()
 
     @rad.field
     def visit(self) -> Visit:
-        return self._get_node("visit", Visit)
+        return Visit()
 
 
 class ImageSourceCatalog(rad.TaggedObjectNode):
@@ -61,8 +61,8 @@ class ImageSourceCatalog(rad.TaggedObjectNode):
 
     @rad.field
     def meta(self) -> ImageSourceCatalog_Meta:
-        return self._get_node("meta", ImageSourceCatalog_Meta)
+        return ImageSourceCatalog_Meta()
 
     @rad.field
     def source_catalog(self) -> Table:
-        return self._get_node("source_catalog", lambda: Table([range(3), range(3)], names=["a", "b"]))
+        return Table([range(3), range(3)], names=["a", "b"])

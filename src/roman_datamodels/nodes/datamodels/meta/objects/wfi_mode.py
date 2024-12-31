@@ -38,7 +38,7 @@ class WfiModeMixin(core.AdditionalNodeMixin):
     _GRATING_OPTICAL_ELEMENTS: ClassVar = {"GRISM", "PRISM"}
 
     @property
-    def filter(self):
+    def filter(self) -> WfiOpticalElement | None:
         """
         Returns the filter if it is one, otherwise None
         """
@@ -48,7 +48,7 @@ class WfiModeMixin(core.AdditionalNodeMixin):
             return self.optical_element
 
     @property
-    def grating(self):
+    def grating(self) -> WfiOpticalElement | None:
         """
         Returns the grating if it is one, otherwise None
         """
@@ -77,12 +77,12 @@ class WfiMode(WfiModeMixin, rad.TaggedObjectNode):
 
     @rad.field
     def name(self) -> InstrumentNameEntry:
-        return self._get_node("name", lambda: InstrumentNameEntry.WFI)
+        return InstrumentNameEntry.WFI
 
     @rad.field
     def detector(self) -> WfiDetector:
-        return self._get_node("detector", lambda: WfiDetector.WFI01)
+        return WfiDetector.WFI01
 
     @rad.field
     def optical_element(self) -> WfiOpticalElement:
-        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
+        return WfiOpticalElement.F158

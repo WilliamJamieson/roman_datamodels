@@ -24,16 +24,16 @@ class Statistics(rad.TaggedObjectNode):
 
     @rad.field
     def zodiacal_light(self) -> float:
-        return self._get_node("zodiacal_light", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def image_median(self) -> float:
-        return self._get_node("image_median", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def image_rms(self) -> float:
-        return self._get_node("image_rms", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def good_pixel_fraction(self) -> float:
-        return self._get_node("good_pixel_fraction", lambda: rad.NONUM)
+        return rad.NONUM

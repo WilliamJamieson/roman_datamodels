@@ -16,7 +16,7 @@ class FlatRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.FLAT)
+        return RefTypeEntry.FLAT
 
 
 class FlatRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -46,16 +46,16 @@ class FlatRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> FlatRef_Meta:
-        return self._get_node("meta", FlatRef_Meta)
+        return FlatRef_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def dq(self) -> np.ndarray:
-        return self._get_node("dq", lambda: np.zeros(self.array_shape, dtype=np.uint32))
+        return np.zeros(self.array_shape, dtype=np.uint32)
 
     @rad.field
     def err(self) -> np.ndarray:
-        return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)

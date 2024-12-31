@@ -24,4 +24,4 @@ class OutlierDetection(rad.TaggedObjectNode):
 
     @rad.field
     def good_bits(self) -> str:
-        return self._get_node("good_bits", lambda: "NA")
+        return "NA"

@@ -17,11 +17,11 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def pixelarea_steradians(self) -> u.Quantity | None:
-        return self._get_node("pixelarea_steradians", lambda: float(rad.NONUM) * u.sr)
+        return float(rad.NONUM) * u.sr
 
     @rad.field
     def pixelarea_arcsecsq(self) -> u.Quantity | None:
-        return self._get_node("pixelarea_arcsecsq", lambda: float(rad.NONUM) * u.arcsec**2)
+        return float(rad.NONUM) * u.arcsec**2
 
 
 class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
@@ -31,11 +31,11 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.AREA)
+        return RefTypeEntry.AREA
 
     @rad.field
     def photometry(self) -> PixelareaRef_Meta_Photometry:
-        return self._get_node("photometry", PixelareaRef_Meta_Photometry)
+        return PixelareaRef_Meta_Photometry()
 
 
 class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -65,8 +65,8 @@ class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> PixelareaRef_Meta:
-        return self._get_node("meta", PixelareaRef_Meta)
+        return PixelareaRef_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)

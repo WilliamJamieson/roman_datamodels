@@ -18,15 +18,15 @@ class DistortionRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.DISTORTION)
+        return RefTypeEntry.DISTORTION
 
     @rad.field
     def input_units(self) -> u.UnitBase:
-        return self._get_node("input_units", lambda: u.pixel)
+        return u.pixel
 
     @rad.field
     def output_units(self) -> u.UnitBase:
-        return self._get_node("output_units", lambda: u.arcsec)
+        return u.arcsec
 
 
 class DistortionRef(rad.TaggedObjectNode):
@@ -48,8 +48,8 @@ class DistortionRef(rad.TaggedObjectNode):
 
     @rad.field
     def meta(self) -> DistortionRef_Meta:
-        return self._get_node("meta", DistortionRef_Meta)
+        return DistortionRef_Meta()
 
     @rad.field
     def coordinate_distortion_transform(self) -> Model:
-        return self._get_node("coordinate_distortion_transform", lambda: Shift(1) & Shift(2))
+        return Shift(1) & Shift(2)

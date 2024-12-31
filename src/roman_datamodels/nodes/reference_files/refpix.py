@@ -17,15 +17,15 @@ class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.REFPIX)
+        return RefTypeEntry.REFPIX
 
     @rad.field
     def input_units(self) -> u.UnitBase:
-        return self._get_node("input_units", lambda: u.DN)
+        return u.DN
 
     @rad.field
     def output_units(self) -> u.UnitBase:
-        return self._get_node("output_units", lambda: u.DN)
+        return u.DN
 
 
 class RefpixRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -59,16 +59,16 @@ class RefpixRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> RefpixRef_Meta:
-        return self._get_node("meta", RefpixRef_Meta)
+        return RefpixRef_Meta()
 
     @rad.field
     def gamma(self) -> np.ndarray:
-        return self._get_node("gamma", lambda: np.zeros(self.array_shape, dtype=np.complex128))
+        return np.zeros(self.array_shape, dtype=np.complex128)
 
     @rad.field
     def zeta(self) -> np.ndarray:
-        return self._get_node("zeta", lambda: np.zeros(self.array_shape, dtype=np.complex128))
+        return np.zeros(self.array_shape, dtype=np.complex128)
 
     @rad.field
     def alpha(self) -> np.ndarray:
-        return self._get_node("alpha", lambda: np.zeros(self.array_shape, dtype=np.complex128))
+        return np.zeros(self.array_shape, dtype=np.complex128)

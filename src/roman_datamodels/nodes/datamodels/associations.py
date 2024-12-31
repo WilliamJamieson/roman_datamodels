@@ -37,15 +37,15 @@ class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def expname(self) -> str:
-        return self._get_node("expname", lambda: "file_0")
+        return "file_0"
 
     @rad.field
     def exposerr(self) -> str:
-        return self._get_node("exposerr", lambda: "null")
+        return "null"
 
     @rad.field
     def exptype(self) -> AssociationsExptypeEntry:
-        return self._get_node("exptype", lambda: AssociationsExptypeEntry.SCIENCE)
+        return AssociationsExptypeEntry.SCIENCE
 
 
 class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
@@ -57,11 +57,11 @@ class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def name(self) -> str:
-        return self._get_node("name", lambda: "product0")
+        return "product0"
 
     @rad.field
     def members(self) -> core.LNode[Associations_Products_Members]:
-        return self._get_node("members", lambda: core.LNode([]))
+        return core.LNode([])
 
 
 class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -98,72 +98,66 @@ class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def asn_id(self) -> str:
-        return self._get_node("asn_id", lambda: "o036")
+        return "o036"
 
     @rad.field
     def asn_pool(self) -> str:
-        return self._get_node("asn_pool", lambda: "r00001_20200530t023154_pool")
+        return "r00001_20200530t023154_pool"
 
     @rad.field
     def asn_type(self) -> str:
-        return self._get_node("asn_type", lambda: "image")
+        return "image"
 
     @rad.field
     def asn_rule(self) -> str:
-        return self._get_node("asn_rule", lambda: "candidate_Asn_Lv2Image_i2d")
+        return "candidate_Asn_Lv2Image_i2d"
 
     @rad.field
     def version_id(self) -> str:
-        return self._get_node("version_id", lambda: "null")
+        return "null"
 
     @rad.field
     def code_version(self) -> str:
-        return self._get_node("code_version", lambda: "0.16.2.dev16+g640b0b7")
+        return "0.16.2.dev16+g640b0b7"
 
     @rad.field
     def degraded_status(self) -> str:
-        return self._get_node("degraded_status", lambda: "No known degraded exposures in association.")
+        return "No known degraded exposures in association."
 
     @rad.field
     def program(self) -> int:
-        return self._get_node("program", lambda: 1)
+        return 1
 
     @rad.field
     def target(self) -> int:
-        return self._get_node("target", lambda: 16)
+        return 16
 
     @rad.field
     def constraints(self) -> str:
-        return self._get_node(
-            "constraints",
-            lambda: (
-                "DMSAttrConstraint({'name': 'program', 'sources': ['program'], "
-                "'value': '001'})\nConstraint_TargetAcq({'name': 'target_acq', 'value': "
-                "'target_acquisition'})\nDMSAttrConstraint({'name': 'science', "
-                "'DMSAttrConstraint({'name': 'asn_candidate','sources': "
-                "['asn_candidate'], 'value': \"\\\\('o036',\\\\ 'observation'\\\\)\"})"
-            ),
+        return (
+            "DMSAttrConstraint({'name': 'program', 'sources': ['program'], "
+            "'value': '001'})\nConstraint_TargetAcq({'name': 'target_acq', 'value': "
+            "'target_acquisition'})\nDMSAttrConstraint({'name': 'science', "
+            "'DMSAttrConstraint({'name': 'asn_candidate','sources': "
+            "['asn_candidate'], 'value': \"\\\\('o036',\\\\ 'observation'\\\\)\"})"
         )
 
     # TODO: need to add a rule to extend typeguard to check the argument of the decorator
     #       currently this only checks that it is an LNode
     @rad.field
     def products(self) -> core.LNode[Associations_Products]:
-        def _default():
-            file_idx = 0
-            products = []
-            CHOICES = ["SCIENCE", "CALIBRATION", "ENGINEERING"]
-            for product_idx, members in enumerate(self.array_shape):
-                members_lst = []
-                for member_idx in range(members):
-                    members_lst.append(
-                        Associations_Products_Members(
-                            {"expname": "file_" + str(file_idx) + ".asdf", "exposerr": "null", "exptype": CHOICES[member_idx % 3]}
-                        )
+        file_idx = 0
+        products = []
+        CHOICES = ["SCIENCE", "CALIBRATION", "ENGINEERING"]
+        for product_idx, members in enumerate(self.array_shape):
+            members_lst = []
+            for member_idx in range(members):
+                members_lst.append(
+                    Associations_Products_Members(
+                        {"expname": "file_" + str(file_idx) + ".asdf", "exposerr": "null", "exptype": CHOICES[member_idx % 3]}
                     )
-                    file_idx += 1
-                products.append(Associations_Products({"name": f"product{product_idx}", "members": core.LNode(members_lst)}))
+                )
+                file_idx += 1
+            products.append(Associations_Products({"name": f"product{product_idx}", "members": core.LNode(members_lst)}))
 
-            return core.LNode(products)
-
-        return self._get_node("products", _default)
+        return core.LNode(products)
