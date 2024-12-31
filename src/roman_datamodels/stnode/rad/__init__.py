@@ -1,3 +1,4 @@
+from ..core import field
 from ._asdf_schema import RadSchema
 from ._base import ArrayFieldMixin, RadNodeMixin
 from ._default import NOFN, NOINT, NONUM, NOSTR, Wcs
@@ -10,8 +11,6 @@ from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode, TagMixi
 from ._utils import (
     camel_case_to_snake_case,
     class_name_from_uri,
-    field,
-    field_property,
     get_all_fields,
     get_node_fields,
     get_nodes,
@@ -46,7 +45,6 @@ __all__ = [
     "camel_case_to_snake_case",
     "class_name_from_uri",
     "field",
-    "field_property",
     "get_all_fields",
     "get_node_fields",
     "get_nodes",
