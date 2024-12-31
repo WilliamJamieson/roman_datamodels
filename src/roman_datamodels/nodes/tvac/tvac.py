@@ -20,7 +20,7 @@ class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon):
 
     @rad.field
     def groundtest(self) -> TvacGroundtest:
-        return self._get_node("groundtest", TvacGroundtest)
+        return TvacGroundtest()
 
 
 class Tvac(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -48,62 +48,32 @@ class Tvac(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> Tvac_Meta:
-        return self._get_node("meta", Tvac_Meta)
+        return Tvac_Meta()
 
     @rad.field
     def data(self) -> u.Quantity:
-        return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=u.DN, dtype=np.uint16))
+        return u.Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=u.DN, dtype=np.uint16)
 
     @rad.field
     def amp33(self) -> u.Quantity:
-        return self._get_node(
-            "amp33",
-            lambda: u.Quantity(
-                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
-            ),
-        )
+        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
 
     @rad.field
     def amp33_reset_reads(self) -> u.Quantity:
-        return self._get_node(
-            "amp33_reset_reads",
-            lambda: u.Quantity(
-                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
-            ),
-        )
+        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
 
     @rad.field
     def amp33_reference_read(self) -> u.Quantity:
-        return self._get_node(
-            "amp33_reference_read",
-            lambda: u.Quantity(
-                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
-            ),
-        )
+        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
 
     @rad.field
     def guidewindow(self) -> u.Quantity:
-        return self._get_node(
-            "guidewindow",
-            lambda: u.Quantity(
-                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
-            ),
-        )
+        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
 
     @rad.field
     def reference_read(self) -> u.Quantity:
-        return self._get_node(
-            "reference_read",
-            lambda: u.Quantity(
-                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
-            ),
-        )
+        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
 
     @rad.field
     def reset_reads(self) -> u.Quantity:
-        return self._get_node(
-            "reset_reads",
-            lambda: u.Quantity(
-                np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16
-            ),
-        )
+        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)

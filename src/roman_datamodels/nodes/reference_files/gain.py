@@ -17,7 +17,7 @@ class GainRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.GAIN)
+        return RefTypeEntry.GAIN
 
 
 class GainRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -47,10 +47,8 @@ class GainRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> GainRef_Meta:
-        return self._get_node("meta", GainRef_Meta)
+        return GainRef_Meta()
 
     @rad.field
     def data(self) -> u.Quantity:
-        return self._get_node(
-            "data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.electron / u.DN, dtype=np.float32)
-        )
+        return u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.electron / u.DN, dtype=np.float32)

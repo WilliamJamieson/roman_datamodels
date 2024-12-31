@@ -103,40 +103,40 @@ class Wcsinfo(rad.TaggedObjectNode):
 
     @rad.field
     def aperture_name(self) -> WcsinfoApertureNameEntry:
-        return self._get_node("aperture_name", lambda: WcsinfoApertureNameEntry.WFI01_FULL)
+        return WcsinfoApertureNameEntry.WFI01_FULL
 
     @rad.field
     def pa_aperture(self) -> float:
-        return self._get_node("pa_aperture", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def v2_ref(self) -> float:
-        return self._get_node("v2_ref", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def v3_ref(self) -> float:
-        return self._get_node("v3_ref", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def vparity(self) -> WcsinfoVparityEntry:
-        return self._get_node("vparity", lambda: WcsinfoVparityEntry.REVERSED)
+        return WcsinfoVparityEntry.REVERSED
 
     @rad.field
     def v3yangle(self) -> float:
-        return self._get_node("v3yangle", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def ra_ref(self) -> float:
-        return self._get_node("ra_ref", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def dec_ref(self) -> float:
-        return self._get_node("dec_ref", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def roll_ref(self) -> float:
-        return self._get_node("roll_ref", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def s_region(self) -> str:
-        return self._get_node("s_region", lambda: rad.NOSTR)
+        return rad.NOSTR

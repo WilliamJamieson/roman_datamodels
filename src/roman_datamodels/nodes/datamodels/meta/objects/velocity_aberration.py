@@ -24,12 +24,12 @@ class VelocityAberration(rad.TaggedObjectNode):
 
     @rad.field
     def ra_reference(self) -> float:
-        return self._get_node("ra_reference", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def dec_reference(self) -> float:
-        return self._get_node("dec_reference", lambda: rad.NONUM)
+        return rad.NONUM
 
     @rad.field
     def scale_factor(self) -> float:
-        return self._get_node("scale_factor", lambda: 1.0)
+        return 1.0

@@ -17,7 +17,7 @@ class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.PHOTOM)
+        return RefTypeEntry.PHOTOM
 
 
 class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
@@ -36,15 +36,15 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
 
     @rad.field
     def photmjsr(self) -> u.Quantity | None:
-        return self._get_node("photmjsr", lambda: 1.0e-15 * u.megajansky / u.steradian)
+        return 1.0e-15 * u.megajansky / u.steradian
 
     @rad.field
     def uncertainty(self) -> u.Quantity | None:
-        return self._get_node("uncertainty", lambda: 1.0e-16 * u.megajansky / u.steradian)
+        return 1.0e-16 * u.megajansky / u.steradian
 
     @rad.field
     def pixelareasr(self) -> u.Quantity | None:
-        return self._get_node("pixelareasr", lambda: 1.0e-13 * u.steradian)
+        return 1.0e-13 * u.steradian
 
 
 class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
@@ -80,18 +80,15 @@ class WfiImgPhotomRef(rad.TaggedObjectNode):
 
     @rad.field
     def meta(self) -> WfiImgPhotomRef_Meta:
-        return self._get_node("meta", WfiImgPhotomRef_Meta)
+        return WfiImgPhotomRef_Meta()
 
     # TODO: Add typeguard rule to fully handle this DNode annotation
     @rad.field
     def phot_table(self) -> WfiImgPhotomRef_PhotTable_PatternNode[str, WfiImgPhotomRef_PhotTable]:
-        def _default():
-            table = {}
-            for element in OPTICAL_ELEMENTS:
-                if element in ("GRISM", "PRISM", "DARK"):
-                    table[element] = WfiImgPhotomRef_PhotTable.no_phot()
-                else:
-                    table[element] = WfiImgPhotomRef_PhotTable()
-            return WfiImgPhotomRef_PhotTable_PatternNode(table)
-
-        return self._get_node("phot_table", _default)
+        table = {}
+        for element in OPTICAL_ELEMENTS:
+            if element in ("GRISM", "PRISM", "DARK"):
+                table[element] = WfiImgPhotomRef_PhotTable.no_phot()
+            else:
+                table[element] = WfiImgPhotomRef_PhotTable()
+        return WfiImgPhotomRef_PhotTable_PatternNode(table)

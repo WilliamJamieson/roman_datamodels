@@ -38,4 +38,4 @@ class RefCommonRefOpticalElementRef(RefCommonRef, RefOpticalElementRef):
 
     @rad.field
     def instrument(self) -> RefCommonRefOpticalElementRef_Instrument:
-        return self._get_node("instrument", RefCommonRefOpticalElementRef_Instrument)
+        return RefCommonRefOpticalElementRef_Instrument()

@@ -24,4 +24,4 @@ class SourceCatalog(rad.TaggedObjectNode):
 
     @rad.field
     def tweakreg_catalog_name(self) -> str:
-        return self._get_node("tweakreg_catalog_name", lambda: "catalog")
+        return "catalog"

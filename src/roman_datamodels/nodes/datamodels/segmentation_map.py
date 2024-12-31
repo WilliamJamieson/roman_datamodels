@@ -21,15 +21,15 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
 
     @rad.field
     def optical_element(self) -> WfiOpticalElement:
-        return self._get_node("optical_element", lambda: WfiOpticalElement.F158)
+        return WfiOpticalElement.F158
 
     @rad.field
     def program(self) -> Program:
-        return self._get_node("program", Program)
+        return Program()
 
     @rad.field
     def visit(self) -> Visit:
-        return self._get_node("visit", Visit)
+        return Visit()
 
 
 class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -59,8 +59,8 @@ class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> SegmentationMap_Meta:
-        return self._get_node("meta", SegmentationMap_Meta)
+        return SegmentationMap_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint32))
+        return np.zeros(self.array_shape, dtype=np.uint32)

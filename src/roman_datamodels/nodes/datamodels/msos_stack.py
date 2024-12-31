@@ -16,7 +16,7 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
 
     @rad.field
     def image_list(self) -> str:
-        return self._get_node("image_list", lambda: rad.NOSTR)
+        return rad.NOSTR
 
 
 class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -46,20 +46,20 @@ class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> MsosStack_Meta:
-        return self._get_node("meta", MsosStack_Meta)
+        return MsosStack_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float64))
+        return np.zeros(self.array_shape, dtype=np.float64)
 
     @rad.field
     def uncertainty(self) -> np.ndarray:
-        return self._get_node("uncertainty", lambda: np.zeros(self.array_shape, dtype=np.float64))
+        return np.zeros(self.array_shape, dtype=np.float64)
 
     @rad.field
     def mask(self) -> np.ndarray:
-        return self._get_node("mask", lambda: np.zeros(self.array_shape, dtype=np.uint8))
+        return np.zeros(self.array_shape, dtype=np.uint8)
 
     @rad.field
     def coverage(self) -> np.ndarray:
-        return self._get_node("coverage", lambda: np.zeros(self.array_shape, dtype=np.uint8))
+        return np.zeros(self.array_shape, dtype=np.uint8)

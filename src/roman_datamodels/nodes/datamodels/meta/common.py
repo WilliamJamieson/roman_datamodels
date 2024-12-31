@@ -27,52 +27,52 @@ class Common(Basic):
 
     @rad.field
     def coordinates(self) -> Coordinates:
-        return self._get_node("coordinates", Coordinates)
+        return Coordinates()
 
     @rad.field
     def ephemeris(self) -> Ephemeris:
-        return self._get_node("ephemeris", Ephemeris)
+        return Ephemeris()
 
     @rad.field
     def exposure(self) -> Exposure:
-        return self._get_node("exposure", Exposure)
+        return Exposure()
 
     @rad.field
     def guide_star(self) -> Guidestar:
-        return self._get_node("guide_star", Guidestar)
+        return Guidestar()
 
     @rad.field
     def instrument(self) -> WfiMode:
-        return self._get_node("instrument", WfiMode)
+        return WfiMode()
 
     @rad.field
     def observation(self) -> Observation:
-        return self._get_node("observation", Observation)
+        return Observation()
 
     @rad.field
     def pointing(self) -> Pointing:
-        return self._get_node("pointing", Pointing)
+        return Pointing()
 
     @rad.field
     def program(self) -> Program:
-        return self._get_node("program", Program)
+        return Program()
 
     @rad.field
     def rcs(self) -> Rcs:
-        return self._get_node("rcs", Rcs)
+        return Rcs()
 
     @rad.field
     def ref_file(self) -> RefFile:
-        return self._get_node("ref_file", RefFile)
+        return RefFile()
 
     @rad.field
     def velocity_aberration(self) -> VelocityAberration:
-        return self._get_node("velocity_aberration", VelocityAberration)
+        return VelocityAberration()
 
     @rad.field
     def visit(self) -> Visit:
-        return self._get_node("visit", Visit)
+        return Visit()
 
     @rad.field
     def wcsinfo(self) -> Wcsinfo:
-        return self._get_node("wcsinfo", Wcsinfo)
+        return Wcsinfo()

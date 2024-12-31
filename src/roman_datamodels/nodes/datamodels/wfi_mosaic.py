@@ -30,47 +30,47 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
 
     @rad.field
     def asn(self) -> MosaicAssociations:
-        return self._get_node("asn", MosaicAssociations)
+        return MosaicAssociations()
 
     @rad.field
     def basic(self) -> MosaicBasic:
-        return self._get_node("basic", MosaicBasic)
+        return MosaicBasic()
 
     @rad.field
     def cal_step(self) -> L3CalStep:
-        return self._get_node("cal_step", L3CalStep)
+        return L3CalStep()
 
     @rad.field
     def coordinates(self) -> Coordinates:
-        return self._get_node("coordinates", Coordinates)
+        return Coordinates()
 
     @rad.field
     def individual_image_meta(self) -> IndividualImageMeta:
-        return self._get_node("individual_image_meta", IndividualImageMeta)
+        return IndividualImageMeta()
 
     @rad.field
     def photometry(self) -> Photometry:
-        return self._get_node("photometry", Photometry)
+        return Photometry()
 
     @rad.field
     def program(self) -> Program:
-        return self._get_node("program", Program)
+        return Program()
 
     @rad.field
     def ref_file(self) -> RefFile:
-        return self._get_node("ref_file", RefFile)
+        return RefFile()
 
     @rad.field
     def resample(self) -> Resample:
-        return self._get_node("resample", Resample)
+        return Resample()
 
     @rad.field
     def wcs(self) -> WCS | None:
-        return self._get_node("wcs", rad.Wcs)
+        return rad.Wcs()
 
     @rad.field
     def wcsinfo(self) -> MosaicWcsinfo:
-        return self._get_node("wcsinfo", MosaicWcsinfo)
+        return MosaicWcsinfo()
 
 
 class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -113,36 +113,36 @@ class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> WfiMosaic_Meta:
-        return self._get_node("meta", WfiMosaic_Meta)
+        return WfiMosaic_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def err(self) -> np.ndarray:
-        return self._get_node("err", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def context(self) -> np.ndarray:
-        return self._get_node("context", lambda: np.zeros((self._n_images, *self.array_shape), dtype=np.uint32))
+        return np.zeros((self._n_images, *self.array_shape), dtype=np.uint32)
 
     @rad.field
     def weight(self) -> np.ndarray:
-        return self._get_node("weight", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_poisson(self) -> np.ndarray:
-        return self._get_node("var_poisson", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_rnoise(self) -> np.ndarray:
-        return self._get_node("var_rnoise", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_flat(self) -> np.ndarray:
-        return self._get_node("var_flat", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def cal_logs(self) -> CalLogs:
-        return self._get_node("cal_logs", CalLogs.default)
+        return CalLogs.default()

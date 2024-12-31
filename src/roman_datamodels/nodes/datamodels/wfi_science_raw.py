@@ -47,16 +47,16 @@ class WfiScienceRaw(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> WfiScienceRaw_Meta:
-        return self._get_node("meta", WfiScienceRaw_Meta)
+        return WfiScienceRaw_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint16))
+        return np.zeros(self.array_shape, dtype=np.uint16)
 
     @rad.field
     def amp33(self) -> np.ndarray:
-        return self._get_node("amp33", lambda: np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16))
+        return np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16)
 
     @rad.field
     def resultantdq(self) -> np.ndarray:
-        return self._get_node("resultantdq", lambda: np.zeros(self.array_shape, dtype=np.uint8))
+        return np.zeros(self.array_shape, dtype=np.uint8)

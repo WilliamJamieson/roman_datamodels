@@ -36,52 +36,52 @@ class RefFile(rad.TaggedObjectNode):
 
     @rad.field
     def crds(self) -> RefFile_Crds:
-        return self._get_node("crds", RefFile_Crds)
+        return RefFile_Crds()
 
     @rad.field
     def dark(self) -> str:
-        return self._get_node("dark", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def distortion(self) -> str:
-        return self._get_node("distortion", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def mask(self) -> str:
-        return self._get_node("mask", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def flat(self) -> str:
-        return self._get_node("flat", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def gain(self) -> str:
-        return self._get_node("gain", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def readnoise(self) -> str:
-        return self._get_node("readnoise", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def linearity(self) -> str:
-        return self._get_node("linearity", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def inverse_linearity(self) -> str:
-        return self._get_node("inverse_linearity", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def photom(self) -> str:
-        return self._get_node("photom", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def area(self) -> str:
-        return self._get_node("area", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def saturation(self) -> str:
-        return self._get_node("saturation", lambda: "N/A")
+        return "N/A"
 
     @rad.field
     def refpix(self) -> str:
-        return self._get_node("refpix", lambda: "N/A")
+        return "N/A"

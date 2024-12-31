@@ -91,20 +91,20 @@ class Rcs(rad.TaggedObjectNode):
 
     @rad.field
     def active(self) -> bool:
-        return self._get_node("active", lambda: False)
+        return False
 
     @rad.field
     def electronics(self) -> RcsElectronicsEntry | None:
-        return self._get_node("electronics", lambda: RcsElectronicsEntry.A)
+        return RcsElectronicsEntry.A
 
     @rad.field
     def bank(self) -> RcsBankEntry | None:
-        return self._get_node("bank", lambda: RcsBankEntry.ONE)
+        return RcsBankEntry.ONE
 
     @rad.field
     def led(self) -> RcsLedEntry | None:
-        return self._get_node("led", lambda: RcsLedEntry.ONE)
+        return RcsLedEntry.ONE
 
     @rad.field
     def counts(self) -> int:
-        return self._get_node("counts", lambda: rad.NOINT)
+        return rad.NOINT

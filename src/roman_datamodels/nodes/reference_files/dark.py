@@ -34,23 +34,23 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
 
     @rad.field
     def ngroups(self) -> int:
-        return self._get_node("ngroups", lambda: 6)
+        return 6
 
     @rad.field
     def nframes(self) -> int:
-        return self._get_node("nframes", lambda: 8)
+        return 8
 
     @rad.field
     def groupgap(self) -> int:
-        return self._get_node("groupgap", lambda: 0)
+        return 0
 
     @rad.field
     def ma_table_name(self) -> str:
-        return self._get_node("ma_table_name", lambda: rad.NOSTR)
+        return rad.NOSTR
 
     @rad.field
     def ma_table_number(self) -> int:
-        return self._get_node("ma_table_number", lambda: rad.NOINT)
+        return rad.NOINT
 
 
 class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):
@@ -68,11 +68,11 @@ class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExpos
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.DARK)
+        return RefTypeEntry.DARK
 
     @rad.field
     def exposure(self) -> DarkRef_Meta_Exposure:
-        return self._get_node("exposure", DarkRef_Meta_Exposure)
+        return DarkRef_Meta_Exposure()
 
 
 class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -102,27 +102,20 @@ class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> DarkRef_Meta:
-        return self._get_node("meta", DarkRef_Meta)
+        return DarkRef_Meta()
 
     @rad.field
     def data(self) -> u.Quantity:
-        return self._get_node(
-            "data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), unit=u.DN, dtype=np.float32)
-        )
+        return u.Quantity(np.zeros(self.array_shape, dtype=np.float32), unit=u.DN, dtype=np.float32)
 
     @rad.field
     def dq(self) -> np.ndarray:
-        return self._get_node("dq", lambda: np.zeros(self.array_shape[1:], dtype=np.uint32))
+        return np.zeros(self.array_shape[1:], dtype=np.uint32)
 
     @rad.field
     def dark_slope(self) -> u.Quantity:
-        return self._get_node(
-            "dark_slope", lambda: u.Quantity(np.zeros(self.array_shape[1:], dtype=np.float32), unit=u.DN / u.s, dtype=np.float32)
-        )
+        return u.Quantity(np.zeros(self.array_shape[1:], dtype=np.float32), unit=u.DN / u.s, dtype=np.float32)
 
     @rad.field
     def dark_slope_error(self) -> u.Quantity:
-        return self._get_node(
-            "dark_slope_error",
-            lambda: u.Quantity(np.zeros(self.array_shape[1:], dtype=np.float32), unit=u.DN / u.s, dtype=np.float32),
-        )
+        return u.Quantity(np.zeros(self.array_shape[1:], dtype=np.float32), unit=u.DN / u.s, dtype=np.float32)

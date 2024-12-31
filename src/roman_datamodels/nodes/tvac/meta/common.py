@@ -18,7 +18,7 @@ class TvacCommonMixin(core.AdditionalNodeMixin):
 
     @rad.field
     def statistics(self) -> TvacStatistics:
-        return self._get_node("statistics", TvacStatistics)
+        return TvacStatistics()
 
     @classmethod
     def _extra_fields(self) -> tuple[str]:
@@ -32,32 +32,32 @@ class TvacCommon(TvacCommonMixin, TvacBasic):
 
     @rad.field
     def cal_step(self) -> TvacCalStep:
-        return self._get_node("cal_step", TvacCalStep)
+        return TvacCalStep()
 
     @rad.field
     def exposure(self) -> TvacExposure:
-        return self._get_node("exposure", TvacExposure)
+        return TvacExposure()
 
     @rad.field
     def guidestar(self) -> TvacGuidestar:
-        return self._get_node("guidestar", TvacGuidestar)
+        return TvacGuidestar()
 
     @rad.field
     def instrument(self) -> TvacWfiMode:
-        return self._get_node("instrument", TvacWfiMode)
+        return TvacWfiMode()
 
     @rad.field
     def ref_file(self) -> TvacRefFile:
-        return self._get_node("ref_file", TvacRefFile)
+        return TvacRefFile()
 
     @rad.field
     def hdf5_meta(self) -> core.DNode:
-        return self._get_node("hdf5_meta", lambda: core.DNode({"test": rad.NOSTR}))
+        return core.DNode({"test": rad.NOSTR})
 
     @rad.field
     def hdf5_telemetry(self) -> str:
-        return self._get_node("hdf5_telemetry", lambda: rad.NOSTR)
+        return rad.NOSTR
 
     @rad.field
     def gw_meta(self) -> core.DNode:
-        return self._get_node("gw_meta", lambda: core.DNode({"test": rad.NOSTR}))
+        return core.DNode({"test": rad.NOSTR})

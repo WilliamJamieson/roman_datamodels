@@ -21,7 +21,7 @@ class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
 
     @rad.field
     def reftype(self) -> RefTypeEntry:
-        return self._get_node("reftype", lambda: RefTypeEntry.READNOISE)
+        return RefTypeEntry.READNOISE
 
 
 class ReadnoiseRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -51,8 +51,8 @@ class ReadnoiseRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> ReadnoiseRef_Meta:
-        return self._get_node("meta", ReadnoiseRef_Meta)
+        return ReadnoiseRef_Meta()
 
     @rad.field
     def data(self) -> u.Quantity:
-        return self._get_node("data", lambda: u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.DN, dtype=np.float32))
+        return u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.DN, dtype=np.float32)

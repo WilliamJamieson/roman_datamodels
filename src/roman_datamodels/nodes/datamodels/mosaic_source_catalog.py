@@ -21,15 +21,15 @@ class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
 
     @rad.field
     def basic(self) -> MosaicBasic:
-        return self._get_node("basic", MosaicBasic)
+        return MosaicBasic()
 
     @rad.field
     def photometry(self) -> Photometry:
-        return self._get_node("photometry", Photometry)
+        return Photometry()
 
     @rad.field
     def program(self) -> Program:
-        return self._get_node("program", Program)
+        return Program()
 
 
 class MosaicSourceCatalog(rad.TaggedObjectNode):
@@ -51,8 +51,8 @@ class MosaicSourceCatalog(rad.TaggedObjectNode):
 
     @rad.field
     def meta(self) -> MosaicSourceCatalog_Meta:
-        return self._get_node("meta", MosaicSourceCatalog_Meta)
+        return MosaicSourceCatalog_Meta()
 
     @rad.field
     def source_catalog(self) -> Table:
-        return self._get_node("source_catalog", lambda: Table([range(3), range(3)], names=["a", "b"]))
+        return Table([range(3), range(3)], names=["a", "b"])

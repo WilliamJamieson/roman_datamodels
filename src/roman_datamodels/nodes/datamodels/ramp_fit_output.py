@@ -51,40 +51,40 @@ class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> RampFitOutput_Meta:
-        return self._get_node("meta", RampFitOutput_Meta)
+        return RampFitOutput_Meta()
 
     @rad.field
     def slope(self) -> np.ndarray:
-        return self._get_node("slope", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def sigslope(self) -> np.ndarray:
-        return self._get_node("sigslope", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def yint(self) -> np.ndarray:
-        return self._get_node("yint", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def sigyint(self) -> np.ndarray:
-        return self._get_node("sigyint", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def pedestal(self) -> np.ndarray:
-        return self._get_node("pedestal", lambda: np.zeros(self.array_shape[1:], dtype=np.float32))
+        return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @rad.field
     def weights(self) -> np.ndarray:
-        return self._get_node("weights", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def crmag(self) -> np.ndarray:
-        return self._get_node("crmag", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_poisson(self) -> np.ndarray:
-        return self._get_node("var_poisson", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def var_rnoise(self) -> np.ndarray:
-        return self._get_node("var_rnoise", lambda: np.zeros(self.array_shape, dtype=np.float32))
+        return np.zeros(self.array_shape, dtype=np.float32)

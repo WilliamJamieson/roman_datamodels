@@ -23,48 +23,45 @@ class Basic(rad.SchemaObjectNode):
 
     @rad.field
     def calibration_software_name(self) -> CalibrationSoftwareName:
-        return self._get_node("calibration_software_name", CalibrationSoftwareName.default)
+        return CalibrationSoftwareName.default()
 
     @rad.field
     def calibration_software_version(self) -> CalibrationSoftwareVersion:
-        return self._get_node("calibration_software_version", CalibrationSoftwareVersion.default)
+        return CalibrationSoftwareVersion.default()
 
     @rad.field
     def product_type(self) -> ProductType:
-        return self._get_node("product_type", ProductType.default)
+        return ProductType.default()
 
     @rad.field
     def filename(self) -> Filename:
-        return self._get_node("filename", Filename.default)
+        return Filename.default()
 
     @rad.field
     def file_date(self) -> FileDate:
-        return self._get_node("file_date", FileDate.default)
+        return FileDate.default()
 
     @rad.field
     def model_type(self) -> ModelType:
-        def _default():
-            from roman_datamodels.stnode import RDM_NODE_REGISTRY
+        from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
-            if isinstance(self, rad.ImpliedNodeMixin):
-                return ModelType(RDM_NODE_REGISTRY.node_datamodel_mapping[self.asdf_implied_by()].__name__)
-            else:
-                return ModelType.default()
-
-        return self._get_node("model_type", _default)
+        if isinstance(self, rad.ImpliedNodeMixin):
+            return ModelType(RDM_NODE_REGISTRY.node_datamodel_mapping[self.asdf_implied_by()].__name__)
+        else:
+            return ModelType.default()
 
     @rad.field
     def origin(self) -> Origin:
-        return self._get_node("origin", Origin.default)
+        return Origin.default()
 
     @rad.field
     def prd_version(self) -> PrdVersion:
-        return self._get_node("prd_version", PrdVersion.default)
+        return PrdVersion.default()
 
     @rad.field
     def sdf_software_version(self) -> SdfSoftwareVersion:
-        return self._get_node("sdf_software_version", SdfSoftwareVersion.default)
+        return SdfSoftwareVersion.default()
 
     @rad.field
     def telescope(self) -> Telescope:
-        return self._get_node("telescope", Telescope.default)
+        return Telescope.default()

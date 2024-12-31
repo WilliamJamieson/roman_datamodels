@@ -20,11 +20,11 @@ class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
 
     @rad.field
     def basic(self) -> MosaicBasic:
-        return self._get_node("basic", MosaicBasic)
+        return MosaicBasic()
 
     @rad.field
     def program(self) -> Program:
-        return self._get_node("program", Program)
+        return Program()
 
 
 class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
@@ -54,8 +54,8 @@ class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
 
     @rad.field
     def meta(self) -> MosaicSegmentationMap_Meta:
-        return self._get_node("meta", MosaicSegmentationMap_Meta)
+        return MosaicSegmentationMap_Meta()
 
     @rad.field
     def data(self) -> np.ndarray:
-        return self._get_node("data", lambda: np.zeros(self.array_shape, dtype=np.uint32))
+        return np.zeros(self.array_shape, dtype=np.uint32)

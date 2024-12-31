@@ -45,4 +45,4 @@ class Coordinates(rad.TaggedObjectNode):
 
     @rad.field
     def reference_frame(self) -> CoordinatesReferenceFrameEntry:
-        return self._get_node("reference_frame", lambda: CoordinatesReferenceFrameEntry.ICRS)
+        return CoordinatesReferenceFrameEntry.ICRS

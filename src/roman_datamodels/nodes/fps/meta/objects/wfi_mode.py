@@ -30,12 +30,12 @@ class FpsWfiMode(rad.TaggedObjectNode):
 
     @rad.field
     def name(self) -> InstrumentNameEntry:
-        return self._get_node("name", lambda: InstrumentNameEntry.WFI)
+        return InstrumentNameEntry.WFI
 
     @rad.field
     def detector(self) -> FpsWfiDetector:
-        return self._get_node("detector", lambda: FpsWfiDetector.WFI01)
+        return FpsWfiDetector.WFI01
 
     @rad.field
     def optical_element(self) -> FpsWfiOpticalElement:
-        return self._get_node("optical_element", lambda: FpsWfiOpticalElement.F158)
+        return FpsWfiOpticalElement.F158
