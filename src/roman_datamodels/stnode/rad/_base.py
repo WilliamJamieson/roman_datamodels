@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from textwrap import indent
 
 from ..core import AsdfNodeMixin, get_config
 from ._asdf_schema import RadSchema
@@ -19,7 +20,11 @@ class RadNodeMixin(AsdfNodeMixin, ABC):
     @classmethod
     def fill_docs(cls) -> None:
         """Fill in the docstrings for the class."""
-        cls.__doc__ = cls.asdf_schema().docstring
+        docstring = indent(cls.asdf_schema().docstring, "    ")
+        if cls.__doc__:
+            docstring = f"{cls.__doc__}\n\n{docstring}"
+
+        cls.__doc__ = docstring
 
 
 class ArrayFieldMixin(ABC):

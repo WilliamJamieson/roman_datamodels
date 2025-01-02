@@ -1,3 +1,5 @@
+import sys
+
 from .datamodels import (
     OPTICAL_ELEMENTS,
     Associations,
@@ -294,3 +296,8 @@ __all__ = [
     "WfiOpticalElement",
     "WfiScienceRaw",
 ]
+
+if hasattr(sys, "ps1"):
+    from roman_datamodels.stnode import RDM_NODE_REGISTRY
+
+    RDM_NODE_REGISTRY.fill_docs()
