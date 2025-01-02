@@ -61,13 +61,6 @@ class _RdmNodeRegistry:
             self._object_nodes = MappingProxyType({**get_nodes(ObjectNode, (ObjectNode, SchemaObjectNode, TaggedObjectNode))})
         return self._object_nodes
 
-    def fill_docs(self) -> None:
-        """
-        Fill in the docstrings for all the nodes
-        """
-        for node in self.object_nodes.values():
-            node.fill_docs()
-
     @property
     def list_nodes(self) -> MappingProxyType[str, type]:
         """
@@ -120,6 +113,13 @@ class _RdmNodeRegistry:
                 }
             )
         return self._all_nodes
+
+    def fill_docs(self) -> None:
+        """
+        Fill in the docstrings for all the nodes
+        """
+        for node in self.all_nodes.values():
+            node.fill_docs()
 
     @property
     def datamodels(self) -> MappingProxyType[str, type]:

@@ -13,7 +13,7 @@ from astropy.time import Time
 from gwcs import WCS
 from rad import resources
 
-from roman_datamodels import nodes
+from roman_datamodels import datamodels, nodes
 from roman_datamodels.stnode import core, rad
 
 _RESOURCES_PATH = importlib_resources.files(resources)
@@ -795,3 +795,57 @@ def test_model_type(node_cls):
     model = node_cls()
     if "meta" in model.fields and "model_type" in model.meta.fields:
         assert model.meta.model_type == node_cls.__name__
+
+
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.all_nodes.values())
+def test_node_docstring_empty(node_cls):
+    """
+    Test that the node docstring is correctly set, so that it can be auto-generated
+    from rad schemas if necessary
+    """
+    from roman_datamodels.nodes.datamodels.ramp_fit_output import RampFitOutput_Meta
+    from roman_datamodels.nodes.datamodels.wfi_science_raw import WfiScienceRaw_Meta
+    from roman_datamodels.nodes.reference_files.dark import DarkRef_Meta_Exposure
+
+    # Check the class docstring
+    # Enum doc
+    if issubclass(node_cls, Enum) and not issubclass(node_cls, rad.SchemaScalarNode):
+        assert "Enum" in node_cls.__doc__
+
+    # Special cases that need extra documentation
+    elif node_cls in (RampFitOutput_Meta, WfiScienceRaw_Meta, DarkRef_Meta_Exposure):
+        # Non-empty string
+        assert node_cls.__doc__ and isinstance(node_cls.__doc__, str)
+
+    # Check that the docstring is None for the rest
+    elif not issubclass(node_cls, datamodels.DataModel):
+        assert node_cls.__doc__ is None
+
+    # These should be the datamodels themselves
+    else:
+        assert issubclass(node_cls, datamodels.DataModel)
+        return
+
+    # Check the fields docstrings
+    if issubclass(node_cls, rad.ObjectNode):
+        for field in rad.get_node_fields(node_cls):
+            assert getattr(node_cls, field).__doc__ is None
+
+
+@pytest.mark.order(after="test_node_docstring_empty")
+def test_node_docstring_fill():
+    """
+    Fill all the node docstrings from the schema files
+    -> needs to be a single test to not mess with the empty test
+    -> needs to be run after the empty test
+    """
+    # Fill the docs
+    rad.RDM_NODE_REGISTRY.fill_docs()
+
+    # All the None docs should now be at least an empty string
+    for node_cls in rad.RDM_NODE_REGISTRY.all_nodes.values():
+        assert isinstance(node_cls.__doc__, str)
+
+        if issubclass(node_cls, rad.ObjectNode):
+            for field in rad.get_node_fields(node_cls):
+                assert isinstance(getattr(node_cls, field).__doc__, str)

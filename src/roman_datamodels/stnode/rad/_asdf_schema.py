@@ -33,12 +33,16 @@ class RadSchema(NodeKeyMixin, Generic[S]):
     @property
     def title(self) -> str:
         """Title of the schema"""
-        return self.schema.get("title", "")
+        if isinstance(self.schema, dict):
+            return self.schema.get("title", "")
+        return ""
 
     @property
     def description(self) -> str:
         """Description of the schema"""
-        return self.schema.get("description", "")
+        if isinstance(self.schema, dict):
+            return self.schema.get("description", "")
+        return ""
 
     @property
     def docstring(self) -> str:

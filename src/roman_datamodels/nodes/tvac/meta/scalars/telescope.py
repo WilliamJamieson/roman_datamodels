@@ -8,10 +8,6 @@ __all__ = ["TvacTelescope"]
 
 
 class TvacTelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
-    """
-    Telescope used to acquire the data
-    """
-
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/telescope-1.0.0",)
