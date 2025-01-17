@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from types import MappingProxyType
-from typing import Any
+from typing import Any, TypeVar
 
 from asdf import AsdfFile
 from astropy.time import Time
@@ -15,8 +15,10 @@ __all__ = [
     "TaggedScalarNode",
 ]
 
+_T = TypeVar("_T")
 
-class TagMixin(SchemaMixin, ABC):
+
+class TagMixin(SchemaMixin[_T], ABC):
     """Mixin for nodes to support linking to a tag."""
 
     @classmethod
@@ -34,13 +36,13 @@ class TagMixin(SchemaMixin, ABC):
         return self.asdf_tag_uri()
 
 
-class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):
+class TaggedObjectNode(SchemaObjectNode[_T], TagMixin[_T], ABC):
     """
     Base class for all objects that are tagged in RAD.
     """
 
 
-class TaggedListNode(SchemaListNode, TagMixin, ABC):
+class TaggedListNode(SchemaListNode[_T], TagMixin[_T], ABC):
     """
     Base class for all tagged list nodes defined by RAD
         There will be one of these for any tagged object defined by RAD, which has
@@ -49,7 +51,7 @@ class TaggedListNode(SchemaListNode, TagMixin, ABC):
     """
 
 
-class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
+class TaggedScalarNode(SchemaScalarNode[_T], TagMixin[_T], ABC):
     """
     Base class for all tagged scalars defined by RAD
         There will be one of these for any tagged object defined by RAD, which has

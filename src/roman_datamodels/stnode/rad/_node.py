@@ -19,10 +19,10 @@ __all__ = [
     "field_property",
 ]
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 
-class ObjectNode(DNode, RadNodeMixin, ABC):
+class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
     @classmethod
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
@@ -61,7 +61,7 @@ class ObjectNode(DNode, RadNodeMixin, ABC):
             case FlushOptions.NONE:
                 return
             case FlushOptions.REQUIRED:
-                fields = self.asdf_required()
+                fields = tuple(self.asdf_required())
             case FlushOptions.ALL:
                 fields = get_node_fields(type(self))
             case FlushOptions.EXTRA:
@@ -78,22 +78,22 @@ class ObjectNode(DNode, RadNodeMixin, ABC):
                 if recurse and isinstance(field_value, ObjectNode):
                     field_value.flush(flush=flush, warn=warn, recurse=recurse)
 
-    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
+    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict[str, Any]:
         # Flush out any required fields
         self.flush(flush, warn)
         return super().to_asdf_tree(ctx, flush=flush, warn=warn)
 
-    def __asdf_traverse__(self):
+    def __asdf_traverse__(self) -> dict[str, _T]:
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
 
 
-class ListNode(LNode, RadNodeMixin, ABC):
+class ListNode(LNode[_T], RadNodeMixin[_T], ABC):
     """
     Base class for all list nodes
     """
 
 
-class ScalarNode(RadNodeMixin, ABC):
+class ScalarNode(RadNodeMixin[_T], ABC):
     """
     Base class for all scalars with descriptions in RAD
     -> this is for enums that are not tagged
@@ -107,7 +107,7 @@ class ScalarNode(RadNodeMixin, ABC):
     def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> Any:
         return self.unwrap()
 
-    def __asdf_traverse__(self):
+    def __asdf_traverse__(self) -> Any:
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
 
 
@@ -117,7 +117,7 @@ class field_property(property):
     """
 
 
-def field(function: Callable[[DNode], T]) -> field_property:
+def field(function: Callable[[DNode[_T]], _T]) -> field_property:
     """
     Create a special property decorator for node methods that does several
     things:
@@ -132,7 +132,7 @@ def field(function: Callable[[DNode], T]) -> field_property:
     """
 
     @wraps(function)
-    def wrapper(self: DNode, *args, **kwargs):
+    def wrapper(self: DNode[_T], *args: Any, **kwargs: Any) -> Any:
         """
         Wrap the function (which is defined on the node) to handle getting the value
         from the node and then falling back on evaluating the function itself to
@@ -142,6 +142,12 @@ def field(function: Callable[[DNode], T]) -> field_property:
         # Note the lambda is used to delay the evaluation of the default value all the way
         # until the default is actually needed. This is important for things like numpy arrays
         # which can be expensive to create (memory and time wise).
-        return self._get_node(function.__name__, lambda: type_checked(function)(self, *args, **kwargs))
+        #
+        # MyPy gets a bit confused about the type_checked call around function.
+        # It works correctly, but we bury it in the lambda to avoid execution of
+        # the type_checked function if we don't need it. This greatly improves
+        # the performance when we are creating a lot of nodes for things like
+        # testing.
+        return self._get_node(function.__name__, lambda: type_checked(function)(self, *args, **kwargs))  # type: ignore[return-value, arg-type]
 
     return field_property(wrapper)

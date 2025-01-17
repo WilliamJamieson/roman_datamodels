@@ -64,7 +64,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
 
         self._post_initialize_node()
 
-    def __class_getitem__(cls, item_type: type) -> DNode[_T]:
+    def __class_getitem__(cls, item_type: _T) -> DNode[_T]:
         """Enable type hinting for the class"""
 
         # Annotated for __class_getitem__ does not quite work in MyPy
@@ -109,7 +109,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
 
         return self._field_signatures[key]
 
-    def _wrap_into_node(self, key: str, value: Any | _T, wrap: bool = True) -> _T:
+    def _wrap_into_node(self, key: str, value: Any | _T, wrap: bool = True) -> Any:
         """
         Wrap things into node containers if necessary.
         """
@@ -127,7 +127,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         """
         return self._to_schema_key(key) in self._data
 
-    # Technical Liskov substitution principle violation
+    # Technical Liskov substitution principle violation from MutableMapping
     # -> however in our case our keys are always strings
     def __contains__(self, key: str) -> bool:  # type: ignore[override]
         return self._has_node(key)
@@ -318,7 +318,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
 
     def to_asdf_tree(
         self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False
-    ) -> dict[str, dict[str, Any] | list[Any] | Any | _T | TagMixin]:
+    ) -> dict[str, dict[str, Any] | list[Any] | Any | _T | TagMixin[_T]]:
         from ..rad import TagMixin
 
         return {

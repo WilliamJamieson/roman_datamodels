@@ -1,17 +1,20 @@
 from abc import ABC, abstractmethod
 from inspect import signature
-from typing import get_args
+from typing import TypeVar, get_args
 
 from ._asdf_schema import RadSchema
 from ._base import RadNodeMixin
+from ._schema import SchemaMixin
 from ._utils import camel_case_to_snake_case
 
 __all__ = [
     "ImpliedNodeMixin",
 ]
 
+_T = TypeVar("_T")
 
-class ImpliedNodeMixin(RadNodeMixin, ABC):
+
+class ImpliedNodeMixin(RadNodeMixin[_T], ABC):
     """
     Mixin for nodes that are implied by other nodes.
 
@@ -21,7 +24,7 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_implied_by(cls) -> type:
+    def asdf_implied_by(cls) -> type[SchemaMixin[_T]]:
         """The name of the field that implies this node."""
 
     @classmethod
@@ -34,17 +37,20 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
     def asdf_implied_property(cls) -> property:
         """Get the raw property object that will accept this node"""
 
-        return getattr(cls.asdf_implied_by(), cls.asdf_implied_property_name())
+        implied: property = getattr(cls.asdf_implied_by(), cls.asdf_implied_property_name())
+        return implied
 
     @classmethod
     def asdf_property_container(cls) -> type | None:
         """The container class used by the property that implies this node."""
         from ..core import DNode, LNode
 
-        sig = signature(cls.asdf_implied_property().fget).return_annotation
+        sig = signature(lambda: cls.asdf_implied_property().fget).return_annotation
 
         if args := get_args(sig):
-            container, element = args
+            container: type = args[0]
+            element: type = args[1]
+            # container, element = args
 
             if element is not cls:
                 raise TypeError(f"Expected {cls} to be the element of {container}")

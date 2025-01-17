@@ -4,17 +4,25 @@ Hold all the registry information for the STNode classes.
     whenever they generated.
 """
 
+from __future__ import annotations
+
 from enum import Enum
 from types import MappingProxyType
+from typing import TYPE_CHECKING, TypeVar
 
-from ._base import ArrayFieldMixin
+from ._base import ArrayFieldMixin, RadNodeMixin
 from ._implied import ImpliedNodeMixin
 from ._node import ListNode, ObjectNode, ScalarNode
 from ._schema import SchemaListNode, SchemaMixin, SchemaObjectNode, SchemaScalarNode
 from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode, TagMixin
 from ._utils import get_all_fields, get_nodes
 
+if TYPE_CHECKING:
+    from roman_datamodels.datamodels import DataModel
+
 __all__ = ["RDM_NODE_REGISTRY"]
+
+_T = TypeVar("_T")
 
 
 class _RdmNodeRegistry:
@@ -79,7 +87,7 @@ class _RdmNodeRegistry:
         return self._list_nodes
 
     @property
-    def scalar_nodes(self) -> MappingProxyType[str, type]:
+    def scalar_nodes(self) -> MappingProxyType[str, type[ScalarNode[_T]]]:
         """
         Get a mapping of all the scalar nodes,
             Those are all the nodes that represent a scalar value in the schema.
@@ -95,7 +103,7 @@ class _RdmNodeRegistry:
         return self._scalar_nodes
 
     @property
-    def all_nodes(self) -> MappingProxyType[str, type]:
+    def all_nodes(self) -> MappingProxyType[str, type[RadNodeMixin[_T]]]:
         """
         Get a mapping of all the nodes
 
@@ -122,7 +130,7 @@ class _RdmNodeRegistry:
             node.fill_docs()
 
     @property
-    def datamodels(self) -> MappingProxyType[str, type]:
+    def datamodels(self) -> MappingProxyType[str, type[DataModel]]:
         """
         Get all the datamodels
         """
@@ -134,7 +142,7 @@ class _RdmNodeRegistry:
         return self._datamodels
 
     @property
-    def implied_nodes(self) -> MappingProxyType[str, type]:
+    def implied_nodes(self) -> MappingProxyType[str, type[ImpliedNodeMixin[_T]]]:
         """
         Get a mapping of all the nodes that are implied by the schema in RAD
 
@@ -154,7 +162,7 @@ class _RdmNodeRegistry:
         return self._implied_nodes
 
     @property
-    def enum_nodes(self) -> MappingProxyType[str, type]:
+    def enum_nodes(self) -> MappingProxyType[str, type[Enum]]:
         """
         Get a mapping of all the nodes that are enums
 
@@ -174,7 +182,7 @@ class _RdmNodeRegistry:
         return self._enum_nodes
 
     @property
-    def schema_registry(self) -> MappingProxyType[str, type]:
+    def schema_registry(self) -> MappingProxyType[str, type[SchemaMixin[_T]]]:
         """
         Get a mapping of all the nodes that are described by a schema in RAD
 
@@ -195,7 +203,7 @@ class _RdmNodeRegistry:
         return self._schema_registry
 
     @property
-    def tagged_registry(self) -> MappingProxyType[str, type]:
+    def tagged_registry(self) -> MappingProxyType[str, type[TagMixin[_T]]]:
         """
         Get a mapping of all the nodes that are tagged in
 
@@ -216,7 +224,7 @@ class _RdmNodeRegistry:
         return self._tagged_registry
 
     @property
-    def node_datamodel_mapping(self) -> MappingProxyType[type, type]:
+    def node_datamodel_mapping(self) -> MappingProxyType[type, type[DataModel]]:
         """
         Get a mapping of all the nodes that are datamodels
 

@@ -1,13 +1,19 @@
 from abc import ABC, abstractmethod
 from textwrap import indent
+from typing import TypeVar
 
-from ..core import AsdfNodeMixin, get_config
+from ..core import AsdfNodeMixin, DNode, get_config
 from ._asdf_schema import RadSchema
 
-__all__ = ["ArrayFieldMixin", "RadNodeMixin"]
+__all__ = [
+    "ArrayFieldMixin",
+    "RadNodeMixin",
+]
+
+_T = TypeVar("_T")
 
 
-class RadNodeMixin(AsdfNodeMixin, ABC):
+class RadNodeMixin(AsdfNodeMixin[_T], ABC):
     """
     Mixin for direct interaction with RAD nodes.
     """
@@ -27,10 +33,15 @@ class RadNodeMixin(AsdfNodeMixin, ABC):
         cls.__doc__ = docstring
 
 
-class ArrayFieldMixin(ABC):
+class ArrayFieldMixin(DNode[_T], ABC):
     """
     Mixin for objects that have arrays
     """
+
+    @classmethod
+    @abstractmethod
+    def asdf_required(cls) -> set[str]:
+        """List of required fields in this node."""
 
     @property
     def primary_array_name(self) -> str:
@@ -50,7 +61,8 @@ class ArrayFieldMixin(ABC):
         """Shape of the primary array."""
 
         if self._has_node(name := self.primary_array_name):
-            return getattr(self, name).shape
+            shape: tuple[int, ...] = getattr(self, name).shape
+            return shape
 
         return None
 
@@ -69,7 +81,9 @@ class ArrayFieldMixin(ABC):
         """Shape of the data array."""
 
         if self._has_node("_array_shape"):
-            return self._data["_array_shape"]
+            # MyPy thinks this is the generic type of data in the Node, but
+            # really its always going to be a tuple of ints in this case
+            return self._data["_array_shape"]  # type: ignore[return-value]
 
         if get_config().use_test_array_shape:
             return self.testing_array_shape

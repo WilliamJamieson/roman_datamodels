@@ -1,13 +1,17 @@
 from abc import ABC, ABCMeta, abstractmethod
 from enum import Enum, EnumType
+from typing import TypeVar
 
 from ._asdf_schema import RadSchema
+from ._schema import SchemaMixin
 
 __all__ = [
     "EnumNodeMixin",
     "NodeEnumMeta",
     "RadEnum",
 ]
+
+_T = TypeVar("_T")
 
 
 class EnumNodeMixin(ABC):
@@ -21,7 +25,7 @@ class EnumNodeMixin(ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_container(cls) -> type:
+    def asdf_container(cls) -> type[SchemaMixin[_T]]:
         """
         A class which has a property that evaluates to the enum
         """

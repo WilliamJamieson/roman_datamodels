@@ -1,9 +1,14 @@
+from __future__ import annotations
+
 from inspect import isclass
-from typing import Any, TypeVar, get_args
+from typing import TYPE_CHECKING, Any, TypeVar, get_args
+
+if TYPE_CHECKING:
+    from ._node import ScalarNode
 
 from ..core import AdditionalNodeMixin, DNode, LNode, PatternDNode
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 __all__ = [
     "camel_case_to_snake_case",
@@ -15,13 +20,13 @@ __all__ = [
 ]
 
 
-def class_name_from_uri(uri) -> str:
+def class_name_from_uri(uri: str) -> str:
     """
     Compute the name of the schema from the uri.
 
     Parameters
     ----------
-    uri : str
+    uri
         The uri to find the name from
     """
     name = uri.split("/")[-1].split("-")[0]
@@ -38,7 +43,7 @@ def class_name_from_uri(uri) -> str:
     return name
 
 
-def camel_case_to_snake_case(value) -> str:
+def camel_case_to_snake_case(value: str) -> str:
     """
     Courtesy of https://stackoverflow.com/a/1176023
     """
@@ -53,13 +58,13 @@ def _add_nodes(node: type, nodes: dict[str, type], sub_nodes: dict[str, type], b
 
     Parameters
     ----------
-    node : type
+    node
         The node the sub-nodes are from.
-    nodes : dict[str, type]
+    nodes
         The nodes to add to.
-    sub_nodes : dict[str, type]
+    sub_nodes
         The sub-nodes to add.
-    base_cls : type
+    base_cls
         The base class to start from.
     """
     for name, sub_node in sub_nodes.items():
@@ -75,19 +80,18 @@ def get_nodes(cls: type, filter_types: tuple[type, ...]) -> dict[str, type]:
 
     Parameters
     ----------
-    cls : type
+    cls
         The class to get the nodes from.
-    filter_types : tuple[type]
+    filter_types
         The types to filter out.
 
     Returns
     -------
-    dict[str, type]
         class_name -> class mapping
     """
 
     def _get_nodes(cls: type, base_cls: type, filter_types: tuple[type, ...]) -> dict[str, type]:
-        nodes = {}
+        nodes: dict[str, type] = {}
         for node in cls.__subclasses__():
             _add_nodes(node, nodes, _get_nodes(node, base_cls, filter_types), base_cls)
 
@@ -105,12 +109,11 @@ def get_all_fields(cls: type) -> set[str]:
 
     Parameters
     ----------
-    cls : type
+    cls
         The class to get the fields from.
 
     Returns
     -------
-    set[str]
         The fields of the class.
     """
 
@@ -123,12 +126,11 @@ def _get_mixin_fields(cls: type) -> set[str]:
 
     Parameters
     ----------
-    cls : type
+    cls
         The class to get the mixin fields from.
 
     Returns
     -------
-    set[str]
         The mixin fields of the class.
     """
 
@@ -153,12 +155,11 @@ def get_node_fields(cls: type) -> tuple[str, ...]:
 
     Parameters
     ----------
-    cls : type
+    cls
         The class to get the node fields from.
 
     Returns
     -------
-    tuple[str]
         The node fields of the class.
     """
     from ._registry import RDM_NODE_REGISTRY
@@ -173,20 +174,21 @@ def get_node_fields(cls: type) -> tuple[str, ...]:
     )
 
 
-def wrap_into_node(value: Any, signature: type[T]) -> T:
+def wrap_into_node(
+    value: Any, signature: type[DNode[_T] | LNode[_T] | ScalarNode[_T] | _T]
+) -> DNode[_T] | LNode[_T] | ScalarNode[_T] | _T | Any:
     """
     Wrap things into node containers if necessary.
 
     Parameters
     ----------
-    value : Any
+    value
         The value to coerce.
-    signature : T
+    signature
         A type annotation
 
     Returns
     -------
-    T
         Value wrapped into the node container if T describes a node container.
     """
     from ._node import ScalarNode
@@ -200,7 +202,10 @@ def wrap_into_node(value: Any, signature: type[T]) -> T:
         if issubclass(signature, DNode) or issubclass(signature, LNode) or issubclass(signature, ScalarNode):
             # Skip if we are already the correct type
             if not isinstance(value, signature):
-                return signature(value)
+                # ScalarNode is detected as having no args, it will be
+                # mixed with something that has an initializer that takes
+                # a single argument
+                return signature(value)  # type: ignore[call-arg]
 
     # This is a annotated type
     if args:

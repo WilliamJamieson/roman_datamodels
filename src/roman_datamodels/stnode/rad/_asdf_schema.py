@@ -3,22 +3,19 @@ from __future__ import annotations
 from collections import ChainMap
 from itertools import chain
 from textwrap import indent
-from typing import Generic, TypeVar
+from typing import Any
 
 from ..core import NodeKeyMixin, get_config
-
-S = TypeVar("S", bound=dict)
-
 
 __all__ = ["RadSchema"]
 
 
-class RadSchema(NodeKeyMixin, Generic[S]):
-    def __init__(self, schema: S):
+class RadSchema(NodeKeyMixin):
+    def __init__(self, schema: dict[str, Any]) -> None:
         self._schema = schema
 
     @classmethod
-    def get_schema(cls, uri: str) -> dict:
+    def get_schema(cls, uri: str) -> dict[str, Any]:
         return get_config().get_schema(uri)
 
     @classmethod
@@ -26,7 +23,7 @@ class RadSchema(NodeKeyMixin, Generic[S]):
         return cls(cls.get_schema(uri))
 
     @property
-    def schema(self) -> S:
+    def schema(self) -> dict[str, Any]:
         """Access schema, so its read-only"""
         return self._schema
 
@@ -34,15 +31,21 @@ class RadSchema(NodeKeyMixin, Generic[S]):
     def title(self) -> str:
         """Title of the schema"""
         if isinstance(self.schema, dict):
-            return self.schema.get("title", "")
-        return ""
+            title: str = self.schema.get("title", "")
+            return title
+
+        # Fall back if schema is not a dict
+        return ""  # type: ignore[unreachable]
 
     @property
     def description(self) -> str:
         """Description of the schema"""
         if isinstance(self.schema, dict):
-            return self.schema.get("description", "")
-        return ""
+            description: str = self.schema.get("description", "")
+            return description
+
+        # Fall back if schema is not a dict
+        return ""  # type: ignore[unreachable]
 
     @property
     def docstring(self) -> str:
@@ -56,7 +59,7 @@ class RadSchema(NodeKeyMixin, Generic[S]):
     def __repr__(self) -> str:
         return repr(self.schema)
 
-    def _get_key(self, key: str, schema: S) -> list[S]:
+    def _get_key(self, key: str, schema: dict[str, Any]) -> list[dict[str, Any]]:
         """
         Get the sub-schema for the field
             -> Recursive search the schema for the field
@@ -123,7 +126,7 @@ class RadSchema(NodeKeyMixin, Generic[S]):
         # Fall back and raise an error if we can't find the field
         return []
 
-    def get_key(self, key: str) -> list[S]:
+    def get_key(self, key: str) -> list[dict[str, Any]]:
         """
         Get the sub-schema for the field
             -> Public method to initiate the recursive search

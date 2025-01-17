@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import TypeVar
 
 from ._asdf_schema import RadSchema
 from ._base import RadNodeMixin
@@ -11,8 +12,10 @@ __all__ = [
     "SchemaScalarNode",
 ]
 
+_T = TypeVar("_T")
 
-class SchemaMixin(RadNodeMixin, ABC):
+
+class SchemaMixin(RadNodeMixin[_T], ABC):
     """Mixin for nodes to support linking to a schema."""
 
     @classmethod
@@ -35,19 +38,19 @@ class SchemaMixin(RadNodeMixin, ABC):
         return RadSchema.from_class(cls.asdf_schema_uri())
 
 
-class SchemaObjectNode(ObjectNode, SchemaMixin, ABC):
+class SchemaObjectNode(ObjectNode[_T], SchemaMixin[_T], ABC):
     """
     Base class for all objects described by their own schema in RAD.
     """
 
 
-class SchemaListNode(ListNode, SchemaMixin, ABC):
+class SchemaListNode(ListNode[_T], SchemaMixin[_T], ABC):
     """
     Base class for all list nodes described by their own schema in RAD.
     """
 
 
-class SchemaScalarNode(ScalarNode, SchemaMixin, ABC):
+class SchemaScalarNode(ScalarNode[_T], SchemaMixin[_T], ABC):
     """
     Base class for all scalars that are described by their own schema in RAD.
     """

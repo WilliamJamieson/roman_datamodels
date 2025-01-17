@@ -32,7 +32,7 @@ class LNode(AsdfNodeMixin[_T], UserList[_T]):
         else:
             raise ValueError("Initializer only accepts lists")
 
-    def __class_getitem__(cls, item_type: type) -> LNode[_T]:
+    def __class_getitem__(cls, item_type: _T) -> LNode[_T]:
         """Enable type hinting for the class"""
 
         # Annotated for __class_getitem__ does not quite work in MyPy
@@ -44,7 +44,7 @@ class LNode(AsdfNodeMixin[_T], UserList[_T]):
 
     def to_asdf_tree(
         self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False
-    ) -> list[dict[str, Any] | list[Any] | Any | _T | TagMixin]:
+    ) -> list[dict[str, Any] | list[Any] | Any | _T | TagMixin[_T]]:
         from ..rad import TagMixin
 
         return [

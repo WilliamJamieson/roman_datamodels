@@ -138,14 +138,15 @@ warn_unreachable = true
 module = [
     "asdf.*",
     # "asdf_astropy.*",
-    # "astropy.coordinates.*",
+    "astropy.coordinates.*",
     # "astropy.io.*",
-    # "astropy.modeling.*",
+    "astropy.modeling.*",
     # "astropy.table.*",
     "astropy.time.*",
-    # "astropy.units.*",
+    "astropy.units.*",
     # "astropy.utils.*",
     # "astropy.wcs.*",
+    "gwcs.*",
 ]
 ignore_missing_imports = true
 
@@ -162,7 +163,6 @@ module = [
     "roman_datamodels.table_definitions.*",
     "roman_datamodels.testing.*",
     "roman_datamodels.validate.*",
-    "roman_datamodels.stnode.rad.*",
 ]
 ignore_errors = true
 
