@@ -118,6 +118,54 @@ extend-select = [
     "S101" # Bandit: Use of assert detected (useful public API for testing only)
 ]
 
+[tool.mypy]
+files = "src"
+python_version = "3.11"
+strict = true
+enable_error_code = [
+    "ignore-without-code",
+    "redundant-expr",
+    "truthy-bool",
+]
+warn_unreachable = true
+# exclude = [
+#     'gwcs/tests/$',
+#     'gwcs/converters/tests/$',
+#     'gwcs/coordinate_frames/$',
+# ]
+
+[[tool.mypy.overrides]]
+module = [
+    "asdf.*",
+    # "asdf_astropy.*",
+    # "astropy.coordinates.*",
+    # "astropy.io.*",
+    # "astropy.modeling.*",
+    # "astropy.table.*",
+    "astropy.time.*",
+    # "astropy.units.*",
+    # "astropy.utils.*",
+    # "astropy.wcs.*",
+]
+ignore_missing_imports = true
+
+# For gradual adoption
+[[tool.mypy.overrides]]
+module = [
+    "roman_datamodels._maker_utils.*",
+    "roman_datamodels.datamodels.*",
+    "roman_datamodels.io.*",
+    "roman_datamodels.nodes.*",
+    "roman_datamodels.conftest.*",
+    "roman_datamodels.dqflags.*",
+    "roman_datamodels.maker_utils.*",
+    "roman_datamodels.table_definitions.*",
+    "roman_datamodels.testing.*",
+    "roman_datamodels.validate.*",
+    "roman_datamodels.stnode.rad.*",
+]
+ignore_errors = true
+
 [tool.codespell]
 skip = "*.pdf,*.fits,*.asdf,.tox,build,./tags,.git,docs/_build"
 

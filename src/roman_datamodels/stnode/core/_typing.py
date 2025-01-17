@@ -18,54 +18,54 @@ the test.
 """
 
 import sys
+from collections.abc import Callable
 from functools import wraps
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from ._config import get_config
 
 __all__ = ["type_checked"]
 
 
-_T = TypeVar("_T")
+_Function = TypeVar("_Function", bound=Callable[..., Any])
 
-
-def _type_checked(target: _T, **kwargs) -> _T:
-    """Default identity decorator"""
-    return target if target else typechecked
-
-
-# If pytest is imported start trying to build the typeguard decorator
 if "pytest" in sys.modules:
     try:
-        from typeguard import suppress_type_checks, typechecked
+        import typeguard  # noqa: F401
     except ImportError:
-        # If typeguard is not available, fall back to the identity decorator
-        type_checked = _type_checked
+        _has_typeguard = False
     else:
-        # If typeguard is available, build the decorator
-        def surpress_check(function):
-            """Function wrapper that enables us to turn on/off typeguard checks suppression"""
+        _has_typeguard = True
 
-            @wraps(function)
-            def wrapper(*args, **kwargs):
-                """Pull the global flag to determine if we should suppress type checks"""
 
-                # If typeguard is not enabled, suppress the type checks
-                if not get_config().typeguard_enabled:
-                    with suppress_type_checks():
-                        return function(*args, **kwargs)
+def surpress_check(function: _Function) -> Callable[[_Function], _Function]:
+    """Function wrapper that enables us to turn on/off typeguard checks suppression"""
 
-                # Otherwise do nothing to the function
-                return function(*args, **kwargs)
+    @wraps(function)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        """Pull the global flag to determine if we should suppress type checks"""
 
-            return wrapper
+        if _has_typeguard:
+            from typeguard import suppress_type_checks
 
-        def type_checked(function):
-            """
-            Decorator to check the type annotations on a function
-                This simply strings suppress_check on top of typechecked
-            """
-            return surpress_check(typechecked(function))
-else:
-    # If no pytest, fall back to the identity decorator
-    type_checked = _type_checked
+            # If typeguard is not enabled, suppress the type checks
+            if not get_config().typeguard_enabled:
+                with suppress_type_checks():
+                    return function(*args, **kwargs)
+
+        # Otherwise do nothing to the function
+        return function(*args, **kwargs)
+
+    return wrapper
+
+
+def type_checked(target: _Function, **kwargs: Any) -> Callable[[_Function], _Function]:
+    """Type checking wrapper"""
+
+    if _has_typeguard:
+        from typeguard import typechecked
+
+        return surpress_check(typechecked(target))
+
+    else:
+        return target

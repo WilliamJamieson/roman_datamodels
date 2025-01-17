@@ -3,9 +3,9 @@ from __future__ import annotations
 import datetime
 import re
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Generator, MutableMapping
+from collections.abc import Callable, Generator, Iterator, MutableMapping
 from inspect import signature
-from typing import Annotated, Any, Generic, TypeVar
+from typing import TYPE_CHECKING, Annotated, Any, TypeVar
 
 import numpy as np
 from asdf import AsdfFile
@@ -15,13 +15,16 @@ from astropy.time import Time
 
 from ._mixins import AsdfNodeMixin, FlushOptions
 
+if TYPE_CHECKING:
+    from ..rad import TagMixin
+
 __all__ = [
     "DNode",
     "MissingFieldError",
     "PatternDNode",
 ]
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 
 class MissingFieldError(AttributeError):
@@ -29,15 +32,15 @@ class MissingFieldError(AttributeError):
 
 
 # Once we are >3.11 -> DNode[T] can replace the Generic[T] in the class definition
-class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
+class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
     """
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
 
-    _fields: tuple[str] | None = None
+    _fields: tuple[str, ...] | None = None
     _field_signatures: dict[str, type] | None = None
 
-    def _pre_initialize_node(self, init=None, **kwargs) -> Any:
+    def _pre_initialize_node(self, init: dict[str, Any] | DNode[_T] | None = None, **kwargs: Any) -> Any:
         """Preprocessing for initialization of the node"""
 
         return init
@@ -46,33 +49,35 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """Postprocessing for initialization of the node"""
         pass
 
-    def __init__(self, node=None, **kwargs) -> None:
+    def __init__(self, node: dict[str, Any] | DNode[_T] | None = None, **kwargs: Any) -> None:
         node = self._pre_initialize_node(node, **kwargs)
 
         # Handle if we are passed different data types
         if node is None:
-            self.__dict__["_data"] = {}
+            self._data: dict[str, _T] = {}
         elif isinstance(node, dict | AsdfDictNode):
-            self.__dict__["_data"] = node
+            self._data = node
         elif isinstance(node, DNode):
-            self.__dict__["_data"] = node._data
+            self._data = node._data
         else:
             raise ValueError(f"Initializer only accepts dict-like, not {type(node)}")
 
         self._post_initialize_node()
 
-    def __class_getitem__(cls, item_type: type) -> type[DNode[T]]:
+    def __class_getitem__(cls, item_type: type) -> DNode[_T]:
         """Enable type hinting for the class"""
 
-        return Annotated[cls, item_type]
+        # Annotated for __class_getitem__ does not quite work in MyPy
+        # see python/mypy#11501
+        return Annotated[cls, item_type]  # type: ignore[return-value]
 
     @classmethod
-    def _extra_fields(self) -> tuple[str]:
+    def _extra_fields(self) -> tuple[str, ...]:
         """List of extra fields that are not in the schema."""
         return tuple()
 
     @property
-    def fields(self) -> tuple[str]:
+    def fields(self) -> tuple[str, ...]:
         """
         Get the keys of the node as defined by the schema
             Note this only works on instances
@@ -104,7 +109,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         return self._field_signatures[key]
 
-    def _wrap_into_node(self, key: str, value: Any, wrap: bool = True) -> T:
+    def _wrap_into_node(self, key: str, value: Any | _T, wrap: bool = True) -> _T:
         """
         Wrap things into node containers if necessary.
         """
@@ -122,10 +127,12 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """
         return self._to_schema_key(key) in self._data
 
-    def __contains__(self, key: str) -> bool:
+    # Technical Liskov substitution principle violation
+    # -> however in our case our keys are always strings
+    def __contains__(self, key: str) -> bool:  # type: ignore[override]
         return self._has_node(key)
 
-    def _pull_node(self, key: str, wrap: bool = True) -> T:
+    def _pull_node(self, key: str, wrap: bool = True) -> _T:
         """
         Get a node from the dictionary, wrapping if necessary.
         """
@@ -144,7 +151,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         raise MissingFieldError(f"No such attribute ({key}) found in node")
 
-    def __getattr__(self, key: str) -> T:
+    def __getattr__(self, key: str) -> _T:
         """
         Permit accessing dict keys as attributes, assuming they are legal Python
         variable names.
@@ -156,17 +163,20 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         return self._pull_node(key)
 
-    def __getitem__(self, key: str) -> T:
+    def __getitem__(self, key: str) -> _T:
         """Dictionary style access data"""
         # Try to directly access the attribute
         try:
             return self._pull_node(key)
 
-        except MissingFieldError:
+        except MissingFieldError as err:
             # For lazy nodes, we need to check if the key is in the fields and
             # grab the value from the property
             if self._to_field_key(key) in self.fields:
-                return getattr(self, key)
+                value: _T = getattr(self, key)
+                return value
+
+            raise err
 
     def _check_key(self, key: str) -> bool:
         """
@@ -174,7 +184,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """
         return self._to_schema_key(key) in self._data or self._to_field_key(key) in self.fields
 
-    def _set_node(self, key: str, value: T, check: bool = True, wrap: bool = True) -> None:
+    def _set_node(self, key: str, value: _T, check: bool = True, wrap: bool = True) -> None:
         """
         Attempt to set a value in for the node, wrapping data if necessary.
         """
@@ -187,17 +197,17 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
             self._data[self._to_schema_key(key)] = self._wrap_into_node(key, value, wrap=wrap)
 
-    def __setattr__(self, key: str, value: T) -> None:
+    def __setattr__(self, key: str, value: _T) -> None:
         """
         Permit assigning dict keys as attributes.
         """
         self._set_node(key, value)
 
-    def __setitem__(self, key: str, value: T) -> None:
+    def __setitem__(self, key: str, value: _T) -> None:
         """Dictionary style access set data"""
         self._set_node(key, value, check=False, wrap=False)
 
-    def _get_node(self, key: str, default: Callable[[], T]) -> T:
+    def _get_node(self, key: str, default: Callable[[], _T]) -> _T:
         """
         Get a node and if not found construct it with the default value.
 
@@ -220,15 +230,17 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         return self._pull_node(key)
 
-    def _recursive_items(self) -> Generator[tuple[str, T], None, None]:
+    def _recursive_items(self) -> Generator[tuple[str, _T], None, None]:
         from ._l_node import LNode
 
-        def recurse(tree, path=None):
+        def recurse(tree: Any, path: list[Any] | None = None) -> Generator[tuple[str, _T], None, None]:
             path = path or []  # Avoid mutable default arguments
             if isinstance(tree, DNode | dict | AsdfDictNode):
                 for key, val in tree.items():
                     yield from recurse(val, [*path, key])
-            elif isinstance(tree, LNode | list | tuple | AsdfListNode):
+            # This is actually reacable, but MyPy cannot determine this statically
+            # because we are passing the object itself into the function
+            elif isinstance(tree, LNode | list | tuple | AsdfListNode):  # type: ignore[unreachable]
                 for i, val in enumerate(tree):
                     yield from recurse(val, [*path, i])
             elif tree is not None:
@@ -236,7 +248,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         yield from recurse(self)
 
-    def to_flat_dict(self, include_arrays: bool = True, recursive: bool = False) -> dict[str, T]:
+    def to_flat_dict(self, include_arrays: bool = True, recursive: bool = False) -> dict[str, _T]:
         """
         Returns a dictionary of all of the schema items as a flat dictionary.
 
@@ -248,7 +260,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         """
 
-        def convert_val(val):
+        def convert_val(val: Any) -> Any:
             """
             Unwrap the tagged scalars if necessary.
             """
@@ -267,9 +279,6 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
                 key: convert_val(val) for (key, val) in item_getter() if not isinstance(val, np.ndarray | ndarray.NDArrayType)
             }
 
-    # def items(self) -> Generator[tuple[str, T], None, None]:
-    #     yield from self._recursive_items()
-
     def __len__(self) -> int:
         """Define length of the node"""
         return len(self._data)
@@ -278,7 +287,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         """Dictionary style access delete data"""
         del self._data[self._to_schema_key(key)]
 
-    def __iter__(self) -> iter[dict[str, T]]:
+    def __iter__(self) -> Iterator[str]:
         """Define iteration"""
         return iter(self._data)
 
@@ -296,7 +305,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         keys.sort()
         return repr({key: self._data[key] for key in keys})
 
-    def copy(self) -> DNode:
+    def copy(self) -> DNode[_T]:
         """Handle copying of the node"""
         instance = self.__class__.__new__(self.__class__)
         instance.__dict__.update(self.__dict__.copy())
@@ -304,32 +313,25 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
 
         return instance
 
-    def unwrap(self) -> dict:
+    def unwrap(self) -> dict[str, _T]:
         return dict(self)
 
-    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False) -> dict:
+    def to_asdf_tree(
+        self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False
+    ) -> dict[str, dict[str, Any] | list[Any] | Any | _T | TagMixin]:
         from ..rad import TagMixin
 
-        tree = self.unwrap()
+        return {
+            key: value.to_asdf_tree(ctx, flush=flush, warn=warn)
+            # Only wrap if it is an AsdfNode, but not tagged,
+            # ASDF will handle the tagged objects in the tree
+            # itself
+            if isinstance(value, AsdfNodeMixin) and not isinstance(value, TagMixin)
+            else value
+            for key, value in self.items()
+        }
 
-        for key, value in tree.items():
-            # Wrap the value into node so that it can be written to ASDF correctly
-            value = self._wrap_into_node(key, value)
-            tree[key] = value
-
-            # Leave tagged objects alone, ASDF will take care of them
-            if isinstance(value, TagMixin):
-                continue
-
-            # Recursively convert not-tagged nodes
-            if isinstance(value, AsdfNodeMixin):
-                tree[key] = value.to_asdf_tree(ctx, flush=flush, warn=warn)
-
-            # Don't need to touch anything else
-
-        return tree
-
-    def __asdf_traverse__(self) -> dict[str, T]:
+    def __asdf_traverse__(self) -> dict[str, _T]:
         """Asdf traverse method for things like info/search"""
         return self.unwrap()
 
@@ -341,7 +343,7 @@ class DNode(AsdfNodeMixin, MutableMapping, Generic[T]):
         return self._data == other._data
 
 
-class PatternDNode(DNode, ABC):
+class PatternDNode(DNode[_T], ABC):
     """
     Support for pattern nodes.
     """
@@ -353,7 +355,7 @@ class PatternDNode(DNode, ABC):
         Get the key pattern for the node.
         """
 
-    def _check_key(self, key):
+    def _check_key(self, key: str) -> bool:
         if re.match(self.asdf_key_pattern(), key):
             return True
 

@@ -69,7 +69,7 @@ def _add_nodes(node: type, nodes: dict[str, type], sub_nodes: dict[str, type], b
         nodes[name] = sub_node
 
 
-def get_nodes(cls: type, filter_types: tuple[type]) -> dict[str, type]:
+def get_nodes(cls: type, filter_types: tuple[type, ...]) -> dict[str, type]:
     """
     Get all the nodes from the class. Starting from the base class.
 
@@ -86,7 +86,7 @@ def get_nodes(cls: type, filter_types: tuple[type]) -> dict[str, type]:
         class_name -> class mapping
     """
 
-    def _get_nodes(cls: type, base_cls: type, filter_types: tuple[type]) -> dict[str, type]:
+    def _get_nodes(cls: type, base_cls: type, filter_types: tuple[type, ...]) -> dict[str, type]:
         nodes = {}
         for node in cls.__subclasses__():
             _add_nodes(node, nodes, _get_nodes(node, base_cls, filter_types), base_cls)
@@ -146,7 +146,7 @@ def _get_mixin_fields(cls: type) -> set[str]:
     return mixin_fields
 
 
-def get_node_fields(cls: type) -> tuple[str]:
+def get_node_fields(cls: type) -> tuple[str, ...]:
     """
     Get all the node fields from the class.
         This excludes the reserved fields and mixin fields.
@@ -173,7 +173,7 @@ def get_node_fields(cls: type) -> tuple[str]:
     )
 
 
-def wrap_into_node(value: Any, signature: T) -> T:
+def wrap_into_node(value: Any, signature: type[T]) -> T:
     """
     Wrap things into node containers if necessary.
 

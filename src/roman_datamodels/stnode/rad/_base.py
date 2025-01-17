@@ -46,7 +46,7 @@ class ArrayFieldMixin(ABC):
         raise NotImplementedError("Primary array name not defined")
 
     @property
-    def primary_array_shape(self) -> tuple[int] | None:
+    def primary_array_shape(self) -> tuple[int, ...] | None:
         """Shape of the primary array."""
 
         if self._has_node(name := self.primary_array_name):
@@ -56,16 +56,16 @@ class ArrayFieldMixin(ABC):
 
     @property
     @abstractmethod
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, ...]:
         """Default shape of the data array."""
 
     @property
     @abstractmethod
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, ...]:
         """Shape of the data array for testing."""
 
     @property
-    def array_shape(self) -> tuple[int]:
+    def array_shape(self) -> tuple[int, ...]:
         """Shape of the data array."""
 
         if self._has_node("_array_shape"):

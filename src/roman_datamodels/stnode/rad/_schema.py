@@ -17,7 +17,7 @@ class SchemaMixin(RadNodeMixin, ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def asdf_schema_uris(cls) -> tuple[str, ...]:
         """URI of the schema that defines this node."""
 
     @classmethod

@@ -2,6 +2,7 @@ import copy
 import threading
 from collections.abc import Generator
 from contextlib import contextmanager
+from typing import Any
 
 import asdf
 import yaml
@@ -15,7 +16,7 @@ class _StNodeConfig:
     Class to handle external configuration of StNode objects.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._typeguard_enabled = False
         self._use_test_array_shape = False
         self._asdf_ctx = None
@@ -66,20 +67,22 @@ class _StNodeConfig:
 
         return cls._asdf_config
 
-    def get_schema(self, uri: str) -> dict:
+    def get_schema(self, uri: str) -> dict[str, Any]:
         """
         Get the schema for the given URI
 
         Parameters
         ----------
-        uri : str
+        uri
             The URI of the schema to get
 
         Returns
         -------
         The raw schema dictionary for the given URI
         """
-        return yaml.safe_load(self.asdf_config.resource_manager[uri])
+        # The yaml.safe_load is hinted as Any but really in our case we
+        # expect a dict with string keys
+        return yaml.safe_load(self.asdf_config.resource_manager[uri])  # type: ignore[no-any-return]
 
 
 class _ConfigLocal(threading.local):
@@ -87,9 +90,9 @@ class _ConfigLocal(threading.local):
     Local storage for configuration settings.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.config_stack = []
+        self.config_stack: list[_StNodeConfig] = []
 
 
 _global_config = _StNodeConfig()

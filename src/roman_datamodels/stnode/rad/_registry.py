@@ -33,7 +33,7 @@ class _RdmNodeRegistry:
 
     _node_datamodel_mapping: MappingProxyType[type, type] | None = None
 
-    _reseved_fields: tuple[str] | None = None
+    _reseved_fields: tuple[str, ...] | None = None
 
     def _import_nodes(self) -> None:
         """
@@ -234,7 +234,7 @@ class _RdmNodeRegistry:
         return self._node_datamodel_mapping
 
     @property
-    def reserved_fields(self) -> tuple[str]:
+    def reserved_fields(self) -> tuple[str, ...]:
         """
         Get a tuple of all the names that are reserved from being a field in a node
         due to them being used as properties

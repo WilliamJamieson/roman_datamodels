@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import StrEnum, auto
+from typing import Any, Generic, TypeVar
 
 from asdf import AsdfFile
 
@@ -9,6 +10,8 @@ __all__ = [
     "FlushOptions",
     "NodeKeyMixin",
 ]
+
+_T = TypeVar("_T")
 
 
 class NodeKeyMixin:
@@ -70,15 +73,15 @@ class FlushOptions(StrEnum):
     EXTRA = auto()
 
 
-class AsdfNodeMixin(NodeKeyMixin, ABC):
+class AsdfNodeMixin(NodeKeyMixin, Generic[_T], ABC):
     """Mixin so that Nodes can have an asdf context."""
 
     @abstractmethod
-    def __asdf_traverse__(self):
+    def __asdf_traverse__(self) -> dict[str, _T] | list[_T] | _T:
         """Traverse the object to create the tree for the ASDF file."""
 
     @abstractmethod
-    def unwrap(self):
+    def unwrap(self) -> dict[str, _T] | list[_T] | _T:
         """
         Unwrap the current object into its native Python form.
             -> dict
@@ -91,7 +94,9 @@ class AsdfNodeMixin(NodeKeyMixin, ABC):
         """
 
     @abstractmethod
-    def to_asdf_tree(self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False):
+    def to_asdf_tree(
+        self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False
+    ) -> dict[str, Any] | list[Any] | Any:
         """
         Convert the object into a form that can be written to an ASDF file.
             -> flush out any required fields
