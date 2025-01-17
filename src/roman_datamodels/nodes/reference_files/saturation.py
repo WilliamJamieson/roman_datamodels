@@ -1,7 +1,6 @@
 from types import MappingProxyType
 
 import numpy as np
-from astropy import units as u
 
 from roman_datamodels.stnode import rad
 
@@ -46,8 +45,8 @@ class SaturationRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return SaturationRef_Meta()
 
     @rad.field
-    def data(self) -> u.Quantity:
-        return u.Quantity(np.zeros(self.array_shape, dtype=np.float32), u.DN, dtype=np.float32)
+    def data(self) -> np.ndarray:
+        return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
     def dq(self) -> np.ndarray:

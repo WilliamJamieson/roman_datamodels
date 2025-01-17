@@ -1,7 +1,6 @@
 from types import MappingProxyType
 
 import numpy as np
-from astropy import units as u
 
 from roman_datamodels.stnode import rad
 
@@ -16,12 +15,12 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
         return PixelareaRef_Meta
 
     @rad.field
-    def pixelarea_steradians(self) -> u.Quantity | None:
-        return float(rad.NONUM) * u.sr
+    def pixelarea_steradians(self) -> float | None:
+        return rad.NONUM
 
     @rad.field
-    def pixelarea_arcsecsq(self) -> u.Quantity | None:
-        return float(rad.NONUM) * u.arcsec**2
+    def pixelarea_arcsecsq(self) -> float | None:
+        return rad.NONUM
 
 
 class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):

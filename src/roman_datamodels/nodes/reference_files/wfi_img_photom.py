@@ -1,7 +1,5 @@
 from types import MappingProxyType
 
-from astropy import units as u
-
 from roman_datamodels.stnode import core, rad
 
 from ..datamodels import OPTICAL_ELEMENTS
@@ -35,16 +33,16 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
         )
 
     @rad.field
-    def photmjsr(self) -> u.Quantity | None:
-        return 1.0e-15 * u.megajansky / u.steradian
+    def photmjsr(self) -> float | None:
+        return 1.0e-15
 
     @rad.field
-    def uncertainty(self) -> u.Quantity | None:
-        return 1.0e-16 * u.megajansky / u.steradian
+    def uncertainty(self) -> float | None:
+        return 1.0e-16
 
     @rad.field
-    def pixelareasr(self) -> u.Quantity | None:
-        return 1.0e-13 * u.steradian
+    def pixelareasr(self) -> float | None:
+        return 1.0e-13
 
 
 class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):

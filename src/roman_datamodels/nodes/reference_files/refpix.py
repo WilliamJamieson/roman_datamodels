@@ -1,7 +1,6 @@
 from types import MappingProxyType
 
 import numpy as np
-from astropy import units as u
 
 from roman_datamodels.stnode import rad
 
@@ -18,14 +17,6 @@ class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @rad.field
     def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.REFPIX
-
-    @rad.field
-    def input_units(self) -> u.UnitBase:
-        return u.DN
-
-    @rad.field
-    def output_units(self) -> u.UnitBase:
-        return u.DN
 
 
 class RefpixRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):

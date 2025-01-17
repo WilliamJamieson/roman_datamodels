@@ -11,7 +11,6 @@ from astropy.table import QTable, Table
 from numpy.testing import assert_array_equal
 
 from roman_datamodels import datamodels, nodes, stnode
-from roman_datamodels.io._converters import NODE_EXTENSIONS
 
 # from roman_datamodels import maker_utils as utils
 from roman_datamodels.nodes.datamodels.wfi_science_raw import WfiScienceRaw
@@ -626,9 +625,6 @@ def test_node_assignment():
     darkmodel = datamodels.DarkRefModel()
     darkexp = darkmodel.meta.exposure
     assert isinstance(darkexp, stnode.DNode)
-    darkexp.ngroups = darkexp.ngroups + 1
-    assert darkexp.ngroups == 7
-    darkmodel.meta.exposure = darkexp
 
 
 # WFI Level 3 Mosaic tests

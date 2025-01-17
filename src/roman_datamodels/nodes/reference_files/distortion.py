@@ -1,6 +1,5 @@
 from types import MappingProxyType
 
-from astropy import units as u
 from astropy.modeling import Model
 from astropy.modeling.models import Shift
 
@@ -19,14 +18,6 @@ class DistortionRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
     @rad.field
     def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.DISTORTION
-
-    @rad.field
-    def input_units(self) -> u.UnitBase:
-        return u.pixel
-
-    @rad.field
-    def output_units(self) -> u.UnitBase:
-        return u.arcsec
 
 
 class DistortionRef(rad.TaggedObjectNode):
