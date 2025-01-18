@@ -1,6 +1,8 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
@@ -9,11 +11,14 @@ from .meta import (
     MosaicBasic,
     Program,
 )
+from .meta.basic import _Basic
 
 __all__ = ["MosaicSegmentationMap"]
 
+_MosaicSegmentationMap_Meta: TypeAlias = _Basic | MosaicBasic | Program
 
-class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
+
+class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin[_MosaicSegmentationMap_Meta], Basic[_MosaicSegmentationMap_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MosaicSegmentationMap
@@ -27,7 +32,10 @@ class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
         return Program()
 
 
-class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_MosaicSegmentationMap: TypeAlias = MosaicSegmentationMap_Meta | npt.NDArray[np.uint32]
+
+
+class MosaicSegmentationMap(rad.TaggedObjectNode[_MosaicSegmentationMap], rad.ArrayFieldMixin[_MosaicSegmentationMap]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_segmentation_map-1.0.0",)
@@ -41,11 +49,11 @@ class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @rad.field
@@ -53,5 +61,5 @@ class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return MosaicSegmentationMap_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)

@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["ModelType"]
 
 
-class ModelType(str, rad.TaggedScalarNode):
+class ModelType(str, rad.TaggedScalarNode[str]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/model_type-1.0.0",)

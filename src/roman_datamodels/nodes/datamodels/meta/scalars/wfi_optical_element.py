@@ -6,7 +6,7 @@ __all__ = [
 ]
 
 
-class WfiOpticalElementMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
+class WfiOpticalElementMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_optical_element-1.0.0",)

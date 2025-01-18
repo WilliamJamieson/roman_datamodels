@@ -1,11 +1,15 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
 __all__ = ["Pointing"]
 
 
-class Pointing(rad.TaggedObjectNode):
+_Pointing: TypeAlias = float | str
+
+
+class Pointing(rad.TaggedObjectNode[_Pointing]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/pointing-1.0.0",)

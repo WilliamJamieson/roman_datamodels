@@ -5,7 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["VelocityAberration"]
 
 
-class VelocityAberration(rad.TaggedObjectNode):
+class VelocityAberration(rad.TaggedObjectNode[float]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/velocity_aberration-1.0.0",)

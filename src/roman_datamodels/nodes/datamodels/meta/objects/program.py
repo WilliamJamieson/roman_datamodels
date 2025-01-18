@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -8,7 +9,7 @@ __all__ = [
 ]
 
 
-class ProgramSubcategoryEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class ProgramSubcategoryEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return Program
@@ -36,7 +37,10 @@ class ProgramSubcategoryEntry(ProgramSubcategoryEntryMixin, rad.RadEnum, metacla
     NONE = "None"
 
 
-class Program(rad.TaggedObjectNode):
+_Program: TypeAlias = ProgramSubcategoryEntry | str | int
+
+
+class Program(rad.TaggedObjectNode[_Program]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/program-1.0.0",)

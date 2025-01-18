@@ -1,15 +1,17 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
-from .meta import Common
+from .meta.common import Common, _Common
 
 __all__ = ["RampFitOutput"]
 
 
-class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common):
+class RampFitOutput_Meta(rad.ImpliedNodeMixin[_Common], Common[_Common]):
     """
     The metadata for the RampFitOutput node
     -> only exists so that model_type can be correctly inferred
@@ -20,7 +22,10 @@ class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common):
         return RampFitOutput
 
 
-class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_RampFitOutput: TypeAlias = RampFitOutput_Meta | npt.NDArray[np.float32]
+
+
+class RampFitOutput(rad.TaggedObjectNode[_RampFitOutput], rad.ArrayFieldMixin[_RampFitOutput]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ramp_fit_output-1.0.0",)
@@ -38,11 +43,11 @@ class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return "slope"
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int, int]:
         return (8, 4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
     @rad.field
@@ -50,37 +55,37 @@ class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return RampFitOutput_Meta()
 
     @rad.field
-    def slope(self) -> np.ndarray:
+    def slope(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def sigslope(self) -> np.ndarray:
+    def sigslope(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def yint(self) -> np.ndarray:
+    def yint(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def sigyint(self) -> np.ndarray:
+    def sigyint(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def pedestal(self) -> np.ndarray:
+    def pedestal(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @rad.field
-    def weights(self) -> np.ndarray:
+    def weights(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def crmag(self) -> np.ndarray:
+    def crmag(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_poisson(self) -> np.ndarray:
+    def var_poisson(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_rnoise(self) -> np.ndarray:
+    def var_rnoise(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

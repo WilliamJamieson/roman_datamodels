@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from astropy.time import Time
 
@@ -9,7 +10,10 @@ from ..scalars import GuidewindowModes
 __all__ = ["Guidestar"]
 
 
-class Guidestar(rad.TaggedObjectNode):
+_Guidestar: TypeAlias = GuidewindowModes | Time | int | float | str
+
+
+class Guidestar(rad.TaggedObjectNode[_Guidestar]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidestar-1.0.0",)
@@ -48,11 +52,13 @@ class Guidestar(rad.TaggedObjectNode):
 
     @rad.field
     def window_xstop(self) -> int:
-        return self.window_xstart + self.window_xsize
+        # MyPy cannot determine that these fields are the type defined in type alias
+        return self.window_xstart + self.window_xsize  # type: ignore[no-any-return]
 
     @rad.field
     def window_ystop(self) -> int:
-        return self.window_ystart + self.window_ysize
+        # MyPy cannot determine that these fields are the type defined in type alias
+        return self.window_ystart + self.window_ysize  # type: ignore[no-any-return]
 
     @rad.field
     def window_xsize(self) -> int:

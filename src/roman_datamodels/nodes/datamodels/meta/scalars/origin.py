@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["Origin"]
 
 
-class OriginMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
+class OriginMixin(str, rad.TaggedScalarNode[str], rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/origin-1.0.0",)

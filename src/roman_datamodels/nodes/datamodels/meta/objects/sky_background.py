@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -8,7 +9,7 @@ __all__ = [
 ]
 
 
-class SkyBackgroundMethodEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class SkyBackgroundMethodEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return SkyBackground
@@ -30,7 +31,10 @@ class SkyBackgroundMethodEntry(SkyBackgroundMethodEntryMixin, rad.RadEnum, metac
     GLOBAL = "global"
 
 
-class SkyBackground(rad.TaggedObjectNode):
+_SkyBackground: TypeAlias = SkyBackgroundMethodEntry | float | bool | None
+
+
+class SkyBackground(rad.TaggedObjectNode[_SkyBackground]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/sky_background-1.0.0",)

@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import core, rad
 
@@ -8,7 +9,7 @@ __all__ = [
 ]
 
 
-class AssociationsExptypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class AssociationsExptypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return Associations_Products_Members
@@ -28,7 +29,12 @@ class AssociationsExptypeEntry(AssociationsExptypeEntryMixin, rad.RadEnum, metac
     ENGINEERING = "ENGINEERING"
 
 
-class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
+_Associations_Products_Members: TypeAlias = AssociationsExptypeEntry | str
+
+
+class Associations_Products_Members(
+    rad.ImpliedNodeMixin[_Associations_Products_Members], rad.ObjectNode[_Associations_Products_Members]
+):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations_Products
@@ -46,7 +52,10 @@ class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
         return AssociationsExptypeEntry.SCIENCE
 
 
-class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
+_Associations_Products: TypeAlias = core.LNode[Associations_Products_Members] | str
+
+
+class Associations_Products(rad.ImpliedNodeMixin[_Associations_Products], rad.ObjectNode[_Associations_Products]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations
@@ -60,7 +69,10 @@ class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
         return core.LNode([])
 
 
-class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_Associations: TypeAlias = core.LNode[Associations_Products] | str
+
+
+class Associations(rad.TaggedObjectNode[_Associations], rad.ArrayFieldMixin[_Associations]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",)
@@ -81,11 +93,11 @@ class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return None
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int, int]:
         return (2, 3, 1)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int, int, int]:
         return (3, 8, 5, 2)
 
     @rad.field

@@ -1,6 +1,8 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 from gwcs import WCS
 
 from roman_datamodels.stnode import rad
@@ -19,11 +21,29 @@ from .meta import (
     RefFile,
     Resample,
 )
+from .meta.basic import _Basic
 
 __all__ = ["WfiMosaic"]
 
 
-class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
+_WfiMosaic_Meta: TypeAlias = (
+    _Basic
+    | MosaicAssociations
+    | MosaicBasic
+    | L3CalStep
+    | Coordinates
+    | IndividualImageMeta
+    | Photometry
+    | Program
+    | RefFile
+    | Resample
+    | WCS
+    | MosaicWcsinfo
+    | None
+)
+
+
+class WfiMosaic_Meta(rad.ImpliedNodeMixin[_WfiMosaic_Meta], Basic[_WfiMosaic_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiMosaic
@@ -73,7 +93,10 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
         return MosaicWcsinfo()
 
 
-class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_WfiMosaic: TypeAlias = WfiMosaic_Meta | CalLogs | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | int
+
+
+class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin[_WfiMosaic]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mosaic-1.0.0",)
@@ -87,22 +110,25 @@ class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4088, 4088)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @property
     def _n_images(self) -> int:
         # The number of images in the mosaic comes from the context array
         if self._has_node("context"):
-            return self.context.shape[0]
+            n_images: int = self.context.shape[0]
+            return n_images
 
         # Allow for one to shrink/set the number of images
         if self._has_node("_n_images"):
-            return self._data["_n_images"]
+            # MyPy doesn't allow us to down cast to the specific type
+            # we expect here
+            return self._data["_n_images"]  # type: ignore[return-value]
 
         # default fall-back
         return 2
@@ -112,31 +138,31 @@ class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return WfiMosaic_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def err(self) -> np.ndarray:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def context(self) -> np.ndarray:
+    def context(self) -> npt.NDArray[np.uint32]:
         return np.zeros((self._n_images, *self.array_shape), dtype=np.uint32)
 
     @rad.field
-    def weight(self) -> np.ndarray:
+    def weight(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_poisson(self) -> np.ndarray:
+    def var_poisson(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_rnoise(self) -> np.ndarray:
+    def var_rnoise(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_flat(self) -> np.ndarray:
+    def var_flat(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field

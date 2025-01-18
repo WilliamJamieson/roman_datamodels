@@ -1,25 +1,29 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
 __all__ = ["RefFile"]
 
 
-class RefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
+class RefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefFile
 
     @rad.field
     def version(self) -> str:
-        return self._get_node("version", lambda: "12.3.1")
+        return "12.3.1"
 
     @rad.field
     def context(self) -> str:
-        return self._get_node("context", lambda: "roman_0815.pmap")
+        return "roman_0815.pmap"
 
 
-class RefFile(rad.TaggedObjectNode):
+_RefFile: TypeAlias = RefFile_Crds | str
+
+
+class RefFile(rad.TaggedObjectNode[_RefFile]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ref_file-1.0.0",)

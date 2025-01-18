@@ -1,6 +1,8 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 from gwcs import WCS
 
 from roman_datamodels.stnode import rad
@@ -16,11 +18,27 @@ from .meta import (
     Statistics,
     Wcsinfo,
 )
+from .meta.common import _Common
 
 __all__ = ["WfiImage"]
 
 
-class WfiImage_Meta(rad.ImpliedNodeMixin, Common):
+_WfiImage_Meta: TypeAlias = (
+    _Common
+    | SkyBackground
+    | CalLogs
+    | L2CalStep
+    | OutlierDetection
+    | Photometry
+    | SourceCatalog
+    | Statistics
+    | WCS
+    | Wcsinfo
+    | None
+)
+
+
+class WfiImage_Meta(rad.ImpliedNodeMixin[_WfiImage_Meta], Common[_WfiImage_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImage
@@ -62,7 +80,10 @@ class WfiImage_Meta(rad.ImpliedNodeMixin, Common):
         return Wcsinfo()
 
 
-class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_WfiImage: TypeAlias = WfiImage_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | npt.NDArray[np.uint16]
+
+
+class WfiImage(rad.TaggedObjectNode[_WfiImage], rad.ArrayFieldMixin[_WfiImage]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_image-1.0.0",)
@@ -76,22 +97,25 @@ class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4088, 4088)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @property
     def _n_groups(self) -> int:
         # The number of groups used for the image
         if self._has_node("amp33"):
-            return self.amp33.shape[0]
+            n_groups: int = self.amp33.shape[0]
+            return n_groups
 
         # Allow for one to shrink/set the number of groups
         if self._has_node("_n_groups"):
-            return self._data["_n_groups"]
+            # MyPy doesn't allow us to down cast to the specific type
+            # we expect here
+            return self._data["_n_groups"]  # type: ignore[return-value]
 
         # default fall-back
         return 8
@@ -101,62 +125,62 @@ class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return WfiImage_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def dq(self) -> np.ndarray:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
 
     @rad.field
-    def err(self) -> np.ndarray:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_poisson(self) -> np.ndarray:
+    def var_poisson(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_rnoise(self) -> np.ndarray:
+    def var_rnoise(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def var_flat(self) -> np.ndarray:
+    def var_flat(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def amp33(self) -> np.ndarray:
+    def amp33(self) -> npt.NDArray[np.uint16]:
         return np.zeros((self._n_groups, self.array_shape[0], 128), dtype=np.uint16)
 
     @rad.field
-    def border_ref_pix_left(self) -> np.ndarray:
+    def border_ref_pix_left(self) -> npt.NDArray[np.float32]:
         return np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
 
     @rad.field
-    def border_ref_pix_right(self) -> np.ndarray:
+    def border_ref_pix_right(self) -> npt.NDArray[np.float32]:
         return np.zeros((self._n_groups, self.array_shape[0] + 8, 4), dtype=np.float32)
 
     @rad.field
-    def border_ref_pix_top(self) -> np.ndarray:
+    def border_ref_pix_top(self) -> npt.NDArray[np.float32]:
         return np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
 
     @rad.field
-    def border_ref_pix_bottom(self) -> np.ndarray:
+    def border_ref_pix_bottom(self) -> npt.NDArray[np.float32]:
         # I think it should be 4, self.array_shape[1] + 8
         return np.zeros((self._n_groups, 4, self.array_shape[1] + 8), dtype=np.float32)
 
     @rad.field
-    def dq_border_ref_pix_left(self) -> np.ndarray:
+    def dq_border_ref_pix_left(self) -> npt.NDArray[np.uint32]:
         return np.zeros((self.array_shape[0] + 8, 4), dtype=np.uint32)
 
     @rad.field
-    def dq_border_ref_pix_right(self) -> np.ndarray:
+    def dq_border_ref_pix_right(self) -> npt.NDArray[np.uint32]:
         return np.zeros((self.array_shape[0] + 8, 4), dtype=np.uint32)
 
     @rad.field
-    def dq_border_ref_pix_top(self) -> np.ndarray:
+    def dq_border_ref_pix_top(self) -> npt.NDArray[np.uint32]:
         return np.zeros((4, self.array_shape[1] + 8), dtype=np.uint32)
 
     @rad.field
-    def dq_border_ref_pix_bottom(self) -> np.ndarray:
+    def dq_border_ref_pix_bottom(self) -> npt.NDArray[np.uint32]:
         return np.zeros((4, self.array_shape[1] + 8), dtype=np.uint32)

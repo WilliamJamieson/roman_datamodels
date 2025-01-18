@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["IndividualImageMeta"]
 
 
-class IndividualImageMeta(rad.TaggedObjectNode):
+class IndividualImageMeta(rad.TaggedObjectNode[Table]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/individual_image_meta-1.0.0",)

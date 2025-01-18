@@ -1,6 +1,8 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 from astropy.time import Time
 
 from roman_datamodels.stnode import rad
@@ -9,11 +11,15 @@ from .meta import (
     Common,
     GuidewindowModes,
 )
+from .meta.common import _Common
 
 __all__ = ["Guidewindow"]
 
 
-class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
+_Guidewindow_Meta: TypeAlias = _Common | GuidewindowModes | Time | str | int | float
+
+
+class Guidewindow_Meta(rad.ImpliedNodeMixin[_Guidewindow_Meta], Common[_Guidewindow_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Guidewindow
@@ -72,11 +78,13 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
 
     @rad.field
     def gw_window_xstop(self) -> int:
-        return self.gw_window_xstart + self.gw_window_xsize
+        # MyPy cannot determine that these fields are the type defined in type alias
+        return self.gw_window_xstart + self.gw_window_xsize  # type: ignore[no-any-return]
 
     @rad.field
     def gw_window_ystop(self) -> int:
-        return self.gw_window_xstart + self.gw_window_ysize
+        # MyPy cannot determine that these fields are the type defined in type alias
+        return self.gw_window_xstart + self.gw_window_ysize  # type: ignore[no-any-return]
 
     @rad.field
     def gw_window_xsize(self) -> int:
@@ -87,7 +95,10 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
         return 24
 
 
-class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_Guidewindow: TypeAlias = Guidewindow_Meta | npt.NDArray[np.uint16]
+
+
+class Guidewindow(rad.TaggedObjectNode[_Guidewindow], rad.ArrayFieldMixin[_Guidewindow]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",)
@@ -106,12 +117,12 @@ class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return "signal_frames"
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int, int, int, int]:
         """Default shape of the data array"""
         return (2, 8, 16, 32, 32)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int, int, int, int]:
         """Shape of the data array for testing"""
         return (2, 2, 2, 2, 2)
 
@@ -120,13 +131,13 @@ class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return Guidewindow_Meta()
 
     @rad.field
-    def pedestal_frames(self) -> np.ndarray:
+    def pedestal_frames(self) -> npt.NDArray[np.uint16]:
         return np.zeros(self.array_shape, dtype=np.uint16)
 
     @rad.field
-    def signal_frames(self) -> np.ndarray:
+    def signal_frames(self) -> npt.NDArray[np.uint16]:
         return np.zeros(self.array_shape, dtype=np.uint16)
 
     @rad.field
-    def amp33(self) -> np.ndarray:
+    def amp33(self) -> npt.NDArray[np.uint16]:
         return np.zeros(self.array_shape, dtype=np.uint16)

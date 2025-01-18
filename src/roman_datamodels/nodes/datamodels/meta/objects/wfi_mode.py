@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import ClassVar
+from typing import ClassVar, TypeAlias
 
 from roman_datamodels.stnode import core, rad
 
@@ -8,7 +8,7 @@ from ..scalars import WfiDetector, WfiOpticalElement
 __all__ = ["InstrumentNameEntry", "WfiMode"]
 
 
-class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return WfiMode
@@ -42,23 +42,34 @@ class WfiModeMixin(core.AdditionalNodeMixin):
         """
         Returns the filter if it is one, otherwise None
         """
-        if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
+        # I would add this as an abstract property here, but for some
+        # reason that I can't figure out, it nukes defining it in the sub class
+        element: WfiOpticalElement = self.optical_element  # type: ignore[attr-defined]
+
+        if element in self._GRATING_OPTICAL_ELEMENTS:
             return None
         else:
-            return self.optical_element
+            return element
 
     @property
     def grating(self) -> WfiOpticalElement | None:
         """
         Returns the grating if it is one, otherwise None
         """
-        if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
-            return self.optical_element
+        # I would add this as an abstract property here, but for some
+        # reason that I can't figure out, it nukes defining it in the sub class
+        element: WfiOpticalElement = self.optical_element  # type: ignore[attr-defined]
+
+        if element in self._GRATING_OPTICAL_ELEMENTS:
+            return element
         else:
             return None
 
 
-class WfiMode(WfiModeMixin, rad.TaggedObjectNode):
+_WfiMode: TypeAlias = InstrumentNameEntry | WfiDetector | WfiOpticalElement
+
+
+class WfiMode(WfiModeMixin, rad.TaggedObjectNode[_WfiMode]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mode-1.0.0",)

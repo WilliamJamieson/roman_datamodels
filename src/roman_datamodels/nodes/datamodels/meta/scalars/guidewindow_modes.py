@@ -3,7 +3,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["GuidewindowModes"]
 
 
-class GuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
+class GuidewindowModesMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow_modes-1.0.0",)

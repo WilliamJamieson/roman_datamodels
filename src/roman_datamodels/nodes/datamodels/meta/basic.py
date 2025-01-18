@@ -1,3 +1,5 @@
+from typing import TypeAlias, TypeVar
+
 from roman_datamodels.stnode import rad
 
 from .scalars import (
@@ -15,8 +17,24 @@ from .scalars import (
 
 __all__ = ["Basic"]
 
+# So that when we inherit from this we can include it's parts too
+_T = TypeVar("_T")
 
-class Basic(rad.SchemaObjectNode):
+_Basic: TypeAlias = (
+    CalibrationSoftwareName
+    | CalibrationSoftwareVersion
+    | FileDate
+    | Filename
+    | ModelType
+    | Origin
+    | PrdVersion
+    | ProductType
+    | SdfSoftwareVersion
+    | Telescope
+)
+
+
+class Basic(rad.SchemaObjectNode[_Basic | _T]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/basic-1.0.0",)

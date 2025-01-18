@@ -5,7 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["Statistics"]
 
 
-class Statistics(rad.TaggedObjectNode):
+class Statistics(rad.TaggedObjectNode[float]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/statistics-1.0.0",)

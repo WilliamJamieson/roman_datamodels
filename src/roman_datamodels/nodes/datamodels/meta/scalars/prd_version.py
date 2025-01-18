@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["PrdVersion"]
 
 
-class PrdVersion(str, rad.TaggedScalarNode):
+class PrdVersion(str, rad.TaggedScalarNode[str]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/prd_version-1.0.0",)

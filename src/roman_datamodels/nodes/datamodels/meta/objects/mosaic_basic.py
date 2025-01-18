@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -8,7 +9,10 @@ from .wfi_mode import InstrumentNameEntry
 __all__ = ["MosaicBasic"]
 
 
-class MosaicBasic(rad.TaggedObjectNode):
+_MosaicBasic: TypeAlias = WfiOpticalElement | InstrumentNameEntry | float | int | str
+
+
+class MosaicBasic(rad.TaggedObjectNode[_MosaicBasic]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_basic-1.0.0",)

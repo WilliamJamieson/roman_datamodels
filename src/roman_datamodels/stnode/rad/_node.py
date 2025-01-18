@@ -117,7 +117,7 @@ class field_property(property):
     """
 
 
-def field(function: Callable[[DNode[_T]], _T]) -> field_property:
+def field(function: Callable[[Any], Any]) -> field_property:
     """
     Create a special property decorator for node methods that does several
     things:
@@ -132,7 +132,7 @@ def field(function: Callable[[DNode[_T]], _T]) -> field_property:
     """
 
     @wraps(function)
-    def wrapper(self: DNode[_T], *args: Any, **kwargs: Any) -> Any:
+    def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
         """
         Wrap the function (which is defined on the node) to handle getting the value
         from the node and then falling back on evaluating the function itself to
@@ -143,11 +143,6 @@ def field(function: Callable[[DNode[_T]], _T]) -> field_property:
         # until the default is actually needed. This is important for things like numpy arrays
         # which can be expensive to create (memory and time wise).
         #
-        # MyPy gets a bit confused about the type_checked call around function.
-        # It works correctly, but we bury it in the lambda to avoid execution of
-        # the type_checked function if we don't need it. This greatly improves
-        # the performance when we are creating a lot of nodes for things like
-        # testing.
-        return self._get_node(function.__name__, lambda: type_checked(function)(self, *args, **kwargs))  # type: ignore[return-value, arg-type]
+        return self._get_node(function.__name__, lambda: type_checked(function)(self, *args, **kwargs))
 
     return field_property(wrapper)

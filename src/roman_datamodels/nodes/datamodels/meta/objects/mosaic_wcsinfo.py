@@ -1,11 +1,12 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import core, rad
 
 __all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry"]
 
 
-class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return MosaicWcsinfo
@@ -23,7 +24,10 @@ class MosaicWcsinfoProjectionEntry(MosaicWcsinfoProjectionEntryMixin, rad.RadEnu
     TAN = "TAN"
 
 
-class MosaicWcsinfo(rad.TaggedObjectNode):
+_MosaicWcsinfo: TypeAlias = MosaicWcsinfoProjectionEntry | core.LNode[core.LNode[float]] | core.LNode[int] | float | str
+
+
+class MosaicWcsinfo(rad.TaggedObjectNode[_MosaicWcsinfo]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_wcsinfo-1.0.0",)

@@ -1,15 +1,20 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
-from .meta import Common
+from .meta.common import Common, _Common
 
 __all__ = ["MsosStack"]
 
 
-class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
+_MsosStack_Meta: TypeAlias = _Common | str
+
+
+class MsosStack_Meta(rad.ImpliedNodeMixin[_MsosStack_Meta], Common[_MsosStack_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MsosStack
@@ -19,7 +24,10 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
         return rad.NOSTR
 
 
-class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_MsosStack: TypeAlias = MsosStack_Meta | npt.NDArray[np.float64] | npt.NDArray[np.uint8]
+
+
+class MsosStack(rad.TaggedObjectNode[_MsosStack_Meta], rad.ArrayFieldMixin[_MsosStack]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/msos_stack-1.0.0",)
@@ -33,11 +41,11 @@ class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @rad.field
@@ -45,17 +53,17 @@ class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return MsosStack_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float64]:
         return np.zeros(self.array_shape, dtype=np.float64)
 
     @rad.field
-    def uncertainty(self) -> np.ndarray:
+    def uncertainty(self) -> npt.NDArray[np.float64]:
         return np.zeros(self.array_shape, dtype=np.float64)
 
     @rad.field
-    def mask(self) -> np.ndarray:
+    def mask(self) -> npt.NDArray[np.uint8]:
         return np.zeros(self.array_shape, dtype=np.uint8)
 
     @rad.field
-    def coverage(self) -> np.ndarray:
+    def coverage(self) -> npt.NDArray[np.uint8]:
         return np.zeros(self.array_shape, dtype=np.uint8)

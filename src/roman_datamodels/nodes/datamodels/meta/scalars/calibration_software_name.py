@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["CalibrationSoftwareName"]
 
 
-class CalibrationSoftwareName(str, rad.TaggedScalarNode):
+class CalibrationSoftwareName(str, rad.TaggedScalarNode[str]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/calibration_software_name-1.0.0",)

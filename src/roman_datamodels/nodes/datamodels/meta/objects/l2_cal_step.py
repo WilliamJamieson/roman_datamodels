@@ -5,7 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["CalStepEntry", "L2CalStep"]
 
 
-class CalStepEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class CalStepEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return L2CalStep
@@ -26,7 +26,7 @@ class CalStepEntry(CalStepEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     INCOMPLETE = "INCOMPLETE"
 
 
-class L2CalStep(rad.TaggedObjectNode):
+class L2CalStep(rad.TaggedObjectNode[CalStepEntry]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/l2_cal_step-1.0.0",)

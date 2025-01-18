@@ -1,6 +1,8 @@
+from typing import TypeAlias, TypeVar
+
 from roman_datamodels.stnode import rad
 
-from .basic import Basic
+from .basic import Basic, _Basic
 from .objects import (
     Coordinates,
     Ephemeris,
@@ -20,7 +22,29 @@ from .objects import (
 __all__ = ["Common"]
 
 
-class Common(Basic):
+# So that when we inherit from this we can include it's parts too
+_T = TypeVar("_T")
+
+
+_Common: TypeAlias = (
+    _Basic
+    | Coordinates
+    | Ephemeris
+    | Exposure
+    | Guidestar
+    | Observation
+    | Pointing
+    | Program
+    | Rcs
+    | RefFile
+    | VelocityAberration
+    | Visit
+    | Wcsinfo
+    | WfiMode
+)
+
+
+class Common(Basic[_Common | _T]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/common-1.0.0",)

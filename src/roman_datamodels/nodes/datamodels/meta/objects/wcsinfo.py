@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -9,7 +10,7 @@ __all__ = [
 ]
 
 
-class WcsinfoApertureNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class WcsinfoApertureNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return Wcsinfo
@@ -65,7 +66,7 @@ class WcsinfoApertureNameEntry(WcsinfoApertureNameEntryMixin, rad.RadEnum, metac
     CGI_CEN = "CGI_CEN"
 
 
-class WcsinfoVparityEntryMixin(int, rad.EnumNodeMixin, rad.ScalarNode):
+class WcsinfoVparityEntryMixin(int, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return Wcsinfo
@@ -84,7 +85,10 @@ class WcsinfoVparityEntry(WcsinfoVparityEntryMixin, rad.RadEnum, metaclass=rad.N
     NORMAL = 1
 
 
-class Wcsinfo(rad.TaggedObjectNode):
+_Wcsinfo: TypeAlias = WcsinfoApertureNameEntry | WcsinfoVparityEntry | float | str
+
+
+class Wcsinfo(rad.TaggedObjectNode[_Wcsinfo]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wcsinfo-1.0.0",)

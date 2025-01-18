@@ -8,7 +8,7 @@ __all__ = [
 ]
 
 
-class CoordinatesReferenceFrameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class CoordinatesReferenceFrameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(self) -> type:
         return Coordinates
@@ -26,7 +26,7 @@ class CoordinatesReferenceFrameEntry(CoordinatesReferenceFrameEntryMixin, rad.Ra
     ICRS = "ICRS"
 
 
-class Coordinates(rad.TaggedObjectNode):
+class Coordinates(rad.TaggedObjectNode[CoordinatesReferenceFrameEntry]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/coordinates-1.0.0",)

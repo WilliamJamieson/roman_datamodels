@@ -141,7 +141,7 @@ module = [
     "astropy.coordinates.*",
     # "astropy.io.*",
     "astropy.modeling.*",
-    # "astropy.table.*",
+    "astropy.table.*",
     "astropy.time.*",
     "astropy.units.*",
     # "astropy.utils.*",
@@ -156,13 +156,15 @@ module = [
     "roman_datamodels._maker_utils.*",
     "roman_datamodels.datamodels.*",
     "roman_datamodels.io.*",
-    "roman_datamodels.nodes.*",
     "roman_datamodels.conftest.*",
     "roman_datamodels.dqflags.*",
     "roman_datamodels.maker_utils.*",
     "roman_datamodels.table_definitions.*",
     "roman_datamodels.testing.*",
     "roman_datamodels.validate.*",
+    "roman_datamodels.nodes.fps.*",
+    "roman_datamodels.nodes.reference_files.*",
+    "roman_datamodels.nodes.tvac.*",
 ]
 ignore_errors = true
 

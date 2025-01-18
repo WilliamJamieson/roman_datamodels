@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -10,7 +11,7 @@ __all__ = [
 ]
 
 
-class RcsElectronicsEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class RcsElectronicsEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return Rcs
@@ -30,7 +31,7 @@ class RcsElectronicsEntry(RcsElectronicsEntryMixin, rad.RadEnum, metaclass=rad.N
     NONE = "None"
 
 
-class RcsBankEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class RcsBankEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return Rcs
@@ -50,7 +51,7 @@ class RcsBankEntry(RcsBankEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     NONE = "None"
 
 
-class RcsLedEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class RcsLedEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return Rcs
@@ -74,7 +75,10 @@ class RcsLedEntry(RcsLedEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     NONE = "None"
 
 
-class Rcs(rad.TaggedObjectNode):
+_Rcs: TypeAlias = RcsElectronicsEntry | RcsBankEntry | RcsLedEntry | int | bool | None
+
+
+class Rcs(rad.TaggedObjectNode[_Rcs]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/rcs-1.0.0",)

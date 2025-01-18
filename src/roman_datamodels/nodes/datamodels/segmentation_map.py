@@ -1,6 +1,8 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
@@ -10,11 +12,15 @@ from .meta import (
     Visit,
     WfiOpticalElement,
 )
+from .meta.basic import _Basic
 
 __all__ = ["SegmentationMap"]
 
 
-class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
+_SegmentationMap_Meta: TypeAlias = _Basic | Program | Visit | WfiOpticalElement
+
+
+class SegmentationMap_Meta(rad.ImpliedNodeMixin[_SegmentationMap_Meta], Basic[_SegmentationMap_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SegmentationMap
@@ -32,7 +38,10 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
         return Visit()
 
 
-class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_SegmentationMap: TypeAlias = SegmentationMap_Meta | npt.NDArray[np.uint32]
+
+
+class SegmentationMap(rad.TaggedObjectNode[_SegmentationMap], rad.ArrayFieldMixin[_SegmentationMap]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/segmentation_map-1.0.0",)
@@ -46,11 +55,11 @@ class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @rad.field
@@ -58,5 +67,5 @@ class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return SegmentationMap_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
