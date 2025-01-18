@@ -7,7 +7,7 @@ from ....datamodels import CalStepEntry
 __all__ = ["FpsCalStep"]
 
 
-class FpsCalStep(rad.TaggedObjectNode):
+class FpsCalStep(rad.TaggedObjectNode[CalStepEntry]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/cal_step-1.0.0",)

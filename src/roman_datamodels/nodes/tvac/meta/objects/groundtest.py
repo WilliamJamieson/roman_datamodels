@@ -1,8 +1,10 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
-from astropy import units as u
+import numpy.typing as npt
 from astropy.time import Time
+from astropy.units import A, K, Quantity, V, cm, ms, nm
 
 from roman_datamodels.stnode import core, rad
 
@@ -13,13 +15,13 @@ __all__ = [
 ]
 
 
-class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
-    def asdf_container(cls):
+    def asdf_container(cls) -> type:
         return TvacGroundtest
 
     @classmethod
-    def asdf_property_name(cls):
+    def asdf_property_name(cls) -> str:
         return "gsorc_sds_dq_pulse"
 
 
@@ -32,13 +34,13 @@ class TvacGroundtestGsorcSdsDqPulseEntry(TvacGroundtestGsorcSdsDqPulseEntryMixin
     CW = "cw"
 
 
-class TvacGroundtestWfiOptTargettypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class TvacGroundtestWfiOptTargettypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
-    def asdf_container(cls):
+    def asdf_container(cls) -> type:
         return TvacGroundtest
 
     @classmethod
-    def asdf_property_name(cls):
+    def asdf_property_name(cls) -> str:
         return "wfi_opt_targettype"
 
 
@@ -68,7 +70,20 @@ class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMix
     STRAY_LIGHT = "STRAY LIGHT"
 
 
-class TvacGroundtest(rad.TaggedObjectNode):
+_TvacGroundtest: TypeAlias = (
+    TvacGroundtestWfiOptTargettypeEntry
+    | TvacGroundtestGsorcSdsDqPulseEntry
+    | core.LNode[int]
+    | npt.NDArray[np.float64]
+    | Time
+    | Quantity
+    | str
+    | bool
+    | int
+)
+
+
+class TvacGroundtest(rad.TaggedObjectNode[_TvacGroundtest]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/groundtest-1.0.0",)
@@ -134,7 +149,7 @@ class TvacGroundtest(rad.TaggedObjectNode):
         return rad.NONUM
 
     @rad.field
-    def frames_temp(self) -> np.ndarray:
+    def frames_temp(self) -> npt.NDArray[np.float64]:
         return np.zeros(6, dtype=np.float64)
 
     @rad.field
@@ -150,11 +165,11 @@ class TvacGroundtest(rad.TaggedObjectNode):
         return rad.NOINT
 
     @rad.field
-    def detector_pixel_size(self) -> u.Quantity:
-        return u.Quantity(np.zeros(6, dtype=np.float64), unit=u.cm, dtype=np.float64)
+    def detector_pixel_size(self) -> Quantity:
+        return Quantity(np.zeros(6, dtype=np.float64), unit=cm, dtype=np.float64)
 
     @rad.field
-    def sensor_error(self) -> np.ndarray:
+    def sensor_error(self) -> npt.NDArray[np.float64]:
         return np.zeros(6, dtype=np.float64)
 
     @rad.field
@@ -170,12 +185,12 @@ class TvacGroundtest(rad.TaggedObjectNode):
         return core.LNode([rad.NOINT])
 
     @rad.field
-    def led_bank1_approx_wlen(self) -> u.Quantity:
-        return u.Quantity(np.zeros(6, dtype=np.float64), unit=u.nm, dtype=np.float64)
+    def led_bank1_approx_wlen(self) -> Quantity:
+        return Quantity(np.zeros(6, dtype=np.float64), unit=nm, dtype=np.float64)
 
     @rad.field
-    def led_bank2_approx_wlen(self) -> u.Quantity:
-        return u.Quantity(np.zeros(6, dtype=np.float64), unit=u.nm, dtype=np.float64)
+    def led_bank2_approx_wlen(self) -> Quantity:
+        return Quantity(np.zeros(6, dtype=np.float64), unit=nm, dtype=np.float64)
 
     @rad.field
     def srcs_pd_voltage(self) -> float:
@@ -186,16 +201,16 @@ class TvacGroundtest(rad.TaggedObjectNode):
         return rad.NONUM
 
     @rad.field
-    def wfi_mce_srcs_bank1_led_i(self) -> u.Quantity:
-        return u.Quantity(np.zeros(6, dtype=np.float64), unit=u.A, dtype=np.float64)
+    def wfi_mce_srcs_bank1_led_i(self) -> Quantity:
+        return Quantity(np.zeros(6, dtype=np.float64), unit=A, dtype=np.float64)
 
     @rad.field
     def wfi_mce_srcs_bank1_led_range(self) -> str:
         return rad.NOSTR
 
     @rad.field
-    def wfi_mce_srcs_bank2_led_i(self) -> u.Quantity:
-        return u.Quantity(np.zeros(6, dtype=np.float64), unit=u.A, dtype=np.float64)
+    def wfi_mce_srcs_bank2_led_i(self) -> Quantity:
+        return Quantity(np.zeros(6, dtype=np.float64), unit=A, dtype=np.float64)
 
     @rad.field
     def wfi_mce_srcs_bank2_led_range(self) -> str:
@@ -246,8 +261,8 @@ class TvacGroundtest(rad.TaggedObjectNode):
         return TvacGroundtestGsorcSdsDqPulseEntry.PULSE
 
     @rad.field
-    def gsorc_sds_daq_pw(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.ms)
+    def gsorc_sds_daq_pw(self) -> Quantity:
+        return Quantity(rad.NONUM, ms)
 
     @rad.field
     def gsorc_heater1_setpt(self) -> float:
@@ -258,53 +273,53 @@ class TvacGroundtest(rad.TaggedObjectNode):
         return rad.NOSTR
 
     @rad.field
-    def sca_temp(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def sca_temp(self) -> Quantity:
+        return Quantity(rad.NONUM, K)
 
     @rad.field
-    def mpa_temp(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def mpa_temp(self) -> Quantity:
+        return Quantity(rad.NONUM, K)
 
     @rad.field
-    def ewa_temp(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def ewa_temp(self) -> Quantity:
+        return Quantity(rad.NONUM, K)
 
     @rad.field
-    def ewta_outer_heater_temp(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def ewta_outer_heater_temp(self) -> Quantity:
+        return Quantity(rad.NONUM, K)
 
     @rad.field
-    def ewta_inner_heater_temp(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def ewta_inner_heater_temp(self) -> Quantity:
+        return Quantity(rad.NONUM, K)
 
     @rad.field
-    def coba_temp_near_ewta(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def coba_temp_near_ewta(self) -> Quantity:
+        return Quantity(rad.NONUM, K)
 
     @rad.field
-    def scea_temp(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def scea_temp(self) -> Quantity:
+        return Quantity(rad.NONUM, K)
 
     @rad.field
-    def wfi_sce_1_vbiasgate_v(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.V)
+    def wfi_sce_1_vbiasgate_v(self) -> Quantity:
+        return Quantity(rad.NONUM, V)
 
     @rad.field
-    def wfi_sce_1_vbiaspwr_i(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.A)
+    def wfi_sce_1_vbiaspwr_i(self) -> Quantity:
+        return Quantity(rad.NONUM, A)
 
     @rad.field
-    def wfi_sce_1_vbiaspwr_v(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.V)
+    def wfi_sce_1_vbiaspwr_v(self) -> Quantity:
+        return Quantity(rad.NONUM, V)
 
     @rad.field
-    def wfi_sce_1_vreset_v(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.V)
+    def wfi_sce_1_vreset_v(self) -> Quantity:
+        return Quantity(rad.NONUM, V)
 
     @rad.field
-    def wfi_sce_1_vreset_i(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.A)
+    def wfi_sce_1_vreset_i(self) -> Quantity:
+        return Quantity(rad.NONUM, A)
 
     @rad.field
-    def wfi_mcu_a_offs_csense_fpssen(self) -> u.Quantity:
-        return u.Quantity(rad.NONUM, u.K)
+    def wfi_mcu_a_offs_csense_fpssen(self) -> Quantity:
+        return Quantity(rad.NONUM, K)

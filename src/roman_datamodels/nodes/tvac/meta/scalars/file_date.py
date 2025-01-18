@@ -9,7 +9,8 @@ from roman_datamodels.stnode import rad
 __all__ = ["TvacFileDate"]
 
 
-class TvacFileDate(Time, rad.TaggedScalarNode):
+# Astropy does not have type hints/stubs for time so MyPy will complain about this class
+class TvacFileDate(Time, rad.TaggedScalarNode[Time]):  # type: ignore[misc]
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/file_date-1.0.0",)

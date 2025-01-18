@@ -1,3 +1,5 @@
+from typing import TypeAlias, TypeVar
+
 from roman_datamodels.stnode import rad
 
 from .scalars import (
@@ -13,8 +15,21 @@ from .scalars import (
 
 __all__ = ["FpsBasic"]
 
+_T = TypeVar("_T")
 
-class FpsBasic(rad.SchemaObjectNode):
+_FpsBasic: TypeAlias = (
+    FpsCalibrationSoftwareVersion
+    | FpsFileDate
+    | FpsFilename
+    | FpsModelType
+    | FpsOrigin
+    | FpsPrdSoftwareVersion
+    | FpsSdfSoftwareVersion
+    | FpsTelescope
+)
+
+
+class FpsBasic(rad.SchemaObjectNode[_FpsBasic | _T]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/basic-1.0.0",)

@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -10,8 +11,10 @@ from ..scalars import (
 
 __all__ = ["TvacWfiMode"]
 
+_TvacWfiMode: TypeAlias = InstrumentNameEntry | TvacWfiDetector | TvacWfiOpticalElement
 
-class TvacWfiMode(rad.TaggedObjectNode):
+
+class TvacWfiMode(rad.TaggedObjectNode[_TvacWfiMode]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_mode-1.0.0",)

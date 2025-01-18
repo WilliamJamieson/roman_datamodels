@@ -1,6 +1,8 @@
+from typing import Any, TypeAlias, TypeVar
+
 from roman_datamodels.stnode import core, rad
 
-from .basic import FpsBasic
+from .basic import FpsBasic, _FpsBasic
 from .objects import (
     FpsCalStep,
     FpsExposure,
@@ -12,20 +14,25 @@ from .objects import (
 
 __all__ = ["FpsCommon"]
 
+_T = TypeVar("_T")
+
 
 class FpsCommonMixin(core.AdditionalNodeMixin):
     """Mixin things present in the constructors not present in the schema"""
 
     @rad.field
     def statistics(self) -> FpsStatistics:
-        return self._get_node("statistics", FpsStatistics)
+        return FpsStatistics()
 
     @classmethod
     def _extra_fields(self) -> tuple[str]:
         return ("statistics",)
 
 
-class FpsCommon(FpsCommonMixin, FpsBasic):
+_FpsCommon: TypeAlias = _FpsBasic | FpsCalStep | FpsExposure | FpsGuidestar | FpsRefFile | FpsWfiMode | FpsStatistics
+
+
+class FpsCommon(FpsCommonMixin, FpsBasic[_FpsCommon | _T]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0",)
@@ -51,7 +58,7 @@ class FpsCommon(FpsCommonMixin, FpsBasic):
         return FpsRefFile()
 
     @rad.field
-    def hdf5_meta(self) -> core.DNode:
+    def hdf5_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})
 
     @rad.field
@@ -59,5 +66,5 @@ class FpsCommon(FpsCommonMixin, FpsBasic):
         return rad.NOSTR
 
     @rad.field
-    def gw_meta(self) -> core.DNode:
+    def gw_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})

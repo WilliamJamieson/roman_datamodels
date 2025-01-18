@@ -3,7 +3,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["TvacExposureType"]
 
 
-class TvacExposureTypeMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
+class TvacExposureTypeMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure_type-1.0.0",)

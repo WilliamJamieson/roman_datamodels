@@ -1,15 +1,20 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
-from astropy import units as u
+import numpy.typing as npt
 from astropy.time import Time
+from astropy.units import Quantity, cm
 
 from roman_datamodels.stnode import rad
 
 __all__ = ["FpsGroundtest"]
 
 
-class FpsGroundtest(rad.TaggedObjectNode):
+_FpsGroundtest: TypeAlias = npt.NDArray[np.float64] | Quantity | Time | str | bool | int
+
+
+class FpsGroundtest(rad.TaggedObjectNode[_FpsGroundtest]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/groundtest-1.0.0",)
@@ -75,7 +80,7 @@ class FpsGroundtest(rad.TaggedObjectNode):
         return rad.NONUM
 
     @rad.field
-    def frames_temp(self) -> np.ndarray:
+    def frames_temp(self) -> npt.NDArray[np.float64]:
         return np.zeros(6, dtype=np.float64)
 
     @rad.field
@@ -91,9 +96,9 @@ class FpsGroundtest(rad.TaggedObjectNode):
         return rad.NOINT
 
     @rad.field
-    def detector_pixel_size(self) -> u.Quantity:
-        return u.Quantity(np.zeros(6, dtype=np.float64), unit=u.cm, dtype=np.float64)
+    def detector_pixel_size(self) -> Quantity:
+        return Quantity(np.zeros(6, dtype=np.float64), unit=cm, dtype=np.float64)
 
     @rad.field
-    def sensor_error(self) -> np.ndarray:
+    def sensor_error(self) -> npt.NDArray[np.float64]:
         return np.zeros(6, dtype=np.float64)

@@ -1,7 +1,8 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
-from astropy import units as u
+from astropy.units import DN, Quantity
 
 from roman_datamodels.stnode import rad
 
@@ -9,11 +10,15 @@ from .meta import (
     FpsCommon,
     FpsGroundtest,
 )
+from .meta.common import _FpsCommon
 
 __all__ = ["Fps"]
 
 
-class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon):
+_Fps_Meta: TypeAlias = _FpsCommon | FpsGroundtest
+
+
+class Fps_Meta(rad.ImpliedNodeMixin[_FpsCommon], FpsCommon[_FpsCommon]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Fps
@@ -23,7 +28,10 @@ class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon):
         return FpsGroundtest()
 
 
-class Fps(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_Fps: TypeAlias = Fps_Meta | Quantity
+
+
+class Fps(rad.TaggedObjectNode[_Fps], rad.ArrayFieldMixin[_Fps]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps-1.0.0",)
@@ -35,11 +43,11 @@ class Fps(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int, int]:
         return (8, 4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
     @rad.field
@@ -47,29 +55,29 @@ class Fps(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return Fps_Meta()
 
     @rad.field
-    def data(self) -> u.Quantity:
-        return u.Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=u.DN, dtype=np.uint16)
+    def data(self) -> Quantity:
+        return Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=DN, dtype=np.uint16)
 
     @rad.field
-    def amp33(self) -> u.Quantity:
-        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
+    def amp33(self) -> Quantity:
+        return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
     @rad.field
-    def amp33_reset_reads(self) -> u.Quantity:
-        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
+    def amp33_reset_reads(self) -> Quantity:
+        return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
     @rad.field
-    def amp33_reference_read(self) -> u.Quantity:
-        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
+    def amp33_reference_read(self) -> Quantity:
+        return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
     @rad.field
-    def guidewindow(self) -> u.Quantity:
-        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
+    def guidewindow(self) -> Quantity:
+        return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
     @rad.field
-    def reference_read(self) -> u.Quantity:
-        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
+    def reference_read(self) -> Quantity:
+        return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
     @rad.field
-    def reset_reads(self) -> u.Quantity:
-        return u.Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=u.DN, dtype=np.uint16)
+    def reset_reads(self) -> Quantity:
+        return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)

@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -7,7 +8,10 @@ from ..scalars import TvacGuidewindowModes
 __all__ = ["TvacGuidestar"]
 
 
-class TvacGuidestar(rad.TaggedObjectNode):
+_TvacGuidestar: TypeAlias = TvacGuidewindowModes | str | float | int
+
+
+class TvacGuidestar(rad.TaggedObjectNode[_TvacGuidestar]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/guidestar-1.0.0",)
@@ -46,11 +50,13 @@ class TvacGuidestar(rad.TaggedObjectNode):
 
     @rad.field
     def gw_window_xstop(self) -> int:
-        return self.gw_window_xstart + self.gw_window_xsize
+        # MyPy cannot determine that these fields are the type defined in type alias
+        return self.gw_window_xstart + self.gw_window_xsize  # type: ignore[no-any-return]
 
     @rad.field
     def gw_window_ystop(self) -> int:
-        return self.gw_window_ystart + self.gw_window_ysize
+        # MyPy cannot determine that these fields are the type defined in type alias
+        return self.gw_window_ystart + self.gw_window_ysize  # type: ignore[no-any-return]
 
     @rad.field
     def gw_window_xsize(self) -> int:

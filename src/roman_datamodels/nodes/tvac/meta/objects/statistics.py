@@ -1,14 +1,17 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
-from astropy import units as u
+from astropy.units import DN, Quantity, s
 
 from roman_datamodels.stnode import rad
 
 __all__ = ["TvacStatistics"]
 
+_TvacStatistics: TypeAlias = Quantity | None
 
-class TvacStatistics(rad.TaggedObjectNode):
+
+class TvacStatistics(rad.TaggedObjectNode[_TvacStatistics]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/statistics-1.0.0",)
@@ -22,17 +25,17 @@ class TvacStatistics(rad.TaggedObjectNode):
         )
 
     @rad.field
-    def mean_counts_per_sec(self) -> u.Quantity | None:
-        return rad.NONUM * (u.DN / u.s)
+    def mean_counts_per_sec(self) -> Quantity | None:
+        return rad.NONUM * (DN / s)
 
     @rad.field
-    def median_counts_per_sec(self) -> u.Quantity | None:
-        return rad.NONUM * (u.DN / u.s)
+    def median_counts_per_sec(self) -> Quantity | None:
+        return rad.NONUM * (DN / s)
 
     @rad.field
-    def max_counts(self) -> u.Quantity | None:
-        return u.Quantity(rad.NONUM, u.DN, dtype=np.int32)
+    def max_counts(self) -> Quantity | None:
+        return Quantity(rad.NONUM, DN, dtype=np.int32)
 
     @rad.field
-    def min_counts(self) -> u.Quantity | None:
-        return u.Quantity(rad.NONUM, u.DN, dtype=np.int32)
+    def min_counts(self) -> Quantity | None:
+        return Quantity(rad.NONUM, DN, dtype=np.int32)

@@ -1,11 +1,12 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
 __all__ = ["TvacRefFile"]
 
 
-class TvacRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
+class TvacRefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return TvacRefFile
@@ -19,7 +20,10 @@ class TvacRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
         return "roman_0815.pmap"
 
 
-class TvacRefFile(rad.TaggedObjectNode):
+_TvacRefFile: TypeAlias = TvacRefFile_Crds | str
+
+
+class TvacRefFile(rad.TaggedObjectNode[_TvacRefFile]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/ref_file-1.0.0",)

@@ -3,7 +3,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["FpsGuidewindowModes"]
 
 
-class FpsGuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
+class FpsGuidewindowModesMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/guidewindow_modes-1.0.0",)

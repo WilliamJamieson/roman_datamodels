@@ -1,3 +1,5 @@
+from typing import TypeAlias, TypeVar
+
 from roman_datamodels.stnode import rad
 
 from .scalars import (
@@ -13,8 +15,21 @@ from .scalars import (
 
 __all__ = ["TvacBasic"]
 
+_T = TypeVar("_T")
 
-class TvacBasic(rad.SchemaObjectNode):
+_TvacBasic: TypeAlias = (
+    TvacCalibrationSoftwareVersion
+    | TvacFileDate
+    | TvacFilename
+    | TvacModelType
+    | TvacOrigin
+    | TvacPrdSoftwareVersion
+    | TvacSdfSoftwareVersion
+    | TvacTelescope
+)
+
+
+class TvacBasic(rad.SchemaObjectNode[_TvacBasic | _T]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/basic-1.0.0",)

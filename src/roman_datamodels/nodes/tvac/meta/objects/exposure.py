@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
 from astropy.time import Time
@@ -10,7 +11,10 @@ from ..scalars import TvacExposureType
 __all__ = ["TvacExposure"]
 
 
-class TvacExposure(rad.TaggedObjectNode):
+_TvacExposure: TypeAlias = TvacExposureType | Time | int | float | str | bool | core.LNode[core.LNode[int]]
+
+
+class TvacExposure(rad.TaggedObjectNode[_TvacExposure]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure-1.0.0",)

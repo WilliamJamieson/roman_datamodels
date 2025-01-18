@@ -1,6 +1,8 @@
+from typing import Any, TypeAlias, TypeVar
+
 from roman_datamodels.stnode import core, rad
 
-from .basic import TvacBasic
+from .basic import TvacBasic, _TvacBasic
 from .objects import (
     TvacCalStep,
     TvacExposure,
@@ -11,6 +13,8 @@ from .objects import (
 )
 
 __all__ = ["TvacCommon"]
+
+_T = TypeVar("_T")
 
 
 class TvacCommonMixin(core.AdditionalNodeMixin):
@@ -25,7 +29,10 @@ class TvacCommonMixin(core.AdditionalNodeMixin):
         return ("statistics",)
 
 
-class TvacCommon(TvacCommonMixin, TvacBasic):
+_TvacCommon: TypeAlias = _TvacBasic | TvacCalStep | TvacExposure | TvacGuidestar | TvacRefFile | TvacWfiMode | TvacStatistics
+
+
+class TvacCommon(TvacCommonMixin, TvacBasic[_TvacCommon | _T]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0",)
@@ -51,7 +58,7 @@ class TvacCommon(TvacCommonMixin, TvacBasic):
         return TvacRefFile()
 
     @rad.field
-    def hdf5_meta(self) -> core.DNode:
+    def hdf5_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})
 
     @rad.field
@@ -59,5 +66,5 @@ class TvacCommon(TvacCommonMixin, TvacBasic):
         return rad.NOSTR
 
     @rad.field
-    def gw_meta(self) -> core.DNode:
+    def gw_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})

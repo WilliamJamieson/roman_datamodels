@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["FpsFilename"]
 
 
-class FpsFilename(str, rad.TaggedScalarNode):
+class FpsFilename(str, rad.TaggedScalarNode[str]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/tagged_scalars/filename-1.0.0",)
