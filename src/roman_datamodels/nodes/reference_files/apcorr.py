@@ -1,16 +1,22 @@
 from types import MappingProxyType
+from typing import TypeAlias, TypeVar
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import core, rad
 
 from ..datamodels import OPTICAL_ELEMENTS
 from .ref import RefCommonRef, RefTypeEntry
+from .ref.ref_common import _RefCommonRef
 
 __all__ = ["ApcorrRef"]
 
 
-class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
+_T = TypeVar("_T")
+
+
+class ApcorrRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -20,7 +26,10 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return RefTypeEntry.APCORR
 
 
-class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
+_ApcorrRef_Data: TypeAlias = npt.NDArray[np.float64] | float | None
+
+
+class ApcorrRef_Data(rad.ImpliedNodeMixin[_ApcorrRef_Data], rad.ObjectNode[_ApcorrRef_Data]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -28,26 +37,29 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     @property
     def array_shape(self) -> tuple[int]:
         if self._has_node("ap_corrections"):
-            return self.ap_corrections.shape
+            array_shape: tuple[int] = self.ap_corrections.shape
+            return array_shape
 
         if self._has_node("ee_fractions"):
-            return self.ee_fractions.shape
+            array_shape = self.ee_fractions.shape
+            return array_shape
 
         if self._has_node("ee_radii"):
-            return self.ee_radii.shape
+            array_shape = self.ee_radii.shape
+            return array_shape
 
         return (10,)
 
     @rad.field
-    def ap_corrections(self) -> np.ndarray | None:
+    def ap_corrections(self) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
     @rad.field
-    def ee_fractions(self) -> np.ndarray | None:
+    def ee_fractions(self) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
     @rad.field
-    def ee_radii(self) -> np.ndarray | None:
+    def ee_radii(self) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
     @rad.field
@@ -59,7 +71,7 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
         return rad.NONUM
 
 
-class ApcorrRef_Data_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
+class ApcorrRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin[_T]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -69,11 +81,14 @@ class ApcorrRef_Data_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
         return "data"
 
     @classmethod
-    def asdf_key_pattern(cls):
+    def asdf_key_pattern(cls) -> str:
         return "^(F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK)$"
 
 
-class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_ApcorrRef: TypeAlias = ApcorrRef_Meta | ApcorrRef_Data_PatternNode[ApcorrRef_Data]
+
+
+class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin[_ApcorrRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0",)
@@ -87,9 +102,10 @@ class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def primary_array_shape(self) -> tuple[int]:
+    def primary_array_shape(self) -> tuple[int] | None:
         if self._has_node("data") and len(data := self._data["data"]) > 0:
-            return next(iter(data.values())).array_shape
+            # MyPy is getting confused here this done correctly in this case
+            return next(iter(data.values())).array_shape  # type: ignore[union-attr, return-value]
 
         return None
 
@@ -106,5 +122,5 @@ class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return ApcorrRef_Meta()
 
     @rad.field
-    def data(self) -> ApcorrRef_Data_PatternNode[str, ApcorrRef_Data]:
+    def data(self) -> ApcorrRef_Data_PatternNode[ApcorrRef_Data]:
         return ApcorrRef_Data_PatternNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})

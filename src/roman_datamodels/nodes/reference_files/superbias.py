@@ -1,15 +1,18 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
+from .ref.ref_common import _RefCommonRef
 
 __all__ = ["SuperbiasRef"]
 
 
-class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
+class SuperbiasRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SuperbiasRef
@@ -19,7 +22,10 @@ class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return RefTypeEntry.BIAS
 
 
-class SuperbiasRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_SuperbiasRef: TypeAlias = SuperbiasRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
+
+
+class SuperbiasRef(rad.TaggedObjectNode[_SuperbiasRef], rad.ArrayFieldMixin[_SuperbiasRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/superbias-1.0.0",)
@@ -33,11 +39,11 @@ class SuperbiasRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @rad.field
@@ -45,13 +51,13 @@ class SuperbiasRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return SuperbiasRef_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def dq(self) -> np.ndarray:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
 
     @rad.field
-    def err(self) -> np.ndarray:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

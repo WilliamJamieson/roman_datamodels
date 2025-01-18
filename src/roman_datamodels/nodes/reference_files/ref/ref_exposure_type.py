@@ -1,11 +1,19 @@
+from typing import TypeAlias, TypeVar
+
 from roman_datamodels.stnode import rad
 
 from ...datamodels import ExposureType
 
 __all__ = ["RefExposureTypeRef"]
 
+_T = TypeVar("_T")
 
-class RefExposureTypeRef_Exposure(rad.ImpliedNodeMixin, rad.ObjectNode):
+_RefExposureTypeRef_Exposure: TypeAlias = ExposureType | str
+
+
+class RefExposureTypeRef_Exposure(
+    rad.ImpliedNodeMixin[_RefExposureTypeRef_Exposure | _T], rad.ObjectNode[_RefExposureTypeRef_Exposure | _T]
+):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefExposureTypeRef
@@ -19,11 +27,14 @@ class RefExposureTypeRef_Exposure(rad.ImpliedNodeMixin, rad.ObjectNode):
         return "WFI_IMAGE|WFI_GRISM|WFI_PRISM|"
 
 
-class RefExposureTypeRef(rad.SchemaObjectNode):
+_RefExposureTypeRef: TypeAlias = RefExposureTypeRef_Exposure[_RefExposureTypeRef_Exposure]
+
+
+class RefExposureTypeRef(rad.SchemaObjectNode[_RefExposureTypeRef | _T]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_exposure_type-1.0.0",)
 
     @rad.field
-    def exposure(self) -> RefExposureTypeRef_Exposure:
+    def exposure(self) -> _RefExposureTypeRef:
         return RefExposureTypeRef_Exposure()

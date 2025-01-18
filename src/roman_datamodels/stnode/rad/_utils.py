@@ -216,8 +216,8 @@ def wrap_into_node(
         if container is DNode or (isclass(container) and issubclass(container, PatternDNode)):
             # Skip if we are already a DNode
             if not isinstance(value, container):
-                # DNodes are hinted as dictionaries, so 2 metadata entries, (key, entry)
-                _, entry = metadata
+                # DNodes only need the container metadata
+                entry = metadata
 
                 # Coerce the dictionary entries if necessary
                 try:

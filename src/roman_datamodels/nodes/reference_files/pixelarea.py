@@ -1,15 +1,18 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
+from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["PixelareaRef"]
 
 
-class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
+class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[float | None]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef_Meta
@@ -23,7 +26,10 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
         return rad.NONUM
 
 
-class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
+_PixelareaRef_Meta: TypeAlias = _RefCommonRefOpticalElementRef | PixelareaRef_Meta_Photometry
+
+
+class PixelareaRef_Meta(rad.ImpliedNodeMixin[_PixelareaRef_Meta], RefCommonRefOpticalElementRef[_PixelareaRef_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef
@@ -37,7 +43,10 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return PixelareaRef_Meta_Photometry()
 
 
-class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_PixelareaRef: TypeAlias = PixelareaRef_Meta | npt.NDArray[np.float32]
+
+
+class PixelareaRef(rad.TaggedObjectNode[_PixelareaRef], rad.ArrayFieldMixin[_PixelareaRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/pixelarea-1.0.0",)
@@ -51,11 +60,11 @@ class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @rad.field
@@ -63,5 +72,5 @@ class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return PixelareaRef_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

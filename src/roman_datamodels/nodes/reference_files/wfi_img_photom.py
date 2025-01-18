@@ -1,14 +1,18 @@
 from types import MappingProxyType
+from typing import TypeAlias, TypeVar
 
 from roman_datamodels.stnode import core, rad
 
 from ..datamodels import OPTICAL_ELEMENTS
 from .ref import RefCommonRef, RefTypeEntry
+from .ref.ref_common import _RefCommonRef
 
 __all__ = ["WfiImgPhotomRef"]
 
+_T = TypeVar("_T")
 
-class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
+
+class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
@@ -18,7 +22,7 @@ class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return RefTypeEntry.PHOTOM
 
 
-class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
+class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[float | None]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
@@ -45,9 +49,9 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
         return 1.0e-13
 
 
-class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode, rad.ImpliedNodeMixin):
+class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin[_T]):
     @classmethod
-    def asdf_implied_by(cls):
+    def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
 
     @classmethod
@@ -55,11 +59,14 @@ class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode, rad.ImpliedNodeMi
         return "phot_table"
 
     @classmethod
-    def asdf_key_pattern(cls):
+    def asdf_key_pattern(cls) -> str:
         return "^(F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK)$"
 
 
-class WfiImgPhotomRef(rad.TaggedObjectNode):
+_WfiImgPhotomRef: TypeAlias = WfiImgPhotomRef_Meta | WfiImgPhotomRef_PhotTable_PatternNode[WfiImgPhotomRef_PhotTable]
+
+
+class WfiImgPhotomRef(rad.TaggedObjectNode[_WfiImgPhotomRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/wfi_img_photom-1.0.0",)
@@ -76,9 +83,8 @@ class WfiImgPhotomRef(rad.TaggedObjectNode):
     def meta(self) -> WfiImgPhotomRef_Meta:
         return WfiImgPhotomRef_Meta()
 
-    # TODO: Add typeguard rule to fully handle this DNode annotation
     @rad.field
-    def phot_table(self) -> WfiImgPhotomRef_PhotTable_PatternNode[str, WfiImgPhotomRef_PhotTable]:
+    def phot_table(self) -> WfiImgPhotomRef_PhotTable_PatternNode[WfiImgPhotomRef_PhotTable]:
         table = {}
         for element in OPTICAL_ELEMENTS:
             if element in ("GRISM", "PRISM", "DARK"):

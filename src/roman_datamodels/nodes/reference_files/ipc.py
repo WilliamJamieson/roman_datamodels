@@ -1,15 +1,20 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
+from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["IpcRef"]
 
 
-class IpcRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
+class IpcRef_Meta(
+    rad.ImpliedNodeMixin[_RefCommonRefOpticalElementRef], RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
+):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return IpcRef
@@ -19,7 +24,10 @@ class IpcRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return RefTypeEntry.IPC
 
 
-class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_IpcRef: TypeAlias = IpcRef_Meta | npt.NDArray[np.float32]
+
+
+class IpcRef(rad.TaggedObjectNode[_IpcRef], rad.ArrayFieldMixin[_IpcRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ipc-1.0.0",)
@@ -33,11 +41,11 @@ class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (3, 3)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return self.default_array_shape
 
     @rad.field
@@ -45,7 +53,7 @@ class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return IpcRef_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float32]:
         data = np.zeros(self.array_shape, dtype=np.float32)
         data[int(np.floor(self.array_shape[0] / 2))][int(np.floor(self.array_shape[1] / 2))] = 1.0
         return data

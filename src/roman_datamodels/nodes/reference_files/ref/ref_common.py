@@ -1,3 +1,5 @@
+from typing import TypeAlias, TypeVar
+
 from astropy.time import Time
 
 from roman_datamodels.stnode import core, rad
@@ -10,11 +12,14 @@ __all__ = [
     "RefTypeEntry",
 ]
 
+# So that when we inherit from this we can include it's parts too
+_T = TypeVar("_T")
 
-class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+
+class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_schema(cls) -> rad.RadSchema:
-        return rad.RadSchema([])
+        return rad.RadSchema({})
 
 
 class RefTypeEntry(RefTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
@@ -44,7 +49,7 @@ class RefTypeEntry(RefTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     NA = "N/A"  # for a default value in ref_common
 
 
-class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
     @classmethod
     def asdf_container(cls) -> type:
         return RefCommonRef
@@ -77,7 +82,14 @@ class RefCommonRef_InstrumentMixin(core.AdditionalNodeMixin):
         return ("optical_element",)
 
 
-class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, rad.ImpliedNodeMixin, rad.ObjectNode):
+_RefCommonRef_Instrument: TypeAlias = InstrumentNameEntry | WfiDetector
+
+
+class RefCommonRef_Instrument(
+    RefCommonRef_InstrumentMixin,
+    rad.ImpliedNodeMixin[_RefCommonRef_Instrument | _T],
+    rad.ObjectNode[_RefCommonRef_Instrument | _T],
+):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefCommonRef
@@ -91,7 +103,10 @@ class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, rad.ImpliedNodeMixin
         return WfiDetector.WFI01
 
 
-class RefCommonRef(rad.SchemaObjectNode):
+_RefCommonRef: TypeAlias = RefTypeEntry | RefCommonPedigreeEntry | RefCommonRef_Instrument[_RefCommonRef_Instrument] | Time | str
+
+
+class RefCommonRef(rad.SchemaObjectNode[_RefCommonRef | _T]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_common-1.0.0",)
@@ -125,5 +140,5 @@ class RefCommonRef(rad.SchemaObjectNode):
         return "STSCI"
 
     @rad.field
-    def instrument(self) -> RefCommonRef_Instrument:
+    def instrument(self) -> RefCommonRef_Instrument[_RefCommonRef_Instrument]:
         return RefCommonRef_Instrument()

@@ -163,7 +163,6 @@ module = [
     "roman_datamodels.testing.*",
     "roman_datamodels.validate.*",
     "roman_datamodels.nodes.fps.*",
-    "roman_datamodels.nodes.reference_files.*",
     "roman_datamodels.nodes.tvac.*",
 ]
 ignore_errors = true

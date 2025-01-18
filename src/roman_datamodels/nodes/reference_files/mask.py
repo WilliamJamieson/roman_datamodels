@@ -1,15 +1,18 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
+from .ref.ref_common import _RefCommonRef
 
 __all__ = ["MaskRef"]
 
 
-class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
+class MaskRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MaskRef
@@ -19,7 +22,10 @@ class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return RefTypeEntry.MASK
 
 
-class MaskRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_MaskRef: TypeAlias = MaskRef_Meta | npt.NDArray[np.uint32]
+
+
+class MaskRef(rad.TaggedObjectNode[_MaskRef], rad.ArrayFieldMixin[_MaskRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/mask-1.0.0",)
@@ -32,15 +38,16 @@ class MaskRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
             }
         )
 
+    @property
     def primary_array_name(self) -> str:
         return "dq"
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @rad.field
@@ -48,5 +55,5 @@ class MaskRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return MaskRef_Meta()
 
     @rad.field
-    def dq(self) -> np.ndarray:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)

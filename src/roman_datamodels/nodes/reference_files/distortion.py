@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 from astropy.modeling import Model
 from astropy.modeling.models import Shift
@@ -6,11 +7,14 @@ from astropy.modeling.models import Shift
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
+from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["DistortionRef"]
 
 
-class DistortionRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
+class DistortionRef_Meta(
+    rad.ImpliedNodeMixin[_RefCommonRefOpticalElementRef], RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
+):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DistortionRef
@@ -20,7 +24,10 @@ class DistortionRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):
         return RefTypeEntry.DISTORTION
 
 
-class DistortionRef(rad.TaggedObjectNode):
+_Distortion_Ref: TypeAlias = DistortionRef_Meta | Model
+
+
+class DistortionRef(rad.TaggedObjectNode[_Distortion_Ref]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/distortion-1.0.0",)

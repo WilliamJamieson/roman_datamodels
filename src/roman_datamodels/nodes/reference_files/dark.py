@@ -1,6 +1,8 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
@@ -9,12 +11,15 @@ from .ref import (
     RefExposureTypeRef,
     RefTypeEntry,
 )
-from .ref.ref_exposure_type import RefExposureTypeRef_Exposure
+from .ref.ref_exposure_type import RefExposureTypeRef_Exposure, _RefExposureTypeRef, _RefExposureTypeRef_Exposure
+from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["DarkRef"]
 
+_DarkRef_Meta_Exposure: TypeAlias = _RefExposureTypeRef_Exposure | str | int
 
-class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
+
+class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure], rad.ImpliedNodeMixin[_DarkRef_Meta_Exposure]):
     """
     This class is the result of a very weird mixture similar to the ref_mixes but only
     applies to the dark schema.
@@ -40,7 +45,12 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
         return rad.NOINT
 
 
-class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):
+_DarkRef_Meta: TypeAlias = _RefCommonRefOpticalElementRef | _RefExposureTypeRef | DarkRef_Meta_Exposure
+
+
+class DarkRef_Meta(
+    rad.ImpliedNodeMixin[_DarkRef_Meta], RefCommonRefOpticalElementRef[_DarkRef_Meta], RefExposureTypeRef[_DarkRef_Meta]
+):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DarkRef
@@ -62,7 +72,10 @@ class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExpos
         return DarkRef_Meta_Exposure()
 
 
-class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_DarkRef: TypeAlias = DarkRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
+
+
+class DarkRef(rad.TaggedObjectNode[_DarkRef], rad.ArrayFieldMixin[_DarkRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0",)
@@ -76,11 +89,11 @@ class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int, int]:
         return (2, 4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
     @rad.field
@@ -88,17 +101,17 @@ class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return DarkRef_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def dq(self) -> np.ndarray:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape[1:], dtype=np.uint32)
 
     @rad.field
-    def dark_slope(self) -> np.ndarray:
+    def dark_slope(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @rad.field
-    def dark_slope_error(self) -> np.ndarray:
+    def dark_slope_error(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)

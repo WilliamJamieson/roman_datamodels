@@ -128,8 +128,11 @@ def test_implied_node(node_cls):
     annotation = signature(cls_property.fget).return_annotation
     if annotation is not node_cls and annotation != core.LNode[node_cls]:
         base, metadata = get_args(annotation)
-        assert issubclass(base, core.PatternDNode)
-        assert metadata == (str, node_cls)
+        if issubclass(base, core.PatternDNode):
+            assert metadata == node_cls
+        else:
+            # Special case when we have an argument to the base to describe its contents for MyPy
+            assert base is node_cls
 
     schema = node_cls.asdf_schema().schema
 
@@ -138,7 +141,7 @@ def test_implied_node(node_cls):
         return
 
     # Check that the orphan node's schema matches the schema of the property
-    if annotation is node_cls:
+    if annotation is node_cls or get_args(annotation)[0] is node_cls:
         assert "allOf" in schema or ("type" in schema and schema["type"] == "object")
 
     elif annotation == core.LNode[node_cls]:

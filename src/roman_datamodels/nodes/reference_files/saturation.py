@@ -1,15 +1,18 @@
 from types import MappingProxyType
+from typing import TypeAlias
 
 import numpy as np
+import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
+from .ref.ref_common import _RefCommonRef
 
 __all__ = ["SaturationRef"]
 
 
-class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
+class SaturationRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SaturationRef
@@ -19,7 +22,10 @@ class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
         return RefTypeEntry.SATURATION
 
 
-class SaturationRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
+_SaturationRef: TypeAlias = SaturationRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
+
+
+class SaturationRef(rad.TaggedObjectNode[_SaturationRef], rad.ArrayFieldMixin[_SaturationRef]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/saturation-1.0.0",)
@@ -33,11 +39,11 @@ class SaturationRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         )
 
     @property
-    def default_array_shape(self) -> tuple[int]:
+    def default_array_shape(self) -> tuple[int, int]:
         return (4096, 4096)
 
     @property
-    def testing_array_shape(self) -> tuple[int]:
+    def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
     @rad.field
@@ -45,9 +51,9 @@ class SaturationRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
         return SaturationRef_Meta()
 
     @rad.field
-    def data(self) -> np.ndarray:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
     @rad.field
-    def dq(self) -> np.ndarray:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
