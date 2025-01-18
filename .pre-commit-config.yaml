@@ -41,6 +41,17 @@ repos:
       args: ["--fix", "--show-fixes"]
     - id: ruff-format
 
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: "v1.13.0"
+  hooks:
+    - id: mypy
+      files: src
+      args: []
+      additional_dependencies:
+        - numpy>=2
+        - types-PyYAML>=6
+        - typeguard>=4.4
+
 - repo: https://github.com/twisted/towncrier
   rev: 24.8.0  # run 'pre-commit autoupdate' to update
   hooks:
