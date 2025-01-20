@@ -20,14 +20,15 @@ the test.
 import sys
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, TypeVar
+from typing import ParamSpec, TypeVar
 
 from ._config import get_config
 
 __all__ = ["type_checked"]
 
 
-_Function = TypeVar("_Function", bound=Callable[..., Any])
+_T = TypeVar("_T")
+_P = ParamSpec("_P")
 
 if "pytest" in sys.modules:
     try:
@@ -38,11 +39,11 @@ if "pytest" in sys.modules:
         _has_typeguard = True
 
 
-def surpress_check(function: _Function) -> Callable[[_Function], _Function]:
+def surpress_check(function: Callable[_P, _T]) -> Callable[_P, _T]:
     """Function wrapper that enables us to turn on/off typeguard checks suppression"""
 
     @wraps(function)
-    def wrapper(*args: Any, **kwargs: Any) -> Any:
+    def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
         """Pull the global flag to determine if we should suppress type checks"""
 
         if _has_typeguard:
@@ -59,7 +60,7 @@ def surpress_check(function: _Function) -> Callable[[_Function], _Function]:
     return wrapper
 
 
-def type_checked(target: _Function, **kwargs: Any) -> Callable[[_Function], _Function]:
+def type_checked(target: Callable[_P, _T]) -> Callable[_P, _T]:
     """Type checking wrapper"""
 
     if _has_typeguard:

@@ -53,26 +53,32 @@ class Program(rad.TaggedObjectNode[_Program]):
             }
         )
 
+    @property
     @rad.field
-    def title(self) -> str:
+    def title(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def investigator_name(self) -> str:
+    def investigator_name(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def category(self) -> str:
+    def category(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def subcategory(self) -> ProgramSubcategoryEntry:
+    def subcategory(self: rad.Node) -> ProgramSubcategoryEntry:
         return ProgramSubcategoryEntry.NONE
 
+    @property
     @rad.field
-    def science_category(self) -> str:
+    def science_category(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def continuation_id(self) -> int:
+    def continuation_id(self: rad.Node) -> int:
         return rad.NOINT

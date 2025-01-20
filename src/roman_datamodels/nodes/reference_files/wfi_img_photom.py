@@ -17,8 +17,9 @@ class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_Re
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.PHOTOM
 
 
@@ -36,16 +37,19 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin[float | None], rad.ObjectNo
             }
         )
 
+    @property
     @rad.field
-    def photmjsr(self) -> float | None:
+    def photmjsr(self: rad.Node) -> float | None:
         return 1.0e-15
 
+    @property
     @rad.field
-    def uncertainty(self) -> float | None:
+    def uncertainty(self: rad.Node) -> float | None:
         return 1.0e-16
 
+    @property
     @rad.field
-    def pixelareasr(self) -> float | None:
+    def pixelareasr(self: rad.Node) -> float | None:
         return 1.0e-13
 
 
@@ -68,7 +72,7 @@ _WfiImgPhotomRef: TypeAlias = WfiImgPhotomRef_Meta | WfiImgPhotomRef_PhotTable_P
 
 class WfiImgPhotomRef(rad.TaggedObjectNode[_WfiImgPhotomRef]):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/wfi_img_photom-1.0.0",)
 
     @classmethod
@@ -79,12 +83,14 @@ class WfiImgPhotomRef(rad.TaggedObjectNode[_WfiImgPhotomRef]):
             }
         )
 
+    @property
     @rad.field
-    def meta(self) -> WfiImgPhotomRef_Meta:
+    def meta(self: rad.Node) -> WfiImgPhotomRef_Meta:
         return WfiImgPhotomRef_Meta()
 
+    @property
     @rad.field
-    def phot_table(self) -> WfiImgPhotomRef_PhotTable_PatternNode[WfiImgPhotomRef_PhotTable]:
+    def phot_table(self: rad.Node) -> WfiImgPhotomRef_PhotTable_PatternNode[WfiImgPhotomRef_PhotTable]:
         table = {}
         for element in OPTICAL_ELEMENTS:
             if element in ("GRISM", "PRISM", "DARK"):

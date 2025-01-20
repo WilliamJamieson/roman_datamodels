@@ -12,15 +12,16 @@ from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 __all__ = ["FlatRef"]
 
 
-class FlatRef_Meta(
+class FlatRef_Meta(  # type: ignore[misc]
     rad.ImpliedNodeMixin[_RefCommonRefOpticalElementRef], RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
 ):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return FlatRef
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.FLAT
 
 
@@ -29,7 +30,7 @@ _FlatRef: TypeAlias = FlatRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.ui
 
 class FlatRef(rad.TaggedObjectNode[_FlatRef], rad.ArrayFieldMixin[_FlatRef]):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/flat-1.0.0",)
 
     @classmethod
@@ -48,18 +49,22 @@ class FlatRef(rad.TaggedObjectNode[_FlatRef], rad.ArrayFieldMixin[_FlatRef]):
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
+    @property
     @rad.field
-    def meta(self) -> FlatRef_Meta:
+    def meta(self: rad.Node) -> FlatRef_Meta:
         return FlatRef_Meta()
 
+    @property
     @rad.field
-    def data(self) -> npt.NDArray[np.float32]:
+    def data(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def dq(self) -> npt.NDArray[np.uint32]:
+    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
 
+    @property
     @rad.field
-    def err(self) -> npt.NDArray[np.float32]:
+    def err(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

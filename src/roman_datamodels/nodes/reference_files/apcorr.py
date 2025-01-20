@@ -21,8 +21,9 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommo
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.APCORR
 
 
@@ -35,39 +36,44 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin[_ApcorrRef_Data], rad.ObjectNode[_Apco
         return ApcorrRef
 
     @property
-    def array_shape(self) -> tuple[int]:
-        if self._has_node("ap_corrections"):
-            array_shape: tuple[int] = self.ap_corrections.shape
+    def array_shape(self) -> tuple[int, ...]:
+        if self._has_node("ap_corrections") and self.ap_corrections is not None:
+            array_shape: tuple[int, ...] = self.ap_corrections.shape
             return array_shape
 
-        if self._has_node("ee_fractions"):
+        if self._has_node("ee_fractions") and self.ee_fractions is not None:
             array_shape = self.ee_fractions.shape
             return array_shape
 
-        if self._has_node("ee_radii"):
+        if self._has_node("ee_radii") and self.ee_radii is not None:
             array_shape = self.ee_radii.shape
             return array_shape
 
         return (10,)
 
+    @property
     @rad.field
-    def ap_corrections(self) -> npt.NDArray[np.float64] | None:
+    def ap_corrections(self: rad.Node) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
+    @property
     @rad.field
-    def ee_fractions(self) -> npt.NDArray[np.float64] | None:
+    def ee_fractions(self: rad.Node) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
+    @property
     @rad.field
-    def ee_radii(self) -> npt.NDArray[np.float64] | None:
+    def ee_radii(self: rad.Node) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
+    @property
     @rad.field
-    def sky_background_rin(self) -> float | None:
+    def sky_background_rin(self: rad.Node) -> float | None:
         return rad.NONUM
 
+    @property
     @rad.field
-    def sky_background_rout(self) -> float | None:
+    def sky_background_rout(self: rad.Node) -> float | None:
         return rad.NONUM
 
 
@@ -90,7 +96,7 @@ _ApcorrRef: TypeAlias = ApcorrRef_Meta | ApcorrRef_Data_PatternNode[ApcorrRef_Da
 
 class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin[_ApcorrRef]):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0",)
 
     @classmethod
@@ -117,10 +123,12 @@ class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin[_ApcorrRef
     def testing_array_shape(self) -> tuple[int]:
         return (10,)
 
+    @property
     @rad.field
-    def meta(self) -> ApcorrRef_Meta:
+    def meta(self: rad.Node) -> ApcorrRef_Meta:
         return ApcorrRef_Meta()
 
+    @property
     @rad.field
-    def data(self) -> ApcorrRef_Data_PatternNode[ApcorrRef_Data]:
+    def data(self: rad.Node) -> ApcorrRef_Data_PatternNode[ApcorrRef_Data]:
         return ApcorrRef_Data_PatternNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})

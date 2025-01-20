@@ -20,18 +20,22 @@ class L3CalStep(rad.TaggedObjectNode[CalStepEntry]):
             }
         )
 
+    @property
     @rad.field
-    def flux(self) -> CalStepEntry:
+    def flux(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def outlier_detection(self) -> CalStepEntry:
+    def outlier_detection(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def skymatch(self) -> CalStepEntry:
+    def skymatch(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def resample(self) -> CalStepEntry:
+    def resample(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE

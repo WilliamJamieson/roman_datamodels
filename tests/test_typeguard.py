@@ -8,11 +8,13 @@ from roman_datamodels.testing import assert_node_equal
 
 
 class TypeguardExample(core.DNode):
+    @property
     @rad.field
     def good(self) -> int:
         """This should not raise an error"""
         return 1
 
+    @property
     @rad.field
     def bad(self) -> int:
         """This should raise an error"""

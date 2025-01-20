@@ -102,16 +102,19 @@ class Visit_Dither(rad.ImpliedNodeMixin[_Visit_Dither], rad.ObjectNode[_Visit_Di
     def asdf_implied_by(cls) -> type:
         return Visit
 
+    @property
     @rad.field
-    def primary_name(self) -> str | None:
+    def primary_name(self: rad.Node) -> str | None:
         return "None"
 
+    @property
     @rad.field
-    def subpixel_name(self) -> str | None:
+    def subpixel_name(self: rad.Node) -> str | None:
         return "None"
 
+    @property
     @rad.field
-    def executed_pattern(self) -> core.LNode[float] | None:
+    def executed_pattern(self: rad.Node) -> core.LNode[float] | None:
         return core.LNode([float(v) for v in range(1, 10)])
 
 
@@ -140,38 +143,47 @@ class Visit(rad.TaggedObjectNode[_Visit]):
             }
         )
 
+    @property
     @rad.field
-    def dither(self) -> Visit_Dither:
+    def dither(self: rad.Node) -> Visit_Dither:
         return Visit_Dither()
 
+    @property
     @rad.field
-    def engineering_quality(self) -> VisitEngineeringQualityEntry:
+    def engineering_quality(self: rad.Node) -> VisitEngineeringQualityEntry:
         return VisitEngineeringQualityEntry.OK
 
+    @property
     @rad.field
-    def pointing_engineering_source(self) -> VisitPointingEngineeringSourceEntry:
+    def pointing_engineering_source(self: rad.Node) -> VisitPointingEngineeringSourceEntry:
         return VisitPointingEngineeringSourceEntry.CALCULATED
 
+    @property
     @rad.field
-    def type(self) -> VisitTypeEntry:
+    def type(self: rad.Node) -> VisitTypeEntry:
         return VisitTypeEntry.PRIME_TARGETED_FIXED
 
+    @property
     @rad.field
-    def start_time(self) -> Time:
+    def start_time(self: rad.Node) -> Time:
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
 
+    @property
     @rad.field
-    def end_time(self) -> Time:
+    def end_time(self: rad.Node) -> Time:
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
 
+    @property
     @rad.field
-    def status(self) -> VisitStatusEntry:
+    def status(self: rad.Node) -> VisitStatusEntry:
         return VisitStatusEntry.UNSUCCESSFUL
 
+    @property
     @rad.field
-    def nexposures(self) -> int:
+    def nexposures(self: rad.Node) -> int:
         return rad.NOINT
 
+    @property
     @rad.field
-    def internal_target(self) -> bool:
+    def internal_target(self: rad.Node) -> bool:
         return False

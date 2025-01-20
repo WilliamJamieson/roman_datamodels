@@ -18,10 +18,12 @@ class MosaicAssociations(rad.TaggedObjectNode[str]):
             }
         )
 
+    @property
     @rad.field
-    def pool_name(self) -> str:
+    def pool_name(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def table_name(self) -> str:
+    def table_name(self: rad.Node) -> str:
         return rad.NOSTR

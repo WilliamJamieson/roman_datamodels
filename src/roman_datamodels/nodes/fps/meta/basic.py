@@ -34,20 +34,24 @@ class FpsBasic(rad.SchemaObjectNode[_FpsBasic | _T]):
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/basic-1.0.0",)
 
+    @property
     @rad.field
-    def calibration_software_version(self) -> FpsCalibrationSoftwareVersion:
+    def calibration_software_version(self: rad.Node) -> FpsCalibrationSoftwareVersion:
         return FpsCalibrationSoftwareVersion.default()
 
+    @property
     @rad.field
-    def filename(self) -> FpsFilename:
+    def filename(self: rad.Node) -> FpsFilename:
         return FpsFilename.default()
 
+    @property
     @rad.field
-    def file_date(self) -> FpsFileDate:
+    def file_date(self: rad.Node) -> FpsFileDate:
         return FpsFileDate.default()
 
+    @property
     @rad.field
-    def model_type(self) -> FpsModelType:
+    def model_type(self: rad.Node) -> FpsModelType:
         from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
         if isinstance(self, rad.ImpliedNodeMixin):
@@ -55,18 +59,22 @@ class FpsBasic(rad.SchemaObjectNode[_FpsBasic | _T]):
         else:
             return FpsModelType.default()
 
+    @property
     @rad.field
-    def origin(self) -> FpsOrigin:
+    def origin(self: rad.Node) -> FpsOrigin:
         return FpsOrigin.default()
 
+    @property
     @rad.field
-    def prd_software_version(self) -> FpsPrdSoftwareVersion:
+    def prd_software_version(self: rad.Node) -> FpsPrdSoftwareVersion:
         return FpsPrdSoftwareVersion.default()
 
+    @property
     @rad.field
-    def sdf_software_version(self) -> FpsSdfSoftwareVersion:
+    def sdf_software_version(self: rad.Node) -> FpsSdfSoftwareVersion:
         return FpsSdfSoftwareVersion.default()
 
+    @property
     @rad.field
-    def telescope(self) -> FpsTelescope:
+    def telescope(self: rad.Node) -> FpsTelescope:
         return FpsTelescope.default()

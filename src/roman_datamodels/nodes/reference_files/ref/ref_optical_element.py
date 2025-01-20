@@ -14,16 +14,18 @@ class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin[WfiOpticalElement], r
     def asdf_implied_by(cls) -> type:
         return RefOpticalElementRef
 
+    @property
     @rad.field
-    def optical_element(self) -> WfiOpticalElement:
+    def optical_element(self: rad.Node) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
 
 class RefOpticalElementRef(rad.SchemaObjectNode[RefOpticalElementRef_Instrument | _T]):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_optical_element-1.0.0",)
 
+    @property
     @rad.field
-    def instrument(self) -> RefOpticalElementRef_Instrument:
+    def instrument(self: rad.Node) -> RefOpticalElementRef_Instrument:
         return RefOpticalElementRef_Instrument()

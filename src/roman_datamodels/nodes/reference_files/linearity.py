@@ -17,8 +17,9 @@ class LinearityRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCo
     def asdf_implied_by(cls) -> type:
         return LinearityRef
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.LINEARITY
 
 
@@ -50,14 +51,17 @@ class LinearityRef(rad.TaggedObjectNode[_LinearityRef], rad.ArrayFieldMixin[_Lin
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
+    @property
     @rad.field
-    def meta(self) -> LinearityRef_Meta:
+    def meta(self: rad.Node) -> LinearityRef_Meta:
         return LinearityRef_Meta()
 
+    @property
     @rad.field
-    def coeffs(self) -> npt.NDArray[np.float32]:
+    def coeffs(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def dq(self) -> npt.NDArray[np.uint32]:
+    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape[1:], dtype=np.uint32)

@@ -44,30 +44,37 @@ class Resample(rad.TaggedObjectNode[_Resample]):
             }
         )
 
+    @property
     @rad.field
-    def good_bits(self) -> str:
+    def good_bits(self: rad.Node) -> str:
         return "NA"
 
+    @property
     @rad.field
-    def pixel_scale_ratio(self) -> float:
+    def pixel_scale_ratio(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def pixfrac(self) -> float:
+    def pixfrac(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def pointings(self) -> int:
+    def pointings(self: rad.Node) -> int:
         return rad.NOINT
 
+    @property
     @rad.field
-    def product_exposure_time(self) -> float:
+    def product_exposure_time(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def members(self) -> core.LNode[str]:
+    def members(self: rad.Node) -> core.LNode[str]:
         return core.LNode([])
 
+    @property
     @rad.field
-    def weight_type(self) -> ResampleWeightTypeEntry:
+    def weight_type(self: rad.Node) -> ResampleWeightTypeEntry:
         return ResampleWeightTypeEntry.EXPTIME

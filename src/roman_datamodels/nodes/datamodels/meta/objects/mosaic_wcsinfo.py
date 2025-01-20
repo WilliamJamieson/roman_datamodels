@@ -40,24 +40,29 @@ class MosaicWcsinfo(rad.TaggedObjectNode[_MosaicWcsinfo]):
             }
         )
 
+    @property
     @rad.field
-    def ra_ref(self) -> float:
+    def ra_ref(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec_ref(self) -> float:
+    def dec_ref(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def x_ref(self) -> float:
+    def x_ref(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def y_ref(self) -> float:
+    def y_ref(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def rotation_matrix(self) -> core.LNode[core.LNode[float]]:
+    def rotation_matrix(self: rad.Node) -> core.LNode[core.LNode[float]]:
         return core.LNode(
             [
                 core.LNode([rad.NONUM, rad.NONUM]),
@@ -65,70 +70,87 @@ class MosaicWcsinfo(rad.TaggedObjectNode[_MosaicWcsinfo]):
             ]
         )
 
+    @property
     @rad.field
-    def pixel_scale(self) -> float:
+    def pixel_scale(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def pixel_scale_local(self) -> float:
+    def pixel_scale_local(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def projection(self) -> MosaicWcsinfoProjectionEntry:
+    def projection(self: rad.Node) -> MosaicWcsinfoProjectionEntry:
         return MosaicWcsinfoProjectionEntry.TAN
 
+    @property
     @rad.field
-    def s_region(self) -> str:
+    def s_region(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def pixel_shape(self) -> core.LNode[int]:
+    def pixel_shape(self: rad.Node) -> core.LNode[int]:
         return core.LNode([rad.NOINT, rad.NOINT])
 
+    @property
     @rad.field
-    def ra_center(self) -> float:
+    def ra_center(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec_center(self) -> float:
+    def dec_center(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def ra_corn1(self) -> float:
+    def ra_corn1(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec_corn1(self) -> float:
+    def dec_corn1(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def ra_corn2(self) -> float:
+    def ra_corn2(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec_corn2(self) -> float:
+    def dec_corn2(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def ra_corn3(self) -> float:
+    def ra_corn3(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec_corn3(self) -> float:
+    def dec_corn3(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def ra_corn4(self) -> float:
+    def ra_corn4(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec_corn4(self) -> float:
+    def dec_corn4(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def orientat_local(self) -> float:
+    def orientat_local(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def orientat(self) -> float:
+    def orientat(self: rad.Node) -> float:
         return rad.NONUM

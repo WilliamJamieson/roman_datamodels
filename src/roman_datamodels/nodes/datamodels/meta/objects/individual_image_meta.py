@@ -20,82 +20,102 @@ class IndividualImageMeta(rad.TaggedObjectNode[Table]):
             }
         )
 
+    @property
     @rad.field
-    def basic(self) -> Table:
+    def basic(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def background(self) -> Table:
+    def background(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def cal_step(self) -> Table:
+    def cal_step(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def cal_logs(self) -> Table:
+    def cal_logs(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def coordinates(self) -> Table:
+    def coordinates(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def ephemeris(self) -> Table:
+    def ephemeris(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def exposure(self) -> Table:
+    def exposure(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def guide_star(self) -> Table:
+    def guide_star(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def instrument(self) -> Table:
+    def instrument(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def observation(self) -> Table:
+    def observation(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def outlier_detection(self) -> Table:
+    def outlier_detection(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def photometry(self) -> Table:
+    def photometry(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def pointing(self) -> Table:
+    def pointing(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def program(self) -> Table:
+    def program(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def rcs(self) -> Table:
+    def rcs(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def ref_file(self) -> Table:
+    def ref_file(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def source_catalog(self) -> Table:
+    def source_catalog(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def velocity_aberration(self) -> Table:
+    def velocity_aberration(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def visit(self) -> Table:
+    def visit(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})
 
+    @property
     @rad.field
-    def wcsinfo(self) -> Table:
+    def wcsinfo(self: rad.Node) -> Table:
         return QTable({"dummy": [rad.NONUM]})

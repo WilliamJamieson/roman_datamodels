@@ -39,58 +39,72 @@ class L2CalStep(rad.TaggedObjectNode[CalStepEntry]):
             }
         )
 
+    @property
     @rad.field
-    def assign_wcs(self) -> CalStepEntry:
+    def assign_wcs(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def flat_field(self) -> CalStepEntry:
+    def flat_field(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def dark(self) -> CalStepEntry:
+    def dark(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def dq_init(self) -> CalStepEntry:
+    def dq_init(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def flux(self) -> CalStepEntry:
+    def flux(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def linearity(self) -> CalStepEntry:
+    def linearity(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def photom(self) -> CalStepEntry:
+    def photom(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def source_catalog(self) -> CalStepEntry:
+    def source_catalog(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def ramp_fit(self) -> CalStepEntry:
+    def ramp_fit(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def refpix(self) -> CalStepEntry:
+    def refpix(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def saturation(self) -> CalStepEntry:
+    def saturation(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def outlier_detection(self) -> CalStepEntry:
+    def outlier_detection(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def tweakreg(self) -> CalStepEntry:
+    def tweakreg(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE
 
+    @property
     @rad.field
-    def skymatch(self) -> CalStepEntry:
+    def skymatch(self: rad.Node) -> CalStepEntry:
         return CalStepEntry.INCOMPLETE

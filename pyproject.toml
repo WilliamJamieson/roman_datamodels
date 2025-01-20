@@ -129,11 +129,6 @@ enable_error_code = [
     "truthy-bool",
 ]
 warn_unreachable = true
-# exclude = [
-#     'gwcs/tests/$',
-#     'gwcs/converters/tests/$',
-#     'gwcs/coordinate_frames/$',
-# ]
 
 [[tool.mypy.overrides]]
 module = [

@@ -25,24 +25,29 @@ class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin[_ImageSourceCatalog_Meta], Ba
     def asdf_implied_by(cls) -> type:
         return ImageSourceCatalog
 
+    @property
     @rad.field
-    def optical_element(self) -> WfiOpticalElement:
+    def optical_element(self: rad.Node) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
+    @property
     @rad.field
-    def exposure(self) -> Exposure:
+    def exposure(self: rad.Node) -> Exposure:
         return Exposure()
 
+    @property
     @rad.field
-    def photometry(self) -> Photometry:
+    def photometry(self: rad.Node) -> Photometry:
         return Photometry()
 
+    @property
     @rad.field
-    def program(self) -> Program:
+    def program(self: rad.Node) -> Program:
         return Program()
 
+    @property
     @rad.field
-    def visit(self) -> Visit:
+    def visit(self: rad.Node) -> Visit:
         return Visit()
 
 
@@ -62,10 +67,12 @@ class ImageSourceCatalog(rad.TaggedObjectNode[_ImageSourceCatalog]):
             }
         )
 
+    @property
     @rad.field
-    def meta(self) -> ImageSourceCatalog_Meta:
+    def meta(self: rad.Node) -> ImageSourceCatalog_Meta:
         return ImageSourceCatalog_Meta()
 
+    @property
     @rad.field
-    def source_catalog(self) -> Table:
+    def source_catalog(self: rad.Node) -> Table:
         return Table([range(3), range(3)], names=["a", "b"])

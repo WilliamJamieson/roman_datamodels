@@ -39,28 +39,34 @@ class Basic(rad.SchemaObjectNode[_Basic | _T]):
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/basic-1.0.0",)
 
+    @property
     @rad.field
-    def calibration_software_name(self) -> CalibrationSoftwareName:
+    def calibration_software_name(self: rad.Node) -> CalibrationSoftwareName:
         return CalibrationSoftwareName.default()
 
+    @property
     @rad.field
-    def calibration_software_version(self) -> CalibrationSoftwareVersion:
+    def calibration_software_version(self: rad.Node) -> CalibrationSoftwareVersion:
         return CalibrationSoftwareVersion.default()
 
+    @property
     @rad.field
-    def product_type(self) -> ProductType:
+    def product_type(self: rad.Node) -> ProductType:
         return ProductType.default()
 
+    @property
     @rad.field
-    def filename(self) -> Filename:
+    def filename(self: rad.Node) -> Filename:
         return Filename.default()
 
+    @property
     @rad.field
-    def file_date(self) -> FileDate:
+    def file_date(self: rad.Node) -> FileDate:
         return FileDate.default()
 
+    @property
     @rad.field
-    def model_type(self) -> ModelType:
+    def model_type(self: rad.Node) -> ModelType:
         from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
         if isinstance(self, rad.ImpliedNodeMixin):
@@ -68,18 +74,22 @@ class Basic(rad.SchemaObjectNode[_Basic | _T]):
         else:
             return ModelType.default()
 
+    @property
     @rad.field
-    def origin(self) -> Origin:
+    def origin(self: rad.Node) -> Origin:
         return Origin.default()
 
+    @property
     @rad.field
-    def prd_version(self) -> PrdVersion:
+    def prd_version(self: rad.Node) -> PrdVersion:
         return PrdVersion.default()
 
+    @property
     @rad.field
-    def sdf_software_version(self) -> SdfSoftwareVersion:
+    def sdf_software_version(self: rad.Node) -> SdfSoftwareVersion:
         return SdfSoftwareVersion.default()
 
+    @property
     @rad.field
-    def telescope(self) -> Telescope:
+    def telescope(self: rad.Node) -> Telescope:
         return Telescope.default()

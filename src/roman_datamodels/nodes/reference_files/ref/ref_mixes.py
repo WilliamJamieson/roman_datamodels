@@ -20,7 +20,7 @@ _T = TypeVar("_T")
 _RefCommonRefOpticalElementRef_Instrument: TypeAlias = _RefCommonRef_Instrument | WfiOpticalElement
 
 
-class RefCommonRefOpticalElementRef_Instrument(
+class RefCommonRefOpticalElementRef_Instrument(  # type: ignore[misc]
     RefCommonRef_Instrument[_RefCommonRefOpticalElementRef_Instrument],
     RefOpticalElementRef_Instrument,
     rad.ImpliedNodeMixin[_RefCommonRefOpticalElementRef_Instrument],
@@ -52,6 +52,7 @@ class RefCommonRefOpticalElementRef(
             *RefOpticalElementRef.asdf_required(),
         }
 
+    @property
     @rad.field
-    def instrument(self) -> RefCommonRefOpticalElementRef_Instrument:
+    def instrument(self: rad.Node) -> RefCommonRefOpticalElementRef_Instrument:  # type: ignore[override]
         return RefCommonRefOpticalElementRef_Instrument()

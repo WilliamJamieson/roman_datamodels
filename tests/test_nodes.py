@@ -243,7 +243,7 @@ def test_fields(node_cls):
 
     for field in properties:
         assert hasattr(node_cls, field)
-        assert isinstance(getattr(node_cls, field), rad.field_property)
+        assert isinstance(getattr(node_cls, field), property)
 
 
 def find_property_schema(schema, property_name):

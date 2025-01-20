@@ -17,8 +17,9 @@ class GainRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonR
     def asdf_implied_by(cls) -> type:
         return GainRef
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.GAIN
 
 
@@ -46,10 +47,12 @@ class GainRef(rad.TaggedObjectNode[_GainRef], rad.ArrayFieldMixin[_GainRef]):
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
+    @property
     @rad.field
-    def meta(self) -> GainRef_Meta:
+    def meta(self: rad.Node) -> GainRef_Meta:
         return GainRef_Meta()
 
+    @property
     @rad.field
-    def data(self) -> npt.NDArray[np.float32]:
+    def data(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

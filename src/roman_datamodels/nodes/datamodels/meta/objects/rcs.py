@@ -89,22 +89,27 @@ class Rcs(rad.TaggedObjectNode[_Rcs]):
             {"asdf://stsci.edu/datamodels/roman/tags/rcs-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/rcs-1.0.0"}
         )
 
+    @property
     @rad.field
-    def active(self) -> bool:
+    def active(self: rad.Node) -> bool:
         return False
 
+    @property
     @rad.field
-    def electronics(self) -> RcsElectronicsEntry | None:
+    def electronics(self: rad.Node) -> RcsElectronicsEntry | None:
         return RcsElectronicsEntry.A
 
+    @property
     @rad.field
-    def bank(self) -> RcsBankEntry | None:
+    def bank(self: rad.Node) -> RcsBankEntry | None:
         return RcsBankEntry.ONE
 
+    @property
     @rad.field
-    def led(self) -> RcsLedEntry | None:
+    def led(self: rad.Node) -> RcsLedEntry | None:
         return RcsLedEntry.ONE
 
+    @property
     @rad.field
-    def counts(self) -> int:
+    def counts(self: rad.Node) -> int:
         return rad.NOINT

@@ -18,18 +18,22 @@ class Statistics(rad.TaggedObjectNode[float]):
             }
         )
 
+    @property
     @rad.field
-    def zodiacal_light(self) -> float:
+    def zodiacal_light(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def image_median(self) -> float:
+    def image_median(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def image_rms(self) -> float:
+    def image_rms(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def good_pixel_fraction(self) -> float:
+    def good_pixel_fraction(self: rad.Node) -> float:
         return rad.NONUM

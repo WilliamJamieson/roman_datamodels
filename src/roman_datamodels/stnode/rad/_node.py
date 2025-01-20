@@ -3,7 +3,7 @@ from abc import ABC
 from collections.abc import Callable
 from enum import Enum
 from functools import wraps
-from typing import Any, TypeVar
+from typing import Any, TypeAlias, TypeVar, cast
 
 from asdf import AsdfFile
 
@@ -13,10 +13,10 @@ from ._utils import get_node_fields
 
 __all__ = [
     "ListNode",
+    "Node",
     "ObjectNode",
     "ScalarNode",
     "field",
-    "field_property",
 ]
 
 _T = TypeVar("_T")
@@ -111,13 +111,7 @@ class ScalarNode(RadNodeMixin[_T], ABC):
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
 
 
-class field_property(property):
-    """
-    Special subclass of property to mark schema fields out
-    """
-
-
-def field(function: Callable[[Any], Any]) -> field_property:
+def field(function: Callable[[ObjectNode[Any]], _T]) -> Callable[[ObjectNode[Any]], _T]:
     """
     Create a special property decorator for node methods that does several
     things:
@@ -132,7 +126,7 @@ def field(function: Callable[[Any], Any]) -> field_property:
     """
 
     @wraps(function)
-    def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
+    def wrapper(self: ObjectNode[Any]) -> _T:
         """
         Wrap the function (which is defined on the node) to handle getting the value
         from the node and then falling back on evaluating the function itself to
@@ -143,6 +137,9 @@ def field(function: Callable[[Any], Any]) -> field_property:
         # until the default is actually needed. This is important for things like numpy arrays
         # which can be expensive to create (memory and time wise).
         #
-        return self._get_node(function.__name__, lambda: type_checked(function)(self, *args, **kwargs))
+        return cast(_T, self._get_node(function.__name__, lambda: type_checked(function)(self)))
 
-    return field_property(wrapper)
+    return wrapper
+
+
+Node: TypeAlias = ObjectNode[Any]

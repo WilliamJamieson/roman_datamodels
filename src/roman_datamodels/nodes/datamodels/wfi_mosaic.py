@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias
+from typing import TypeAlias, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -48,48 +48,59 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin[_WfiMosaic_Meta], Basic[_WfiMosaic_Met
     def asdf_implied_by(cls) -> type:
         return WfiMosaic
 
+    @property
     @rad.field
-    def asn(self) -> MosaicAssociations:
+    def asn(self: rad.Node) -> MosaicAssociations:
         return MosaicAssociations()
 
+    @property
     @rad.field
-    def basic(self) -> MosaicBasic:
+    def basic(self: rad.Node) -> MosaicBasic:
         return MosaicBasic()
 
+    @property
     @rad.field
-    def cal_step(self) -> L3CalStep:
+    def cal_step(self: rad.Node) -> L3CalStep:
         return L3CalStep()
 
+    @property
     @rad.field
-    def coordinates(self) -> Coordinates:
+    def coordinates(self: rad.Node) -> Coordinates:
         return Coordinates()
 
+    @property
     @rad.field
-    def individual_image_meta(self) -> IndividualImageMeta:
+    def individual_image_meta(self: rad.Node) -> IndividualImageMeta:
         return IndividualImageMeta()
 
+    @property
     @rad.field
-    def photometry(self) -> Photometry:
+    def photometry(self: rad.Node) -> Photometry:
         return Photometry()
 
+    @property
     @rad.field
-    def program(self) -> Program:
+    def program(self: rad.Node) -> Program:
         return Program()
 
+    @property
     @rad.field
-    def ref_file(self) -> RefFile:
+    def ref_file(self: rad.Node) -> RefFile:
         return RefFile()
 
+    @property
     @rad.field
-    def resample(self) -> Resample:
+    def resample(self: rad.Node) -> Resample:
         return Resample()
 
+    @property
     @rad.field
-    def wcs(self) -> WCS | None:
+    def wcs(self: rad.Node) -> WCS | None:
         return rad.Wcs()
 
+    @property
     @rad.field
-    def wcsinfo(self) -> MosaicWcsinfo:
+    def wcsinfo(self: rad.Node) -> MosaicWcsinfo:
         return MosaicWcsinfo()
 
 
@@ -128,43 +139,52 @@ class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin[_WfiMosaic
         if self._has_node("_n_images"):
             # MyPy doesn't allow us to down cast to the specific type
             # we expect here
-            return self._data["_n_images"]  # type: ignore[return-value]
+            return cast(int, self._data["_n_images"])
 
         # default fall-back
         return 2
 
+    @property
     @rad.field
-    def meta(self) -> WfiMosaic_Meta:
+    def meta(self: rad.Node) -> WfiMosaic_Meta:
         return WfiMosaic_Meta()
 
+    @property
     @rad.field
-    def data(self) -> npt.NDArray[np.float32]:
+    def data(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def err(self) -> npt.NDArray[np.float32]:
+    def err(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def context(self) -> npt.NDArray[np.uint32]:
+    def context(self: rad.Node) -> npt.NDArray[np.uint32]:
         return np.zeros((self._n_images, *self.array_shape), dtype=np.uint32)
 
+    @property
     @rad.field
-    def weight(self) -> npt.NDArray[np.float32]:
+    def weight(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def var_poisson(self) -> npt.NDArray[np.float32]:
+    def var_poisson(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def var_rnoise(self) -> npt.NDArray[np.float32]:
+    def var_rnoise(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def var_flat(self) -> npt.NDArray[np.float32]:
+    def var_flat(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def cal_logs(self) -> CalLogs:
+    def cal_logs(self: rad.Node) -> CalLogs:
         return CalLogs.default()

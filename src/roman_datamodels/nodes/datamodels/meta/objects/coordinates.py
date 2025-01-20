@@ -39,6 +39,7 @@ class Coordinates(rad.TaggedObjectNode[CoordinatesReferenceFrameEntry]):
             }
         )
 
+    @property
     @rad.field
-    def reference_frame(self) -> CoordinatesReferenceFrameEntry:
+    def reference_frame(self: rad.Node) -> CoordinatesReferenceFrameEntry:
         return CoordinatesReferenceFrameEntry.ICRS

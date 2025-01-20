@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias
+from typing import TypeAlias, cast
 
 from astropy.time import Time
 
@@ -26,112 +26,137 @@ class Guidestar(rad.TaggedObjectNode[_Guidestar]):
             }
         )
 
+    @property
     @rad.field
-    def guide_window_id(self) -> str:
+    def guide_window_id(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def guide_mode(self) -> GuidewindowModes:
+    def guide_mode(self: rad.Node) -> GuidewindowModes:
         return GuidewindowModes.WSM_ACQ_2
 
+    @property
     @rad.field
-    def data_start(self) -> Time:
+    def data_start(self: rad.Node) -> Time:
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
 
+    @property
     @rad.field
-    def data_end(self) -> Time:
+    def data_end(self: rad.Node) -> Time:
         return Time("2020-01-01T01:00:00.0", format="isot", scale="utc")
 
+    @property
     @rad.field
-    def window_xstart(self) -> int:
+    def window_xstart(self: rad.Node) -> int:
         return rad.NOINT
 
+    @property
     @rad.field
-    def window_ystart(self) -> int:
+    def window_ystart(self: rad.Node) -> int:
         return rad.NOINT
 
+    @property
     @rad.field
-    def window_xstop(self) -> int:
-        # MyPy cannot determine that these fields are the type defined in type alias
-        return self.window_xstart + self.window_xsize  # type: ignore[no-any-return]
+    def window_xstop(self: rad.Node) -> int:
+        return cast(int, self.window_xstart) + cast(int, self.window_xsize)
 
+    @property
     @rad.field
-    def window_ystop(self) -> int:
-        # MyPy cannot determine that these fields are the type defined in type alias
-        return self.window_ystart + self.window_ysize  # type: ignore[no-any-return]
+    def window_ystop(self: rad.Node) -> int:
+        return cast(int, self.window_ystart) + cast(int, self.window_ysize)
 
+    @property
     @rad.field
-    def window_xsize(self) -> int:
+    def window_xsize(self: rad.Node) -> int:
         return 170
 
+    @property
     @rad.field
-    def window_ysize(self) -> int:
+    def window_ysize(self: rad.Node) -> int:
         return 24
 
+    @property
     @rad.field
-    def guide_star_id(self) -> str:
+    def guide_star_id(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def gsc_version(self) -> str:
+    def gsc_version(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def ra(self) -> float:
+    def ra(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec(self) -> float:
+    def dec(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def ra_uncertainty(self) -> float:
+    def ra_uncertainty(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def dec_uncertainty(self) -> float:
+    def dec_uncertainty(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def fgs_magnitude(self) -> float:
+    def fgs_magnitude(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def fgs_magnitude_uncertainty(self) -> float:
+    def fgs_magnitude_uncertainty(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def centroid_x(self) -> float:
+    def centroid_x(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def centroid_y(self) -> float:
+    def centroid_y(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def centroid_x_uncertainty(self) -> float:
+    def centroid_x_uncertainty(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def centroid_y_uncertainty(self) -> float:
+    def centroid_y_uncertainty(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def epoch(self) -> str:
+    def epoch(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def proper_motion_ra(self) -> float:
+    def proper_motion_ra(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def proper_motion_dec(self) -> float:
+    def proper_motion_dec(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def parallax(self) -> float:
+    def parallax(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def centroid_rms(self) -> float:
+    def centroid_rms(self: rad.Node) -> float:
         return rad.NONUM

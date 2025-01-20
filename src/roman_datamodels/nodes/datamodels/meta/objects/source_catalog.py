@@ -18,6 +18,7 @@ class SourceCatalog(rad.TaggedObjectNode[str]):
             }
         )
 
+    @property
     @rad.field
-    def tweakreg_catalog_name(self) -> str:
+    def tweakreg_catalog_name(self: rad.Node) -> str:
         return "catalog"

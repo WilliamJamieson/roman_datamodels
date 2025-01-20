@@ -82,14 +82,17 @@ class WfiMode(WfiModeMixin, rad.TaggedObjectNode[_WfiMode]):
             }
         )
 
+    @property
     @rad.field
-    def name(self) -> InstrumentNameEntry:
+    def name(self: rad.Node) -> InstrumentNameEntry:
         return InstrumentNameEntry.WFI
 
+    @property
     @rad.field
-    def detector(self) -> WfiDetector:
+    def detector(self: rad.Node) -> WfiDetector:
         return WfiDetector.WFI01
 
+    @property
     @rad.field
-    def optical_element(self) -> WfiOpticalElement:
+    def optical_element(self: rad.Node) -> WfiOpticalElement:
         return WfiOpticalElement.F158

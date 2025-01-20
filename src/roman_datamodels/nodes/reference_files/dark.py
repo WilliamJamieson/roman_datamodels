@@ -36,19 +36,21 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure],
             *RefExposureTypeRef_Exposure.asdf_required(),
         }
 
+    @property
     @rad.field
-    def ma_table_name(self) -> str:
+    def ma_table_name(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def ma_table_number(self) -> int:
+    def ma_table_number(self: rad.Node) -> int:
         return rad.NOINT
 
 
 _DarkRef_Meta: TypeAlias = _RefCommonRefOpticalElementRef | _RefExposureTypeRef | DarkRef_Meta_Exposure
 
 
-class DarkRef_Meta(
+class DarkRef_Meta(  # type: ignore[misc]
     rad.ImpliedNodeMixin[_DarkRef_Meta], RefCommonRefOpticalElementRef[_DarkRef_Meta], RefExposureTypeRef[_DarkRef_Meta]
 ):
     @classmethod
@@ -63,12 +65,14 @@ class DarkRef_Meta(
             *RefExposureTypeRef.asdf_required(),
         }
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.DARK
 
+    @property
     @rad.field
-    def exposure(self) -> DarkRef_Meta_Exposure:
+    def exposure(self: rad.Node) -> DarkRef_Meta_Exposure:  # type: ignore[override]
         return DarkRef_Meta_Exposure()
 
 
@@ -77,7 +81,7 @@ _DarkRef: TypeAlias = DarkRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.ui
 
 class DarkRef(rad.TaggedObjectNode[_DarkRef], rad.ArrayFieldMixin[_DarkRef]):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0",)
 
     @classmethod
@@ -96,22 +100,27 @@ class DarkRef(rad.TaggedObjectNode[_DarkRef], rad.ArrayFieldMixin[_DarkRef]):
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
+    @property
     @rad.field
-    def meta(self) -> DarkRef_Meta:
+    def meta(self: rad.Node) -> DarkRef_Meta:
         return DarkRef_Meta()
 
+    @property
     @rad.field
-    def data(self) -> npt.NDArray[np.float32]:
+    def data(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
+    @property
     @rad.field
-    def dq(self) -> npt.NDArray[np.uint32]:
+    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape[1:], dtype=np.uint32)
 
+    @property
     @rad.field
-    def dark_slope(self) -> npt.NDArray[np.float32]:
+    def dark_slope(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
+    @property
     @rad.field
-    def dark_slope_error(self) -> npt.NDArray[np.float32]:
+    def dark_slope_error(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)

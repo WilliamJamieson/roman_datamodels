@@ -34,20 +34,24 @@ class TvacBasic(rad.SchemaObjectNode[_TvacBasic | _T]):
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/basic-1.0.0",)
 
+    @property
     @rad.field
-    def calibration_software_version(self) -> TvacCalibrationSoftwareVersion:
+    def calibration_software_version(self: rad.Node) -> TvacCalibrationSoftwareVersion:
         return TvacCalibrationSoftwareVersion.default()
 
+    @property
     @rad.field
-    def filename(self) -> TvacFilename:
+    def filename(self: rad.Node) -> TvacFilename:
         return TvacFilename.default()
 
+    @property
     @rad.field
-    def file_date(self) -> TvacFileDate:
+    def file_date(self: rad.Node) -> TvacFileDate:
         return TvacFileDate.default()
 
+    @property
     @rad.field
-    def model_type(self) -> TvacModelType:
+    def model_type(self: rad.Node) -> TvacModelType:
         from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
         if isinstance(self, rad.ImpliedNodeMixin):
@@ -55,18 +59,22 @@ class TvacBasic(rad.SchemaObjectNode[_TvacBasic | _T]):
         else:
             return TvacModelType.default()
 
+    @property
     @rad.field
-    def origin(self) -> TvacOrigin:
+    def origin(self: rad.Node) -> TvacOrigin:
         return TvacOrigin.default()
 
+    @property
     @rad.field
-    def prd_software_version(self) -> TvacPrdSoftwareVersion:
+    def prd_software_version(self: rad.Node) -> TvacPrdSoftwareVersion:
         return TvacPrdSoftwareVersion.default()
 
+    @property
     @rad.field
-    def sdf_software_version(self) -> TvacSdfSoftwareVersion:
+    def sdf_software_version(self: rad.Node) -> TvacSdfSoftwareVersion:
         return TvacSdfSoftwareVersion.default()
 
+    @property
     @rad.field
-    def telescope(self) -> TvacTelescope:
+    def telescope(self: rad.Node) -> TvacTelescope:
         return TvacTelescope.default()

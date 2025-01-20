@@ -18,6 +18,7 @@ class OutlierDetection(rad.TaggedObjectNode[str]):
             }
         )
 
+    @property
     @rad.field
-    def good_bits(self) -> str:
+    def good_bits(self: rad.Node) -> str:
         return "NA"

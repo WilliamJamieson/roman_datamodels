@@ -27,8 +27,9 @@ class ReadnoiseRef_Meta(
     def asdf_implied_by(cls) -> type:
         return ReadnoiseRef
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.READNOISE
 
 
@@ -56,10 +57,12 @@ class ReadnoiseRef(rad.TaggedObjectNode[_Readnoiseref], rad.ArrayFieldMixin[_Rea
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
+    @property
     @rad.field
-    def meta(self) -> ReadnoiseRef_Meta:
+    def meta(self: rad.Node) -> ReadnoiseRef_Meta:
         return ReadnoiseRef_Meta()
 
+    @property
     @rad.field
-    def data(self) -> npt.NDArray[np.float32]:
+    def data(self: rad.Node) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

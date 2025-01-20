@@ -22,14 +22,17 @@ class Photometry(rad.TaggedObjectNode[_Photometry]):
             }
         )
 
+    @property
     @rad.field
-    def conversion_megajanskys(self) -> float | None:
+    def conversion_megajanskys(self: rad.Node) -> float | None:
         return rad.NONUM
 
+    @property
     @rad.field
-    def conversion_megajanskys_uncertainty(self) -> float | None:
+    def conversion_megajanskys_uncertainty(self: rad.Node) -> float | None:
         return rad.NONUM
 
+    @property
     @rad.field
-    def pixel_area(self) -> float | None:
+    def pixel_area(self: rad.Node) -> float | None:
         return rad.NONUM

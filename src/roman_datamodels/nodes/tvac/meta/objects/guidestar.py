@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias
+from typing import TypeAlias, cast
 
 from roman_datamodels.stnode import rad
 
@@ -24,44 +24,52 @@ class TvacGuidestar(rad.TaggedObjectNode[_TvacGuidestar]):
             }
         )
 
+    @property
     @rad.field
-    def gw_id(self) -> str:
+    def gw_id(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def gw_fgs_mode(self) -> TvacGuidewindowModes:
+    def gw_fgs_mode(self: rad.Node) -> TvacGuidewindowModes:
         return TvacGuidewindowModes.WSM_ACQ_2
 
+    @property
     @rad.field
-    def data_start(self) -> float:
+    def data_start(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def data_end(self) -> float:
+    def data_end(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def gw_window_xstart(self) -> int:
+    def gw_window_xstart(self: rad.Node) -> int:
         return rad.NOINT
 
+    @property
     @rad.field
-    def gw_window_ystart(self) -> int:
+    def gw_window_ystart(self: rad.Node) -> int:
         return rad.NOINT
 
+    @property
     @rad.field
-    def gw_window_xstop(self) -> int:
-        # MyPy cannot determine that these fields are the type defined in type alias
-        return self.gw_window_xstart + self.gw_window_xsize  # type: ignore[no-any-return]
+    def gw_window_xstop(self: rad.Node) -> int:
+        return cast(int, self.gw_window_xstart) + cast(int, self.gw_window_xsize)
 
+    @property
     @rad.field
-    def gw_window_ystop(self) -> int:
-        # MyPy cannot determine that these fields are the type defined in type alias
-        return self.gw_window_ystart + self.gw_window_ysize  # type: ignore[no-any-return]
+    def gw_window_ystop(self: rad.Node) -> int:
+        return cast(int, self.gw_window_ystart) + cast(int, self.gw_window_ysize)
 
+    @property
     @rad.field
-    def gw_window_xsize(self) -> int:
+    def gw_window_xsize(self: rad.Node) -> int:
         return 170
 
+    @property
     @rad.field
-    def gw_window_ysize(self) -> int:
+    def gw_window_ysize(self: rad.Node) -> int:
         return 24

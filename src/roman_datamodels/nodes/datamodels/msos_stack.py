@@ -19,8 +19,9 @@ class MsosStack_Meta(rad.ImpliedNodeMixin[_MsosStack_Meta], Common[_MsosStack_Me
     def asdf_implied_by(cls) -> type:
         return MsosStack
 
+    @property
     @rad.field
-    def image_list(self) -> str:
+    def image_list(self: rad.Node) -> str:
         return rad.NOSTR
 
 
@@ -48,22 +49,27 @@ class MsosStack(rad.TaggedObjectNode[_MsosStack_Meta], rad.ArrayFieldMixin[_Msos
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
+    @property
     @rad.field
-    def meta(self) -> MsosStack_Meta:
+    def meta(self: rad.Node) -> MsosStack_Meta:
         return MsosStack_Meta()
 
+    @property
     @rad.field
-    def data(self) -> npt.NDArray[np.float64]:
+    def data(self: rad.Node) -> npt.NDArray[np.float64]:
         return np.zeros(self.array_shape, dtype=np.float64)
 
+    @property
     @rad.field
-    def uncertainty(self) -> npt.NDArray[np.float64]:
+    def uncertainty(self: rad.Node) -> npt.NDArray[np.float64]:
         return np.zeros(self.array_shape, dtype=np.float64)
 
+    @property
     @rad.field
-    def mask(self) -> npt.NDArray[np.uint8]:
+    def mask(self: rad.Node) -> npt.NDArray[np.uint8]:
         return np.zeros(self.array_shape, dtype=np.uint8)
 
+    @property
     @rad.field
-    def coverage(self) -> npt.NDArray[np.uint8]:
+    def coverage(self: rad.Node) -> npt.NDArray[np.uint8]:
         return np.zeros(self.array_shape, dtype=np.uint8)

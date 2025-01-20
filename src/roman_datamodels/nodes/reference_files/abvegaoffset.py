@@ -17,8 +17,9 @@ class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_Re
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
+    @property
     @rad.field
-    def reftype(self) -> RefTypeEntry:
+    def reftype(self: rad.Node) -> RefTypeEntry:
         return RefTypeEntry.ABVEGAOFFSET
 
 
@@ -27,8 +28,9 @@ class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[fl
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
+    @property
     @rad.field
-    def abvega_offset(self) -> float | None:
+    def abvega_offset(self: rad.Node) -> float | None:
         return rad.NONUM
 
 
@@ -51,7 +53,7 @@ _AbvegaoffsetRef: TypeAlias = AbvegaoffsetRef_Data | AbvedgaoffsetRef_Data_Patte
 
 class AbvegaoffsetRef(rad.TaggedObjectNode[_AbvegaoffsetRef]):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0",)
 
     @classmethod
@@ -62,10 +64,12 @@ class AbvegaoffsetRef(rad.TaggedObjectNode[_AbvegaoffsetRef]):
             }
         )
 
+    @property
     @rad.field
-    def meta(self) -> AbvegaoffsetRef_Meta:
+    def meta(self: rad.Node) -> AbvegaoffsetRef_Meta:
         return AbvegaoffsetRef_Meta()
 
+    @property
     @rad.field
-    def data(self) -> AbvedgaoffsetRef_Data_PatternNode[AbvegaoffsetRef_Data]:
+    def data(self: rad.Node) -> AbvedgaoffsetRef_Data_PatternNode[AbvegaoffsetRef_Data]:
         return AbvedgaoffsetRef_Data_PatternNode({element: AbvegaoffsetRef_Data() for element in OPTICAL_ELEMENTS})

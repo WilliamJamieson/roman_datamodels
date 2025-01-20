@@ -27,78 +27,97 @@ class FpsGroundtest(rad.TaggedObjectNode[_FpsGroundtest]):
             }
         )
 
+    @property
     @rad.field
-    def test_name(self) -> str:
+    def test_name(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def test_phase(self) -> str:
+    def test_phase(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def test_environment(self) -> str:
+    def test_environment(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def test_script(self) -> str:
+    def test_script(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def product_date(self) -> Time:
+    def product_date(self: rad.Node) -> Time:
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
 
+    @property
     @rad.field
-    def product_version(self) -> str:
+    def product_version(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def conversion_date(self) -> Time:
+    def conversion_date(self: rad.Node) -> Time:
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
 
+    @property
     @rad.field
-    def conversion_version(self) -> str:
+    def conversion_version(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def filename_pnt5(self) -> str:
+    def filename_pnt5(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def filepath_level_pnt5(self) -> str:
+    def filepath_level_pnt5(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def filename_l1a(self) -> str:
+    def filename_l1a(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def detector_id(self) -> str:
+    def detector_id(self: rad.Node) -> str:
         return rad.NOSTR
 
+    @property
     @rad.field
-    def detector_temp(self) -> float:
+    def detector_temp(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def frames_temp(self) -> npt.NDArray[np.float64]:
+    def frames_temp(self: rad.Node) -> npt.NDArray[np.float64]:
         return np.zeros(6, dtype=np.float64)
 
+    @property
     @rad.field
-    def ota_temp(self) -> float:
+    def ota_temp(self: rad.Node) -> float:
         return rad.NONUM
 
+    @property
     @rad.field
-    def rcs_on(self) -> bool:
+    def rcs_on(self: rad.Node) -> bool:
         return False
 
+    @property
     @rad.field
-    def readout_col_num(self) -> int:
+    def readout_col_num(self: rad.Node) -> int:
         return rad.NOINT
 
+    @property
     @rad.field
-    def detector_pixel_size(self) -> Quantity:
+    def detector_pixel_size(self: rad.Node) -> Quantity:
         return Quantity(np.zeros(6, dtype=np.float64), unit=cm, dtype=np.float64)
 
+    @property
     @rad.field
-    def sensor_error(self) -> npt.NDArray[np.float64]:
+    def sensor_error(self: rad.Node) -> npt.NDArray[np.float64]:
         return np.zeros(6, dtype=np.float64)

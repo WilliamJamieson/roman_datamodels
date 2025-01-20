@@ -49,54 +49,67 @@ class Common(Basic[_Common | _T]):
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/common-1.0.0",)
 
+    @property
     @rad.field
-    def coordinates(self) -> Coordinates:
+    def coordinates(self: rad.Node) -> Coordinates:
         return Coordinates()
 
+    @property
     @rad.field
-    def ephemeris(self) -> Ephemeris:
+    def ephemeris(self: rad.Node) -> Ephemeris:
         return Ephemeris()
 
+    @property
     @rad.field
-    def exposure(self) -> Exposure:
+    def exposure(self: rad.Node) -> Exposure:
         return Exposure()
 
+    @property
     @rad.field
-    def guide_star(self) -> Guidestar:
+    def guide_star(self: rad.Node) -> Guidestar:
         return Guidestar()
 
+    @property
     @rad.field
-    def instrument(self) -> WfiMode:
+    def instrument(self: rad.Node) -> WfiMode:
         return WfiMode()
 
+    @property
     @rad.field
-    def observation(self) -> Observation:
+    def observation(self: rad.Node) -> Observation:
         return Observation()
 
+    @property
     @rad.field
-    def pointing(self) -> Pointing:
+    def pointing(self: rad.Node) -> Pointing:
         return Pointing()
 
+    @property
     @rad.field
-    def program(self) -> Program:
+    def program(self: rad.Node) -> Program:
         return Program()
 
+    @property
     @rad.field
-    def rcs(self) -> Rcs:
+    def rcs(self: rad.Node) -> Rcs:
         return Rcs()
 
+    @property
     @rad.field
-    def ref_file(self) -> RefFile:
+    def ref_file(self: rad.Node) -> RefFile:
         return RefFile()
 
+    @property
     @rad.field
-    def velocity_aberration(self) -> VelocityAberration:
+    def velocity_aberration(self: rad.Node) -> VelocityAberration:
         return VelocityAberration()
 
+    @property
     @rad.field
-    def visit(self) -> Visit:
+    def visit(self: rad.Node) -> Visit:
         return Visit()
 
+    @property
     @rad.field
-    def wcsinfo(self) -> Wcsinfo:
+    def wcsinfo(self: rad.Node) -> Wcsinfo:
         return Wcsinfo()

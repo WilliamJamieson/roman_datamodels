@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from textwrap import indent
-from typing import TypeVar
+from typing import TypeVar, cast
 
 from ..core import AsdfNodeMixin, DNode, get_config
 from ._asdf_schema import RadSchema
@@ -83,7 +83,7 @@ class ArrayFieldMixin(DNode[_T], ABC):
         if self._has_node("_array_shape"):
             # MyPy thinks this is the generic type of data in the Node, but
             # really its always going to be a tuple of ints in this case
-            return self._data["_array_shape"]  # type: ignore[return-value]
+            return cast(tuple[int, ...], self._data["_array_shape"])
 
         if get_config().use_test_array_shape:
             return self.testing_array_shape

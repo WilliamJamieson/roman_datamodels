@@ -23,8 +23,9 @@ class Tvac_Meta(rad.ImpliedNodeMixin[_Tvac_Meta], TvacCommon[_Tvac_Meta]):
     def asdf_implied_by(cls) -> type:
         return Tvac
 
+    @property
     @rad.field
-    def groundtest(self) -> TvacGroundtest:
+    def groundtest(self: rad.Node) -> TvacGroundtest:
         return TvacGroundtest()
 
 
@@ -50,34 +51,42 @@ class Tvac(rad.TaggedObjectNode[_Tvac], rad.ArrayFieldMixin[_Tvac]):
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
+    @property
     @rad.field
-    def meta(self) -> Tvac_Meta:
+    def meta(self: rad.Node) -> Tvac_Meta:
         return Tvac_Meta()
 
+    @property
     @rad.field
-    def data(self) -> Quantity:
+    def data(self: rad.Node) -> Quantity:
         return Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=DN, dtype=np.uint16)
 
+    @property
     @rad.field
-    def amp33(self) -> Quantity:
+    def amp33(self: rad.Node) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
+    @property
     @rad.field
-    def amp33_reset_reads(self) -> Quantity:
+    def amp33_reset_reads(self: rad.Node) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
+    @property
     @rad.field
-    def amp33_reference_read(self) -> Quantity:
+    def amp33_reference_read(self: rad.Node) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
+    @property
     @rad.field
-    def guidewindow(self) -> Quantity:
+    def guidewindow(self: rad.Node) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
+    @property
     @rad.field
-    def reference_read(self) -> Quantity:
+    def reference_read(self: rad.Node) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
+    @property
     @rad.field
-    def reset_reads(self) -> Quantity:
+    def reset_reads(self: rad.Node) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
