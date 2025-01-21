@@ -2,7 +2,7 @@ from types import MappingProxyType
 from typing import TypeAlias
 
 import numpy as np
-from astropy.units import DN, Quantity
+from astropy.units import DN, Quantity  # type: ignore[attr-defined]
 
 from roman_datamodels.stnode import rad
 

@@ -19,8 +19,8 @@ class _StNodeConfig:
     def __init__(self) -> None:
         self._typeguard_enabled = False
         self._use_test_array_shape = False
-        self._asdf_ctx = None
-        self._asdf_config = None
+        self._asdf_ctx: asdf.AsdfFile | None = None
+        self._asdf_config: _asdf_config.AsdfConfig | None = None
 
     @property
     def typeguard_enabled(self) -> bool:
@@ -55,7 +55,9 @@ class _StNodeConfig:
         """Get the asdf context for the class."""
 
         if self._asdf_ctx is None:
-            self._asdf_ctx = asdf.AsdfFile()
+            # ASDF has not implemented type hints so MyPy will complain about this
+            # until they do.
+            self._asdf_ctx = asdf.AsdfFile()  # type: ignore[no-untyped-call]
 
         return self._asdf_ctx
 
@@ -63,7 +65,7 @@ class _StNodeConfig:
     def asdf_config(cls) -> _asdf_config.AsdfConfig:
         """Get the asdf config for the class."""
         if cls._asdf_config is None:
-            cls._asdf_config = _asdf_config.get_config()
+            cls._asdf_config = _asdf_config.get_config()  # type: ignore[no-untyped-call]
 
         return cls._asdf_config
 

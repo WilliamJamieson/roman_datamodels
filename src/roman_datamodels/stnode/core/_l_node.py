@@ -22,7 +22,8 @@ class LNode(AsdfNodeMixin[_T], UserList[_T]):
     Base class describing all "array" (list-like) data nodes for STNode classes.
     """
 
-    def __init__(self, node: list[Any] | AsdfListNode | LNode[_T] | None = None) -> None:
+    def __init__(self, node: list[_T] | AsdfListNode | LNode[_T] | None = None) -> None:
+        self.data: list[_T] | AsdfListNode  # type: ignore[assignment]
         if node is None:
             self.data = []
         elif isinstance(node, list | AsdfListNode):

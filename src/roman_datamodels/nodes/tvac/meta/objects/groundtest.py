@@ -4,7 +4,7 @@ from typing import TypeAlias
 import numpy as np
 import numpy.typing as npt
 from astropy.time import Time
-from astropy.units import A, K, Quantity, V, cm, ms, nm
+from astropy.units import A, K, Quantity, V, cm, ms, nm  # type: ignore[attr-defined]
 
 from roman_datamodels.stnode import core, rad
 
@@ -119,7 +119,9 @@ class TvacGroundtest(rad.TaggedObjectNode[_TvacGroundtest]):
     @property
     @rad.field
     def product_date(self: rad.Node) -> Time:
-        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field
@@ -129,7 +131,9 @@ class TvacGroundtest(rad.TaggedObjectNode[_TvacGroundtest]):
     @property
     @rad.field
     def conversion_date(self: rad.Node) -> Time:
-        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field

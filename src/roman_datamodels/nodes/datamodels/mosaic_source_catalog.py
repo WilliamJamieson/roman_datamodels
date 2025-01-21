@@ -64,4 +64,6 @@ class MosaicSourceCatalog(rad.TaggedObjectNode[_MosaicSourceCatalog]):
     @property
     @rad.field
     def source_catalog(self: rad.Node) -> Table:
-        return Table([range(3), range(3)], names=["a", "b"])
+        # Astropy has not implemented type hints for Table so MyPy will complain about this
+        # until they do.
+        return Table([range(3), range(3)], names=["a", "b"])  # type: ignore[no-untyped-call]

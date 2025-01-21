@@ -130,21 +130,23 @@ enable_error_code = [
 ]
 warn_unreachable = true
 
+# Skip checks for external packages
+# [[tool.mypy.overrides]]
+# module = [
+# ]
+# ignore_missing_imports = true
+
 [[tool.mypy.overrides]]
 module = [
     "asdf.*",
-    # "asdf_astropy.*",
     "astropy.coordinates.*",
-    # "astropy.io.*",
     "astropy.modeling.*",
     "astropy.table.*",
     "astropy.time.*",
     "astropy.units.*",
-    # "astropy.utils.*",
-    # "astropy.wcs.*",
     "gwcs.*",
 ]
-ignore_missing_imports = true
+follow_untyped_imports = true
 
 # For gradual adoption
 [[tool.mypy.overrides]]

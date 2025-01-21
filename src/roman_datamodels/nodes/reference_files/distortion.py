@@ -49,4 +49,6 @@ class DistortionRef(rad.TaggedObjectNode[_Distortion_Ref]):
     @property
     @rad.field
     def coordinate_distortion_transform(self: rad.Node) -> Model:
-        return Shift(1) & Shift(2)
+        # Astropy has not implemented type hints for modeling so MyPy will complain about this
+        # until they do.
+        return Shift(1) & Shift(2)  # type: ignore[no-any-return, no-untyped-call, operator]

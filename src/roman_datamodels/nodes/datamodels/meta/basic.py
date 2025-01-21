@@ -62,7 +62,9 @@ class Basic(rad.SchemaObjectNode[_Basic | _T]):
     @property
     @rad.field
     def file_date(self: rad.Node) -> FileDate:
-        return FileDate.default()
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return FileDate.default()  # type: ignore[no-any-return]
 
     @property
     @rad.field

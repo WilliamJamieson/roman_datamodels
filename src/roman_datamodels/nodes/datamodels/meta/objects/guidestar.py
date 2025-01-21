@@ -39,12 +39,16 @@ class Guidestar(rad.TaggedObjectNode[_Guidestar]):
     @property
     @rad.field
     def data_start(self: rad.Node) -> Time:
-        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field
     def data_end(self: rad.Node) -> Time:
-        return Time("2020-01-01T01:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T01:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field

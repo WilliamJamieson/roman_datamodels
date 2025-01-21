@@ -1,8 +1,8 @@
 from types import MappingProxyType
-from typing import TypeAlias
+from typing import TypeAlias, cast
 
 import numpy as np
-from astropy.units import DN, Quantity, s
+from astropy.units import DN, Quantity, s  # type: ignore[attr-defined]
 
 from roman_datamodels.stnode import rad
 
@@ -27,12 +27,12 @@ class TvacStatistics(rad.TaggedObjectNode[_TvacStatistics]):
     @property
     @rad.field
     def mean_counts_per_sec(self: rad.Node) -> Quantity | None:
-        return rad.NONUM * (DN / s)
+        return cast(Quantity, rad.NONUM * (DN / s))
 
     @property
     @rad.field
     def median_counts_per_sec(self: rad.Node) -> Quantity | None:
-        return rad.NONUM * (DN / s)
+        return cast(Quantity, rad.NONUM * (DN / s))
 
     @property
     @rad.field

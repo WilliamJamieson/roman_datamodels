@@ -239,9 +239,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
             if isinstance(tree, DNode | dict | AsdfDictNode):
                 for key, val in tree.items():
                     yield from recurse(val, [*path, key])
-            # This is actually reacable, but MyPy cannot determine this statically
-            # because we are passing the object itself into the function
-            elif isinstance(tree, LNode | list | tuple | AsdfListNode):  # type: ignore[unreachable]
+            elif isinstance(tree, LNode | list | tuple | AsdfListNode):
                 for i, val in enumerate(tree):
                     yield from recurse(val, [*path, i])
             elif tree is not None:

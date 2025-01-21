@@ -27,12 +27,16 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin[_Guidewindow_Meta], Common[_Guidewin
     @property
     @rad.field
     def gw_start_time(self: rad.Node) -> Time:
-        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field
     def gw_end_time(self: rad.Node) -> Time:
-        return Time("2020-01-01T10:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T10:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field
@@ -42,12 +46,16 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin[_Guidewindow_Meta], Common[_Guidewin
     @property
     @rad.field
     def gw_function_start_time(self: rad.Node) -> Time:
-        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field
     def gw_function_end_time(self: rad.Node) -> Time:
-        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")
+        # Astropy has not implemented type hints for Time so MyPy will complain about this
+        # until they do.
+        return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
     @property
     @rad.field
