@@ -17,12 +17,12 @@ __all__ = ["TvacCommon"]
 _T = TypeVar("_T")
 
 
-class TvacCommonMixin(core.AdditionalNodeMixin):
+class TvacCommonMixin(core.AdditionalNodeMixin[TvacStatistics | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
     @property
     @rad.field
-    def statistics(self: rad.Node) -> TvacStatistics:  # type: ignore[misc]
+    def statistics(self: rad.Node) -> TvacStatistics:
         return TvacStatistics()
 
     @classmethod
@@ -33,7 +33,7 @@ class TvacCommonMixin(core.AdditionalNodeMixin):
 _TvacCommon: TypeAlias = _TvacBasic | TvacCalStep | TvacExposure | TvacGuidestar | TvacRefFile | TvacWfiMode | TvacStatistics
 
 
-class TvacCommon(TvacCommonMixin, TvacBasic[_TvacCommon | _T]):
+class TvacCommon(TvacCommonMixin[_TvacCommon | _T], TvacBasic[_TvacCommon | _T]):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0",)

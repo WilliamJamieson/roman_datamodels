@@ -5,7 +5,6 @@ from typing import Any, Generic, TypeVar
 from asdf import AsdfFile
 
 __all__ = [
-    "AdditionalNodeMixin",
     "AsdfNodeMixin",
     "FlushOptions",
     "NodeKeyMixin",
@@ -115,9 +114,3 @@ class AsdfNodeMixin(NodeKeyMixin, Generic[_T], ABC):
         -------
         unwrapped version of object ready to be written to ASDF file
         """
-
-
-class AdditionalNodeMixin:
-    """
-    Base class for all mixin classes.
-    """

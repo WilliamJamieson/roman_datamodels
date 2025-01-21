@@ -111,7 +111,7 @@ class ScalarNode(RadNodeMixin[_T], ABC):
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
 
 
-def field(function: Callable[[ObjectNode[Any]], _T]) -> Callable[[ObjectNode[Any]], _T]:
+def field(function: Callable[[DNode[Any]], _T]) -> Callable[[ObjectNode[Any]], _T]:
     """
     Create a special property decorator for node methods that does several
     things:
@@ -126,7 +126,7 @@ def field(function: Callable[[ObjectNode[Any]], _T]) -> Callable[[ObjectNode[Any
     """
 
     @wraps(function)
-    def wrapper(self: ObjectNode[Any]) -> _T:
+    def wrapper(self: DNode[Any]) -> _T:
         """
         Wrap the function (which is defined on the node) to handle getting the value
         from the node and then falling back on evaluating the function itself to
@@ -142,4 +142,4 @@ def field(function: Callable[[ObjectNode[Any]], _T]) -> Callable[[ObjectNode[Any
     return wrapper
 
 
-Node: TypeAlias = ObjectNode[Any]
+Node: TypeAlias = DNode[Any]

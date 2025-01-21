@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias, TypeVar
+from typing import TypeAlias, TypeVar, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -108,10 +108,10 @@ class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin[_ApcorrRef
         )
 
     @property
-    def primary_array_shape(self) -> tuple[int] | None:
+    def primary_array_shape(self) -> tuple[int, ...] | None:
         if self._has_node("data") and len(data := self._data["data"]) > 0:
             # MyPy is getting confused here this done correctly in this case
-            return next(iter(data.values())).array_shape  # type: ignore[union-attr, return-value]
+            return cast(tuple[int, ...], next(iter(data.values())).array_shape)  # type: ignore[union-attr]
 
         return None
 

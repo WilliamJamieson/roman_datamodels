@@ -70,12 +70,15 @@ class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, rad.RadEnum, metaclass
     SIMULATION = "SIMULATION"
 
 
-class RefCommonRef_InstrumentMixin(core.AdditionalNodeMixin):
+_RefCommonRef_InstrumentMixin: TypeAlias = WfiOpticalElement | None
+
+
+class RefCommonRef_InstrumentMixin(core.AdditionalNodeMixin[_RefCommonRef_InstrumentMixin | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
     @property
     @rad.field
-    def optical_element(self: rad.Node) -> WfiOpticalElement | str:  # type: ignore[misc]
+    def optical_element(self: rad.Node) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
     @classmethod
@@ -83,11 +86,11 @@ class RefCommonRef_InstrumentMixin(core.AdditionalNodeMixin):
         return ("optical_element",)
 
 
-_RefCommonRef_Instrument: TypeAlias = InstrumentNameEntry | WfiDetector
+_RefCommonRef_Instrument: TypeAlias = _RefCommonRef_InstrumentMixin | InstrumentNameEntry | WfiDetector
 
 
 class RefCommonRef_Instrument(
-    RefCommonRef_InstrumentMixin,
+    RefCommonRef_InstrumentMixin[_RefCommonRef_InstrumentMixin | _T],
     rad.ImpliedNodeMixin[_RefCommonRef_Instrument | _T],
     rad.ObjectNode[_RefCommonRef_Instrument | _T],
 ):
