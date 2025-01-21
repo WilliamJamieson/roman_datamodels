@@ -1,37 +1,47 @@
+from __future__ import annotations
+
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from os import PathLike
 from pathlib import Path
+from typing import Any, ParamSpec, TypeVar, cast
 
 from asdf import AsdfFile
+from asdf.search import AsdfSearchResult
 
+from roman_datamodels.stnode import DNode
 from roman_datamodels.validate import nuke_validation
 
 __all__ = ["AsdfFileMixin"]
 
+_T = TypeVar("_T")
+_P = ParamSpec("_P")
+
 
 @contextmanager
-def _temporary_update_filename(datamodel, filename):
+def _temporary_update_filename(datamodel: AsdfFileMixin[_T], filename: PathLike[str] | str) -> Generator[None, None, None]:
     """
     Context manager to temporarily update the filename of a datamodel so that it
     can be saved with that new file name without changing the current model's filename
     """
     from roman_datamodels.nodes import Filename
 
-    if "meta" in datamodel.fields and "filename" in datamodel.meta.fields:
-        old_filename = datamodel.meta.filename
-        datamodel.meta.filename = Filename(filename)
+    dm: DNode[DNode[_T]] = cast(DNode[DNode[_T]], datamodel)
+
+    if "meta" in cast(DNode[_T], dm.fields) and "filename" in dm.meta.fields:
+        old_filename = dm.meta.filename
+        dm.meta.filename = cast(_T, Filename(filename))
 
         yield
-        datamodel.meta.filename = old_filename
+        dm.meta.filename = old_filename
         return
 
     yield
     return
 
 
-class AsdfFileMixin:
+class AsdfFileMixin(DNode[DNode[_T] | _T]):
     _is_copy: bool = False
     _asdf: AsdfFile | None = None
 
@@ -48,9 +58,14 @@ class AsdfFileMixin:
         Initialize the ASDF file
         """
         with nuke_validation():
-            af = AsdfFile()
+            # ASDF has not implemented type hints so MyPy will complain about this
+            # until they do.
+            af = AsdfFile()  # type: ignore[no-untyped-call]
+
             af["roman"] = self.node_type()(self._data)
-            af.validate()
+            # ASDF has not implemented type hints so MyPy will complain about this
+            # until they do.
+            af.validate()  # type: ignore[no-untyped-call]
             self._asdf = af
 
     @property
@@ -59,7 +74,7 @@ class AsdfFileMixin:
         if self._asdf is None:
             self._init_asdf_file()
 
-        return self._asdf
+        return cast(AsdfFile, self._asdf)
 
     def _check_type(self, asdf_file: AsdfFile) -> bool:
         """
@@ -73,17 +88,19 @@ class AsdfFileMixin:
     def close(self) -> None:
         """Close the associated ASDF file if it can be"""
         if not self._is_copy and self._asdf is not None:
-            self._asdf.close()
+            self._asdf.close()  # type: ignore[no-untyped-call]
 
-    def open_asdf(self, init: PathLike | None = None, **kwargs) -> AsdfFile:
+    def open_asdf(self, init: PathLike[str] | str | None = None, lazy_tree: bool = True, **kwargs: Any) -> AsdfFile:
         """
         Attempt to open the ASDF path
 
         Parameters
         ----------
-        init : PathLike
+        init
             Path to the ASDF file
-        **kwargs:
+        lazy_tree
+            Whether to load the tree lazily
+        **kwargs
             Arguments to asdf open
 
         Returns
@@ -94,55 +111,62 @@ class AsdfFileMixin:
 
         with nuke_validation():
             if isinstance(init, str):
-                return _open_path_like(init, **kwargs)
+                return _open_path_like(init, lazy_tree=lazy_tree, **kwargs)
 
-            return AsdfFile(init, **kwargs)
+            return AsdfFile(init, **kwargs)  # type: ignore[no-untyped-call]
 
-    def to_asdf(self, init: PathLike, *args, **kwargs) -> None:
+    def to_asdf(
+        self, init: PathLike[str] | str, lazy_tree: bool = True, all_array_compression: str = "lz4", **kwargs: Any
+    ) -> None:
         """
         Write to the ASDF File
 
         Parameters
         ----------
-        init : PathLike
+        init
             Path to the ASDF file
-        *args:
-            Arguments to asdf write_to
-        **kwargs:
+        lazy_tree
+            Whether to load the tree lazily
+        all_array_compression
+            What (if any) compression to use on all arrays default is lz4
+        **kwargs
             Keyword arguments to asdf open and asdf write_to
         """
-        all_array_compression = kwargs.pop("all_array_compression", "lz4")
-
         with nuke_validation(), _temporary_update_filename(self, Path(init).name):
-            asdf_file = self.open_asdf(**kwargs)
+            asdf_file = self.open_asdf(None, lazy_tree=lazy_tree, **kwargs)
             asdf_file["roman"] = self.node_type()(self._data)
-            asdf_file.write_to(init, *args, all_array_compression=all_array_compression, **kwargs)
+            asdf_file.write_to(init, all_array_compression=all_array_compression, **kwargs)  # type: ignore[no-untyped-call]
 
-    def save(self, path: PathLike | Callable[[PathLike], PathLike], dir_path: PathLike | None = None, *args, **kwargs) -> None:
-        path = Path(path(self.meta.filename) if callable(path) else path)
+    def save(
+        self,
+        path: PathLike[str] | str | Callable[[PathLike[str] | str], PathLike[str] | str],
+        dir_path: PathLike[str] | None = None,
+        **kwargs: Any,
+    ) -> Path:
+        path = Path(path(cast(str, cast(DNode[_T], self.meta).filename)) if callable(path) else path)
         output_path = Path(dir_path) / path.name if dir_path else path
-        ext = path.suffix.decode(sys.getfilesystemencoding()) if isinstance(path.suffix, bytes) else path.suffix
+        ext = path.suffix.decode(sys.getfilesystemencoding()) if isinstance(path.suffix, bytes) else path.suffix  # type: ignore[attr-defined, unreachable, redundant-expr]
 
         # TODO: Support gzip-compressed fits
         if ext == ".asdf":
-            self.to_asdf(output_path, *args, **kwargs)
+            self.to_asdf(output_path, **kwargs)
         else:
             raise ValueError(f"unknown filetype {ext}")
 
         return output_path
 
-    def validate(self):
+    def validate(self) -> None:
         """Validate the ASDF file"""
-        return self._asdf_file.validate()
+        self._asdf_file.validate()  # type: ignore[no-untyped-call]
 
-    def info(self, *args, **kwargs):
+    def info(self, *args: _P.args, **kwargs: _P.kwargs) -> None:
         """Pass through to the AsdfFile info method"""
-        return self._asdf_file.info(*args, **kwargs)
+        self._asdf_file.info(*args, **kwargs)  # type: ignore[no-untyped-call]
 
-    def search(self, *args, **kwargs):
+    def search(self, *args: _P.args, **kwargs: _P.kwargs) -> AsdfSearchResult:
         """Pass through to the AsdfFile search method"""
-        return self._asdf_file.search(*args, **kwargs)
+        return cast(AsdfSearchResult, self._asdf_file.search(*args, **kwargs))  # type: ignore[no-untyped-call]
 
-    def schema_info(self, *args, **kwargs):
+    def schema_info(self, *args: _P.args, **kwargs: _P.kwargs) -> Any:
         """Pass through to the AsdfFile schema_info method"""
-        return self._asdf_file.schema_info(*args, **kwargs)
+        return self._asdf_file.schema_info(*args, **kwargs)  # type: ignore[no-untyped-call]

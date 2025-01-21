@@ -130,7 +130,7 @@ class _RdmNodeRegistry:
             node.fill_docs()
 
     @property
-    def datamodels(self) -> MappingProxyType[str, type[DataModel]]:
+    def datamodels(self) -> MappingProxyType[str, type[DataModel[_T]]]:
         """
         Get all the datamodels
         """
@@ -224,7 +224,7 @@ class _RdmNodeRegistry:
         return self._tagged_registry
 
     @property
-    def node_datamodel_mapping(self) -> MappingProxyType[type, type[DataModel]]:
+    def node_datamodel_mapping(self) -> MappingProxyType[type, type[DataModel[_T]]]:
         """
         Get a mapping of all the nodes that are datamodels
 

@@ -41,7 +41,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
     _fields: tuple[str, ...] | None = None
     _field_signatures: dict[str, type] | None = None
 
-    def _pre_initialize_node(self, init: dict[str, Any] | DNode[_T] | None = None, **kwargs: Any) -> Any:
+    def _pre_initialize_node(self, init: dict[str, _T] | DNode[_T] | AsdfFile | None = None, **kwargs: Any) -> Any:
         """Preprocessing for initialization of the node"""
 
         return init
@@ -50,7 +50,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         """Postprocessing for initialization of the node"""
         pass
 
-    def __init__(self, node: dict[str, Any] | DNode[_T] | None = None, **kwargs: Any) -> None:
+    def __init__(self, node: dict[str, _T] | DNode[_T] | None = None, **kwargs: Any) -> None:
         node = self._pre_initialize_node(node, **kwargs)
 
         # Handle if we are passed different data types

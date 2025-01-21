@@ -2,9 +2,12 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from enum import Enum
+from typing import Any, cast
 
 import asdf
+import asdf.lazy_nodes
 import numpy as np
+import numpy.typing as npt
 from astropy.table import QTable
 
 from roman_datamodels import nodes, stnode
@@ -12,13 +15,13 @@ from roman_datamodels import nodes, stnode
 from ._core import DataModel
 
 
-class AssociationsModel(DataModel, nodes.Associations):
+class AssociationsModel(DataModel[Any], nodes.Associations):
     """
     A model for the Roman associations file
     """
 
     @classmethod
-    def is_association(cls, asn_data):
+    def is_association(cls, asn_data: dict[str, Any] | Any) -> bool:
         """
         Test if an object is an association by checking for required fields
 
@@ -30,49 +33,49 @@ class AssociationsModel(DataModel, nodes.Associations):
         return isinstance(asn_data, dict) and "asn_id" in asn_data and "asn_pool" in asn_data
 
 
-class GuidewindowModel(DataModel, nodes.Guidewindow):
+class GuidewindowModel(DataModel[Any], nodes.Guidewindow):
     """
     A model for the Roman guide window file
     """
 
 
-class ImageSourceCatalogModel(DataModel, nodes.ImageSourceCatalog):
+class ImageSourceCatalogModel(DataModel[Any], nodes.ImageSourceCatalog):
     """
     A model for the Roman image source catalog file
     """
 
 
-class MosaicSegmentationMapModel(DataModel, nodes.MosaicSegmentationMap):
+class MosaicSegmentationMapModel(DataModel[Any], nodes.MosaicSegmentationMap):
     """
     A model for the Roman mosaic segmentation map file
     """
 
 
-class MosaicSourceCatalogModel(DataModel, nodes.MosaicSourceCatalog):
+class MosaicSourceCatalogModel(DataModel[Any], nodes.MosaicSourceCatalog):
     """
     A model for the Roman mosaic source catalog file
     """
 
 
-class MsosStackModel(DataModel, nodes.MsosStack):
+class MsosStackModel(DataModel[Any], nodes.MsosStack):
     """
     A model for the Roman MSOS stack file
     """
 
 
-class RampFitOutputModel(DataModel, nodes.RampFitOutput):
+class RampFitOutputModel(DataModel[Any], nodes.RampFitOutput):
     """
     A model for the Roman ramp fit output file
     """
 
 
-class RampModel(DataModel, nodes.Ramp):
+class RampModel(DataModel[Any], nodes.Ramp):
     """
     A model for the Roman ramp file
     """
 
     @classmethod
-    def from_science_raw(cls, model) -> RampModel:
+    def from_science_raw(cls, model: RampModel | ScienceRawModel | FpsModel | TvacModel) -> RampModel:
         """
         Attempt to construct a RampModel from a DataModel
 
@@ -102,10 +105,10 @@ class RampModel(DataModel, nodes.Ramp):
 
         # check if the input model has a resultantdq from SDF
         if hasattr(model, "resultantdq"):
-            ramp.groupdq = model.resultantdq.copy()
+            ramp.groupdq = cast(npt.NDArray[np.uint8], model.resultantdq.copy())  # type: ignore[misc]
 
         # Define how to recursively copy all attributes.
-        def node_update(ramp, other):
+        def node_update(ramp: nodes.Ramp, other: RampModel | ScienceRawModel | FpsModel | TvacModel) -> None:
             """Implement update to directly access each value"""
             for key in other.keys():
                 if key == "resultantdq":
@@ -120,22 +123,23 @@ class RampModel(DataModel, nodes.Ramp):
                     else:
                         setattr(ramp, key, getattr(other, key))
                 else:
-                    ramp[key] = other[key]
+                    # This covers anything not in the schema
+                    ramp[key] = other[key]  # type: ignore[assignment]
 
         node_update(ramp, model)
 
         # Create model from node
-        ramp_model = RampModel(ramp)
+        ramp_model = RampModel(cast(DataModel[Any], ramp))
         return ramp_model
 
 
-class SegmentationMapModel(DataModel, nodes.SegmentationMap):
+class SegmentationMapModel(DataModel[Any], nodes.SegmentationMap):
     """
     A model for the Roman segmentation map file
     """
 
 
-class ImageModel(DataModel, nodes.WfiImage):
+class ImageModel(DataModel[Any], nodes.WfiImage):
     """
     A model for the Roman WFI image file
     """
@@ -144,12 +148,12 @@ class ImageModel(DataModel, nodes.WfiImage):
 WfiImageModel = ImageModel
 
 
-class MosaicModel(DataModel, nodes.WfiMosaic):
+class MosaicModel(DataModel[Any], nodes.WfiMosaic):
     """
     A model for the Roman WFI mosaic file
     """
 
-    def append_individual_image_meta(self, meta):
+    def append_individual_image_meta(self, meta: stnode.DNode[Any] | dict[str, Any] | asdf.lazy_nodes.AsdfDictNode) -> None:
         """
         Add the contents of meta to the appropriate keyword in individual_image_meta as an astropy QTable.
 
@@ -163,7 +167,7 @@ class MosaicModel(DataModel, nodes.WfiMosaic):
         if not isinstance(meta, dict | asdf.lazy_nodes.AsdfDictNode):
             meta_dict = meta.to_flat_dict()
         else:
-            meta_dict = meta
+            meta_dict = cast(dict[str, Any], meta)
 
         # Storage for keys and values in the base meta layer
         basic_cols = []
@@ -208,10 +212,14 @@ class MosaicModel(DataModel, nodes.WfiMosaic):
                     if (key not in self.meta.individual_image_meta) or (
                         self.meta.individual_image_meta[key].colnames == ["dummy"]
                     ):
-                        self.meta.individual_image_meta[key] = QTable(names=subtable_cols, data=subtable_vals)
+                        # Astropy has not implemented type hints for Table so MyPy will complain about this
+                        # until they do.
+                        self.meta.individual_image_meta[key] = QTable(names=subtable_cols, data=subtable_vals)  # type: ignore[no-untyped-call]
                     else:
                         # Append to existing table
-                        self.meta.individual_image_meta[key].add_row(subtable_vals)
+                        # Astropy has not implemented type hints for Table so MyPy will complain about this
+                        # until they do.
+                        self.meta.individual_image_meta[key].add_row(subtable_vals)  # type: ignore[no-untyped-call]
             else:
                 # Store Basic keyword
                 basic_cols.append(key)
@@ -219,16 +227,20 @@ class MosaicModel(DataModel, nodes.WfiMosaic):
 
         # Make Basic Table if needed
         if self.meta.individual_image_meta.basic.colnames == ["dummy"]:
-            self.meta.individual_image_meta.basic = QTable(names=basic_cols, data=basic_vals)
+            # Astropy has not implemented type hints for Table so MyPy will complain about this
+            # until they do.
+            self.meta.individual_image_meta.basic = QTable(names=basic_cols, data=basic_vals)  # type: ignore[misc, no-untyped-call]
         else:
             # Append to existing basic table
-            self.meta.individual_image_meta.basic.add_row(basic_vals)
+            # Astropy has not implemented type hints for Table so MyPy will complain about this
+            # until they do.
+            self.meta.individual_image_meta.basic.add_row(basic_vals)  # type: ignore[no-untyped-call]
 
 
 WfiMosaicModel = MosaicModel
 
 
-class ScienceRawModel(DataModel, nodes.WfiScienceRaw):
+class ScienceRawModel(DataModel[Any], nodes.WfiScienceRaw):
     """
     A model for the Roman WFI science raw file
     """
@@ -237,115 +249,115 @@ class ScienceRawModel(DataModel, nodes.WfiScienceRaw):
 WfiScienceRawModel = ScienceRawModel
 
 
-class FpsModel(DataModel, nodes.Fps):
+class FpsModel(DataModel[Any], nodes.Fps):
     """
     A model for the Roman FPS file
     """
 
 
-class AbvegaoffsetRefModel(DataModel, nodes.AbvegaoffsetRef):
+class AbvegaoffsetRefModel(DataModel[Any], nodes.AbvegaoffsetRef):
     """
     A model for the Roman ABVegaOffset file
     """
 
 
-class ApcorrRefModel(DataModel, nodes.ApcorrRef):
+class ApcorrRefModel(DataModel[Any], nodes.ApcorrRef):
     """
     A model for the Roman APCorr reference file
     """
 
 
-class DarkRefModel(DataModel, nodes.DarkRef):
+class DarkRefModel(DataModel[Any], nodes.DarkRef):
     """
     A model for the Roman dark reference file
     """
 
 
-class DistortionRefModel(DataModel, nodes.DistortionRef):
+class DistortionRefModel(DataModel[Any], nodes.DistortionRef):
     """
     A model for the Roman distortion reference file
     """
 
 
-class EpsfRefModel(DataModel, nodes.EpsfRef):
+class EpsfRefModel(DataModel[Any], nodes.EpsfRef):
     """
     A model for the Roman EPSF reference file
     """
 
 
-class FlatRefModel(DataModel, nodes.FlatRef):
+class FlatRefModel(DataModel[Any], nodes.FlatRef):
     """
     A model for the Roman flat reference file
     """
 
 
-class GainRefModel(DataModel, nodes.GainRef):
+class GainRefModel(DataModel[Any], nodes.GainRef):
     """
     A model for the Roman gain reference file
     """
 
 
-class InverselinearityRefModel(DataModel, nodes.InverselinearityRef):
+class InverselinearityRefModel(DataModel[Any], nodes.InverselinearityRef):
     """
     A model for the Roman Inverse Linearity reference file
     """
 
 
-class IpcRefModel(DataModel, nodes.IpcRef):
+class IpcRefModel(DataModel[Any], nodes.IpcRef):
     """
     A model for the Roman IPC reference file
     """
 
 
-class LinearityRefModel(DataModel, nodes.LinearityRef):
+class LinearityRefModel(DataModel[Any], nodes.LinearityRef):
     """
     A model for the Roman Linearity reference file
     """
 
 
-class MaskRefModel(DataModel, nodes.MaskRef):
+class MaskRefModel(DataModel[Any], nodes.MaskRef):
     """
     A model for the Roman mask reference file
     """
 
 
-class PixelareaRefModel(DataModel, nodes.PixelareaRef):
+class PixelareaRefModel(DataModel[Any], nodes.PixelareaRef):
     """
     A model for the Roman pixel area reference file
     """
 
 
-class ReadnoiseRefModel(DataModel, nodes.ReadnoiseRef):
+class ReadnoiseRefModel(DataModel[Any], nodes.ReadnoiseRef):
     """
     A model for the Roman readnoise reference file
     """
 
 
-class RefpixRefModel(DataModel, nodes.RefpixRef):
+class RefpixRefModel(DataModel[Any], nodes.RefpixRef):
     """
     A model for the Roman Refpix reference file
     """
 
 
-class SaturationRefModel(DataModel, nodes.SaturationRef):
+class SaturationRefModel(DataModel[Any], nodes.SaturationRef):
     """
     A model for the Roman saturation reference file
     """
 
 
-class SuperbiasRefModel(DataModel, nodes.SuperbiasRef):
+class SuperbiasRefModel(DataModel[Any], nodes.SuperbiasRef):
     """
     A model for the Roman superbias reference file
     """
 
 
-class WfiImgPhotomRefModel(DataModel, nodes.WfiImgPhotomRef):
+class WfiImgPhotomRefModel(DataModel[Any], nodes.WfiImgPhotomRef):
     """
     A model for the Roman WFI IMG photom reference file
     """
 
 
-class TvacModel(DataModel, nodes.Tvac):
+class TvacModel(DataModel[Any], nodes.Tvac):
     """
     A model for the Roman TVAC file
     """

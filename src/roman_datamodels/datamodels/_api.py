@@ -1,9 +1,15 @@
+from typing import TypeVar, cast
+
+from roman_datamodels.stnode import DNode
+
 from ._asdf import AsdfFileMixin
 
 __all__ = ["StpipeAPIMixin"]
 
+_T = TypeVar("_T")
 
-class StpipeAPIMixin(AsdfFileMixin):
+
+class StpipeAPIMixin(AsdfFileMixin[_T]):
     @property
     def crds_observatory(self) -> str:
         """The observatory for CRDS."""
@@ -21,6 +27,6 @@ class StpipeAPIMixin(AsdfFileMixin):
         """
         return {
             f"roman.meta.{key}": val
-            for key, val in self.meta.to_flat_dict(include_arrays=False, recursive=True).items()
+            for key, val in cast(DNode[_T], self.meta).to_flat_dict(include_arrays=False, recursive=True).items()
             if isinstance(val, str | int | float | complex | bool)
         }

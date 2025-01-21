@@ -27,8 +27,9 @@ import numpy as np
 
 
 # fmt: off
+# np.unint32 __copy__ and __deepcopy__ conflict with Emum __copy__ and __deepcopy__
 @unique
-class pixel(np.uint32, Enum):
+class pixel(np.uint32, Enum):  # type: ignore[misc]
     """Pixel-specific data quality flags"""
 
     GOOD             = 0      # No bits set, all is good
@@ -65,8 +66,9 @@ class pixel(np.uint32, Enum):
     REFERENCE_PIXEL  = 2**31  # Pixel is a reference pixel
 
 
+# np.unint32 __copy__ and __deepcopy__ conflict with Emum __copy__ and __deepcopy__
 @unique
-class group(np.uint32, Enum):
+class group(np.uint32, Enum):  # type: ignore[misc]
     """Group-specific data quality flags
         Once groups are combined, these flags are equivalent to the pixel-specific flags.
     """

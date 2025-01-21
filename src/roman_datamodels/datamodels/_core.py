@@ -3,22 +3,28 @@ from __future__ import annotations
 import copy
 import sys
 from pathlib import PurePath
+from types import TracebackType
+from typing import Any, TypeVar, cast
 
 from asdf import AsdfFile
 from asdf.exceptions import ValidationError
 
-from roman_datamodels.stnode import rad
+from roman_datamodels.stnode import DNode, rad
 
 from ._api import StpipeAPIMixin
 
+__all__ = ["DataModel"]
 
-class DataModel(StpipeAPIMixin):
+_T = TypeVar("_T")
+
+
+class DataModel(StpipeAPIMixin[_T], rad.TagMixin[_T]):
     """
     Mixin class for all data models (top-level nodes)
     -> this will be mixed with a TaggedObject Node class
     """
 
-    def __new__(cls, init=None, **kwargs):
+    def __new__(cls, init: DataModel[_T] | None = None, **kwargs: Any) -> DataModel[_T]:
         """
         Handle the case where one passes in an already instantiated version
         of the model. In this case the constructor should just directly return
@@ -29,7 +35,7 @@ class DataModel(StpipeAPIMixin):
 
         return super().__new__(cls)
 
-    def _pre_initialize_node(self, init=None, **kwargs) -> dict:
+    def _pre_initialize_node(self, init: dict[str, _T] | DNode[_T] | AsdfFile | None = None, **kwargs: Any) -> dict[str, Any]:  # type: ignore[override]
         """
         Overwrite the default node initializer function so that we can inject
         pre processiong of the input data
@@ -43,16 +49,18 @@ class DataModel(StpipeAPIMixin):
         # Pass in a node/datamodel
         if isinstance(init, rad.TaggedObjectNode):
             if not isinstance(init, self.node_type()):
-                raise ValidationError(
+                # ASDF has not implemented type hints so MyPy will complain about this
+                # until they do.
+                raise ValidationError(  # type: ignore[no-untyped-call]
                     f"TaggedObjectNode: {type(init).__name__} is not of the type expected. Expected {self.node_type().__name__}"
                 )
 
             # Return the raw data (this will go directly into the node initializer)
-            return init._data
+            return cast(DNode[_T], init)._data
 
         # Pass in a file path -> process into asdf file
         if isinstance(init, str | bytes | PurePath):
-            if isinstance(init, PurePath):
+            if isinstance(init, PurePath):  # type: ignore[unreachable]
                 init = str(init)
             if isinstance(init, bytes):
                 init = init.decode(sys.getfilesystemencoding())
@@ -69,7 +77,7 @@ class DataModel(StpipeAPIMixin):
             self._asdf = init
 
             # Return the raw data (this will go directly into the node initializer)
-            return self._asdf.tree["roman"]._data
+            return cast(dict[str, Any], self._asdf.tree["roman"]._data)
 
         raise OSError("Argument init does not appear to be a valid ASDFfile or TaggedObjectNode")
 
@@ -85,7 +93,7 @@ class DataModel(StpipeAPIMixin):
         """
         return self.asdf_schema_uri()
 
-    def __del__(self):
+    def __del__(self) -> None:
         """
         Ensure closure of resources when deleted.
 
@@ -97,15 +105,15 @@ class DataModel(StpipeAPIMixin):
         """
         self.close()
 
-    def __enter__(self):
+    def __enter__(self) -> DataModel[_T]:
         """Return the data model object if it is acting as a context manager for itself"""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: TracebackType | None) -> None:
         """Close the ASDF file when exiting the context manager defined by the object itself"""
         self.close()
 
-    def copy(self, deepcopy=True, memo=None):
+    def copy(self, deepcopy: bool = True, memo: dict[int, Any] | None = None) -> DataModel[_T]:
         result = type(self)()
         self.clone(result, self, deepcopy=deepcopy, memo=memo)
         return result
@@ -113,9 +121,9 @@ class DataModel(StpipeAPIMixin):
     __copy__ = __deepcopy__ = copy
 
     @staticmethod
-    def clone(target: DataModel, source: DataModel, deepcopy=False, memo=None):
+    def clone(target: DataModel[_T], source: DataModel[_T], deepcopy: bool = False, memo: dict[int, Any] | None = None) -> None:
         if deepcopy:
-            target._asdf = source._asdf_file.copy()
+            target._asdf = source._asdf_file.copy()  # type: ignore[no-untyped-call]
             target._data = copy.deepcopy(source._data, memo=memo)
         else:
             target._asdf = source._asdf_file
@@ -123,7 +131,7 @@ class DataModel(StpipeAPIMixin):
 
         target._is_copy = True
 
-    def get_primary_array_name(self):
+    def get_primary_array_name(self) -> str:
         """
         Returns the name "primary" array for this model, which
         controls the size of other arrays that are implicitly created.
@@ -136,7 +144,7 @@ class DataModel(StpipeAPIMixin):
         return "data" if hasattr(self, "data") else ""
 
     @property
-    def override_handle(self):
+    def override_handle(self) -> str:
         """override_handle identifies in-memory models where a filepath
         would normally be used.
         """
@@ -148,13 +156,13 @@ class DataModel(StpipeAPIMixin):
     #     """Return the shape of the model's primary array"""
     #     return self._data_model_state.get_shape(self)
 
-    def to_flat_dict(self, include_arrays: bool = True, recursive: bool = True) -> dict:
+    def to_flat_dict(self, include_arrays: bool = True, recursive: bool = True) -> dict[str, Any]:
         """
         Get a flattened dictionary of the model's data
         """
         return {f"roman.{key}": val for key, val in super().to_flat_dict(include_arrays, recursive).items()}
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: DNode[_T] | _T) -> None:
         """
         Set an item in the data model
         """

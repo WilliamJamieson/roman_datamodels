@@ -5,7 +5,9 @@ This module contains the utility functions for the datamodels sub-package. Mainl
 
 import warnings
 from collections.abc import Mapping
+from os import PathLike
 from pathlib import Path
+from typing import Any, TypeVar
 
 import asdf
 
@@ -16,6 +18,8 @@ from ._core import DataModel
 
 __all__ = ["FilenameMismatchWarning", "rdm_open"]
 
+_T = TypeVar("_T")
+
 
 class FilenameMismatchWarning(UserWarning):
     """
@@ -24,30 +28,28 @@ class FilenameMismatchWarning(UserWarning):
     """
 
 
-def _open_path_like(init, lazy_tree=True, **kwargs):
+def _open_path_like(init: PathLike[str] | str, lazy_tree: bool = True, **kwargs: Any) -> asdf.AsdfFile:
     """
     Attempt to open init as if it was a path-like object.
 
     Parameters
     ----------
-    init : str
+    init
         Any path-like object that can be opened by asdf such as a valid string
-    memmap : bool
+    lazy_tree: bool
         If we should open the file with memmap
     **kwargs:
         Any additional arguments to pass to asdf.open
-
-    Returns
-    -------
-    `asdf.AsdfFile`
     """
     # asdf defaults to lazy_tree=False, this overwrites it to
     # lazy_tree=True for roman_datamodels
     kwargs["lazy_tree"] = lazy_tree
     init = Path(init)
 
+    asdf_file: asdf.AsdfFile
+
     try:
-        asdf_file = asdf.open(init, **kwargs)
+        asdf_file = asdf.open(init, **kwargs)  # type: ignore[no-untyped-call]
     except ValueError as err:
         raise TypeError("Open requires a filepath, file-like object, or Roman datamodel") from err
 
@@ -68,7 +70,7 @@ def _open_path_like(init, lazy_tree=True, **kwargs):
     return asdf_file
 
 
-def rdm_open(init, memmap=False, **kwargs):
+def rdm_open(init: str | Path | DataModel[_T] | asdf.AsdfFile, memmap: bool = False, **kwargs: Any) -> DataModel[_T]:
     """
     Datamodel open/create function.
         This function opens a Roman datamodel from an asdf file or generates
@@ -76,12 +78,12 @@ def rdm_open(init, memmap=False, **kwargs):
 
     Parameters
     ----------
-    init : str, `DataModel`, `asdf.AsdfFile`
+    init
         May be any one of the following types:
             - `asdf.AsdfFile` instance
             - string indicating the path to an ASDF file
             - `DataModel` Roman data model instance
-    memmap : bool
+    memmap
         Open ASDF file binary data using memmap (default: False)
 
     Returns
@@ -95,7 +97,8 @@ def rdm_open(init, memmap=False, **kwargs):
             try:
                 from romancal.datamodels.library import ModelLibrary
 
-                return ModelLibrary(init)
+                # Romancal is being totally skipped by MyPy
+                return ModelLibrary(init)  # type: ignore[no-any-return]
             except ImportError as err:
                 raise ImportError("Please install romancal to allow opening associations with roman_datamodels") from err
     with validate.nuke_validation():
@@ -109,18 +112,24 @@ def rdm_open(init, memmap=False, **kwargs):
 
         asdf_file = init if isinstance(init, asdf.AsdfFile) else _open_path_like(init, memmap=memmap, **kwargs)
         if (model_type := type(asdf_file.tree["roman"])) in RDM_NODE_REGISTRY.node_datamodel_mapping:
-            return RDM_NODE_REGISTRY.node_datamodel_mapping[model_type](asdf_file, **kwargs)
+            # MyPy cannot statically determine that the return type will be a DataModel
+            return RDM_NODE_REGISTRY.node_datamodel_mapping[model_type](asdf_file, **kwargs)  # type: ignore[no-any-return, index]
 
         # Check if the datamodel is a GDPS datamodel
         try:
             import roman_gdps  # noqa: F401
         except ImportError as err:
-            asdf_file.close()
+            # ASDF has not implemented type so MyPy will complain about this
+            # until they do.
+            asdf_file.close()  # type: ignore[no-untyped-call]
             raise ImportError("Please install roman-gdps to allow opening GDPS datamodels") from err
 
         # We assume at this point that an asdf file with `roman` key is a GDPS datamodel
         if "roman" in asdf_file.tree:
-            return asdf_file.tree["roman"]
+            # MyPy is not indexing into roman_gpds so it will complain about this being Any
+            return asdf_file.tree["roman"]  # type: ignore[no-any-return]
 
-        asdf_file.close()
+        # ASDF has not implemented type so MyPy will complain about this
+        # until they do.
+        asdf_file.close()  # type: ignore[no-untyped-call]
         raise TypeError(f"Unknown datamodel type: {model_type}")
