@@ -77,10 +77,7 @@ def mk_fps(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import Fps
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    fps = Fps(kwargs)
+    fps = Fps(kwargs, _array_shape=shape)
     fps.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(fps, filepath=filepath)

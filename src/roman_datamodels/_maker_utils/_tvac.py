@@ -77,10 +77,7 @@ def mk_tvac(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import Tvac
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    tvac = Tvac(kwargs)
+    tvac = Tvac(kwargs, _array_shape=shape)
     tvac.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(tvac, filepath=filepath)

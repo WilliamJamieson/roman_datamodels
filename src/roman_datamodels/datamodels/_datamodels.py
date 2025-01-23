@@ -101,7 +101,7 @@ class RampModel(DataModel[Any], nodes.Ramp):
             raise ValueError(f"Input must be one of {ALLOWED_MODELS}")
 
         # Create base ramp node with dummy values (for validation)
-        ramp = nodes.Ramp()
+        ramp = RampModel(_array_shape=model._array_shape_)
 
         # check if the input model has a resultantdq from SDF
         if hasattr(model, "resultantdq"):
@@ -113,7 +113,7 @@ class RampModel(DataModel[Any], nodes.Ramp):
             for key in other.keys():
                 if key == "resultantdq":
                     continue
-                if key in ramp:
+                if key in ramp.fields:
                     if isinstance(ramp[key], Mapping):
                         node_update(getattr(ramp, key), getattr(other, key))
                     elif isinstance(ramp[key], list):
@@ -128,9 +128,7 @@ class RampModel(DataModel[Any], nodes.Ramp):
 
         node_update(ramp, model)
 
-        # Create model from node
-        ramp_model = RampModel(cast(DataModel[Any], ramp))
-        return ramp_model
+        return ramp
 
 
 class SegmentationMapModel(DataModel[Any], nodes.SegmentationMap):
@@ -153,28 +151,45 @@ class MosaicModel(DataModel[Any], nodes.WfiMosaic):
     A model for the Roman WFI mosaic file
     """
 
-    def append_individual_image_meta(self, meta: stnode.DNode[Any] | dict[str, Any] | asdf.lazy_nodes.AsdfDictNode) -> None:
+    # May want this to be ALL, so everything is included, but that maybe a lot of
+    # dummy data
+    def append_individual_image_meta(
+        self,
+        meta: stnode.DNode[Any] | dict[str, Any] | asdf.lazy_nodes.AsdfDictNode,
+        flush: stnode.FlushOptions = stnode.FlushOptions.REQUIRED,
+    ) -> None:
         """
         Add the contents of meta to the appropriate keyword in individual_image_meta as an astropy QTable.
 
         Parameters
         ----------
-        meta : roman_datamodels.stnode._node.DNode or dict
+        meta
             Metadata from a component image of the mosiac.
+        flush
+            The method used to flush out the nodes if necessary.
         """
 
         # Convert input to a dictionary, if necessary
         if not isinstance(meta, dict | asdf.lazy_nodes.AsdfDictNode):
             meta_dict = meta.to_flat_dict()
         else:
+            # Flush the meta node if it is an ObjectNode, so its properties are
+            # all populated
             meta_dict = cast(dict[str, Any], meta)
 
         # Storage for keys and values in the base meta layer
         basic_cols = []
         basic_vals = []
 
+        # MyPy can't correctly inver that we may be passing super classes of DNode
+        # So it complains about the expression below
+        iterator = (
+            meta_dict.flat_items(flush=flush)  # type: ignore[attr-defined]
+            if isinstance(meta_dict, stnode.ObjectNode)  # type: ignore[redundant-expr, unreachable]
+            else meta_dict.items()
+        )
         # Sift through meta items to place in tables
-        for key, value in meta_dict.items():
+        for key, value in iterator:
             # Skip wcs objects
             if key == "wcs":
                 continue
@@ -185,18 +200,28 @@ class MosaicModel(DataModel[Any], nodes.WfiMosaic):
                 continue
 
             if isinstance(value, stnode.DNode):
+                # Flush the node if it is an ObjectNode, so its properties are
+                # all populated
+
                 # Storage for keys and values
                 subtable_cols = []
                 subtable_vals = []
 
+                sub_iterator = (
+                    meta_dict[key].flat_items(flush=flush)
+                    if isinstance(meta_dict[key], stnode.ObjectNode)
+                    else meta_dict[key].items()
+                )
+
                 # Loop over items within the node
-                for subkey, subvalue in meta_dict[key].items():
+                for subkey, subvalue in sub_iterator:
                     # Skip ndarrays and QTables
                     if isinstance(subvalue, asdf.tags.core.ndarray.NDArrayType | QTable):
                         continue
 
                     # Unwrap Enum values
                     subvalue = subvalue.value if isinstance(subvalue, Enum) else subvalue
+                    subvalue = np.nan if subvalue is None else subvalue
                     subtable_cols.append(subkey)
                     subtable_vals.append(
                         [str(subvalue)]

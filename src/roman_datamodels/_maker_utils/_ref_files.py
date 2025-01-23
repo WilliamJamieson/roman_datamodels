@@ -67,10 +67,7 @@ def mk_apcorr(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import ApcorrRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    apcorrref = ApcorrRef(kwargs)
+    apcorrref = ApcorrRef(kwargs, _array_shape=shape)
     apcorrref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(apcorrref, filepath=filepath)
@@ -96,10 +93,7 @@ def mk_flat(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import FlatRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    flatref = FlatRef(kwargs)
+    flatref = FlatRef(kwargs, _array_shape=shape)
     flatref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(flatref, filepath=filepath)
@@ -124,10 +118,7 @@ def mk_dark(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import DarkRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    darkref = DarkRef(kwargs)
+    darkref = DarkRef(kwargs, _array_shape=shape)
     darkref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(darkref, filepath=filepath)
@@ -176,10 +167,7 @@ def mk_epsf(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import EpsfRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    epsfref = EpsfRef(kwargs)
+    epsfref = EpsfRef(kwargs, _array_shape=shape)
     epsfref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(epsfref, filepath=filepath)
@@ -205,10 +193,7 @@ def mk_gain(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import GainRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    gainref = GainRef(kwargs)
+    gainref = GainRef(kwargs, _array_shape=shape)
     gainref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(gainref, filepath=filepath)
@@ -234,10 +219,7 @@ def mk_ipc(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import IpcRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    ipcref = IpcRef(kwargs)
+    ipcref = IpcRef(kwargs, _array_shape=shape)
     ipcref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(ipcref, filepath=filepath)
@@ -262,10 +244,7 @@ def mk_linearity(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import LinearityRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    linearityref = LinearityRef(kwargs)
+    linearityref = LinearityRef(kwargs, _array_shape=shape)
     linearityref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(linearityref, filepath=filepath)
@@ -290,10 +269,7 @@ def mk_inverselinearity(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import InverselinearityRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    inverselinearityref = InverselinearityRef(kwargs)
+    inverselinearityref = InverselinearityRef(kwargs, _shape=shape)
     inverselinearityref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(inverselinearityref, filepath=filepath)
@@ -319,10 +295,7 @@ def mk_mask(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import MaskRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    maskref = MaskRef(kwargs)
+    maskref = MaskRef(kwargs, _array_shape=shape)
     maskref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(maskref, filepath=filepath)
@@ -348,10 +321,7 @@ def mk_pixelarea(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import PixelareaRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    pixelarearef = PixelareaRef(kwargs)
+    pixelarearef = PixelareaRef(kwargs, _array_shape=shape)
     pixelarearef.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(pixelarearef, filepath=filepath)
@@ -399,10 +369,7 @@ def mk_readnoise(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import ReadnoiseRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    readnoiseref = ReadnoiseRef(kwargs)
+    readnoiseref = ReadnoiseRef(kwargs, _array_shape=shape)
     readnoiseref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(readnoiseref, filepath=filepath)
@@ -428,10 +395,7 @@ def mk_saturation(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import SaturationRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    saturationref = SaturationRef(kwargs)
+    saturationref = SaturationRef(kwargs, _array_shape=shape)
     saturationref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(saturationref, filepath=filepath)
@@ -457,10 +421,7 @@ def mk_superbias(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import SuperbiasRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    superbiasref = SuperbiasRef(kwargs)
+    superbiasref = SuperbiasRef(kwargs, _array_shape=shape)
     superbiasref.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(superbiasref, filepath=filepath)
@@ -500,10 +461,7 @@ def mk_refpix(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import RefpixRef
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    refpix = RefpixRef(kwargs)
+    refpix = RefpixRef(kwargs, _array_shape=shape)
     refpix.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(refpix, filepath=filepath)

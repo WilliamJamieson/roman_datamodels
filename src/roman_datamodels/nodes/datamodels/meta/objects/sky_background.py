@@ -50,7 +50,7 @@ class SkyBackground(rad.TaggedObjectNode[_SkyBackground]):
     @property
     @rad.field
     def level(self: rad.Node) -> float | None:
-        return rad.NONUM
+        return None
 
     @property
     @rad.field

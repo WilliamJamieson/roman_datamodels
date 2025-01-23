@@ -434,9 +434,9 @@ def mk_ref_common(reftype_, **kwargs):
     -------
     dict (follows reference_file/ref_common-1.0.0 schema)
     """
-    from roman_datamodels.nodes import RefCommon
+    from roman_datamodels.nodes import RefCommonRef
 
-    meta = RefCommon(kwargs)
+    meta = RefCommonRef(kwargs)
     meta.flush(FlushOptions.EXTRA, recurse=True)
 
     return meta

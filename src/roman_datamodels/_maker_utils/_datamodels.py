@@ -32,10 +32,7 @@ def mk_level1_science_raw(*, shape=None, dq=False, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import WfiScienceRaw
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    wfi_science_raw = WfiScienceRaw(kwargs)
+    wfi_science_raw = WfiScienceRaw(kwargs, _array_shape=shape)
     wfi_science_raw.flush(FlushOptions.EXTRA, recurse=True)
     if not dq:
         del wfi_science_raw._data["resultantdq"]
@@ -75,16 +72,10 @@ def mk_level2_image(*, shape=None, n_groups=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import WfiImage
 
-    if shape is not None:
-        if len(shape) == 3:
-            n_groups = shape[0]
-            shape = shape[1:]
-        kwargs["_array_shape"] = shape
-
     if n_groups is not None:
-        kwargs["_n_groups"] = n_groups
+        shape = (n_groups, shape[0], shape[1])
 
-    wfi_image = WfiImage(kwargs)
+    wfi_image = WfiImage(kwargs, _array_shape=shape)
     wfi_image.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(wfi_image, filepath=filepath)
@@ -115,13 +106,10 @@ def mk_level3_mosaic(*, shape=None, n_images=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import WfiMosaic
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
     if n_images is not None:
-        kwargs["_n_images"] = n_images
+        shape = (n_images, shape[0], shape[1])
 
-    wfi_mosaic = WfiMosaic(kwargs)
+    wfi_mosaic = WfiMosaic(kwargs, _array_shape=shape)
     wfi_mosaic.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(wfi_mosaic, filepath=filepath)
@@ -147,10 +135,7 @@ def mk_msos_stack(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import MsosStack
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    msos_stack = MsosStack(kwargs)
+    msos_stack = MsosStack(kwargs, _array_shape=shape)
     msos_stack.flush(FlushOptions.EXTRA, recurse=True)
     return save_node(msos_stack, filepath=filepath)
 
@@ -176,10 +161,7 @@ def mk_ramp(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import Ramp
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    ramp = Ramp(kwargs)
+    ramp = Ramp(kwargs, _array_shape=shape)
     ramp.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(ramp, filepath=filepath)
@@ -204,10 +186,7 @@ def mk_ramp_fit_output(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import RampFitOutput
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    rampfitoutput = RampFitOutput(kwargs)
+    rampfitoutput = RampFitOutput(kwargs, _array_shape=shape)
     rampfitoutput.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(rampfitoutput, filepath=filepath)
@@ -237,10 +216,7 @@ def mk_associations(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import Associations
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    associations = Associations(kwargs)
+    associations = Associations(kwargs, _array_shape=shape)
     associations.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(associations, filepath=filepath)
@@ -265,10 +241,7 @@ def mk_guidewindow(*, shape=None, filepath=None, **kwargs):
     """
     from roman_datamodels.nodes import Guidewindow
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    guidewindow = Guidewindow(kwargs)
+    guidewindow = Guidewindow(kwargs, _array_shape=shape)
     guidewindow.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(guidewindow, filepath=filepath)
@@ -315,10 +288,7 @@ def mk_mosaic_segmentation_map(*, filepath=None, shape=None, **kwargs):
     """
     from roman_datamodels.nodes import MosaicSegmentationMap
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    segmentation_map = MosaicSegmentationMap(kwargs)
+    segmentation_map = MosaicSegmentationMap(kwargs, _array_shape=shape)
     segmentation_map.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(segmentation_map, filepath=filepath)
@@ -365,10 +335,7 @@ def mk_segmentation_map(*, filepath=None, shape=None, **kwargs):
     """
     from roman_datamodels.nodes import SegmentationMap
 
-    if shape is not None:
-        kwargs["_array_shape"] = shape
-
-    segmentation_map = SegmentationMap(kwargs)
+    segmentation_map = SegmentationMap(kwargs, _array_shape=shape)
     segmentation_map.flush(FlushOptions.EXTRA, recurse=True)
 
     return save_node(segmentation_map, filepath=filepath)

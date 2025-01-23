@@ -8,7 +8,7 @@ from astropy.time import Time
 from gwcs import WCS
 from numpy.testing import assert_array_equal
 
-# from .stnode import DNode, TaggedListNode, TaggedObjectNode, TaggedScalarNode
+from .datamodels import DataModel
 from .stnode.core import DNode, LNode
 from .stnode.rad import SchemaScalarNode
 
@@ -92,7 +92,7 @@ def assert_node_is_copy(node1, node2, deepcopy=False):
     assert_node_equal(node1, node2)
 
     if isinstance(node1, DNode):
-        for key, value1 in node1.items():
+        for key, value1 in node1._data.items() if isinstance(node1, DataModel) else node1.items():
             value2 = node2[key]
             _assert_value_is_copy(value1, value2, deepcopy=deepcopy)
     elif isinstance(node1, LNode):
@@ -126,7 +126,6 @@ def _assert_value_is_copy(value1, value2, deepcopy=False):
             try:
                 hash(value1)
             except TypeError:
-                print(id(value1), id(value2))
                 assert value1 is not value2
             else:
                 assert value1 is value2

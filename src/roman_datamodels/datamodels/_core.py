@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import copy
 import sys
+from collections.abc import Generator
 from pathlib import PurePath
 from types import TracebackType
 from typing import Any, TypeVar, cast
 
+import numpy.typing as npt
 from asdf import AsdfFile
 from asdf.exceptions import ValidationError
 
@@ -114,7 +116,7 @@ class DataModel(StpipeAPIMixin[_T], rad.TagMixin[_T]):
         self.close()
 
     def copy(self, deepcopy: bool = True, memo: dict[int, Any] | None = None) -> DataModel[_T]:
-        result = type(self)()
+        result = cast(DataModel[_T], self.construct_model(None))
         self.clone(result, self, deepcopy=deepcopy, memo=memo)
         return result
 
@@ -151,10 +153,12 @@ class DataModel(StpipeAPIMixin[_T], rad.TagMixin[_T]):
         # Arbitrary choice to look something like crds://
         return f"override://{type(self).__name__}"
 
-    # @property
-    # def shape(self) -> tuple[int] | None:
-    #     """Return the shape of the model's primary array"""
-    #     return self._data_model_state.get_shape(self)
+    @property
+    def shape(self) -> tuple[int, ...] | None:
+        """Return the shape of the model's primary array"""
+        if (array := getattr(self, self.get_primary_array_name(), None)) is not None:
+            return cast(tuple[int, ...], cast(npt.NDArray[Any], array.shape))
+        return None
 
     def to_flat_dict(self, include_arrays: bool = True, recursive: bool = True) -> dict[str, Any]:
         """
@@ -169,3 +173,22 @@ class DataModel(StpipeAPIMixin[_T], rad.TagMixin[_T]):
         if key.startswith("_"):
             raise ValueError("May not specify attributes/keys that start with _")
         super().__setitem__(key, value)
+
+    # For backwards compatibility with the old version of the datamodels which
+    # did not directly inherit from their respective node types, we need to
+    # override the items method to ensure that the correct items are returned
+    def items(self) -> Generator[tuple[str, Any], None, None]:  # type: ignore[override]
+        """
+        Iterates over all of the model items in a flat way.
+
+        Each element is a pair (``key``, ``value``).  Each ``key`` is a
+        dot-separated name.  For example, the schema element
+        ``meta.observation.date`` will end up in the result as::
+
+            ("meta.observation.date": "2012-04-22T03:22:05.432")
+
+        Unlike the JWST DataModel implementation, this does not use
+        schemas directly.
+        """
+
+        yield from self._recursive_items()

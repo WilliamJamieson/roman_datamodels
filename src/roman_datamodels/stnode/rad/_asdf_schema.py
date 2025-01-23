@@ -10,6 +10,9 @@ from ..core import NodeKeyMixin, get_config
 __all__ = ["RadSchema"]
 
 
+# TODO: Create a registry for these objects
+
+
 class RadSchema(NodeKeyMixin):
     def __init__(self, schema: dict[str, Any]) -> None:
         self._schema = schema
@@ -149,6 +152,10 @@ class RadSchema(NodeKeyMixin):
     @property
     def required(self) -> set[str]:
         return set(self._to_field_key(key) for key in list(chain(*self.get_key("required"))))
+
+    @property
+    def property_order(self) -> tuple[str, ...]:
+        return tuple(self._to_field_key(key) for key in list(chain(*self.get_key("propertyOrder"))))
 
     @property
     def fields(self) -> dict[str, RadSchema]:

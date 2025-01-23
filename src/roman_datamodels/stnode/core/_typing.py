@@ -37,6 +37,8 @@ if "pytest" in sys.modules:
         _has_typeguard = False
     else:
         _has_typeguard = True
+else:
+    _has_typeguard = False
 
 
 def surpress_check(function: Callable[_P, _T]) -> Callable[_P, _T]:

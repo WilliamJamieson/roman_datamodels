@@ -10,7 +10,7 @@ from typing import Any, ParamSpec, TypeVar, cast
 from asdf import AsdfFile
 from asdf.search import AsdfSearchResult
 
-from roman_datamodels.stnode import DNode
+from roman_datamodels.stnode import DNode, TaggedObjectNode
 from roman_datamodels.validate import nuke_validation
 
 __all__ = ["AsdfFileMixin"]
@@ -53,6 +53,19 @@ class AsdfFileMixin(DNode[DNode[_T] | _T]):
         """
         return cls.__bases__[-1]
 
+    def construct_node(self, data: dict[str, DNode[_T] | _T]) -> TaggedObjectNode[_T]:
+        """
+        Construct a new node (matching the node for this model) from the given data
+        """
+        # MyPy can't correctly infer the typing here
+        return self.node_type()(data, _array_shape=self._array_shape_)  # type: ignore[no-any-return]
+
+    def construct_model(self, data: dict[str, DNode[_T] | _T] | DNode[DNode[_T] | _T] | None) -> AsdfFileMixin[_T]:
+        """
+        Construct a new model from the given data
+        """
+        return type(self)(data, _array_shape=self._array_shape_)
+
     def _init_asdf_file(self) -> None:
         """
         Initialize the ASDF file
@@ -62,7 +75,7 @@ class AsdfFileMixin(DNode[DNode[_T] | _T]):
             # until they do.
             af = AsdfFile()  # type: ignore[no-untyped-call]
 
-            af["roman"] = self.node_type()(self._data)
+            af["roman"] = self.construct_node(self._data)
             # ASDF has not implemented type hints so MyPy will complain about this
             # until they do.
             af.validate()  # type: ignore[no-untyped-call]
@@ -134,7 +147,7 @@ class AsdfFileMixin(DNode[DNode[_T] | _T]):
         """
         with nuke_validation(), _temporary_update_filename(self, Path(init).name):
             asdf_file = self.open_asdf(None, lazy_tree=lazy_tree, **kwargs)
-            asdf_file["roman"] = self.node_type()(self._data)
+            asdf_file["roman"] = self.construct_node(self._data)
             asdf_file.write_to(init, all_array_compression=all_array_compression, **kwargs)  # type: ignore[no-untyped-call]
 
     def save(

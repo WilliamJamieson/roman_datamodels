@@ -13,7 +13,6 @@ import asdf
 
 from roman_datamodels import validate
 
-# from ._core import MODEL_REGISTRY, DataModel
 from ._core import DataModel
 
 __all__ = ["FilenameMismatchWarning", "rdm_open"]

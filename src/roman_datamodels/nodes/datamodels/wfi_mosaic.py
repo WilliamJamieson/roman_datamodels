@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias, cast
+from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -121,28 +121,24 @@ class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin[_WfiMosaic
         )
 
     @property
-    def default_array_shape(self) -> tuple[int, int]:
-        return (4088, 4088)
+    def default_array_shape(self) -> tuple[int, int, int]:
+        return (2, 4088, 4088)
 
     @property
-    def testing_array_shape(self) -> tuple[int, int]:
-        return (8, 8)
+    def testing_array_shape(self) -> tuple[int, int, int]:
+        return (2, 8, 8)
 
     @property
-    def _n_images(self) -> int:
-        # The number of images in the mosaic comes from the context array
+    def _largest_array_shape_(self) -> tuple[int, ...] | None:
+        """Override so that array_shape is the correct shape for construction"""
+        if (shape := self.primary_array_shape) is None:
+            return None
+
         if self._has_node("context"):
             n_images: int = self.context.shape[0]
-            return n_images
+            return (n_images, shape[0], shape[1])
 
-        # Allow for one to shrink/set the number of images
-        if self._has_node("_n_images"):
-            # MyPy doesn't allow us to down cast to the specific type
-            # we expect here
-            return cast(int, self._data["_n_images"])
-
-        # default fall-back
-        return 2
+        return None
 
     @property
     @rad.field
@@ -152,37 +148,37 @@ class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin[_WfiMosaic
     @property
     @rad.field
     def data(self: rad.Node) -> npt.NDArray[np.float32]:
-        return np.zeros(self.array_shape, dtype=np.float32)
+        return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @property
     @rad.field
     def err(self: rad.Node) -> npt.NDArray[np.float32]:
-        return np.zeros(self.array_shape, dtype=np.float32)
+        return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @property
     @rad.field
     def context(self: rad.Node) -> npt.NDArray[np.uint32]:
-        return np.zeros((self._n_images, *self.array_shape), dtype=np.uint32)
+        return np.zeros(self.array_shape, dtype=np.uint32)
 
     @property
     @rad.field
     def weight(self: rad.Node) -> npt.NDArray[np.float32]:
-        return np.zeros(self.array_shape, dtype=np.float32)
+        return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @property
     @rad.field
     def var_poisson(self: rad.Node) -> npt.NDArray[np.float32]:
-        return np.zeros(self.array_shape, dtype=np.float32)
+        return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @property
     @rad.field
     def var_rnoise(self: rad.Node) -> npt.NDArray[np.float32]:
-        return np.zeros(self.array_shape, dtype=np.float32)
+        return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @property
     @rad.field
     def var_flat(self: rad.Node) -> npt.NDArray[np.float32]:
-        return np.zeros(self.array_shape, dtype=np.float32)
+        return np.zeros(self.array_shape[1:], dtype=np.float32)
 
     @property
     @rad.field

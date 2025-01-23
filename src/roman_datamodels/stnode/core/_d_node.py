@@ -4,6 +4,7 @@ import datetime
 import re
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Generator, Iterator, MutableMapping
+from enum import Enum
 from inspect import signature
 from typing import TYPE_CHECKING, Annotated, Any, TypeVar
 
@@ -39,6 +40,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
     """
 
     _fields: tuple[str, ...] | None = None
+    _schema_fields: tuple[str, ...] | None = None
     _field_signatures: dict[str, type] | None = None
 
     def _pre_initialize_node(self, init: dict[str, _T] | DNode[_T] | AsdfFile | None = None, **kwargs: Any) -> Any:
@@ -50,7 +52,9 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         """Postprocessing for initialization of the node"""
         pass
 
-    def __init__(self, node: dict[str, _T] | DNode[_T] | None = None, **kwargs: Any) -> None:
+    def __init__(
+        self, node: dict[str, _T] | DNode[_T] | None = None, *, _array_shape: tuple[int, ...] | None = None, **kwargs: Any
+    ) -> None:
         node = self._pre_initialize_node(node, **kwargs)
 
         # Handle if we are passed different data types
@@ -60,8 +64,12 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
             self._data = node
         elif isinstance(node, DNode):
             self._data = node._data
+            _array_shape = node._array_shape_ if _array_shape is None else _array_shape
         else:
             raise ValueError(f"Initializer only accepts dict-like, not {type(node)}")
+
+        # Have ability to custom override the array shape
+        self._array_shape_: tuple[int, ...] | None = _array_shape
 
         self._post_initialize_node()
 
@@ -78,7 +86,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         return tuple()
 
     @property
-    def fields(self) -> tuple[str, ...]:
+    def schema_fields(self) -> tuple[str, ...]:
         """
         Get the keys of the node as defined by the schema
             Note this only works on instances
@@ -86,8 +94,18 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         """
         from ..rad import get_node_fields
 
+        if self._schema_fields is None:
+            self._schema_fields = get_node_fields(type(self))
+
+        return self._schema_fields
+
+    @property
+    def fields(self) -> tuple[str, ...]:
+        """
+        Get the keys of all the fields defined in for the object
+        """
         if self._fields is None:
-            self._fields = get_node_fields(type(self)) + type(self)._extra_fields()
+            self._fields = self.schema_fields + type(self)._extra_fields()
 
         return self._fields
 
@@ -173,11 +191,11 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         except MissingFieldError as err:
             # For lazy nodes, we need to check if the key is in the fields and
             # grab the value from the property
-            if self._to_field_key(key) in self.fields:
-                value: _T = getattr(self, key)
+            if (key_ := self._to_field_key(key)) in self.fields:
+                value: _T = getattr(self, key_)
                 return value
 
-            raise err
+            raise KeyError(f"No such attribute ({key}) found in node") from err
 
     def _check_key(self, key: str) -> bool:
         """
@@ -237,10 +255,13 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         def recurse(tree: Any, path: list[Any] | None = None) -> Generator[tuple[str, _T], None, None]:
             path = path or []  # Avoid mutable default arguments
             if isinstance(tree, DNode | dict | AsdfDictNode):
-                for key, val in tree.items():
+                # Since datamodels redefine items by flattening, we need to iterate over the
+                # _data attribute directly
+                for key, val in tree._data.items() if isinstance(tree, DNode) else tree.items():
                     yield from recurse(val, [*path, key])
             elif isinstance(tree, LNode | list | tuple | AsdfListNode):
-                for i, val in enumerate(tree):
+                # Same issue as for DNode
+                for i, val in enumerate(tree.data if isinstance(tree, LNode) else tree):
                     yield from recurse(val, [*path, i])
             elif tree is not None:
                 yield (".".join(str(x) for x in path), tree)
@@ -263,6 +284,9 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
             """
             Unwrap the tagged scalars if necessary.
             """
+            if isinstance(val, Enum):
+                val = val.value
+
             if isinstance(val, datetime.datetime):
                 return val.isoformat()
             elif isinstance(val, Time):
@@ -309,6 +333,10 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         instance = self.__class__.__new__(self.__class__)
         instance.__dict__.update(self.__dict__.copy())
         instance.__dict__["_data"] = self.__dict__["_data"].copy()
+        if (shape := self.__dict__["_array_shape_"]) is not None:
+            instance.__dict__["_array_shape_"] = shape.copy()
+        else:
+            instance.__dict__["_array_shape_"] = None
 
         return instance
 

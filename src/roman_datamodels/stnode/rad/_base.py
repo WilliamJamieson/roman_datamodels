@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from textwrap import indent
-from typing import TypeVar, cast
+from typing import TypeVar
 
 from ..core import AsdfNodeMixin, DNode, get_config
 from ._asdf_schema import RadSchema
@@ -67,6 +67,16 @@ class ArrayFieldMixin(DNode[_T], ABC):
         return None
 
     @property
+    def _largest_array_shape_(self) -> tuple[int, ...] | None:
+        """
+        Shape of the primary array for the array_shape property.
+        -> Normally the largest in dimension array is the primary array,
+           but sometimes this is not the case. This property allows for
+           a model to override this behavior
+        """
+        return self.primary_array_shape
+
+    @property
     @abstractmethod
     def default_array_shape(self) -> tuple[int, ...]:
         """Default shape of the data array."""
@@ -78,17 +88,15 @@ class ArrayFieldMixin(DNode[_T], ABC):
 
     @property
     def array_shape(self) -> tuple[int, ...]:
-        """Shape of the data array."""
+        """The full shape of the largest (in dimension) array in the model."""
 
-        if self._has_node("_array_shape"):
-            # MyPy thinks this is the generic type of data in the Node, but
-            # really its always going to be a tuple of ints in this case
-            return cast(tuple[int, ...], self._data["_array_shape"])
+        if self._array_shape_ is not None:
+            return self._array_shape_
 
         if get_config().use_test_array_shape:
             return self.testing_array_shape
 
-        if shape := self.primary_array_shape:
+        if shape := self._largest_array_shape_:
             return shape
 
         return self.default_array_shape
