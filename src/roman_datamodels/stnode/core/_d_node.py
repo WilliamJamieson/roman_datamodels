@@ -43,7 +43,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
     _schema_fields: tuple[str, ...] | None = None
     _field_signatures: dict[str, type] | None = None
 
-    def _pre_initialize_node(self, init: dict[str, _T] | DNode[_T] | AsdfFile | None = None, **kwargs: Any) -> Any:
+    def _pre_initialize_node(self, init: dict[str, _T] | AsdfDictNode | DNode[_T] | AsdfFile | None = None, **kwargs: Any) -> Any:
         """Preprocessing for initialization of the node"""
 
         return init
@@ -53,7 +53,11 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         pass
 
     def __init__(
-        self, node: dict[str, _T] | DNode[_T] | None = None, *, _array_shape: tuple[int, ...] | None = None, **kwargs: Any
+        self,
+        node: dict[str, _T] | AsdfDictNode | DNode[_T] | None = None,
+        *,
+        _array_shape: tuple[int, ...] | None = None,
+        **kwargs: Any,
     ) -> None:
         node = self._pre_initialize_node(node, **kwargs)
 
@@ -61,7 +65,8 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         if node is None:
             self._data: dict[str, _T] = {}
         elif isinstance(node, dict | AsdfDictNode):
-            self._data = node
+            # Ignore due to MyPy issues with AsdfDictNode
+            self._data = node  # type: ignore[assignment]
         elif isinstance(node, DNode):
             self._data = node._data
             _array_shape = node._array_shape_ if _array_shape is None else _array_shape
@@ -105,7 +110,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         Get the keys of all the fields defined in for the object
         """
         if self._fields is None:
-            self._fields = self.schema_fields + type(self)._extra_fields()
+            self._fields = self.schema_fields + self._extra_fields()
 
         return self._fields
 

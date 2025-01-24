@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 from asdf import AsdfFile, get_config
 from asdf.extension import Converter, ManifestExtension
 
-from roman_datamodels.stnode.rad import RDM_NODE_REGISTRY
+from roman_datamodels.stnode.rad import RDM_NODE_REGISTRY, TaggedListNode, TaggedObjectNode
 
 if TYPE_CHECKING:
     from roman_datamodels.stnode.rad import TagMixin
@@ -37,7 +37,7 @@ class _NodeConverter(Converter):
         return list(RDM_NODE_REGISTRY.tagged_registry.values())
 
     def select_tag(self, obj: TagMixin[_T], tags: list[str], ctx: AsdfFile) -> str:
-        return obj.asdf_tag_uri()
+        return obj._tag
 
     def to_yaml_tree(self, obj: TagMixin[_T], tag: str, ctx: AsdfFile) -> dict[str, Any] | list[Any] | Any:
         return obj.to_asdf_tree(ctx)
@@ -53,9 +53,17 @@ class _NodeConverter(Converter):
             # by containing objects
             return node  # type: ignore[return-value]
 
-        # MyPy is upset that we are attemptying to use the constructor for the type
-        # stored in the registry.
-        return node_cls(node)  # type: ignore[call-arg, return-value]
+        # Handle the tagged object and list nodes
+        if issubclass(node_cls, TaggedObjectNode) or issubclass(node_cls, TaggedListNode):
+            # MyPy doesn't know how to handle these having basically the same signature
+            return node_cls(node, tag=tag)  # type: ignore[arg-type]
+
+        # Handle the tagged scalar nodes
+        # MyPy doesn't know how to handle this call
+        out = node_cls(node)  # type: ignore[call-arg]
+        out._instance_tag = tag
+        # MyPy can't determine that the return value will be the correct type
+        return out  # type: ignore[return-value]
 
 
 # Create the ASDF extension for the STNode classes.

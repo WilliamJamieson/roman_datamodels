@@ -1,23 +1,19 @@
 import warnings
 from abc import ABC
-from collections.abc import Callable, Generator
+from collections.abc import Generator
 from enum import Enum
-from functools import wraps
-from typing import Any, TypeAlias, TypeVar, cast
+from typing import Any, TypeVar
 
 from asdf import AsdfFile
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 
-from ..core import DNode, FlushOptions, LNode, get_config, type_checked
+from ..core import DNode, FlushOptions, LNode, get_config
 from ._base import RadNodeMixin
-from ._utils import get_node_fields
 
 __all__ = [
     "ListNode",
-    "Node",
     "ObjectNode",
     "ScalarNode",
-    "field",
 ]
 
 _T = TypeVar("_T")
@@ -28,6 +24,11 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
         return cls.asdf_schema().required
+
+    @property
+    def schema_required(self) -> set[str]:
+        """List of required fields in the schema."""
+        return self.schema.required
 
     @classmethod
     def asdf_property_order(cls) -> tuple[str, ...]:
@@ -52,7 +53,9 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
                 4. Extra fields not already yielded in alphabetical order.
                 5. All other non-yielded data in _data in alphabetical order
         """
-        required_fields = self.asdf_required()
+        required_fields = self.schema_required
+        all_fields = self.schema_fields
+        extra_fields = self.fields
 
         data_fields = set(self._data.keys())
         visited_fields = set()
@@ -66,10 +69,10 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
                     if field in required_fields:
                         yield field
                 case FlushOptions.ALL:
-                    if field in self.schema_fields:
+                    if field in all_fields:
                         yield field
                 case FlushOptions.EXTRA:
-                    if field in self.fields:
+                    if field in extra_fields:
                         yield field
                 case _:
                     if flush is not FlushOptions.NONE:
@@ -191,11 +194,11 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
             case FlushOptions.NONE:
                 return
             case FlushOptions.REQUIRED:
-                fields = tuple(self.asdf_required())
+                fields = tuple(self.schema_required)
             case FlushOptions.ALL:
-                fields = get_node_fields(type(self))
+                fields = self.schema_fields
             case FlushOptions.EXTRA:
-                fields = get_node_fields(type(self)) + self._extra_fields()
+                fields = self.fields
             case _:
                 raise ValueError(f"Invalid flush option: {flush}")
 
@@ -239,37 +242,3 @@ class ScalarNode(RadNodeMixin[_T], ABC):
 
     def __asdf_traverse__(self) -> Any:
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
-
-
-def field(function: Callable[[DNode[Any]], _T]) -> Callable[[ObjectNode[Any]], _T]:
-    """
-    Create a special property decorator for node methods that does several
-    things:
-        1. Marks them out as `field_property` so that they can be identified as
-           schema fields.
-        2. Wraps the method itself so that it acts a a pure default value
-           producer, using the value in the node before falling back on the method
-           itself to get the default value.
-        3. Adds a type check wrapper method which is only active during certain
-           testing conditions (falling back on a no-op identity decorator when
-           not testing).
-    """
-
-    @wraps(function)
-    def wrapper(self: DNode[Any]) -> _T:
-        """
-        Wrap the function (which is defined on the node) to handle getting the value
-        from the node and then falling back on evaluating the function itself to
-        get, set, and then return the default value.
-        """
-
-        # Note the lambda is used to delay the evaluation of the default value all the way
-        # until the default is actually needed. This is important for things like numpy arrays
-        # which can be expensive to create (memory and time wise).
-        #
-        return cast(_T, self._get_node(function.__name__, lambda: type_checked(function)(self)))
-
-    return wrapper
-
-
-Node: TypeAlias = DNode[Any]

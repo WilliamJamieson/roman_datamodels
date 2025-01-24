@@ -37,6 +37,10 @@ class RefCommonRefOpticalElementRef_Instrument(
             *RefOpticalElementRef_Instrument.asdf_required(),
         }
 
+    @property
+    def schema_required(self) -> set[str]:
+        return self.asdf_required()
+
 
 _RefCommonRefOpticalElementRef: TypeAlias = _RefCommonRef | RefCommonRefOpticalElementRef_Instrument
 

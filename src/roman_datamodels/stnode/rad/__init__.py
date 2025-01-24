@@ -2,8 +2,9 @@ from ._asdf_schema import RadSchema
 from ._base import ArrayFieldMixin, RadNodeMixin
 from ._default import NOFN, NOINT, NONUM, NOSTR, Wcs
 from ._enum import EnumNodeMixin, NodeEnumMeta, RadEnum
+from ._field import Node, field
 from ._implied import ImpliedNodeMixin
-from ._node import ListNode, Node, ObjectNode, ScalarNode, field
+from ._node import ListNode, ObjectNode, ScalarNode
 from ._registry import RDM_NODE_REGISTRY
 from ._schema import SchemaListNode, SchemaMixin, SchemaObjectNode, SchemaScalarNode
 from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode, TagMixin

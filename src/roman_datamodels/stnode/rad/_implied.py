@@ -65,3 +65,9 @@ class ImpliedNodeMixin(RadNodeMixin[_T], ABC):
     def asdf_schema(cls) -> RadSchema:
         """Get the schema for the implied node"""
         return cls.asdf_implied_by().asdf_schema().fields[cls.asdf_implied_property_name()]
+
+    # TODO: Figure out why I need to redefine this here
+    @property
+    def schema(self) -> RadSchema:
+        """Get the schema for this instance."""
+        return self.asdf_schema()

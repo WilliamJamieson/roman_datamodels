@@ -23,6 +23,11 @@ class RadNodeMixin(AsdfNodeMixin[_T], ABC):
     def asdf_schema(cls) -> RadSchema:
         """Get the schema in rad for this class."""
 
+    @property
+    def schema(self) -> RadSchema:
+        """Get the schema for this instance."""
+        return self.asdf_schema()
+
     @classmethod
     def fill_docs(cls) -> None:
         """Fill in the docstrings for the class."""
@@ -44,6 +49,11 @@ class ArrayFieldMixin(DNode[_T], ABC):
         """List of required fields in this node."""
 
     @property
+    @abstractmethod
+    def schema_required(self) -> set[str]:
+        """List of required fields in the schema."""
+
+    @property
     def primary_array_name(self) -> str:
         """
         Returns the name "primary" array for this model, which
@@ -51,7 +61,7 @@ class ArrayFieldMixin(DNode[_T], ABC):
         This is intended to be overridden in the subclasses if the
         primary array's name is not "data".
         """
-        if "data" in self.asdf_required():
+        if "data" in self.schema_required:
             return "data"
 
         raise NotImplementedError("Primary array name not defined")

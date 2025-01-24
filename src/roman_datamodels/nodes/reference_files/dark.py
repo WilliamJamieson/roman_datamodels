@@ -37,6 +37,10 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure],
         }
 
     @property
+    def schema_required(self) -> set[str]:
+        return self.asdf_required()
+
+    @property
     @rad.field
     def ma_table_name(self: rad.Node) -> str:
         return rad.NOSTR

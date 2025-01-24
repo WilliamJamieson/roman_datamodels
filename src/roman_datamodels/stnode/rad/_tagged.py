@@ -3,9 +3,10 @@ from types import MappingProxyType
 from typing import Any, TypeVar
 
 from asdf import AsdfFile
+from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from astropy.time import Time
 
-from ..core import FlushOptions
+from ..core import DNode, FlushOptions, LNode
 from ._schema import SchemaListNode, SchemaMixin, SchemaObjectNode, SchemaScalarNode
 
 __all__ = [
@@ -21,6 +22,8 @@ _T = TypeVar("_T")
 class TagMixin(SchemaMixin[_T], ABC):
     """Mixin for nodes to support linking to a tag."""
 
+    _instance_tag: str | None = None
+
     @classmethod
     @abstractmethod
     def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
@@ -28,18 +31,38 @@ class TagMixin(SchemaMixin[_T], ABC):
 
     @classmethod
     def asdf_tag_uri(cls) -> str:
-        """Get the tag URI for the node."""
+        """Get the latest tag URI for the node."""
         return list(cls.asdf_tag_uris())[-1]
 
+    # TODO: Should not be hidden, but it breaks something when doing asdf_info
     @property
     def _tag(self) -> str:
-        return self.asdf_tag_uri()
+        """Get the tag URI for the instance."""
+        if self._instance_tag is None:
+            self._instance_tag = self.asdf_tag_uri()
+        return self._instance_tag
+
+    @property
+    def schema_uri(self) -> str:
+        """Get the schema URI for the instance."""
+        return self.asdf_tag_uris()[self._tag]
 
 
 class TaggedObjectNode(SchemaObjectNode[_T], TagMixin[_T], ABC):
     """
     Base class for all objects that are tagged in RAD.
     """
+
+    def __init__(
+        self,
+        node: dict[str, _T] | AsdfDictNode | DNode[_T] | None = None,
+        *,
+        tag: str | None = None,
+        _array_shape: tuple[int, ...] | None = None,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(node=node, _array_shape=_array_shape, **kwargs)
+        self._instance_tag = tag
 
 
 class TaggedListNode(SchemaListNode[_T], TagMixin[_T], ABC):
@@ -49,6 +72,10 @@ class TaggedListNode(SchemaListNode[_T], TagMixin[_T], ABC):
         a list base type, or wraps a list base type.
         These will all be in the tagged_lists directory.
     """
+
+    def __init__(self, node: list[_T] | AsdfListNode | LNode[_T] | None = None, *, tag: str | None = None) -> None:
+        super().__init__(node=node)
+        self._instance_tag = tag
 
 
 class TaggedScalarNode(SchemaScalarNode[_T], TagMixin[_T], ABC):

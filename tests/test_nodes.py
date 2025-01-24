@@ -246,6 +246,19 @@ def test_fields(node_cls):
         assert isinstance(getattr(node_cls, field), property)
 
 
+@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+def test_required_fields_default_tag(node_cls):
+    """
+    Check if the required fields are correct for the default tag
+    """
+    # Check that the tag is the required tag
+    if issubclass(node_cls, rad.TaggedObjectNode):
+        assert node_cls.asdf_tag_uri() == node_cls()._tag
+
+    # Check the required fields for the default tag match
+    assert node_cls.asdf_required() == node_cls().schema_required
+
+
 def find_property_schema(schema, property_name):
     property_name = "pass" if property_name == "pass_" else property_name
     if "properties" in schema:

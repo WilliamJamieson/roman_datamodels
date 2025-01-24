@@ -83,18 +83,6 @@ class DataModel(StpipeAPIMixin[_T], rad.TagMixin[_T]):
 
         raise OSError("Argument init does not appear to be a valid ASDFfile or TaggedObjectNode")
 
-    # def _post_initialize_node(self) -> None:
-    #     # Set the model type correctly
-    #     if "meta" in self.fields and "model_type" in self.meta.fields:
-    #         self.meta.model_type = type(self).__name__
-
-    @property
-    def schema_uri(self) -> str:
-        """
-        Find the schema URI for the data model
-        """
-        return self.asdf_schema_uri()
-
     def __del__(self) -> None:
         """
         Ensure closure of resources when deleted.
