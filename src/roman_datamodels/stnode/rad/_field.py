@@ -1,13 +1,13 @@
+import threading
 import warnings
 from collections.abc import Callable
 from functools import wraps
 from typing import Any, TypeAlias, TypeVar, cast
 
 from ..core import DNode, type_checked
-from ._node import ObjectNode
 from ._tagged import TaggedObjectNode
 
-__all__ = ["Node", "field"]
+__all__ = ["FIELD_REGISTRY", "FieldPropertyWarning", "Node", "field"]
 
 _T = TypeVar("_T")
 
@@ -50,7 +50,43 @@ def _default(function: Callable[[DNode[Any]], _T]) -> Callable[[DNode[Any]], _T]
     return wrapper
 
 
-def field(function: Callable[[DNode[Any]], _T]) -> Callable[[ObjectNode[Any]], _T]:
+class _FieldRegistry:
+    """
+    Registry of all the active fields in the nodes
+    """
+
+    def __init__(self) -> None:
+        self._fields: dict[str, set[str]] = {}
+        self._lock = threading.RLock()
+
+    def add_field(self, field: Callable[[DNode[Any]], _T]) -> None:
+        """
+        Add a field to the registry
+        """
+        with self._lock:
+            name = field.__name__
+            cls_name = field.__qualname__.split(".")[0]
+
+            if cls_name not in self._fields:
+                self._fields[cls_name] = set()
+
+            if name in self._fields[cls_name]:
+                raise ValueError(f"Field {name} already exists on {cls_name}")
+
+            self._fields[cls_name].add(name)
+
+    def get_fields(self, cls: type) -> set[str]:
+        fields = self._fields.get(cls.__name__, set())
+        for base in cls.__bases__:
+            fields |= self._fields.get(base.__name__, set())
+
+        return fields
+
+
+FIELD_REGISTRY = _FieldRegistry()
+
+
+def field(function: Callable[[DNode[Any]], _T]) -> Callable[[DNode[Any]], _T]:
     """
     Create a special property decorator for node methods that does several
     things:
@@ -63,6 +99,7 @@ def field(function: Callable[[DNode[Any]], _T]) -> Callable[[ObjectNode[Any]], _
            testing conditions (falling back on a no-op identity decorator when
            not testing).
     """
+    FIELD_REGISTRY.add_field(function)
 
     @wraps(function)
     def wrapper(self: DNode[Any]) -> _T:
@@ -75,7 +112,6 @@ def field(function: Callable[[DNode[Any]], _T]) -> Callable[[ObjectNode[Any]], _
         # Note the lambda is used to delay the evaluation of the default value all the way
         # until the default is actually needed. This is important for things like numpy arrays
         # which can be expensive to create (memory and time wise).
-        #
         return cast(_T, self._get_node(function.__name__, lambda: _default(function)(self)))
 
     return wrapper
