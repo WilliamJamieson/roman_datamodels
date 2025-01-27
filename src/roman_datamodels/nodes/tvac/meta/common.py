@@ -20,9 +20,8 @@ _T = TypeVar("_T")
 class TvacCommonMixin(core.AdditionalNodeMixin[TvacStatistics | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
-    @property
     @rad.field
-    def statistics(self: rad.Node) -> TvacStatistics:
+    def statistics(self) -> TvacStatistics:
         return TvacStatistics()
 
     @classmethod
@@ -38,42 +37,34 @@ class TvacCommon(TvacCommonMixin[_TvacCommon | _T], TvacBasic[_TvacCommon | _T])
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0",)
 
-    @property
     @rad.field
-    def cal_step(self: rad.Node) -> TvacCalStep:
+    def cal_step(self) -> TvacCalStep:
         return TvacCalStep()
 
-    @property
     @rad.field
-    def exposure(self: rad.Node) -> TvacExposure:
+    def exposure(self) -> TvacExposure:
         return TvacExposure()
 
-    @property
     @rad.field
-    def guidestar(self: rad.Node) -> TvacGuidestar:
+    def guidestar(self) -> TvacGuidestar:
         return TvacGuidestar()
 
-    @property
     @rad.field
-    def instrument(self: rad.Node) -> TvacWfiMode:
+    def instrument(self) -> TvacWfiMode:
         return TvacWfiMode()
 
-    @property
     @rad.field
-    def ref_file(self: rad.Node) -> TvacRefFile:
+    def ref_file(self) -> TvacRefFile:
         return TvacRefFile()
 
-    @property
     @rad.field
-    def hdf5_meta(self: rad.Node) -> core.DNode[Any]:
+    def hdf5_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})
 
-    @property
     @rad.field
-    def hdf5_telemetry(self: rad.Node) -> str:
+    def hdf5_telemetry(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def gw_meta(self: rad.Node) -> core.DNode[Any]:
+    def gw_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})

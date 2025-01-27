@@ -40,14 +40,12 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure],
     def schema_required(self) -> set[str]:
         return self.asdf_required()
 
-    @property
     @rad.field
-    def ma_table_name(self: rad.Node) -> str:
+    def ma_table_name(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def ma_table_number(self: rad.Node) -> int:
+    def ma_table_number(self) -> int:
         return rad.NOINT
 
 
@@ -69,14 +67,12 @@ class DarkRef_Meta(  # type: ignore[misc]
             *RefExposureTypeRef.asdf_required(),
         }
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.DARK
 
-    @property
     @rad.field
-    def exposure(self: rad.Node) -> DarkRef_Meta_Exposure:  # type: ignore[override]
+    def exposure(self) -> DarkRef_Meta_Exposure:  # type: ignore[override]
         return DarkRef_Meta_Exposure()
 
 
@@ -104,27 +100,22 @@ class DarkRef(rad.TaggedObjectNode[_DarkRef], rad.ArrayFieldMixin[_DarkRef]):
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> DarkRef_Meta:
+    def meta(self) -> DarkRef_Meta:
         return DarkRef_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.float32]:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
-    @property
     @rad.field
-    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape[1:], dtype=np.uint32)
 
-    @property
     @rad.field
-    def dark_slope(self: rad.Node) -> npt.NDArray[np.float32]:
+    def dark_slope(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def dark_slope_error(self: rad.Node) -> npt.NDArray[np.float32]:
+    def dark_slope_error(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)

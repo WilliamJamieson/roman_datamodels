@@ -19,9 +19,8 @@ class FlatRef_Meta(  # type: ignore[misc]
     def asdf_implied_by(cls) -> type:
         return FlatRef
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.FLAT
 
 
@@ -49,22 +48,18 @@ class FlatRef(rad.TaggedObjectNode[_FlatRef], rad.ArrayFieldMixin[_FlatRef]):
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> FlatRef_Meta:
+    def meta(self) -> FlatRef_Meta:
         return FlatRef_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.float32]:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
-    @property
     @rad.field
-    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
 
-    @property
     @rad.field
-    def err(self: rad.Node) -> npt.NDArray[np.float32]:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

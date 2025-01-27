@@ -18,14 +18,12 @@ class RefExposureTypeRef_Exposure(
     def asdf_implied_by(cls) -> type:
         return RefExposureTypeRef
 
-    @property
     @rad.field
-    def type(self: rad.Node) -> ExposureType:
+    def type(self) -> ExposureType:
         return ExposureType.WFI_IMAGE
 
-    @property
     @rad.field
-    def p_exptype(self: rad.Node) -> str:
+    def p_exptype(self) -> str:
         return "WFI_IMAGE|WFI_GRISM|WFI_PRISM|"
 
 
@@ -37,7 +35,6 @@ class RefExposureTypeRef(rad.SchemaObjectNode[_RefExposureTypeRef | _T]):
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_exposure_type-1.0.0",)
 
-    @property
     @rad.field
-    def exposure(self: rad.Node) -> _RefExposureTypeRef:
+    def exposure(self) -> _RefExposureTypeRef:
         return RefExposureTypeRef_Exposure()

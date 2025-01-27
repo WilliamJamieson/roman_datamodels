@@ -11,14 +11,12 @@ class TvacRefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):
     def asdf_implied_by(cls) -> type:
         return TvacRefFile
 
-    @property
     @rad.field
-    def sw_version(self: rad.Node) -> str:
+    def sw_version(self) -> str:
         return "12.3.1"
 
-    @property
     @rad.field
-    def context_used(self: rad.Node) -> str:
+    def context_used(self) -> str:
         return "roman_0815.pmap"
 
 
@@ -38,57 +36,46 @@ class TvacRefFile(rad.TaggedObjectNode[_TvacRefFile]):
             }
         )
 
-    @property
     @rad.field
-    def crds(self: rad.Node) -> TvacRefFile_Crds:
+    def crds(self) -> TvacRefFile_Crds:
         return TvacRefFile_Crds()
 
-    @property
     @rad.field
-    def dark(self: rad.Node) -> str:
+    def dark(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def distortion(self: rad.Node) -> str:
+    def distortion(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def mask(self: rad.Node) -> str:
+    def mask(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def flat(self: rad.Node) -> str:
+    def flat(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def gain(self: rad.Node) -> str:
+    def gain(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def readnoise(self: rad.Node) -> str:
+    def readnoise(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def linearity(self: rad.Node) -> str:
+    def linearity(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def photom(self: rad.Node) -> str:
+    def photom(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def area(self: rad.Node) -> str:
+    def area(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def saturation(self: rad.Node) -> str:
+    def saturation(self) -> str:
         return "N/A"

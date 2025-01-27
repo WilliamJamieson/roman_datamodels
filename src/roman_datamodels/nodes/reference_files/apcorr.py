@@ -21,9 +21,8 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommo
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.APCORR
 
 
@@ -51,29 +50,24 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin[_ApcorrRef_Data], rad.ObjectNode[_Apco
 
         return (10,)
 
-    @property
     @rad.field
-    def ap_corrections(self: rad.Node) -> npt.NDArray[np.float64] | None:
+    def ap_corrections(self) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
-    @property
     @rad.field
-    def ee_fractions(self: rad.Node) -> npt.NDArray[np.float64] | None:
+    def ee_fractions(self) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
-    @property
     @rad.field
-    def ee_radii(self: rad.Node) -> npt.NDArray[np.float64] | None:
+    def ee_radii(self) -> npt.NDArray[np.float64] | None:
         return np.zeros(self.array_shape, dtype=np.float64)
 
-    @property
     @rad.field
-    def sky_background_rin(self: rad.Node) -> float | None:
+    def sky_background_rin(self) -> float | None:
         return rad.NONUM
 
-    @property
     @rad.field
-    def sky_background_rout(self: rad.Node) -> float | None:
+    def sky_background_rout(self) -> float | None:
         return rad.NONUM
 
 
@@ -123,12 +117,10 @@ class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin[_ApcorrRef
     def testing_array_shape(self) -> tuple[int]:
         return (10,)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> ApcorrRef_Meta:
+    def meta(self) -> ApcorrRef_Meta:
         return ApcorrRef_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> ApcorrRef_Data_PatternNode[ApcorrRef_Data]:
+    def data(self) -> ApcorrRef_Data_PatternNode[ApcorrRef_Data]:
         return ApcorrRef_Data_PatternNode({element: ApcorrRef_Data() for element in OPTICAL_ELEMENTS})

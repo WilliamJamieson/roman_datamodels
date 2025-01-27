@@ -44,62 +44,50 @@ class Ephemeris(rad.TaggedObjectNode[_Ephemeris]):
             }
         )
 
-    @property
     @rad.field
-    def earth_angle(self: rad.Node) -> float:
+    def earth_angle(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def moon_angle(self: rad.Node) -> float:
+    def moon_angle(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def sun_angle(self: rad.Node) -> float:
+    def sun_angle(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def ephemeris_reference_frame(self: rad.Node) -> str:
+    def ephemeris_reference_frame(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def type(self: rad.Node) -> EphemerisTypeEntry:
+    def type(self) -> EphemerisTypeEntry:
         return EphemerisTypeEntry.DEFINITIVE
 
-    @property
     @rad.field
-    def time(self: rad.Node) -> float:
+    def time(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def spatial_x(self: rad.Node) -> float:
+    def spatial_x(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def spatial_y(self: rad.Node) -> float:
+    def spatial_y(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def spatial_z(self: rad.Node) -> float:
+    def spatial_z(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def velocity_x(self: rad.Node) -> float:
+    def velocity_x(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def velocity_y(self: rad.Node) -> float:
+    def velocity_y(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def velocity_z(self: rad.Node) -> float:
+    def velocity_z(self) -> float:
         return rad.NONUM

@@ -20,142 +20,122 @@ class IndividualImageMeta(rad.TaggedObjectNode[Table]):
             }
         )
 
-    @property
     @rad.field
-    def basic(self: rad.Node) -> Table:
+    def basic(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def background(self: rad.Node) -> Table:
+    def background(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def cal_step(self: rad.Node) -> Table:
+    def cal_step(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def cal_logs(self: rad.Node) -> Table:
+    def cal_logs(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def coordinates(self: rad.Node) -> Table:
+    def coordinates(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def ephemeris(self: rad.Node) -> Table:
+    def ephemeris(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def exposure(self: rad.Node) -> Table:
+    def exposure(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def guide_star(self: rad.Node) -> Table:
+    def guide_star(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def instrument(self: rad.Node) -> Table:
+    def instrument(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def observation(self: rad.Node) -> Table:
+    def observation(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def outlier_detection(self: rad.Node) -> Table:
+    def outlier_detection(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def photometry(self: rad.Node) -> Table:
+    def photometry(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def pointing(self: rad.Node) -> Table:
+    def pointing(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> Table:
+    def program(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def rcs(self: rad.Node) -> Table:
+    def rcs(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def ref_file(self: rad.Node) -> Table:
+    def ref_file(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def source_catalog(self: rad.Node) -> Table:
+    def source_catalog(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def velocity_aberration(self: rad.Node) -> Table:
+    def velocity_aberration(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def visit(self: rad.Node) -> Table:
+    def visit(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def wcsinfo(self: rad.Node) -> Table:
+    def wcsinfo(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return QTable({"dummy": [rad.NONUM]})  # type: ignore[no-untyped-call]

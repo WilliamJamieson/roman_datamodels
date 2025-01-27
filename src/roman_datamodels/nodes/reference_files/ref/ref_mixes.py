@@ -56,7 +56,6 @@ class RefCommonRefOpticalElementRef(
             *RefOpticalElementRef.asdf_required(),
         }
 
-    @property
     @rad.field
-    def instrument(self: rad.Node) -> RefCommonRefOpticalElementRef_Instrument:
+    def instrument(self) -> RefCommonRefOpticalElementRef_Instrument:  # type: ignore[override]
         return RefCommonRefOpticalElementRef_Instrument()

@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias, cast
+from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -24,54 +24,42 @@ class FpsGuidestar(rad.TaggedObjectNode[_FpsGuidestar]):
             }
         )
 
-    @property
     @rad.field
-    def gw_id(self: rad.Node) -> str:
+    def gw_id(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def gw_fgs_mode(self: rad.Node) -> FpsGuidewindowModes:
+    def gw_fgs_mode(self) -> FpsGuidewindowModes:
         return FpsGuidewindowModes.WSM_ACQ_2
 
-    @property
     @rad.field
-    def data_start(self: rad.Node) -> float:
+    def data_start(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def data_end(self: rad.Node) -> float:
+    def data_end(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def gw_window_xstart(self: rad.Node) -> int:
+    def gw_window_xstart(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def gw_window_ystart(self: rad.Node) -> int:
+    def gw_window_ystart(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def gw_window_xstop(self: rad.Node) -> int:
-        # MyPy cannot determine that these fields are the type defined in type alias
-        return cast(int, self.gw_window_xstart) + cast(int, self.gw_window_xsize)
+    def gw_window_xstop(self) -> int:
+        return self.gw_window_xstart + self.gw_window_xsize
 
-    @property
     @rad.field
-    def gw_window_ystop(self: rad.Node) -> int:
-        # MyPy cannot determine that these fields are the type defined in type alias
-        return cast(int, self.gw_window_ystart) + cast(int, self.gw_window_ysize)
+    def gw_window_ystop(self) -> int:
+        return self.gw_window_ystart + self.gw_window_ysize
 
-    @property
     @rad.field
-    def gw_window_xsize(self: rad.Node) -> int:
+    def gw_window_xsize(self) -> int:
         return 170
 
-    @property
     @rad.field
-    def gw_window_ysize(self: rad.Node) -> int:
+    def gw_window_ysize(self) -> int:
         return 24

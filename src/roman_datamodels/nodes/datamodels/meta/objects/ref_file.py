@@ -13,14 +13,12 @@ class RefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):
     def asdf_implied_by(cls) -> type:
         return RefFile
 
-    @property
     @rad.field
-    def version(self: rad.Node) -> str:
+    def version(self) -> str:
         return "12.3.1"
 
-    @property
     @rad.field
-    def context(self: rad.Node) -> str:
+    def context(self) -> str:
         return "roman_0815.pmap"
 
 
@@ -38,67 +36,54 @@ class RefFile(rad.TaggedObjectNode[_RefFile]):
             {"asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/ref_file-1.0.0"}
         )
 
-    @property
     @rad.field
-    def crds(self: rad.Node) -> RefFile_Crds:
+    def crds(self) -> RefFile_Crds:
         return RefFile_Crds()
 
-    @property
     @rad.field
-    def dark(self: rad.Node) -> str:
+    def dark(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def distortion(self: rad.Node) -> str:
+    def distortion(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def mask(self: rad.Node) -> str:
+    def mask(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def flat(self: rad.Node) -> str:
+    def flat(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def gain(self: rad.Node) -> str:
+    def gain(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def readnoise(self: rad.Node) -> str:
+    def readnoise(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def linearity(self: rad.Node) -> str:
+    def linearity(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def inverse_linearity(self: rad.Node) -> str:
+    def inverse_linearity(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def photom(self: rad.Node) -> str:
+    def photom(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def area(self: rad.Node) -> str:
+    def area(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def saturation(self: rad.Node) -> str:
+    def saturation(self) -> str:
         return "N/A"
 
-    @property
     @rad.field
-    def refpix(self: rad.Node) -> str:
+    def refpix(self) -> str:
         return "N/A"

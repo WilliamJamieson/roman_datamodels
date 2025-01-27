@@ -102,19 +102,16 @@ class Visit_Dither(rad.ImpliedNodeMixin[_Visit_Dither], rad.ObjectNode[_Visit_Di
     def asdf_implied_by(cls) -> type:
         return Visit
 
-    @property
     @rad.field
-    def primary_name(self: rad.Node) -> str | None:
+    def primary_name(self) -> str | None:
         return "None"
 
-    @property
     @rad.field
-    def subpixel_name(self: rad.Node) -> str | None:
+    def subpixel_name(self) -> str | None:
         return "None"
 
-    @property
     @rad.field
-    def executed_pattern(self: rad.Node) -> core.LNode[float] | None:
+    def executed_pattern(self) -> core.LNode[float] | None:
         return core.LNode([float(v) for v in range(1, 10)])
 
 
@@ -143,51 +140,42 @@ class Visit(rad.TaggedObjectNode[_Visit]):
             }
         )
 
-    @property
     @rad.field
-    def dither(self: rad.Node) -> Visit_Dither:
+    def dither(self) -> Visit_Dither:
         return Visit_Dither()
 
-    @property
     @rad.field
-    def engineering_quality(self: rad.Node) -> VisitEngineeringQualityEntry:
+    def engineering_quality(self) -> VisitEngineeringQualityEntry:
         return VisitEngineeringQualityEntry.OK
 
-    @property
     @rad.field
-    def pointing_engineering_source(self: rad.Node) -> VisitPointingEngineeringSourceEntry:
+    def pointing_engineering_source(self) -> VisitPointingEngineeringSourceEntry:
         return VisitPointingEngineeringSourceEntry.CALCULATED
 
-    @property
     @rad.field
-    def type(self: rad.Node) -> VisitTypeEntry:
+    def type(self) -> VisitTypeEntry:
         return VisitTypeEntry.PRIME_TARGETED_FIXED
 
-    @property
     @rad.field
-    def start_time(self: rad.Node) -> Time:
+    def start_time(self) -> Time:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def end_time(self: rad.Node) -> Time:
+    def end_time(self) -> Time:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def status(self: rad.Node) -> VisitStatusEntry:
+    def status(self) -> VisitStatusEntry:
         return VisitStatusEntry.UNSUCCESSFUL
 
-    @property
     @rad.field
-    def nexposures(self: rad.Node) -> int:
+    def nexposures(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def internal_target(self: rad.Node) -> bool:
+    def internal_target(self) -> bool:
         return False

@@ -27,17 +27,14 @@ class TvacWfiMode(rad.TaggedObjectNode[_TvacWfiMode]):
             }
         )
 
-    @property
     @rad.field
-    def name(self: rad.Node) -> InstrumentNameEntry:
+    def name(self) -> InstrumentNameEntry:
         return InstrumentNameEntry.WFI
 
-    @property
     @rad.field
-    def detector(self: rad.Node) -> TvacWfiDetector:
+    def detector(self) -> TvacWfiDetector:
         return TvacWfiDetector.WFI01
 
-    @property
     @rad.field
-    def optical_element(self: rad.Node) -> TvacWfiOpticalElement:
+    def optical_element(self) -> TvacWfiOpticalElement:
         return TvacWfiOpticalElement.F158

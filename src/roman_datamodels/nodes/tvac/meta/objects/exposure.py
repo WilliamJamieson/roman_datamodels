@@ -27,70 +27,57 @@ class TvacExposure(rad.TaggedObjectNode[_TvacExposure]):
             }
         )
 
-    @property
     @rad.field
-    def type(self: rad.Node) -> TvacExposureType:
+    def type(self) -> TvacExposureType:
         return TvacExposureType.WFI_IMAGE
 
-    @property
     @rad.field
-    def start_time(self: rad.Node) -> Time:
+    def start_time(self) -> Time:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def ngroups(self: rad.Node) -> int:
+    def ngroups(self) -> int:
         return 6
 
-    @property
     @rad.field
-    def nframes(self: rad.Node) -> int:
+    def nframes(self) -> int:
         return 8
 
-    @property
     @rad.field
-    def data_problem(self: rad.Node) -> bool:
+    def data_problem(self) -> bool:
         return False
 
-    @property
     @rad.field
-    def frame_divisor(self: rad.Node) -> int:
+    def frame_divisor(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def groupgap(self: rad.Node) -> int:
+    def groupgap(self) -> int:
         return 0
 
-    @property
     @rad.field
-    def frame_time(self: rad.Node) -> float:
+    def frame_time(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def group_time(self: rad.Node) -> float:
+    def group_time(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def exposure_time(self: rad.Node) -> float:
+    def exposure_time(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def ma_table_name(self: rad.Node) -> str:
+    def ma_table_name(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def ma_table_number(self: rad.Node) -> int:
+    def ma_table_number(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def read_pattern(self: rad.Node) -> core.LNode[core.LNode[int]]:
+    def read_pattern(self) -> core.LNode[core.LNode[int]]:
         base = np.arange(1, 56).reshape((-1, 1)).tolist()
         return core.LNode([core.LNode(row) for row in base])

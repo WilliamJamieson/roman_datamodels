@@ -23,9 +23,8 @@ class Ramp_Meta(rad.ImpliedNodeMixin[_Ramp_Meta], Common[_Ramp_Meta]):
     def asdf_implied_by(cls) -> type:
         return Ramp
 
-    @property
     @rad.field
-    def cal_step(self: rad.Node) -> L2CalStep:
+    def cal_step(self) -> L2CalStep:
         return L2CalStep()
 
 
@@ -51,72 +50,58 @@ class Ramp(rad.TaggedObjectNode[_Ramp], rad.ArrayFieldMixin[_Ramp]):
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> Ramp_Meta:
+    def meta(self) -> Ramp_Meta:
         return Ramp_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.float32]:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.full(self.array_shape, 1.0, dtype=np.float32)
 
-    @property
     @rad.field
-    def pixeldq(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def pixeldq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape[1:], dtype=np.uint32)
 
-    @property
     @rad.field
-    def groupdq(self: rad.Node) -> npt.NDArray[np.uint8]:
+    def groupdq(self) -> npt.NDArray[np.uint8]:
         return np.zeros(self.array_shape, dtype=np.uint8)
 
-    @property
     @rad.field
-    def err(self: rad.Node) -> npt.NDArray[np.float32]:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
-    @property
     @rad.field
-    def amp33(self: rad.Node) -> npt.NDArray[np.uint16]:
+    def amp33(self) -> npt.NDArray[np.uint16]:
         return np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16)
 
-    @property
     @rad.field
-    def border_ref_pix_left(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_left(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], self.array_shape[1], 4), dtype=np.float32)
 
-    @property
     @rad.field
-    def border_ref_pix_right(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_right(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], self.array_shape[1], 4), dtype=np.float32)
 
-    @property
     @rad.field
-    def border_ref_pix_top(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_top(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], 4, self.array_shape[2]), dtype=np.float32)
 
-    @property
     @rad.field
-    def border_ref_pix_bottom(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_bottom(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], 4, self.array_shape[2]), dtype=np.float32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_left(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_left(self) -> npt.NDArray[np.uint32]:
         return np.zeros((self.array_shape[1], 4), dtype=np.uint32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_right(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_right(self) -> npt.NDArray[np.uint32]:
         return np.zeros((self.array_shape[1], 4), dtype=np.uint32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_top(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_top(self) -> npt.NDArray[np.uint32]:
         return np.zeros((4, self.array_shape[2]), dtype=np.uint32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_bottom(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_bottom(self) -> npt.NDArray[np.uint32]:
         return np.zeros((4, self.array_shape[2]), dtype=np.uint32)

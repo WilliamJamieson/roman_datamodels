@@ -76,9 +76,8 @@ _RefCommonRef_InstrumentMixin: TypeAlias = WfiOpticalElement | None
 class RefCommonRef_InstrumentMixin(core.AdditionalNodeMixin[_RefCommonRef_InstrumentMixin | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
-    @property
     @rad.field
-    def optical_element(self: rad.Node) -> WfiOpticalElement:
+    def optical_element(self) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
     @classmethod
@@ -98,14 +97,12 @@ class RefCommonRef_Instrument(
     def asdf_implied_by(cls) -> type:
         return RefCommonRef
 
-    @property
     @rad.field
-    def name(self: rad.Node) -> InstrumentNameEntry:
+    def name(self) -> InstrumentNameEntry:
         return InstrumentNameEntry.WFI
 
-    @property
     @rad.field
-    def detector(self: rad.Node) -> WfiDetector:
+    def detector(self) -> WfiDetector:
         return WfiDetector.WFI01
 
 
@@ -117,44 +114,36 @@ class RefCommonRef(rad.SchemaObjectNode[_RefCommonRef | _T]):
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_common-1.0.0",)
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.NA
 
-    @property
     @rad.field
-    def pedigree(self: rad.Node) -> RefCommonPedigreeEntry:
+    def pedigree(self) -> RefCommonPedigreeEntry:
         return RefCommonPedigreeEntry.GROUND
 
-    @property
     @rad.field
-    def description(self: rad.Node) -> str:
+    def description(self) -> str:
         return "blah blah blah"
 
-    @property
     @rad.field
-    def author(self: rad.Node) -> str:
+    def author(self) -> str:
         return "test system"
 
-    @property
     @rad.field
-    def useafter(self: rad.Node) -> Time:
+    def useafter(self) -> Time:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
         return Time("2020-01-01T00:00:00.0", format="isot", scale="utc")  # type: ignore[no-untyped-call]
 
-    @property
     @rad.field
-    def telescope(self: rad.Node) -> Telescope | str:
+    def telescope(self) -> Telescope | str:
         return Telescope.ROMAN
 
-    @property
     @rad.field
-    def origin(self: rad.Node) -> str:
+    def origin(self) -> str:
         return "STSCI"
 
-    @property
     @rad.field
-    def instrument(self: rad.Node) -> RefCommonRef_Instrument[_RefCommonRef_Instrument]:
+    def instrument(self) -> RefCommonRef_Instrument[_RefCommonRef_Instrument]:
         return RefCommonRef_Instrument()

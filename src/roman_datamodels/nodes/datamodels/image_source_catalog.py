@@ -25,29 +25,24 @@ class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin[_ImageSourceCatalog_Meta], Ba
     def asdf_implied_by(cls) -> type:
         return ImageSourceCatalog
 
-    @property
     @rad.field
-    def optical_element(self: rad.Node) -> WfiOpticalElement:
+    def optical_element(self) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
-    @property
     @rad.field
-    def exposure(self: rad.Node) -> Exposure:
+    def exposure(self) -> Exposure:
         return Exposure()
 
-    @property
     @rad.field
-    def photometry(self: rad.Node) -> Photometry:
+    def photometry(self) -> Photometry:
         return Photometry()
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> Program:
+    def program(self) -> Program:
         return Program()
 
-    @property
     @rad.field
-    def visit(self: rad.Node) -> Visit:
+    def visit(self) -> Visit:
         return Visit()
 
 
@@ -67,14 +62,12 @@ class ImageSourceCatalog(rad.TaggedObjectNode[_ImageSourceCatalog]):
             }
         )
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> ImageSourceCatalog_Meta:
+    def meta(self) -> ImageSourceCatalog_Meta:
         return ImageSourceCatalog_Meta()
 
-    @property
     @rad.field
-    def source_catalog(self: rad.Node) -> Table:
+    def source_catalog(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return Table([range(3), range(3)], names=["a", "b"])  # type: ignore[no-untyped-call]

@@ -39,19 +39,16 @@ class Associations_Products_Members(
     def asdf_implied_by(cls) -> type:
         return Associations_Products
 
-    @property
     @rad.field
-    def expname(self: rad.Node) -> str:
+    def expname(self) -> str:
         return "file_0"
 
-    @property
     @rad.field
-    def exposerr(self: rad.Node) -> str:
+    def exposerr(self) -> str:
         return "null"
 
-    @property
     @rad.field
-    def exptype(self: rad.Node) -> AssociationsExptypeEntry:
+    def exptype(self) -> AssociationsExptypeEntry:
         return AssociationsExptypeEntry.SCIENCE
 
 
@@ -63,14 +60,12 @@ class Associations_Products(rad.ImpliedNodeMixin[_Associations_Products], rad.Ob
     def asdf_implied_by(cls) -> type:
         return Associations
 
-    @property
     @rad.field
-    def name(self: rad.Node) -> str:
+    def name(self) -> str:
         return "product0"
 
-    @property
     @rad.field
-    def members(self: rad.Node) -> core.LNode[Associations_Products_Members]:
+    def members(self) -> core.LNode[Associations_Products_Members]:
         return core.LNode([])
 
 
@@ -105,54 +100,44 @@ class Associations(rad.TaggedObjectNode[_Associations], rad.ArrayFieldMixin[_Ass
     def testing_array_shape(self) -> tuple[int, int, int, int]:
         return (3, 8, 5, 2)
 
-    @property
     @rad.field
-    def asn_id(self: rad.Node) -> str:
+    def asn_id(self) -> str:
         return "o036"
 
-    @property
     @rad.field
-    def asn_pool(self: rad.Node) -> str:
+    def asn_pool(self) -> str:
         return "r00001_20200530t023154_pool"
 
-    @property
     @rad.field
-    def asn_type(self: rad.Node) -> str:
+    def asn_type(self) -> str:
         return "image"
 
-    @property
     @rad.field
-    def asn_rule(self: rad.Node) -> str:
+    def asn_rule(self) -> str:
         return "candidate_Asn_Lv2Image_i2d"
 
-    @property
     @rad.field
-    def version_id(self: rad.Node) -> str:
+    def version_id(self) -> str:
         return "null"
 
-    @property
     @rad.field
-    def code_version(self: rad.Node) -> str:
+    def code_version(self) -> str:
         return "0.16.2.dev16+g640b0b7"
 
-    @property
     @rad.field
-    def degraded_status(self: rad.Node) -> str:
+    def degraded_status(self) -> str:
         return "No known degraded exposures in association."
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> int:
+    def program(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def target(self: rad.Node) -> int:
+    def target(self) -> int:
         return 16
 
-    @property
     @rad.field
-    def constraints(self: rad.Node) -> str:
+    def constraints(self) -> str:
         return (
             "DMSAttrConstraint({'name': 'program', 'sources': ['program'], "
             "'value': '001'})\nConstraint_TargetAcq({'name': 'target_acq', 'value': "
@@ -163,9 +148,8 @@ class Associations(rad.TaggedObjectNode[_Associations], rad.ArrayFieldMixin[_Ass
 
     # TODO: need to add a rule to extend typeguard to check the argument of the decorator
     #       currently this only checks that it is an LNode
-    @property
     @rad.field
-    def products(self: rad.Node) -> core.LNode[Associations_Products]:
+    def products(self) -> core.LNode[Associations_Products]:
         file_idx = 0
         products = []
         CHOICES = ["SCIENCE", "CALIBRATION", "ENGINEERING"]

@@ -24,19 +24,16 @@ class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin[_MosaicSourceCatalog_Meta], 
     def asdf_implied_by(cls) -> type:
         return MosaicSourceCatalog
 
-    @property
     @rad.field
-    def basic(self: rad.Node) -> MosaicBasic:
+    def basic(self) -> MosaicBasic:
         return MosaicBasic()
 
-    @property
     @rad.field
-    def photometry(self: rad.Node) -> Photometry:
+    def photometry(self) -> Photometry:
         return Photometry()
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> Program:
+    def program(self) -> Program:
         return Program()
 
 
@@ -56,14 +53,12 @@ class MosaicSourceCatalog(rad.TaggedObjectNode[_MosaicSourceCatalog]):
             }
         )
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> MosaicSourceCatalog_Meta:
+    def meta(self) -> MosaicSourceCatalog_Meta:
         return MosaicSourceCatalog_Meta()
 
-    @property
     @rad.field
-    def source_catalog(self: rad.Node) -> Table:
+    def source_catalog(self) -> Table:
         # Astropy has not implemented type hints for Table so MyPy will complain about this
         # until they do.
         return Table([range(3), range(3)], names=["a", "b"])  # type: ignore[no-untyped-call]

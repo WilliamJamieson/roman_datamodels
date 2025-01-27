@@ -47,22 +47,18 @@ class WfiScienceRaw(rad.TaggedObjectNode[_WfiScienceRaw], rad.ArrayFieldMixin[_W
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> WfiScienceRaw_Meta:
+    def meta(self) -> WfiScienceRaw_Meta:
         return WfiScienceRaw_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.uint16]:
+    def data(self) -> npt.NDArray[np.uint16]:
         return np.zeros(self.array_shape, dtype=np.uint16)
 
-    @property
     @rad.field
-    def amp33(self: rad.Node) -> npt.NDArray[np.uint16]:
+    def amp33(self) -> npt.NDArray[np.uint16]:
         return np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16)
 
-    @property
     @rad.field
-    def resultantdq(self: rad.Node) -> npt.NDArray[np.uint8]:
+    def resultantdq(self) -> npt.NDArray[np.uint8]:
         return np.zeros(self.array_shape, dtype=np.uint8)

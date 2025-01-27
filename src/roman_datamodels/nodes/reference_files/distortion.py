@@ -19,9 +19,8 @@ class DistortionRef_Meta(  # type: ignore[misc]
     def asdf_implied_by(cls) -> type:
         return DistortionRef
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.DISTORTION
 
 
@@ -41,14 +40,12 @@ class DistortionRef(rad.TaggedObjectNode[_Distortion_Ref]):
             }
         )
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> DistortionRef_Meta:
+    def meta(self) -> DistortionRef_Meta:
         return DistortionRef_Meta()
 
-    @property
     @rad.field
-    def coordinate_distortion_transform(self: rad.Node) -> Model:
+    def coordinate_distortion_transform(self) -> Model:
         # Astropy has not implemented type hints for modeling so MyPy will complain about this
         # until they do.
         return Shift(1) & Shift(2)  # type: ignore[no-any-return, no-untyped-call, operator]

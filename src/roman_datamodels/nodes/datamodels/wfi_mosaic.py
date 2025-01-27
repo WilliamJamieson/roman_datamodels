@@ -48,59 +48,48 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin[_WfiMosaic_Meta], Basic[_WfiMosaic_Met
     def asdf_implied_by(cls) -> type:
         return WfiMosaic
 
-    @property
     @rad.field
-    def asn(self: rad.Node) -> MosaicAssociations:
+    def asn(self) -> MosaicAssociations:
         return MosaicAssociations()
 
-    @property
     @rad.field
-    def basic(self: rad.Node) -> MosaicBasic:
+    def basic(self) -> MosaicBasic:
         return MosaicBasic()
 
-    @property
     @rad.field
-    def cal_step(self: rad.Node) -> L3CalStep:
+    def cal_step(self) -> L3CalStep:
         return L3CalStep()
 
-    @property
     @rad.field
-    def coordinates(self: rad.Node) -> Coordinates:
+    def coordinates(self) -> Coordinates:
         return Coordinates()
 
-    @property
     @rad.field
-    def individual_image_meta(self: rad.Node) -> IndividualImageMeta:
+    def individual_image_meta(self) -> IndividualImageMeta:
         return IndividualImageMeta()
 
-    @property
     @rad.field
-    def photometry(self: rad.Node) -> Photometry:
+    def photometry(self) -> Photometry:
         return Photometry()
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> Program:
+    def program(self) -> Program:
         return Program()
 
-    @property
     @rad.field
-    def ref_file(self: rad.Node) -> RefFile:
+    def ref_file(self) -> RefFile:
         return RefFile()
 
-    @property
     @rad.field
-    def resample(self: rad.Node) -> Resample:
+    def resample(self) -> Resample:
         return Resample()
 
-    @property
     @rad.field
-    def wcs(self: rad.Node) -> WCS | None:
+    def wcs(self) -> WCS | None:
         return rad.Wcs()
 
-    @property
     @rad.field
-    def wcsinfo(self: rad.Node) -> MosaicWcsinfo:
+    def wcsinfo(self) -> MosaicWcsinfo:
         return MosaicWcsinfo()
 
 
@@ -140,47 +129,38 @@ class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin[_WfiMosaic
 
         return None
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> WfiMosaic_Meta:
+    def meta(self) -> WfiMosaic_Meta:
         return WfiMosaic_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.float32]:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def err(self: rad.Node) -> npt.NDArray[np.float32]:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def context(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def context(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
 
-    @property
     @rad.field
-    def weight(self: rad.Node) -> npt.NDArray[np.float32]:
+    def weight(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def var_poisson(self: rad.Node) -> npt.NDArray[np.float32]:
+    def var_poisson(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def var_rnoise(self: rad.Node) -> npt.NDArray[np.float32]:
+    def var_rnoise(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def var_flat(self: rad.Node) -> npt.NDArray[np.float32]:
+    def var_flat(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def cal_logs(self: rad.Node) -> CalLogs:
+    def cal_logs(self) -> CalLogs:
         return CalLogs.default()

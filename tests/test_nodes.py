@@ -121,11 +121,11 @@ def test_implied_node(node_cls):
 
     # Check that the property exists on the containing class
     assert hasattr(containing_cls, property_name), f"Property {property_name} not found on {containing_name}"
-    cls_property = getattr(containing_cls, property_name)
-    assert node_cls.asdf_implied_property() is cls_property
+    cls_field = getattr(containing_cls, property_name)
+    assert node_cls.asdf_implied_property() is cls_field
 
     # Check that the property's return type matches the orphan node
-    annotation = signature(cls_property.fget).return_annotation
+    annotation = signature(cls_field.default).return_annotation
     if annotation is not node_cls and annotation != core.LNode[node_cls]:
         base, metadata = get_args(annotation)
         if issubclass(base, core.PatternDNode):
@@ -798,7 +798,7 @@ def test_enum_exists(node_cls):
 
         if "enum" in field_schema:
             field_cls = getattr(node_cls, field)
-            annotation = signature(field_cls.fget).return_annotation
+            annotation = signature(field_cls.default).return_annotation
             assert issubclass(annotation, Enum), f"Annotation for {node_cls}.{field} should be an Enum"
 
 

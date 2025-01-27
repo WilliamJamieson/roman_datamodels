@@ -22,63 +22,51 @@ class Observation(rad.TaggedObjectNode[_Observation]):
             }
         )
 
-    @property
     @rad.field
-    def observation_id(self: rad.Node) -> str:
+    def observation_id(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def visit_id(self: rad.Node) -> str:
+    def visit_id(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> int:
+    def program(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def execution_plan(self: rad.Node) -> int:
+    def execution_plan(self) -> int:
         return 1
 
     # Note cannot use "pass" as a property name due to reserved keyword
-    @property
     @rad.field
-    def pass_(self: rad.Node) -> int:
+    def pass_(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def segment(self: rad.Node) -> int:
+    def segment(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def observation(self: rad.Node) -> int:
+    def observation(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def visit(self: rad.Node) -> int:
+    def visit(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def visit_file_group(self: rad.Node) -> int:
+    def visit_file_group(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def visit_file_sequence(self: rad.Node) -> int:
+    def visit_file_sequence(self) -> int:
         return 1
 
-    @property
     @rad.field
-    def visit_file_activity(self: rad.Node) -> str:
+    def visit_file_activity(self) -> str:
         return "01"
 
-    @property
     @rad.field
-    def exposure(self: rad.Node) -> int:
+    def exposure(self) -> int:
         return 1

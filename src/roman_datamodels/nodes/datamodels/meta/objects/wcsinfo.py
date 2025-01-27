@@ -101,52 +101,42 @@ class Wcsinfo(rad.TaggedObjectNode[_Wcsinfo]):
             }
         )
 
-    @property
     @rad.field
-    def aperture_name(self: rad.Node) -> WcsinfoApertureNameEntry:
+    def aperture_name(self) -> WcsinfoApertureNameEntry:
         return WcsinfoApertureNameEntry.WFI01_FULL
 
-    @property
     @rad.field
-    def pa_aperture(self: rad.Node) -> float:
+    def pa_aperture(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def v2_ref(self: rad.Node) -> float:
+    def v2_ref(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def v3_ref(self: rad.Node) -> float:
+    def v3_ref(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def vparity(self: rad.Node) -> WcsinfoVparityEntry:
+    def vparity(self) -> WcsinfoVparityEntry:
         return WcsinfoVparityEntry.REVERSED
 
-    @property
     @rad.field
-    def v3yangle(self: rad.Node) -> float:
+    def v3yangle(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def ra_ref(self: rad.Node) -> float:
+    def ra_ref(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def dec_ref(self: rad.Node) -> float:
+    def dec_ref(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def roll_ref(self: rad.Node) -> float:
+    def roll_ref(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def s_region(self: rad.Node) -> str:
+    def s_region(self) -> str:
         return rad.NOSTR

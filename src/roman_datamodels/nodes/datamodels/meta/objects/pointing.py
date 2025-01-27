@@ -20,32 +20,26 @@ class Pointing(rad.TaggedObjectNode[_Pointing]):
             {"asdf://stsci.edu/datamodels/roman/tags/pointing-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/pointing-1.0.0"}
         )
 
-    @property
     @rad.field
-    def ra_v1(self: rad.Node) -> float:
+    def ra_v1(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def dec_v1(self: rad.Node) -> float:
+    def dec_v1(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def pa_v3(self: rad.Node) -> float:
+    def pa_v3(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def target_aperture(self: rad.Node) -> str:
+    def target_aperture(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def target_ra(self: rad.Node) -> float:
+    def target_ra(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def target_dec(self: rad.Node) -> float:
+    def target_dec(self) -> float:
         return rad.NONUM

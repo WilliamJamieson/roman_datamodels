@@ -25,72 +25,58 @@ class MosaicBasic(rad.TaggedObjectNode[_MosaicBasic]):
             }
         )
 
-    @property
     @rad.field
-    def time_first_mjd(self: rad.Node) -> float:
+    def time_first_mjd(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def time_last_mjd(self: rad.Node) -> float:
+    def time_last_mjd(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def time_mean_mjd(self: rad.Node) -> float:
+    def time_mean_mjd(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def max_exposure_time(self: rad.Node) -> float:
+    def max_exposure_time(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def mean_exposure_time(self: rad.Node) -> float:
+    def mean_exposure_time(self) -> float:
         return rad.NONUM
 
-    @property
     @rad.field
-    def visit(self: rad.Node) -> int:
+    def visit(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def segment(self: rad.Node) -> int:
+    def segment(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def pass_(self: rad.Node) -> int:
+    def pass_(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> int:
+    def program(self) -> int:
         return rad.NOINT
 
-    @property
     @rad.field
-    def survey(self: rad.Node) -> str:
+    def survey(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def optical_element(self: rad.Node) -> WfiOpticalElement:
+    def optical_element(self) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
-    @property
     @rad.field
-    def instrument(self: rad.Node) -> InstrumentNameEntry:
+    def instrument(self) -> InstrumentNameEntry:
         return InstrumentNameEntry.WFI
 
-    @property
     @rad.field
-    def location_name(self: rad.Node) -> str:
+    def location_name(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def product_type(self: rad.Node) -> str:
+    def product_type(self) -> str:
         return rad.NOSTR

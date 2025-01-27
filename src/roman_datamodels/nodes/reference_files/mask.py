@@ -17,9 +17,8 @@ class MaskRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonR
     def asdf_implied_by(cls) -> type:
         return MaskRef
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.MASK
 
 
@@ -51,12 +50,10 @@ class MaskRef(rad.TaggedObjectNode[_MaskRef], rad.ArrayFieldMixin[_MaskRef]):
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> MaskRef_Meta:
+    def meta(self) -> MaskRef_Meta:
         return MaskRef_Meta()
 
-    @property
     @rad.field
-    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)

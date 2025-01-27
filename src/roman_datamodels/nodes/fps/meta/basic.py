@@ -34,26 +34,22 @@ class FpsBasic(rad.SchemaObjectNode[_FpsBasic | _T]):
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/basic-1.0.0",)
 
-    @property
     @rad.field
-    def calibration_software_version(self: rad.Node) -> FpsCalibrationSoftwareVersion:
+    def calibration_software_version(self) -> FpsCalibrationSoftwareVersion:
         return FpsCalibrationSoftwareVersion.default()
 
-    @property
     @rad.field
-    def filename(self: rad.Node) -> FpsFilename:
+    def filename(self) -> FpsFilename:
         return FpsFilename.default()
 
-    @property
     @rad.field
-    def file_date(self: rad.Node) -> FpsFileDate:
+    def file_date(self) -> FpsFileDate:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
         return FpsFileDate.default()  # type: ignore[no-any-return]
 
-    @property
     @rad.field
-    def model_type(self: rad.Node) -> FpsModelType:
+    def model_type(self) -> FpsModelType:
         from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
         if isinstance(self, rad.ImpliedNodeMixin):
@@ -61,22 +57,18 @@ class FpsBasic(rad.SchemaObjectNode[_FpsBasic | _T]):
         else:
             return FpsModelType.default()
 
-    @property
     @rad.field
-    def origin(self: rad.Node) -> FpsOrigin:
+    def origin(self) -> FpsOrigin:
         return FpsOrigin.default()
 
-    @property
     @rad.field
-    def prd_software_version(self: rad.Node) -> FpsPrdSoftwareVersion:
+    def prd_software_version(self) -> FpsPrdSoftwareVersion:
         return FpsPrdSoftwareVersion.default()
 
-    @property
     @rad.field
-    def sdf_software_version(self: rad.Node) -> FpsSdfSoftwareVersion:
+    def sdf_software_version(self) -> FpsSdfSoftwareVersion:
         return FpsSdfSoftwareVersion.default()
 
-    @property
     @rad.field
-    def telescope(self: rad.Node) -> FpsTelescope:
+    def telescope(self) -> FpsTelescope:
         return FpsTelescope.default()

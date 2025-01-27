@@ -20,9 +20,8 @@ _T = TypeVar("_T")
 class FpsCommonMixin(core.AdditionalNodeMixin[FpsStatistics | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
-    @property
     @rad.field
-    def statistics(self: rad.Node) -> FpsStatistics:
+    def statistics(self) -> FpsStatistics:
         return FpsStatistics()
 
     @classmethod
@@ -38,42 +37,34 @@ class FpsCommon(FpsCommonMixin[_FpsCommon | _T], FpsBasic[_FpsCommon | _T]):
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0",)
 
-    @property
     @rad.field
-    def cal_step(self: rad.Node) -> FpsCalStep:
+    def cal_step(self) -> FpsCalStep:
         return FpsCalStep()
 
-    @property
     @rad.field
-    def exposure(self: rad.Node) -> FpsExposure:
+    def exposure(self) -> FpsExposure:
         return FpsExposure()
 
-    @property
     @rad.field
-    def guidestar(self: rad.Node) -> FpsGuidestar:
+    def guidestar(self) -> FpsGuidestar:
         return FpsGuidestar()
 
-    @property
     @rad.field
-    def instrument(self: rad.Node) -> FpsWfiMode:
+    def instrument(self) -> FpsWfiMode:
         return FpsWfiMode()
 
-    @property
     @rad.field
-    def ref_file(self: rad.Node) -> FpsRefFile:
+    def ref_file(self) -> FpsRefFile:
         return FpsRefFile()
 
-    @property
     @rad.field
-    def hdf5_meta(self: rad.Node) -> core.DNode[Any]:
+    def hdf5_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})
 
-    @property
     @rad.field
-    def hdf5_telemetry(self: rad.Node) -> str:
+    def hdf5_telemetry(self) -> str:
         return rad.NOSTR
 
-    @property
     @rad.field
-    def gw_meta(self: rad.Node) -> core.DNode[Any]:
+    def gw_meta(self) -> core.DNode[Any]:
         return core.DNode({"test": rad.NOSTR})

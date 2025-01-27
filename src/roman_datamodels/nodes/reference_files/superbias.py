@@ -17,9 +17,8 @@ class SuperbiasRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCo
     def asdf_implied_by(cls) -> type:
         return SuperbiasRef
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.BIAS
 
 
@@ -47,22 +46,18 @@ class SuperbiasRef(rad.TaggedObjectNode[_SuperbiasRef], rad.ArrayFieldMixin[_Sup
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> SuperbiasRef_Meta:
+    def meta(self) -> SuperbiasRef_Meta:
         return SuperbiasRef_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.float32]:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)
 
-    @property
     @rad.field
-    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)
 
-    @property
     @rad.field
-    def err(self: rad.Node) -> npt.NDArray[np.float32]:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

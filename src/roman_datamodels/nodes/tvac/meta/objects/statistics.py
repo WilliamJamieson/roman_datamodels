@@ -24,22 +24,18 @@ class TvacStatistics(rad.TaggedObjectNode[_TvacStatistics]):
             }
         )
 
-    @property
     @rad.field
-    def mean_counts_per_sec(self: rad.Node) -> Quantity | None:
+    def mean_counts_per_sec(self) -> Quantity | None:
         return cast(Quantity, rad.NONUM * (DN / s))
 
-    @property
     @rad.field
-    def median_counts_per_sec(self: rad.Node) -> Quantity | None:
+    def median_counts_per_sec(self) -> Quantity | None:
         return cast(Quantity, rad.NONUM * (DN / s))
 
-    @property
     @rad.field
-    def max_counts(self: rad.Node) -> Quantity | None:
+    def max_counts(self) -> Quantity | None:
         return Quantity(rad.NONUM, DN, dtype=np.int32)
 
-    @property
     @rad.field
-    def min_counts(self: rad.Node) -> Quantity | None:
+    def min_counts(self) -> Quantity | None:
         return Quantity(rad.NONUM, DN, dtype=np.int32)

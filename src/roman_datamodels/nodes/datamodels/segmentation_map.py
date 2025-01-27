@@ -25,19 +25,16 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin[_SegmentationMap_Meta], Basic[_S
     def asdf_implied_by(cls) -> type:
         return SegmentationMap
 
-    @property
     @rad.field
-    def optical_element(self: rad.Node) -> WfiOpticalElement:
+    def optical_element(self) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
-    @property
     @rad.field
-    def program(self: rad.Node) -> Program:
+    def program(self) -> Program:
         return Program()
 
-    @property
     @rad.field
-    def visit(self: rad.Node) -> Visit:
+    def visit(self) -> Visit:
         return Visit()
 
 
@@ -65,12 +62,10 @@ class SegmentationMap(rad.TaggedObjectNode[_SegmentationMap], rad.ArrayFieldMixi
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> SegmentationMap_Meta:
+    def meta(self) -> SegmentationMap_Meta:
         return SegmentationMap_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def data(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape, dtype=np.uint32)

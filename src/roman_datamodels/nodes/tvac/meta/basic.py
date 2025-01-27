@@ -34,26 +34,22 @@ class TvacBasic(rad.SchemaObjectNode[_TvacBasic | _T]):
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/basic-1.0.0",)
 
-    @property
     @rad.field
-    def calibration_software_version(self: rad.Node) -> TvacCalibrationSoftwareVersion:
+    def calibration_software_version(self) -> TvacCalibrationSoftwareVersion:
         return TvacCalibrationSoftwareVersion.default()
 
-    @property
     @rad.field
-    def filename(self: rad.Node) -> TvacFilename:
+    def filename(self) -> TvacFilename:
         return TvacFilename.default()
 
-    @property
     @rad.field
-    def file_date(self: rad.Node) -> TvacFileDate:
+    def file_date(self) -> TvacFileDate:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
         return TvacFileDate.default()  # type: ignore[no-any-return]
 
-    @property
     @rad.field
-    def model_type(self: rad.Node) -> TvacModelType:
+    def model_type(self) -> TvacModelType:
         from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
         if isinstance(self, rad.ImpliedNodeMixin):
@@ -61,22 +57,18 @@ class TvacBasic(rad.SchemaObjectNode[_TvacBasic | _T]):
         else:
             return TvacModelType.default()
 
-    @property
     @rad.field
-    def origin(self: rad.Node) -> TvacOrigin:
+    def origin(self) -> TvacOrigin:
         return TvacOrigin.default()
 
-    @property
     @rad.field
-    def prd_software_version(self: rad.Node) -> TvacPrdSoftwareVersion:
+    def prd_software_version(self) -> TvacPrdSoftwareVersion:
         return TvacPrdSoftwareVersion.default()
 
-    @property
     @rad.field
-    def sdf_software_version(self: rad.Node) -> TvacSdfSoftwareVersion:
+    def sdf_software_version(self) -> TvacSdfSoftwareVersion:
         return TvacSdfSoftwareVersion.default()
 
-    @property
     @rad.field
-    def telescope(self: rad.Node) -> TvacTelescope:
+    def telescope(self) -> TvacTelescope:
         return TvacTelescope.default()

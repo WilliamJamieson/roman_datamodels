@@ -18,14 +18,13 @@ __all__ = ["Fps"]
 _Fps_Meta: TypeAlias = _FpsCommon | FpsGroundtest
 
 
-class Fps_Meta(rad.ImpliedNodeMixin[_FpsCommon], FpsCommon[_FpsCommon]):
+class Fps_Meta(rad.ImpliedNodeMixin[_Fps_Meta], FpsCommon[_Fps_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Fps
 
-    @property
     @rad.field
-    def groundtest(self: rad.Node) -> FpsGroundtest:
+    def groundtest(self) -> FpsGroundtest:
         return FpsGroundtest()
 
 
@@ -51,42 +50,34 @@ class Fps(rad.TaggedObjectNode[_Fps], rad.ArrayFieldMixin[_Fps]):
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (2, 8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> Fps_Meta:
+    def meta(self) -> Fps_Meta:
         return Fps_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> Quantity:
+    def data(self) -> Quantity:
         return Quantity(np.zeros(self.array_shape, dtype=np.uint16), unit=DN, dtype=np.uint16)
 
-    @property
     @rad.field
-    def amp33(self: rad.Node) -> Quantity:
+    def amp33(self) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
-    @property
     @rad.field
-    def amp33_reset_reads(self: rad.Node) -> Quantity:
+    def amp33_reset_reads(self) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
-    @property
     @rad.field
-    def amp33_reference_read(self: rad.Node) -> Quantity:
+    def amp33_reference_read(self) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
-    @property
     @rad.field
-    def guidewindow(self: rad.Node) -> Quantity:
+    def guidewindow(self) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
-    @property
     @rad.field
-    def reference_read(self: rad.Node) -> Quantity:
+    def reference_read(self) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)
 
-    @property
     @rad.field
-    def reset_reads(self: rad.Node) -> Quantity:
+    def reset_reads(self) -> Quantity:
         return Quantity(np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16), unit=DN, dtype=np.uint16)

@@ -7,7 +7,6 @@ from typing import Any, cast
 import asdf
 import asdf.lazy_nodes
 import numpy as np
-import numpy.typing as npt
 from astropy.table import QTable
 
 from roman_datamodels import nodes, stnode
@@ -105,7 +104,7 @@ class RampModel(DataModel[Any], nodes.Ramp):
 
         # check if the input model has a resultantdq from SDF
         if hasattr(model, "resultantdq"):
-            ramp.groupdq = cast(npt.NDArray[np.uint8], model.resultantdq.copy())  # type: ignore[misc]
+            ramp.groupdq = model.resultantdq.copy()
 
         # Define how to recursively copy all attributes.
         def node_update(ramp: nodes.Ramp, other: RampModel | ScienceRawModel | FpsModel | TvacModel) -> None:
@@ -254,7 +253,7 @@ class MosaicModel(DataModel[Any], nodes.WfiMosaic):
         if self.meta.individual_image_meta.basic.colnames == ["dummy"]:
             # Astropy has not implemented type hints for Table so MyPy will complain about this
             # until they do.
-            self.meta.individual_image_meta.basic = QTable(names=basic_cols, data=basic_vals)  # type: ignore[misc, no-untyped-call]
+            self.meta.individual_image_meta.basic = QTable(names=basic_cols, data=basic_vals)  # type: ignore[no-untyped-call]
         else:
             # Append to existing basic table
             # Astropy has not implemented type hints for Table so MyPy will complain about this

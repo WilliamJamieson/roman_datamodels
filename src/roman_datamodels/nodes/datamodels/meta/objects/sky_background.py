@@ -47,17 +47,14 @@ class SkyBackground(rad.TaggedObjectNode[_SkyBackground]):
             }
         )
 
-    @property
     @rad.field
-    def level(self: rad.Node) -> float | None:
+    def level(self) -> float | None:
         return None
 
-    @property
     @rad.field
-    def method(self: rad.Node) -> SkyBackgroundMethodEntry:
+    def method(self) -> SkyBackgroundMethodEntry:
         return SkyBackgroundMethodEntry.NONE
 
-    @property
     @rad.field
-    def subtracted(self: rad.Node) -> bool:
+    def subtracted(self) -> bool:
         return False

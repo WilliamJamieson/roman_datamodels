@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import threading
 import warnings
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, TypeAlias, TypeVar, cast
+from typing import Any, Generic, TypeVar, cast, overload
 
 from ..core import DNode, type_checked
 from ._tagged import TaggedObjectNode
 
-__all__ = ["FIELD_REGISTRY", "FieldPropertyWarning", "Node", "field"]
+__all__ = ["FIELD_REGISTRY", "FieldPropertyWarning", "field"]
 
 _T = TypeVar("_T")
+_D = TypeVar("_D", bound=DNode[Any])
 
 
 class FieldPropertyWarning(UserWarning):
@@ -18,7 +21,7 @@ class FieldPropertyWarning(UserWarning):
     """
 
 
-def _default(function: Callable[[DNode[Any]], _T]) -> Callable[[DNode[Any]], _T]:
+def _default(function: Callable[[_D], _T]) -> Callable[[_D], _T]:
     """
     Wrap the function (which was defined like a property) on an ObjectNode so that
     two things are checked:
@@ -32,7 +35,7 @@ def _default(function: Callable[[DNode[Any]], _T]) -> Callable[[DNode[Any]], _T]
     """
 
     @wraps(function)
-    def wrapper(self: DNode[Any]) -> _T:
+    def wrapper(self: _D) -> _T:
         """
         Raises a warning if the tag does not match the latest one
         """
@@ -59,7 +62,7 @@ class _FieldRegistry:
         self._fields: dict[str, set[str]] = {}
         self._lock = threading.RLock()
 
-    def add_field(self, field: Callable[[DNode[Any]], _T]) -> None:
+    def add_field(self, field: Callable[[_D], _T]) -> None:
         """
         Add a field to the registry
         """
@@ -86,35 +89,38 @@ class _FieldRegistry:
 FIELD_REGISTRY = _FieldRegistry()
 
 
-def field(function: Callable[[DNode[Any]], _T]) -> Callable[[DNode[Any]], _T]:
+class field(property, Generic[_T]):
     """
-    Create a special property decorator for node methods that does several
-    things:
-        1. Marks them out as `field_property` so that they can be identified as
-           schema fields.
-        2. Wraps the method itself so that it acts a a pure default value
-           producer, using the value in the node before falling back on the method
-           itself to get the default value.
-        3. Adds a type check wrapper method which is only active during certain
-           testing conditions (falling back on a no-op identity decorator when
-           not testing).
+    Field descriptor for fields under properties keywords in the RAD schemas
     """
-    FIELD_REGISTRY.add_field(function)
 
-    @wraps(function)
-    def wrapper(self: DNode[Any]) -> _T:
-        """
-        Wrap the function (which is defined on the node) to handle getting the value
-        from the node and then falling back on evaluating the function itself to
-        get, set, and then return the default value.
-        """
+    def __init__(
+        self,
+        fget: Callable[[_D], _T],
+        fset: Callable[[_D, _T], None] | None = None,
+        fdel: Callable[[_D], None] | None = None,
+        doc: str | None = None,
+    ) -> None:
+        self.default = _default(fget)
+        FIELD_REGISTRY.add_field(self.default)
 
-        # Note the lambda is used to delay the evaluation of the default value all the way
-        # until the default is actually needed. This is important for things like numpy arrays
-        # which can be expensive to create (memory and time wise).
-        return cast(_T, self._get_node(function.__name__, lambda: _default(function)(self)))
+        super().__init__(None, fset, fdel, doc)
 
-    return wrapper
+    @overload
+    def __get__(self, obj: None, objtype: type | None) -> field[_T]: ...
 
+    @overload
+    def __get__(self, obj: _D, objtype: type | None = None) -> _T: ...
 
-Node: TypeAlias = DNode[Any]
+    def __get__(self, obj: _D | None, objtype: type | None = None) -> _T | field[_T]:
+        if obj is None:
+            # This is to handle the case where we do a getattr on the class itself
+            # I don't want to confuse the normal operations with adding this to the
+            return self
+
+        # MyPy seems to have an issue with the type of obj for the `obj._get_node` call
+        # it believes it is `_D@__get__` but it should be `_D@__init__`, not sure why.
+        #
+        # The specific cast here is to let the MyPy know that the generic _get_node method
+        # will be return the correct for the descriptor.
+        return cast(_T, obj._get_node(self.default.__name__, lambda: self.default(obj)))  # type: ignore[arg-type]

@@ -2,7 +2,7 @@ from ._asdf_schema import RadSchema
 from ._base import ArrayFieldMixin, RadNodeMixin
 from ._default import NOFN, NOINT, NONUM, NOSTR, Wcs
 from ._enum import EnumNodeMixin, NodeEnumMeta, RadEnum
-from ._field import Node, field
+from ._field import field
 from ._implied import ImpliedNodeMixin
 from ._node import ListNode, ObjectNode, ScalarNode
 from ._registry import RDM_NODE_REGISTRY
@@ -27,7 +27,6 @@ __all__ = [
     "EnumNodeMixin",
     "ImpliedNodeMixin",
     "ListNode",
-    "Node",
     "NodeEnumMeta",
     "ObjectNode",
     "RadEnum",

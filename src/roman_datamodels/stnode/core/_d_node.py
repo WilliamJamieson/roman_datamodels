@@ -5,7 +5,7 @@ import re
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Generator, Iterator, MutableMapping
 from enum import Enum
-from inspect import signature
+from inspect import getattr_static, signature
 from typing import TYPE_CHECKING, Annotated, Any, TypeVar
 
 import numpy as np
@@ -118,6 +118,8 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         """
         The field signatures for the node.
         """
+        from ..rad import field
+
         # Make change upfront as the key will be reused several times
         key = self._to_field_key(key)
 
@@ -129,7 +131,10 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
             self._field_signatures = {}
 
         if key not in self._field_signatures:
-            self._field_signatures[key] = signature(getattr(type(self), key).fget).return_annotation
+            if not isinstance(field_descriptor := getattr_static(type(self), key), field):
+                raise AttributeError(f"{key} is not a field, instead found {field_descriptor}")
+
+            self._field_signatures[key] = signature(field_descriptor.default).return_annotation
 
         return self._field_signatures[key]
 

@@ -17,14 +17,12 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin[float | None], rad.Objec
     def asdf_implied_by(cls) -> type:
         return PixelareaRef_Meta
 
-    @property
     @rad.field
-    def pixelarea_steradians(self: rad.Node) -> float | None:
+    def pixelarea_steradians(self) -> float | None:
         return rad.NONUM
 
-    @property
     @rad.field
-    def pixelarea_arcsecsq(self: rad.Node) -> float | None:
+    def pixelarea_arcsecsq(self) -> float | None:
         return rad.NONUM
 
 
@@ -36,14 +34,12 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin[_PixelareaRef_Meta], RefCommonRefOp
     def asdf_implied_by(cls) -> type:
         return PixelareaRef
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.AREA
 
-    @property
     @rad.field
-    def photometry(self: rad.Node) -> PixelareaRef_Meta_Photometry:
+    def photometry(self) -> PixelareaRef_Meta_Photometry:
         return PixelareaRef_Meta_Photometry()
 
 
@@ -71,12 +67,10 @@ class PixelareaRef(rad.TaggedObjectNode[_PixelareaRef], rad.ArrayFieldMixin[_Pix
     def testing_array_shape(self) -> tuple[int, int]:
         return (8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> PixelareaRef_Meta:
+    def meta(self) -> PixelareaRef_Meta:
         return PixelareaRef_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.float32]:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape, dtype=np.float32)

@@ -17,9 +17,8 @@ class RefpixRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommo
     def asdf_implied_by(cls) -> type:
         return RefpixRef
 
-    @property
     @rad.field
-    def reftype(self: rad.Node) -> RefTypeEntry:
+    def reftype(self) -> RefTypeEntry:
         return RefTypeEntry.REFPIX
 
 
@@ -51,22 +50,18 @@ class RefpixRef(rad.TaggedObjectNode[_RefPixRef], rad.ArrayFieldMixin[_RefPixRef
     def testing_array_shape(self) -> tuple[int, int]:
         return (32, 840)  # Chosen as the minimum size to do real testing
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> RefpixRef_Meta:
+    def meta(self) -> RefpixRef_Meta:
         return RefpixRef_Meta()
 
-    @property
     @rad.field
-    def gamma(self: rad.Node) -> npt.NDArray[np.complex128]:
+    def gamma(self) -> npt.NDArray[np.complex128]:
         return np.zeros(self.array_shape, dtype=np.complex128)
 
-    @property
     @rad.field
-    def zeta(self: rad.Node) -> npt.NDArray[np.complex128]:
+    def zeta(self) -> npt.NDArray[np.complex128]:
         return np.zeros(self.array_shape, dtype=np.complex128)
 
-    @property
     @rad.field
-    def alpha(self: rad.Node) -> npt.NDArray[np.complex128]:
+    def alpha(self) -> npt.NDArray[np.complex128]:
         return np.zeros(self.array_shape, dtype=np.complex128)

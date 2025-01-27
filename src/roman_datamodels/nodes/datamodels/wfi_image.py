@@ -43,49 +43,40 @@ class WfiImage_Meta(rad.ImpliedNodeMixin[_WfiImage_Meta], Common[_WfiImage_Meta]
     def asdf_implied_by(cls) -> type:
         return WfiImage
 
-    @property
     @rad.field
-    def background(self: rad.Node) -> SkyBackground:
+    def background(self) -> SkyBackground:
         return SkyBackground()
 
-    @property
     @rad.field
-    def cal_logs(self: rad.Node) -> CalLogs:
+    def cal_logs(self) -> CalLogs:
         return CalLogs.default()
 
-    @property
     @rad.field
-    def cal_step(self: rad.Node) -> L2CalStep:
+    def cal_step(self) -> L2CalStep:
         return L2CalStep()
 
-    @property
     @rad.field
-    def outlier_detection(self: rad.Node) -> OutlierDetection:
+    def outlier_detection(self) -> OutlierDetection:
         return OutlierDetection()
 
-    @property
     @rad.field
-    def photometry(self: rad.Node) -> Photometry:
+    def photometry(self) -> Photometry:
         return Photometry()
 
-    @property
     @rad.field
-    def source_catalog(self: rad.Node) -> SourceCatalog:
+    def source_catalog(self) -> SourceCatalog:
         return SourceCatalog()
 
-    @property
     @rad.field
-    def statistics(self: rad.Node) -> Statistics:
+    def statistics(self) -> Statistics:
         return Statistics()
 
-    @property
     @rad.field
-    def wcs(self: rad.Node) -> WCS | None:
+    def wcs(self) -> WCS | None:
         return rad.Wcs()
 
-    @property
     @rad.field
-    def wcsinfo(self: rad.Node) -> Wcsinfo:
+    def wcsinfo(self) -> Wcsinfo:
         return Wcsinfo()
 
 
@@ -125,82 +116,66 @@ class WfiImage(rad.TaggedObjectNode[_WfiImage], rad.ArrayFieldMixin[_WfiImage]):
     def testing_array_shape(self) -> tuple[int, int, int]:
         return (8, 8, 8)
 
-    @property
     @rad.field
-    def meta(self: rad.Node) -> WfiImage_Meta:
+    def meta(self) -> WfiImage_Meta:
         return WfiImage_Meta()
 
-    @property
     @rad.field
-    def data(self: rad.Node) -> npt.NDArray[np.float32]:
+    def data(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def dq(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq(self) -> npt.NDArray[np.uint32]:
         return np.zeros(self.array_shape[1:], dtype=np.uint32)
 
-    @property
     @rad.field
-    def err(self: rad.Node) -> npt.NDArray[np.float32]:
+    def err(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def var_poisson(self: rad.Node) -> npt.NDArray[np.float32]:
+    def var_poisson(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def var_rnoise(self: rad.Node) -> npt.NDArray[np.float32]:
+    def var_rnoise(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def var_flat(self: rad.Node) -> npt.NDArray[np.float32]:
+    def var_flat(self) -> npt.NDArray[np.float32]:
         return np.zeros(self.array_shape[1:], dtype=np.float32)
 
-    @property
     @rad.field
-    def amp33(self: rad.Node) -> npt.NDArray[np.uint16]:
+    def amp33(self) -> npt.NDArray[np.uint16]:
         return np.zeros((self.array_shape[0], self.array_shape[1], 128), dtype=np.uint16)
 
-    @property
     @rad.field
-    def border_ref_pix_left(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_left(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], self.array_shape[1] + 8, 4), dtype=np.float32)
 
-    @property
     @rad.field
-    def border_ref_pix_right(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_right(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], self.array_shape[1] + 8, 4), dtype=np.float32)
 
-    @property
     @rad.field
-    def border_ref_pix_top(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_top(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], 4, self.array_shape[2] + 8), dtype=np.float32)
 
-    @property
     @rad.field
-    def border_ref_pix_bottom(self: rad.Node) -> npt.NDArray[np.float32]:
+    def border_ref_pix_bottom(self) -> npt.NDArray[np.float32]:
         return np.zeros((self.array_shape[0], 4, self.array_shape[2] + 8), dtype=np.float32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_left(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_left(self) -> npt.NDArray[np.uint32]:
         return np.zeros((self.array_shape[1] + 8, 4), dtype=np.uint32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_right(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_right(self) -> npt.NDArray[np.uint32]:
         return np.zeros((self.array_shape[1] + 8, 4), dtype=np.uint32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_top(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_top(self) -> npt.NDArray[np.uint32]:
         return np.zeros((4, self.array_shape[2] + 8), dtype=np.uint32)
 
-    @property
     @rad.field
-    def dq_border_ref_pix_bottom(self: rad.Node) -> npt.NDArray[np.uint32]:
+    def dq_border_ref_pix_bottom(self) -> npt.NDArray[np.uint32]:
         return np.zeros((4, self.array_shape[2] + 8), dtype=np.uint32)
