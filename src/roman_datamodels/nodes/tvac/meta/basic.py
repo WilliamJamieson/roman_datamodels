@@ -46,7 +46,7 @@ class TvacBasic(rad.SchemaObjectNode[_TvacBasic | _T]):
     def file_date(self) -> TvacFileDate:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
-        return TvacFileDate.default()  # type: ignore[no-any-return]
+        return TvacFileDate.default()
 
     @rad.field
     def model_type(self) -> TvacModelType:

@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 from enum import Enum
 from importlib import resources as importlib_resources
-from inspect import signature
+from inspect import getattr_static, signature
 from typing import get_args
 
 import numpy as np
@@ -10,10 +10,11 @@ import yaml
 from astropy import units as u
 from astropy.table import Table
 from astropy.time import Time
+from astropy.utils.decorators import classproperty
 from gwcs import WCS
 from rad import resources
 
-from roman_datamodels import datamodels, nodes
+from roman_datamodels import nodes
 from roman_datamodels.stnode import core, rad
 
 _RESOURCES_PATH = importlib_resources.files(resources)
@@ -814,54 +815,16 @@ def test_model_type(node_cls):
 
 
 @pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.all_nodes.values())
-def test_node_docstring_empty(node_cls):
+def test_node_docstring(node_cls):
     """
     Test that the node docstring is correctly set, so that it can be auto-generated
     from rad schemas if necessary
     """
-    from roman_datamodels.nodes.datamodels.ramp_fit_output import RampFitOutput_Meta
-    from roman_datamodels.nodes.datamodels.wfi_science_raw import WfiScienceRaw_Meta
-    from roman_datamodels.nodes.reference_files.dark import DarkRef_Meta_Exposure
+    # Check that we have injected a classproperty for `__doc__`
+    assert isinstance(getattr_static(node_cls, "__doc__"), classproperty)
+    assert getattr_static(node_cls, "__doc__")._lazy is True  # It should be lazy
+    assert getattr_static(node_cls, "__doc__")._cache == {}  # It should not have a cache yet
 
-    # Check the class docstring
-    # Enum doc
-    if issubclass(node_cls, Enum) and not issubclass(node_cls, rad.SchemaScalarNode):
-        assert "Enum" in node_cls.__doc__
-
-    # Special cases that need extra documentation
-    elif node_cls in (RampFitOutput_Meta, WfiScienceRaw_Meta, DarkRef_Meta_Exposure):
-        # Non-empty string
-        assert node_cls.__doc__ and isinstance(node_cls.__doc__, str)
-
-    # Check that the docstring is None for the rest
-    elif not issubclass(node_cls, datamodels.DataModel):
-        assert node_cls.__doc__ is None
-
-    # These should be the datamodels themselves
-    else:
-        assert issubclass(node_cls, datamodels.DataModel)
-        return
-
-    # Check the fields docstrings
-    if issubclass(node_cls, rad.ObjectNode):
-        for field in rad.get_node_fields(node_cls):
-            assert getattr(node_cls, field).__doc__ is None
-
-
-@pytest.mark.order(after="test_node_docstring_empty")
-def test_node_docstring_fill():
-    """
-    Fill all the node docstrings from the schema files
-    -> needs to be a single test to not mess with the empty test
-    -> needs to be run after the empty test
-    """
-    # Fill the docs
-    rad.RDM_NODE_REGISTRY.fill_docs()
-
-    # All the None docs should now be at least an empty string
-    for node_cls in rad.RDM_NODE_REGISTRY.all_nodes.values():
-        assert isinstance(node_cls.__doc__, str)
-
-        if issubclass(node_cls, rad.ObjectNode):
-            for field in rad.get_node_fields(node_cls):
-                assert isinstance(getattr(node_cls, field).__doc__, str)
+    # Now actually get the docstring
+    assert isinstance(node_cls.__doc__, str)
+    assert len(getattr_static(node_cls, "__doc__")._cache) >= 1  # Check that the cache is now filled

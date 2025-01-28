@@ -20,17 +20,6 @@ _T = TypeVar("_T")
 
 
 class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
-    # _field_registry: str | None = None
-
-    # @classmethod
-    # def register_field(cls, field: str) -> None:
-    #     """
-    #     Register the field in the field registry
-    #     """
-    #     if cls._field_registry is None:
-    #         cls._field_registry = set()
-    #     cls._field_registry.add(field)
-
     @classmethod
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""

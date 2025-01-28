@@ -80,7 +80,7 @@ class _FieldRegistry:
 
     def get_fields(self, cls: type) -> set[str]:
         fields = self._fields.get(cls.__name__, set())
-        for base in cls.__bases__:
+        for base in cls.__mro__:
             fields |= self._fields.get(base.__name__, set())
 
         return fields

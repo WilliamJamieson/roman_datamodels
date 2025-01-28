@@ -17,7 +17,7 @@ __all__ = ["FpsCommon"]
 _T = TypeVar("_T")
 
 
-class FpsCommonMixin(core.AdditionalNodeMixin[FpsStatistics | _T]):
+class FpsCommonMixin(rad.ExtraFieldsMixin[FpsStatistics | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
     @rad.field

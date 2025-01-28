@@ -97,10 +97,10 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
             Note this only works on instances
             (not sure why I can't get it to work on the class)
         """
-        from ..rad import get_node_fields
+        from ..rad import FIELD_REGISTRY
 
         if self._schema_fields is None:
-            self._schema_fields = get_node_fields(type(self))
+            self._schema_fields = tuple(FIELD_REGISTRY.get_fields(type(self)))
 
         return self._schema_fields
 

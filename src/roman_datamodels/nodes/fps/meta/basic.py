@@ -46,7 +46,7 @@ class FpsBasic(rad.SchemaObjectNode[_FpsBasic | _T]):
     def file_date(self) -> FpsFileDate:
         # Astropy has not implemented type hints for Time so MyPy will complain about this
         # until they do.
-        return FpsFileDate.default()  # type: ignore[no-any-return]
+        return FpsFileDate.default()
 
     @rad.field
     def model_type(self) -> FpsModelType:

@@ -147,6 +147,7 @@ module = [
     "astropy.table.*",
     "astropy.time.*",
     "astropy.units.*",
+    "astropy.utils.*",
     "gwcs.*",
 ]
 follow_untyped_imports = true

@@ -2,7 +2,7 @@ from typing import TypeAlias, TypeVar
 
 from astropy.time import Time
 
-from roman_datamodels.stnode import core, rad
+from roman_datamodels.stnode import rad
 
 from ...datamodels import InstrumentNameEntry, Telescope, WfiDetector, WfiOpticalElement
 
@@ -73,7 +73,7 @@ class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, rad.RadEnum, metaclass
 _RefCommonRef_InstrumentMixin: TypeAlias = WfiOpticalElement | None
 
 
-class RefCommonRef_InstrumentMixin(core.AdditionalNodeMixin[_RefCommonRef_InstrumentMixin | _T]):
+class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin[_RefCommonRef_InstrumentMixin | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
     @rad.field

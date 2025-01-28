@@ -17,7 +17,7 @@ __all__ = ["TvacCommon"]
 _T = TypeVar("_T")
 
 
-class TvacCommonMixin(core.AdditionalNodeMixin[TvacStatistics | _T]):
+class TvacCommonMixin(rad.ExtraFieldsMixin[TvacStatistics | _T]):
     """Mixin things present in the constructors not present in the schema"""
 
     @rad.field

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from inspect import isclass
+from inspect import getattr_static, isclass
 from typing import TYPE_CHECKING, Any, TypeVar, get_args
 
 if TYPE_CHECKING:
@@ -117,7 +117,7 @@ def get_all_fields(cls: type) -> set[str]:
         The fields of the class.
     """
 
-    return {property_name for property_name in dir(cls) if isinstance(getattr(cls, property_name), property)}
+    return {property_name for property_name in dir(cls) if isinstance(getattr_static(cls, property_name), property)}
 
 
 def _get_mixin_fields(cls: type) -> set[str]:
