@@ -6,7 +6,9 @@ from typing import TYPE_CHECKING, Any, TypeVar, get_args
 if TYPE_CHECKING:
     from ._node import ScalarNode
 
-from ..core import AdditionalNodeMixin, DNode, LNode, PatternDNode
+from ..core import DNode, LNode, PatternDNode
+from ._base import ExtraFieldsMixin
+from ._field import field
 
 _T = TypeVar("_T")
 
@@ -117,7 +119,7 @@ def get_all_fields(cls: type) -> set[str]:
         The fields of the class.
     """
 
-    return {property_name for property_name in dir(cls) if isinstance(getattr_static(cls, property_name), property)}
+    return {property_name for property_name in dir(cls) if isinstance(getattr_static(cls, property_name), field)}
 
 
 def _get_mixin_fields(cls: type) -> set[str]:
@@ -135,10 +137,10 @@ def _get_mixin_fields(cls: type) -> set[str]:
     """
 
     mixin_fields = set()
-    if issubclass(cls, AdditionalNodeMixin):
+    if issubclass(cls, ExtraFieldsMixin):
         for base in cls.__bases__:
-            if issubclass(base, AdditionalNodeMixin):
-                if base is AdditionalNodeMixin:
+            if issubclass(base, ExtraFieldsMixin):
+                if base is ExtraFieldsMixin:
                     # This means that cls is the actual mixin class
                     new_fields = get_all_fields(cls)
                 else:

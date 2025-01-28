@@ -2,6 +2,7 @@ import warnings
 from abc import ABC
 from collections.abc import Generator
 from enum import Enum
+from inspect import getattr_static
 from typing import Any, TypeVar
 
 from asdf import AsdfFile
@@ -9,6 +10,7 @@ from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 
 from ..core import DNode, FlushOptions, LNode, get_config
 from ._base import RadNodeMixin
+from ._field import FIELD_REGISTRY
 
 __all__ = [
     "ListNode",
@@ -20,6 +22,12 @@ _T = TypeVar("_T")
 
 
 class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        super().__init_subclass__(**kwargs)
+
+        for name in FIELD_REGISTRY.get_local_fields(cls):
+            getattr_static(cls, name)._schema = cls.asdf_schema
+
     @classmethod
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""

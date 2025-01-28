@@ -29,7 +29,6 @@ class RadNodeMixin(AsdfNodeMixin[_T], ABC):
 
         @classproperty(lazy=True)  # type: ignore[no-untyped-call, call-arg, operator]
         def docstring(cls: RadNodeMixin[_T]) -> str:
-            print(cls)
             docstring = indent(cls.asdf_schema().docstring, "    ")
             if cls._custom_doc:
                 docstring = f"{cls._custom_doc}\n\n{docstring}"

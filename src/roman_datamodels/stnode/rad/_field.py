@@ -4,10 +4,12 @@ import threading
 import warnings
 from collections.abc import Callable
 from functools import wraps
+from textwrap import indent
 from typing import Any, Generic, TypeVar, cast, overload
 
 from ..core import DNode, type_checked
-from ._tagged import TaggedObjectNode
+from ._asdf_schema import RadSchema
+from ._base import ExtraFieldsMixin
 
 __all__ = ["FIELD_REGISTRY", "FieldPropertyWarning", "field"]
 
@@ -39,6 +41,8 @@ def _default(function: Callable[[_D], _T]) -> Callable[[_D], _T]:
         """
         Raises a warning if the tag does not match the latest one
         """
+        from ._tagged import TaggedObjectNode
+
         if isinstance(self, TaggedObjectNode) and self._tag != self.asdf_tag_uri():
             msg = (
                 f"Node is not on the latest tag: {self._tag} != {self.asdf_tag_uri()} "
@@ -78,10 +82,14 @@ class _FieldRegistry:
 
             self._fields[cls_name].add(name)
 
+    def get_local_fields(self, cls: type) -> set[str]:
+        return self._fields.get(cls.__name__, set())
+
     def get_fields(self, cls: type) -> set[str]:
-        fields = self._fields.get(cls.__name__, set())
+        fields = self.get_local_fields(cls)
         for base in cls.__mro__:
-            fields |= self._fields.get(base.__name__, set())
+            if ExtraFieldsMixin not in base.__bases__:
+                fields |= self._fields.get(base.__name__, set())
 
         return fields
 
@@ -94,6 +102,9 @@ class field(property, Generic[_T]):
     Field descriptor for fields under properties keywords in the RAD schemas
     """
 
+    _schema: Callable[[], RadSchema] | None = None
+    _docstring: str | None = None
+
     def __init__(
         self,
         fget: Callable[[_D], _T],
@@ -104,7 +115,21 @@ class field(property, Generic[_T]):
         self.default = _default(fget)
         FIELD_REGISTRY.add_field(self.default)
 
-        super().__init__(None, fset, fdel, doc)
+        super().__init__(None, fset, fdel, None)
+
+    # I should be able to use a lazyproperty here, but it gets overridden by the
+    # initializer for `property` called by the `super().__init__`
+    @property
+    def __doc__(self) -> str:  # type: ignore[override]
+        if self._docstring is None:
+            docstring = f"{self.default.__doc__}\n\n" if self.default.__doc__ else ""
+
+            if self._schema:
+                docstring += indent(f"{self._schema().fields[self.default.__name__].docstring}", "    ")
+
+            self._docstring = docstring
+
+        return self._docstring
 
     @overload
     def __get__(self, obj: None, objtype: type | None) -> field[_T]: ...
