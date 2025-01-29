@@ -12,7 +12,7 @@ __all__ = ["WfiImgPhotomRef", "WfiImgPhotomRef_Meta", "WfiImgPhotomRef_PhotTable
 _T = TypeVar("_T")
 
 
-class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
+class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
@@ -22,7 +22,7 @@ class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_Re
         return RefTypeEntry.PHOTOM
 
 
-class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[float | None]):
+class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode[float | None]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
@@ -49,7 +49,7 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin[float | None], rad.ObjectNo
         return 1.0e-13
 
 
-class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin[_T]):
+class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef

@@ -13,7 +13,7 @@ __all__ = ["IpcRef", "IpcRef_Meta"]
 
 
 class IpcRef_Meta(  # type: ignore[misc]
-    rad.ImpliedNodeMixin[_RefCommonRefOpticalElementRef], RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
+    rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
 ):
     @classmethod
     def asdf_implied_by(cls) -> type:

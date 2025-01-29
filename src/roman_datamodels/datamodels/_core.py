@@ -20,7 +20,7 @@ __all__ = ["DataModel"]
 _T = TypeVar("_T")
 
 
-class DataModel(StpipeAPIMixin[_T], rad.TagMixin[_T]):
+class DataModel(StpipeAPIMixin[_T], rad.TagMixin):
     """
     Mixin class for all data models (top-level nodes)
     -> this will be mixed with a TaggedObject Node class

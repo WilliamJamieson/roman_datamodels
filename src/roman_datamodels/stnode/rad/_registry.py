@@ -87,7 +87,7 @@ class _RdmNodeRegistry:
         return self._list_nodes
 
     @property
-    def scalar_nodes(self) -> MappingProxyType[str, type[ScalarNode[_T]]]:
+    def scalar_nodes(self) -> MappingProxyType[str, type[ScalarNode]]:
         """
         Get a mapping of all the scalar nodes,
             Those are all the nodes that represent a scalar value in the schema.
@@ -103,7 +103,7 @@ class _RdmNodeRegistry:
         return self._scalar_nodes
 
     @property
-    def all_nodes(self) -> MappingProxyType[str, type[RadNodeMixin[_T]]]:
+    def all_nodes(self) -> MappingProxyType[str, type[RadNodeMixin]]:
         """
         Get a mapping of all the nodes
 
@@ -142,7 +142,7 @@ class _RdmNodeRegistry:
         return self._datamodels
 
     @property
-    def implied_nodes(self) -> MappingProxyType[str, type[ImpliedNodeMixin[_T]]]:
+    def implied_nodes(self) -> MappingProxyType[str, type[ImpliedNodeMixin]]:
         """
         Get a mapping of all the nodes that are implied by the schema in RAD
 
@@ -182,7 +182,7 @@ class _RdmNodeRegistry:
         return self._enum_nodes
 
     @property
-    def schema_registry(self) -> MappingProxyType[str, type[SchemaMixin[_T]]]:
+    def schema_registry(self) -> MappingProxyType[str, type[SchemaMixin]]:
         """
         Get a mapping of all the nodes that are described by a schema in RAD
 
@@ -203,7 +203,7 @@ class _RdmNodeRegistry:
         return self._schema_registry
 
     @property
-    def tagged_registry(self) -> MappingProxyType[str, type[TagMixin[_T]]]:
+    def tagged_registry(self) -> MappingProxyType[str, type[TagMixin]]:
         """
         Get a mapping of all the nodes that are tagged in
 

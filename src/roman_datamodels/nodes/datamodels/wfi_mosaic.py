@@ -43,7 +43,7 @@ _WfiMosaic_Meta: TypeAlias = (
 )
 
 
-class WfiMosaic_Meta(rad.ImpliedNodeMixin[_WfiMosaic_Meta], Basic[_WfiMosaic_Meta]):
+class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic[_WfiMosaic_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiMosaic

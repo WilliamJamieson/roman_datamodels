@@ -18,7 +18,7 @@ __all__ = ["Ramp", "Ramp_Meta"]
 _Ramp_Meta: TypeAlias = _Common | L2CalStep
 
 
-class Ramp_Meta(rad.ImpliedNodeMixin[_Ramp_Meta], Common[_Ramp_Meta]):
+class Ramp_Meta(rad.ImpliedNodeMixin, Common[_Ramp_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Ramp

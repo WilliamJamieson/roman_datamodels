@@ -15,7 +15,7 @@ __all__ = [
 _T = TypeVar("_T")
 
 
-class SchemaMixin(RadNodeMixin[_T], ABC):
+class SchemaMixin(RadNodeMixin, ABC):
     """Mixin for nodes to support linking to a schema."""
 
     @classmethod
@@ -54,19 +54,19 @@ class SchemaMixin(RadNodeMixin[_T], ABC):
         return SCHEMA_REGISTRY.get_schema(self.schema_uri)
 
 
-class SchemaObjectNode(ObjectNode[_T], SchemaMixin[_T], ABC):
+class SchemaObjectNode(ObjectNode[_T], SchemaMixin, ABC):
     """
     Base class for all objects described by their own schema in RAD.
     """
 
 
-class SchemaListNode(ListNode[_T], SchemaMixin[_T], ABC):
+class SchemaListNode(ListNode[_T], SchemaMixin, ABC):
     """
     Base class for all list nodes described by their own schema in RAD.
     """
 
 
-class SchemaScalarNode(ScalarNode[_T], SchemaMixin[_T], ABC):
+class SchemaScalarNode(ScalarNode, SchemaMixin, ABC):
     """
     Base class for all scalars that are described by their own schema in RAD.
     """

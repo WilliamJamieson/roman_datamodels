@@ -38,7 +38,7 @@ _WfiImage_Meta: TypeAlias = (
 )
 
 
-class WfiImage_Meta(rad.ImpliedNodeMixin[_WfiImage_Meta], Common[_WfiImage_Meta]):
+class WfiImage_Meta(rad.ImpliedNodeMixin, Common[_WfiImage_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImage

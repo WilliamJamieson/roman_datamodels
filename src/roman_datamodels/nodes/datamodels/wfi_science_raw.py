@@ -12,7 +12,7 @@ from .meta.common import _Common
 __all__ = ["WfiScienceRaw", "WfiScienceRaw_Meta"]
 
 
-class WfiScienceRaw_Meta(rad.ImpliedNodeMixin[_Common], Common[_Common]):
+class WfiScienceRaw_Meta(rad.ImpliedNodeMixin, Common[_Common]):
     """
     The metadata for the WfiScienceRaw node
     -> only exists so that model_type can be correctly inferred

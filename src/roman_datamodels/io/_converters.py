@@ -36,13 +36,13 @@ class _NodeConverter(Converter):
     def types(self) -> list[type]:
         return list(RDM_NODE_REGISTRY.tagged_registry.values())
 
-    def select_tag(self, obj: TagMixin[_T], tags: list[str], ctx: AsdfFile) -> str:
+    def select_tag(self, obj: TagMixin, tags: list[str], ctx: AsdfFile) -> str:
         return obj._tag
 
-    def to_yaml_tree(self, obj: TagMixin[_T], tag: str, ctx: AsdfFile) -> dict[str, Any] | list[Any] | Any:
+    def to_yaml_tree(self, obj: TagMixin, tag: str, ctx: AsdfFile) -> dict[str, Any] | list[Any] | Any:
         return obj.to_asdf_tree(ctx)
 
-    def from_yaml_tree(self, node: dict[str, Any] | Any, tag: str, ctx: AsdfFile) -> TagMixin[_T]:
+    def from_yaml_tree(self, node: dict[str, Any] | Any, tag: str, ctx: AsdfFile) -> TagMixin:
         node_cls = RDM_NODE_REGISTRY.tagged_registry[tag]
 
         # Enum will do a form of validation (if not in enum Python will raise a ValueError)
@@ -63,7 +63,7 @@ class _NodeConverter(Converter):
         out = node_cls(node)  # type: ignore[call-arg]
         out._instance_tag = tag
         # MyPy can't determine that the return value will be the correct type
-        return out  # type: ignore[return-value]
+        return out
 
 
 # Create the ASDF extension for the STNode classes.

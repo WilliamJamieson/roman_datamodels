@@ -20,7 +20,7 @@ __all__ = ["SegmentationMap", "SegmentationMap_Meta"]
 _SegmentationMap_Meta: TypeAlias = _Basic | Program | Visit | WfiOpticalElement
 
 
-class SegmentationMap_Meta(rad.ImpliedNodeMixin[_SegmentationMap_Meta], Basic[_SegmentationMap_Meta]):
+class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_SegmentationMap_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SegmentationMap

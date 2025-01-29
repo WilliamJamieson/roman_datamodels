@@ -12,7 +12,7 @@ __all__ = ["AbvedgaoffsetRef_Data_PatternNode", "AbvegaoffsetRef", "Abvegaoffset
 _T = TypeVar("_T")
 
 
-class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
+class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
@@ -22,7 +22,7 @@ class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_Re
         return RefTypeEntry.ABVEGAOFFSET
 
 
-class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[float | None]):
+class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode[float | None]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
@@ -32,7 +32,7 @@ class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[fl
         return rad.NONUM
 
 
-class AbvedgaoffsetRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin[_T]):
+class AbvedgaoffsetRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef

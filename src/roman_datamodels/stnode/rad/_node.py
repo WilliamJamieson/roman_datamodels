@@ -21,7 +21,7 @@ __all__ = [
 _T = TypeVar("_T")
 
 
-class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
+class ObjectNode(DNode[_T], RadNodeMixin, ABC):
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
 
@@ -224,13 +224,13 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
 
 
-class ListNode(LNode[_T], RadNodeMixin[_T], ABC):
+class ListNode(LNode[_T], RadNodeMixin, ABC):
     """
     Base class for all list nodes
     """
 
 
-class ScalarNode(RadNodeMixin[_T], ABC):
+class ScalarNode(RadNodeMixin, ABC):
     """
     Base class for all scalars with descriptions in RAD
     -> this is for enums that are not tagged

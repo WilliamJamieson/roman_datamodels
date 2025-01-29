@@ -12,7 +12,7 @@ __all__ = [
 ]
 
 
-class WcsinfoApertureNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class WcsinfoApertureNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Wcsinfo
@@ -68,7 +68,7 @@ class WcsinfoApertureNameEntry(WcsinfoApertureNameEntryMixin, rad.RadEnum, metac
     CGI_CEN = "CGI_CEN"
 
 
-class WcsinfoVparityEntryMixin(int, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class WcsinfoVparityEntryMixin(int, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Wcsinfo

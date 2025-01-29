@@ -23,7 +23,7 @@ _RefCommonRefOpticalElementRef_Instrument: TypeAlias = _RefCommonRef_Instrument 
 class RefCommonRefOpticalElementRef_Instrument(
     RefCommonRef_Instrument[_RefCommonRefOpticalElementRef_Instrument],
     RefOpticalElementRef_Instrument,
-    rad.ImpliedNodeMixin[_RefCommonRefOpticalElementRef_Instrument],
+    rad.ImpliedNodeMixin,
 ):
     @classmethod
     def asdf_implied_by(cls) -> type:

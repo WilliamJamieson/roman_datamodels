@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["Telescope", "TelescopeMixin"]
 
 
-class TelescopeMixin(str, rad.TaggedScalarNode[str], rad.EnumNodeMixin):
+class TelescopeMixin(str, rad.TaggedScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/telescope-1.0.0",)

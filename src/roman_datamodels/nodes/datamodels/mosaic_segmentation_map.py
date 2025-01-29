@@ -18,7 +18,7 @@ __all__ = ["MosaicSegmentationMap", "MosaicSegmentationMap_Meta"]
 _MosaicSegmentationMap_Meta: TypeAlias = _Basic | MosaicBasic | Program
 
 
-class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin[_MosaicSegmentationMap_Meta], Basic[_MosaicSegmentationMap_Meta]):
+class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_MosaicSegmentationMap_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MosaicSegmentationMap

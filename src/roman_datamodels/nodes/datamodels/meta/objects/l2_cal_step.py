@@ -5,7 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["CalStepEntry", "CalStepEntryMixin", "L2CalStep"]
 
 
-class CalStepEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class CalStepEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return L2CalStep

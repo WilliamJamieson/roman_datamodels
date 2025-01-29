@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["TvacFilename"]
 
 
-class TvacFilename(str, rad.TaggedScalarNode[str]):
+class TvacFilename(str, rad.TaggedScalarNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/filename-1.0.0",)

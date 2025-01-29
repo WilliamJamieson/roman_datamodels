@@ -18,7 +18,7 @@ __all__ = ["Fps", "Fps_Meta"]
 _Fps_Meta: TypeAlias = _FpsCommon | FpsGroundtest
 
 
-class Fps_Meta(rad.ImpliedNodeMixin[_Fps_Meta], FpsCommon[_Fps_Meta]):
+class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon[_Fps_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Fps

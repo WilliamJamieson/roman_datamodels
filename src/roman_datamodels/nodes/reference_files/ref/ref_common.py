@@ -20,7 +20,7 @@ __all__ = [
 _T = TypeVar("_T")
 
 
-class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_schema(cls) -> rad.RadSchema:
         return rad.RadSchema({})
@@ -53,7 +53,7 @@ class RefTypeEntry(RefTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     NA = "N/A"  # for a default value in ref_common
 
 
-class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return RefCommonRef
@@ -94,7 +94,7 @@ _RefCommonRef_Instrument: TypeAlias = _RefCommonRef_InstrumentMixin | Instrument
 
 class RefCommonRef_Instrument(
     RefCommonRef_InstrumentMixin[_RefCommonRef_InstrumentMixin | _T],
-    rad.ImpliedNodeMixin[_RefCommonRef_Instrument | _T],
+    rad.ImpliedNodeMixin,
     rad.ObjectNode[_RefCommonRef_Instrument | _T],
 ):
     @classmethod

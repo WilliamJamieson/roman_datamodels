@@ -3,7 +3,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["FpsExposureType", "FpsExposureTypeMixin"]
 
 
-class FpsExposureTypeMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):
+class FpsExposureTypeMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/exposure_type-1.0.0",)

@@ -12,7 +12,7 @@ from .ref.ref_common import _RefCommonRef
 __all__ = ["RefpixRef", "RefpixRef_Meta"]
 
 
-class RefpixRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
+class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefpixRef

@@ -166,8 +166,8 @@ def get_node_fields(cls: type) -> tuple[str, ...]:
 
 
 def wrap_into_node(
-    value: Any, signature: type[DNode[_T] | LNode[_T] | ScalarNode[_T] | _T]
-) -> DNode[_T] | LNode[_T] | ScalarNode[_T] | _T | Any:
+    value: Any, signature: type[DNode[_T] | LNode[_T] | ScalarNode | _T]
+) -> DNode[_T] | LNode[_T] | ScalarNode | _T | Any:
     """
     Wrap things into node containers if necessary.
 

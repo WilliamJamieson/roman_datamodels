@@ -16,7 +16,7 @@ __all__ = [
 _T = TypeVar("_T")
 
 
-class RadNodeMixin(AsdfNodeMixin[_T], ABC):
+class RadNodeMixin(AsdfNodeMixin[Any], ABC):
     """
     Mixin for direct interaction with RAD nodes.
     """
@@ -28,7 +28,7 @@ class RadNodeMixin(AsdfNodeMixin[_T], ABC):
         cls._custom_doc = cls.__doc__
 
         @classproperty(lazy=True)  # type: ignore[no-untyped-call, call-arg, operator]
-        def docstring(cls: RadNodeMixin[_T]) -> str:
+        def docstring(cls: RadNodeMixin) -> str:
             docstring = indent(cls.asdf_schema().docstring, "    ")
             if cls._custom_doc:
                 docstring = f"{cls._custom_doc}\n\n{docstring}"

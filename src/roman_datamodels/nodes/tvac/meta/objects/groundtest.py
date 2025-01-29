@@ -17,7 +17,7 @@ __all__ = [
 ]
 
 
-class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return TvacGroundtest
@@ -36,7 +36,7 @@ class TvacGroundtestGsorcSdsDqPulseEntry(TvacGroundtestGsorcSdsDqPulseEntryMixin
     CW = "cw"
 
 
-class TvacGroundtestWfiOptTargettypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class TvacGroundtestWfiOptTargettypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return TvacGroundtest

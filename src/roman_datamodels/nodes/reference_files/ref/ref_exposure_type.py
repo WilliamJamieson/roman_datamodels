@@ -11,9 +11,7 @@ _T = TypeVar("_T")
 _RefExposureTypeRef_Exposure: TypeAlias = ExposureType | str
 
 
-class RefExposureTypeRef_Exposure(
-    rad.ImpliedNodeMixin[_RefExposureTypeRef_Exposure | _T], rad.ObjectNode[_RefExposureTypeRef_Exposure | _T]
-):
+class RefExposureTypeRef_Exposure(rad.ImpliedNodeMixin, rad.ObjectNode[_RefExposureTypeRef_Exposure | _T]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefExposureTypeRef

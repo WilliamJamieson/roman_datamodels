@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-class SkyBackgroundMethodEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class SkyBackgroundMethodEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return SkyBackground

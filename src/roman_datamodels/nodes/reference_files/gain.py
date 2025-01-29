@@ -12,7 +12,7 @@ from .ref.ref_common import _RefCommonRef
 __all__ = ["GainRef", "GainRef_Meta"]
 
 
-class GainRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
+class GainRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return GainRef

@@ -12,7 +12,7 @@ from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 __all__ = ["PixelareaRef", "PixelareaRef_Meta", "PixelareaRef_Meta_Photometry"]
 
 
-class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[float | None]):
+class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode[float | None]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef_Meta
@@ -29,7 +29,7 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin[float | None], rad.Objec
 _PixelareaRef_Meta: TypeAlias = _RefCommonRefOpticalElementRef | PixelareaRef_Meta_Photometry
 
 
-class PixelareaRef_Meta(rad.ImpliedNodeMixin[_PixelareaRef_Meta], RefCommonRefOpticalElementRef[_PixelareaRef_Meta]):  # type: ignore[misc]
+class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_PixelareaRef_Meta]):  # type: ignore[misc]
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef

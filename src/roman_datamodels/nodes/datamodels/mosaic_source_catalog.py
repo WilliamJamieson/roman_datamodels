@@ -19,7 +19,7 @@ __all__ = ["MosaicSourceCatalog", "MosaicSourceCatalog_Meta"]
 _MosaicSourceCatalog_Meta: TypeAlias = _Basic | MosaicBasic | Photometry | Program
 
 
-class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin[_MosaicSourceCatalog_Meta], Basic[_MosaicSourceCatalog_Meta]):
+class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic[_MosaicSourceCatalog_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MosaicSourceCatalog

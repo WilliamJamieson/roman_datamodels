@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-class ResampleWeightTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class ResampleWeightTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Resample

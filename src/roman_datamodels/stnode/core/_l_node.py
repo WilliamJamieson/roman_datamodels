@@ -45,7 +45,7 @@ class LNode(AsdfNodeMixin[_T], UserList[_T]):
 
     def to_asdf_tree(
         self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False
-    ) -> list[dict[str, Any] | list[Any] | Any | _T | TagMixin[_T]]:
+    ) -> list[dict[str, Any] | list[Any] | Any | _T | TagMixin]:
         from ..rad import TagMixin
 
         return [

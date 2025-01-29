@@ -25,7 +25,7 @@ class EnumNodeMixin(ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_container(cls) -> type[SchemaMixin[_T]]:
+    def asdf_container(cls) -> type[SchemaMixin]:
         """
         A class which has a property that evaluates to the enum
         """

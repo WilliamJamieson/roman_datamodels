@@ -6,7 +6,7 @@ from roman_datamodels.stnode import core, rad
 __all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry", "MosaicWcsinfoProjectionEntryMixin"]
 
 
-class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return MosaicWcsinfo

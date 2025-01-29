@@ -11,7 +11,7 @@ from .meta.common import Common, _Common
 __all__ = ["RampFitOutput", "RampFitOutput_Meta"]
 
 
-class RampFitOutput_Meta(rad.ImpliedNodeMixin[_Common], Common[_Common]):
+class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common[_Common]):
     """
     The metadata for the RampFitOutput node
     -> only exists so that model_type can be correctly inferred

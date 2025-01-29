@@ -16,7 +16,7 @@ __all__ = ["ApcorrRef", "ApcorrRef_Data", "ApcorrRef_Data_PatternNode", "ApcorrR
 _T = TypeVar("_T")
 
 
-class ApcorrRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):
+class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -29,7 +29,7 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommo
 _ApcorrRef_Data: TypeAlias = npt.NDArray[np.float64] | float | None
 
 
-class ApcorrRef_Data(rad.ImpliedNodeMixin[_ApcorrRef_Data], rad.ObjectNode[_ApcorrRef_Data]):
+class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode[_ApcorrRef_Data]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -71,7 +71,7 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin[_ApcorrRef_Data], rad.ObjectNode[_Apco
         return rad.NONUM
 
 
-class ApcorrRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin[_T]):
+class ApcorrRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef

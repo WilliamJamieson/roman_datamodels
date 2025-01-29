@@ -10,7 +10,7 @@ __all__ = ["InstrumentNameEntry", "InstrumentNameEntryMixin", "WfiMode", "WfiMod
 _T = TypeVar("_T")
 
 
-class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return WfiMode

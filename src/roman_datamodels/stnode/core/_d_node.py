@@ -355,7 +355,7 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
 
     def to_asdf_tree(
         self, ctx: AsdfFile, flush: FlushOptions = FlushOptions.REQUIRED, warn: bool = False
-    ) -> dict[str, dict[str, Any] | list[Any] | Any | _T | TagMixin[_T]]:
+    ) -> dict[str, dict[str, Any] | list[Any] | Any | _T | TagMixin]:
         from ..rad import TagMixin
 
         return {

@@ -6,7 +6,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["TvacRefFile", "TvacRefFile_Crds"]
 
 
-class TvacRefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):
+class TvacRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode[str]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return TvacRefFile

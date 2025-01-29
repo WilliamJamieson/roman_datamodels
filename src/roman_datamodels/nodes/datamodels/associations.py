@@ -12,7 +12,7 @@ __all__ = [
 ]
 
 
-class AssociationsExptypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class AssociationsExptypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Associations_Products_Members
@@ -35,9 +35,7 @@ class AssociationsExptypeEntry(AssociationsExptypeEntryMixin, rad.RadEnum, metac
 _Associations_Products_Members: TypeAlias = AssociationsExptypeEntry | str
 
 
-class Associations_Products_Members(
-    rad.ImpliedNodeMixin[_Associations_Products_Members], rad.ObjectNode[_Associations_Products_Members]
-):
+class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode[_Associations_Products_Members]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations_Products
@@ -58,7 +56,7 @@ class Associations_Products_Members(
 _Associations_Products: TypeAlias = core.LNode[Associations_Products_Members] | str
 
 
-class Associations_Products(rad.ImpliedNodeMixin[_Associations_Products], rad.ObjectNode[_Associations_Products]):
+class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode[_Associations_Products]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Associations

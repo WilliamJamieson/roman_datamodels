@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-class RcsElectronicsEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class RcsElectronicsEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Rcs
@@ -34,7 +34,7 @@ class RcsElectronicsEntry(RcsElectronicsEntryMixin, rad.RadEnum, metaclass=rad.N
     NONE = "None"
 
 
-class RcsBankEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class RcsBankEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Rcs
@@ -54,7 +54,7 @@ class RcsBankEntry(RcsBankEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     NONE = "None"
 
 
-class RcsLedEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class RcsLedEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Rcs

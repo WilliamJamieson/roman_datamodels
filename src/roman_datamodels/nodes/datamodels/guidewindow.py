@@ -19,7 +19,7 @@ __all__ = ["Guidewindow", "Guidewindow_Meta"]
 _Guidewindow_Meta: TypeAlias = _Common | GuidewindowModes | Time | str | int | float
 
 
-class Guidewindow_Meta(rad.ImpliedNodeMixin[_Guidewindow_Meta], Common[_Guidewindow_Meta]):
+class Guidewindow_Meta(rad.ImpliedNodeMixin, Common[_Guidewindow_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Guidewindow

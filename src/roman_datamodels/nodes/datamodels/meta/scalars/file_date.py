@@ -9,7 +9,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["FileDate"]
 
 
-class FileDate(Time, rad.TaggedScalarNode[Time]):
+class FileDate(Time, rad.TaggedScalarNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tagged_scalars/file_date-1.0.0",)

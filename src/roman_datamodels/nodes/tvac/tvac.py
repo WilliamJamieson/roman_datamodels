@@ -18,7 +18,7 @@ __all__ = ["Tvac", "Tvac_Meta"]
 _Tvac_Meta: TypeAlias = _TvacCommon | TvacGroundtest
 
 
-class Tvac_Meta(rad.ImpliedNodeMixin[_Tvac_Meta], TvacCommon[_Tvac_Meta]):
+class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon[_Tvac_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Tvac

@@ -20,9 +20,7 @@ __all__ = ["ReadnoiseRef", "ReadnoiseRef_Meta"]
 _ReadnoiseRef_Meta: TypeAlias = _RefCommonRef | _RefExposureTypeRef
 
 
-class ReadnoiseRef_Meta(
-    rad.ImpliedNodeMixin[_ReadnoiseRef_Meta], RefCommonRef[_ReadnoiseRef_Meta], RefExposureTypeRef[_RefExposureTypeRef]
-):
+class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_ReadnoiseRef_Meta], RefExposureTypeRef[_RefExposureTypeRef]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ReadnoiseRef

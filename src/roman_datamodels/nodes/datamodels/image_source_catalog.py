@@ -20,7 +20,7 @@ __all__ = ["ImageSourceCatalog", "ImageSourceCatalog_Meta"]
 _ImageSourceCatalog_Meta: TypeAlias = _Basic | WfiOpticalElement | Exposure | Photometry | Program | Visit
 
 
-class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin[_ImageSourceCatalog_Meta], Basic[_ImageSourceCatalog_Meta]):
+class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic[_ImageSourceCatalog_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ImageSourceCatalog

@@ -19,7 +19,7 @@ __all__ = [
 _T = TypeVar("_T")
 
 
-class TagMixin(SchemaMixin[_T], ABC):
+class TagMixin(SchemaMixin, ABC):
     """Mixin for nodes to support linking to a tag."""
 
     _instance_tag: str | None = None
@@ -48,7 +48,7 @@ class TagMixin(SchemaMixin[_T], ABC):
         return self.asdf_tag_uris()[self._tag]
 
 
-class TaggedObjectNode(SchemaObjectNode[_T], TagMixin[_T], ABC):
+class TaggedObjectNode(SchemaObjectNode[_T], TagMixin, ABC):
     """
     Base class for all objects that are tagged in RAD.
     """
@@ -65,7 +65,7 @@ class TaggedObjectNode(SchemaObjectNode[_T], TagMixin[_T], ABC):
         self._instance_tag = tag
 
 
-class TaggedListNode(SchemaListNode[_T], TagMixin[_T], ABC):
+class TaggedListNode(SchemaListNode[_T], TagMixin, ABC):
     """
     Base class for all tagged list nodes defined by RAD
         There will be one of these for any tagged object defined by RAD, which has
@@ -78,7 +78,7 @@ class TaggedListNode(SchemaListNode[_T], TagMixin[_T], ABC):
         self._instance_tag = tag
 
 
-class TaggedScalarNode(SchemaScalarNode[_T], TagMixin[_T], ABC):
+class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
     """
     Base class for all tagged scalars defined by RAD
         There will be one of these for any tagged object defined by RAD, which has

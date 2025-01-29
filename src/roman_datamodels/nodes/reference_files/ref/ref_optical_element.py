@@ -9,7 +9,7 @@ __all__ = ["RefOpticalElementRef", "RefOpticalElementRef_Instrument"]
 _T = TypeVar("_T")
 
 
-class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin[WfiOpticalElement], rad.ObjectNode[WfiOpticalElement]):
+class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin, rad.ObjectNode[WfiOpticalElement]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefOpticalElementRef

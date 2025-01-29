@@ -14,7 +14,7 @@ __all__ = ["MsosStack", "MsosStack_Meta"]
 _MsosStack_Meta: TypeAlias = _Common | str
 
 
-class MsosStack_Meta(rad.ImpliedNodeMixin[_MsosStack_Meta], Common[_MsosStack_Meta]):
+class MsosStack_Meta(rad.ImpliedNodeMixin, Common[_MsosStack_Meta]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MsosStack

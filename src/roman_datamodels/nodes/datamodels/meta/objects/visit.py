@@ -19,7 +19,7 @@ __all__ = [
 ]
 
 
-class VisitEngineeringQualityEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class VisitEngineeringQualityEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Visit
@@ -38,7 +38,7 @@ class VisitEngineeringQualityEntry(VisitEngineeringQualityEntryMixin, rad.RadEnu
     SUSPECT = "SUSPECT"
 
 
-class VisitPointingEngineeringSourceEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class VisitPointingEngineeringSourceEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Visit
@@ -57,7 +57,7 @@ class VisitPointingEngineeringSourceEntry(VisitPointingEngineeringSourceEntryMix
     PLANNED = "PLANNED"
 
 
-class VisitTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class VisitTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Visit
@@ -79,7 +79,7 @@ class VisitTypeEntry(VisitTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMet
     PRIME_UNTARGETED = "PRIME_UNTARGETED"
 
 
-class VisitStatusEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
+class VisitStatusEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def asdf_container(cls) -> type:
         return Visit
@@ -102,7 +102,7 @@ class VisitStatusEntry(VisitStatusEntryMixin, rad.RadEnum, metaclass=rad.NodeEnu
 _Visit_Dither = core.LNode[float] | str | None
 
 
-class Visit_Dither(rad.ImpliedNodeMixin[_Visit_Dither], rad.ObjectNode[_Visit_Dither]):
+class Visit_Dither(rad.ImpliedNodeMixin, rad.ObjectNode[_Visit_Dither]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Visit

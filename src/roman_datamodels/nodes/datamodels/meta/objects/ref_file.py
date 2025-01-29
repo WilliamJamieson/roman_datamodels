@@ -8,7 +8,7 @@ __all__ = ["RefFile", "RefFile_Crds"]
 _Self_Crds: TypeAlias = rad.ObjectNode[str]
 
 
-class RefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):
+class RefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode[str]):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefFile

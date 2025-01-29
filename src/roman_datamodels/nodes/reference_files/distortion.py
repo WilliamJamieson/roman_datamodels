@@ -13,7 +13,7 @@ __all__ = ["DistortionRef", "DistortionRef_Meta"]
 
 
 class DistortionRef_Meta(  # type: ignore[misc]
-    rad.ImpliedNodeMixin[_RefCommonRefOpticalElementRef], RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
+    rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
 ):
     @classmethod
     def asdf_implied_by(cls) -> type:

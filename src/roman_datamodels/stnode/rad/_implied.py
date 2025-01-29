@@ -14,7 +14,7 @@ __all__ = [
 _T = TypeVar("_T")
 
 
-class ImpliedNodeMixin(RadNodeMixin[_T], ABC):
+class ImpliedNodeMixin(RadNodeMixin, ABC):
     """
     Mixin for nodes that are implied by other nodes.
 
@@ -24,7 +24,7 @@ class ImpliedNodeMixin(RadNodeMixin[_T], ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_implied_by(cls) -> type[SchemaMixin[_T]]:
+    def asdf_implied_by(cls) -> type[SchemaMixin]:
         """The name of the field that implies this node."""
 
     @classmethod

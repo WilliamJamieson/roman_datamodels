@@ -19,7 +19,7 @@ __all__ = ["DarkRef", "DarkRef_Meta", "DarkRef_Meta_Exposure"]
 _DarkRef_Meta_Exposure: TypeAlias = _RefExposureTypeRef_Exposure | str | int
 
 
-class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure], rad.ImpliedNodeMixin[_DarkRef_Meta_Exposure]):
+class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure], rad.ImpliedNodeMixin):
     """
     This class is the result of a very weird mixture similar to the ref_mixes but only
     applies to the dark schema.
@@ -53,7 +53,7 @@ _DarkRef_Meta: TypeAlias = _RefCommonRefOpticalElementRef | _RefExposureTypeRef 
 
 
 class DarkRef_Meta(  # type: ignore[misc]
-    rad.ImpliedNodeMixin[_DarkRef_Meta], RefCommonRefOpticalElementRef[_DarkRef_Meta], RefExposureTypeRef[_DarkRef_Meta]
+    rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_DarkRef_Meta], RefExposureTypeRef[_DarkRef_Meta]
 ):
     @classmethod
     def asdf_implied_by(cls) -> type:
