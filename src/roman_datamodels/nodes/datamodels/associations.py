@@ -73,7 +73,7 @@ class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode[_Associations_P
 _Associations: TypeAlias = core.LNode[Associations_Products] | str
 
 
-class Associations(rad.TaggedObjectNode[_Associations], rad.ArrayFieldMixin[_Associations]):
+class Associations(rad.TaggedObjectNode[_Associations], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",)

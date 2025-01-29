@@ -104,7 +104,7 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common[_Guidewindow_Meta]):
 _Guidewindow: TypeAlias = Guidewindow_Meta | npt.NDArray[np.uint16]
 
 
-class Guidewindow(rad.TaggedObjectNode[_Guidewindow], rad.ArrayFieldMixin[_Guidewindow]):
+class Guidewindow(rad.TaggedObjectNode[_Guidewindow], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",)

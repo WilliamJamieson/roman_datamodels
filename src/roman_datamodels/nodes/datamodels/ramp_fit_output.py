@@ -25,7 +25,7 @@ class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common[_Common]):
 _RampFitOutput: TypeAlias = RampFitOutput_Meta | npt.NDArray[np.float32]
 
 
-class RampFitOutput(rad.TaggedObjectNode[_RampFitOutput], rad.ArrayFieldMixin[_RampFitOutput]):
+class RampFitOutput(rad.TaggedObjectNode[_RampFitOutput], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ramp_fit_output-1.0.0",)

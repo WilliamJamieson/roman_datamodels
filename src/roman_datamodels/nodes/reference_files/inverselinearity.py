@@ -25,7 +25,7 @@ class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]
 _InverselinearityRef: TypeAlias = InverselinearityRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
 
 
-class InverselinearityRef(rad.TaggedObjectNode[_InverselinearityRef], rad.ArrayFieldMixin[_InverselinearityRef]):
+class InverselinearityRef(rad.TaggedObjectNode[_InverselinearityRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/inverselinearity-1.0.0",)

@@ -27,7 +27,7 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common[_MsosStack_Meta]):
 _MsosStack: TypeAlias = MsosStack_Meta | npt.NDArray[np.float64] | npt.NDArray[np.uint8]
 
 
-class MsosStack(rad.TaggedObjectNode[_MsosStack_Meta], rad.ArrayFieldMixin[_MsosStack]):
+class MsosStack(rad.TaggedObjectNode[_MsosStack_Meta], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/msos_stack-1.0.0",)

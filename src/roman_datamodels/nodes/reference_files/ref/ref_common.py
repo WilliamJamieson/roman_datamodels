@@ -77,7 +77,7 @@ class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, rad.RadEnum, metaclass
 _RefCommonRef_InstrumentMixin: TypeAlias = WfiOpticalElement | None
 
 
-class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin[_RefCommonRef_InstrumentMixin | _T]):
+class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin):
     """Mixin things present in the constructors not present in the schema"""
 
     @rad.field
@@ -93,7 +93,7 @@ _RefCommonRef_Instrument: TypeAlias = _RefCommonRef_InstrumentMixin | Instrument
 
 
 class RefCommonRef_Instrument(
-    RefCommonRef_InstrumentMixin[_RefCommonRef_InstrumentMixin | _T],
+    RefCommonRef_InstrumentMixin,
     rad.ImpliedNodeMixin,
     rad.ObjectNode[_RefCommonRef_Instrument | _T],
 ):

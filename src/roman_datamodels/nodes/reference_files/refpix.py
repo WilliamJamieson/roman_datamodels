@@ -25,7 +25,7 @@ class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
 _RefPixRef: TypeAlias = RefpixRef_Meta | npt.NDArray[np.complex128]
 
 
-class RefpixRef(rad.TaggedObjectNode[_RefPixRef], rad.ArrayFieldMixin[_RefPixRef]):
+class RefpixRef(rad.TaggedObjectNode[_RefPixRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/refpix-1.0.0",)

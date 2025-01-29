@@ -46,7 +46,7 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_Pix
 _PixelareaRef: TypeAlias = PixelareaRef_Meta | npt.NDArray[np.float32]
 
 
-class PixelareaRef(rad.TaggedObjectNode[_PixelareaRef], rad.ArrayFieldMixin[_PixelareaRef]):
+class PixelareaRef(rad.TaggedObjectNode[_PixelareaRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/pixelarea-1.0.0",)

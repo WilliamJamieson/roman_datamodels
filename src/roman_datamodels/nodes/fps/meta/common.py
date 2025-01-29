@@ -17,7 +17,7 @@ __all__ = ["FpsCommon", "FpsCommonMixin"]
 _T = TypeVar("_T")
 
 
-class FpsCommonMixin(rad.ExtraFieldsMixin[FpsStatistics | _T]):
+class FpsCommonMixin(rad.ExtraFieldsMixin):
     """Mixin things present in the constructors not present in the schema"""
 
     @rad.field
@@ -32,7 +32,7 @@ class FpsCommonMixin(rad.ExtraFieldsMixin[FpsStatistics | _T]):
 _FpsCommon: TypeAlias = _FpsBasic | FpsCalStep | FpsExposure | FpsGuidestar | FpsRefFile | FpsWfiMode | FpsStatistics
 
 
-class FpsCommon(FpsCommonMixin[_FpsCommon | _T], FpsBasic[_FpsCommon | _T]):
+class FpsCommon(FpsCommonMixin, FpsBasic[_FpsCommon | _T]):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0",)

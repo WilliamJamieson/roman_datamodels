@@ -47,7 +47,7 @@ class EpsfRef_Meta(  # type: ignore[misc]
 _EpsfRef: TypeAlias = EpsfRef_Meta | npt.NDArray[np.float32]
 
 
-class EpsfRef(rad.TaggedObjectNode[_EpsfRef], rad.ArrayFieldMixin[_EpsfRef]):
+class EpsfRef(rad.TaggedObjectNode[_EpsfRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/epsf-1.0.0",)

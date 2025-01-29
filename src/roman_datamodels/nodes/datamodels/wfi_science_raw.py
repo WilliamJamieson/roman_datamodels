@@ -26,7 +26,7 @@ class WfiScienceRaw_Meta(rad.ImpliedNodeMixin, Common[_Common]):
 _WfiScienceRaw: TypeAlias = WfiScienceRaw_Meta | npt.NDArray[np.uint16] | npt.NDArray[np.uint8]
 
 
-class WfiScienceRaw(rad.TaggedObjectNode[_WfiScienceRaw], rad.ArrayFieldMixin[_WfiScienceRaw]):
+class WfiScienceRaw(rad.TaggedObjectNode[_WfiScienceRaw], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_science_raw-1.0.0",)

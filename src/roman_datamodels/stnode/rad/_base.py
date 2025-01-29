@@ -57,7 +57,7 @@ class RadNodeMixin(AsdfNodeMixin[Any], ABC):
         cls.__doc__ = docstring
 
 
-class ArrayFieldMixin(DNode[_T], ABC):
+class ArrayFieldMixin(DNode[Any], ABC):
     """
     Mixin for objects that have arrays
     """
@@ -131,7 +131,7 @@ class ArrayFieldMixin(DNode[_T], ABC):
         return self.default_array_shape
 
 
-class ExtraFieldsMixin(AdditionalNodeMixin[_T], ABC):
+class ExtraFieldsMixin(AdditionalNodeMixin[Any], ABC):
     """
     Mixin for objects that have extra fields
     """

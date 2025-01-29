@@ -27,7 +27,7 @@ class FlatRef_Meta(  # type: ignore[misc]
 _FlatRef: TypeAlias = FlatRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
 
 
-class FlatRef(rad.TaggedObjectNode[_FlatRef], rad.ArrayFieldMixin[_FlatRef]):
+class FlatRef(rad.TaggedObjectNode[_FlatRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/flat-1.0.0",)

@@ -41,7 +41,7 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_SegmentationMap_Meta]):
 _SegmentationMap: TypeAlias = SegmentationMap_Meta | npt.NDArray[np.uint32]
 
 
-class SegmentationMap(rad.TaggedObjectNode[_SegmentationMap], rad.ArrayFieldMixin[_SegmentationMap]):
+class SegmentationMap(rad.TaggedObjectNode[_SegmentationMap], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/segmentation_map-1.0.0",)

@@ -25,7 +25,7 @@ class LinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
 _LinearityRef: TypeAlias = LinearityRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
 
 
-class LinearityRef(rad.TaggedObjectNode[_LinearityRef], rad.ArrayFieldMixin[_LinearityRef]):
+class LinearityRef(rad.TaggedObjectNode[_LinearityRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/linearity-1.0.0",)

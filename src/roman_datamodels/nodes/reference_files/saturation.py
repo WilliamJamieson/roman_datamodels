@@ -25,7 +25,7 @@ class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
 _SaturationRef: TypeAlias = SaturationRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
 
 
-class SaturationRef(rad.TaggedObjectNode[_SaturationRef], rad.ArrayFieldMixin[_SaturationRef]):
+class SaturationRef(rad.TaggedObjectNode[_SaturationRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/saturation-1.0.0",)

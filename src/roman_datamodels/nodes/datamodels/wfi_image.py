@@ -83,7 +83,7 @@ class WfiImage_Meta(rad.ImpliedNodeMixin, Common[_WfiImage_Meta]):
 _WfiImage: TypeAlias = WfiImage_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | npt.NDArray[np.uint16]
 
 
-class WfiImage(rad.TaggedObjectNode[_WfiImage], rad.ArrayFieldMixin[_WfiImage]):
+class WfiImage(rad.TaggedObjectNode[_WfiImage], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_image-1.0.0",)

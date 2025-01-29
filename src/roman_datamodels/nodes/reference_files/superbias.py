@@ -25,7 +25,7 @@ class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
 _SuperbiasRef: TypeAlias = SuperbiasRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
 
 
-class SuperbiasRef(rad.TaggedObjectNode[_SuperbiasRef], rad.ArrayFieldMixin[_SuperbiasRef]):
+class SuperbiasRef(rad.TaggedObjectNode[_SuperbiasRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/superbias-1.0.0",)

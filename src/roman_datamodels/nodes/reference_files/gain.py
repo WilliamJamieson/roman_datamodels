@@ -25,7 +25,7 @@ class GainRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
 _GainRef: TypeAlias = GainRef_Meta | npt.NDArray[np.float32]
 
 
-class GainRef(rad.TaggedObjectNode[_GainRef], rad.ArrayFieldMixin[_GainRef]):
+class GainRef(rad.TaggedObjectNode[_GainRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/gain-1.0.0",)

@@ -31,7 +31,7 @@ class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon[_Tvac_Meta]):
 _Tvac: TypeAlias = Tvac_Meta | Quantity
 
 
-class Tvac(rad.TaggedObjectNode[_Tvac], rad.ArrayFieldMixin[_Tvac]):
+class Tvac(rad.TaggedObjectNode[_Tvac], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac-1.0.0",)

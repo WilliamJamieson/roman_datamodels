@@ -27,7 +27,7 @@ class IpcRef_Meta(  # type: ignore[misc]
 _IpcRef: TypeAlias = IpcRef_Meta | npt.NDArray[np.float32]
 
 
-class IpcRef(rad.TaggedObjectNode[_IpcRef], rad.ArrayFieldMixin[_IpcRef]):
+class IpcRef(rad.TaggedObjectNode[_IpcRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ipc-1.0.0",)

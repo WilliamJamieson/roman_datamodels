@@ -35,7 +35,7 @@ class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_MosaicSegmentation
 _MosaicSegmentationMap: TypeAlias = MosaicSegmentationMap_Meta | npt.NDArray[np.uint32]
 
 
-class MosaicSegmentationMap(rad.TaggedObjectNode[_MosaicSegmentationMap], rad.ArrayFieldMixin[_MosaicSegmentationMap]):
+class MosaicSegmentationMap(rad.TaggedObjectNode[_MosaicSegmentationMap], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_segmentation_map-1.0.0",)

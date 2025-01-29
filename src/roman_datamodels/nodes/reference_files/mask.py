@@ -25,7 +25,7 @@ class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
 _MaskRef: TypeAlias = MaskRef_Meta | npt.NDArray[np.uint32]
 
 
-class MaskRef(rad.TaggedObjectNode[_MaskRef], rad.ArrayFieldMixin[_MaskRef]):
+class MaskRef(rad.TaggedObjectNode[_MaskRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/mask-1.0.0",)

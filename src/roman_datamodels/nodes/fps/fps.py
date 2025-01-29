@@ -31,7 +31,7 @@ class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon[_Fps_Meta]):
 _Fps: TypeAlias = Fps_Meta | Quantity
 
 
-class Fps(rad.TaggedObjectNode[_Fps], rad.ArrayFieldMixin[_Fps]):
+class Fps(rad.TaggedObjectNode[_Fps], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps-1.0.0",)

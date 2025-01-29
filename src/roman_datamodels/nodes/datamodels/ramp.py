@@ -31,7 +31,7 @@ class Ramp_Meta(rad.ImpliedNodeMixin, Common[_Ramp_Meta]):
 _Ramp: TypeAlias = Ramp_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | npt.NDArray[np.uint8] | npt.NDArray[np.uint16]
 
 
-class Ramp(rad.TaggedObjectNode[_Ramp], rad.ArrayFieldMixin[_Ramp]):
+class Ramp(rad.TaggedObjectNode[_Ramp], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ramp-1.0.0",)

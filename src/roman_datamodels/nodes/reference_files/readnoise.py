@@ -33,7 +33,7 @@ class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_ReadnoiseRef_Meta], 
 _Readnoiseref: TypeAlias = ReadnoiseRef_Meta | npt.NDArray[np.float32]
 
 
-class ReadnoiseRef(rad.TaggedObjectNode[_Readnoiseref], rad.ArrayFieldMixin[_Readnoiseref]):
+class ReadnoiseRef(rad.TaggedObjectNode[_Readnoiseref], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/readnoise-1.0.0",)

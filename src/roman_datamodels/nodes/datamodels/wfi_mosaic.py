@@ -96,7 +96,7 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic[_WfiMosaic_Meta]):
 _WfiMosaic: TypeAlias = WfiMosaic_Meta | CalLogs | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | int
 
 
-class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin[_WfiMosaic]):
+class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mosaic-1.0.0",)

@@ -88,7 +88,7 @@ class ApcorrRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
 _ApcorrRef: TypeAlias = ApcorrRef_Meta | ApcorrRef_Data_PatternNode[ApcorrRef_Data]
 
 
-class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin[_ApcorrRef]):
+class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0",)
