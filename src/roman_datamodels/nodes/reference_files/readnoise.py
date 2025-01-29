@@ -14,7 +14,7 @@ from .ref import (
 from .ref.ref_common import _RefCommonRef
 from .ref.ref_exposure_type import _RefExposureTypeRef
 
-__all__ = ["ReadnoiseRef"]
+__all__ = ["ReadnoiseRef", "ReadnoiseRef_Meta"]
 
 
 _ReadnoiseRef_Meta: TypeAlias = _RefCommonRef | _RefExposureTypeRef

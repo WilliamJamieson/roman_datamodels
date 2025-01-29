@@ -12,7 +12,7 @@ from .meta import (
 )
 from .meta.common import _TvacCommon
 
-__all__ = ["Tvac"]
+__all__ = ["Tvac", "Tvac_Meta"]
 
 
 _Tvac_Meta: TypeAlias = _TvacCommon | TvacGroundtest

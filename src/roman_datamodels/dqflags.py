@@ -8,7 +8,7 @@ https://roman-cal-pipeline.readthedocs.io/en/latest/roman/references_general/ref
 
 
 Implementation
--------------
+--------------
 
 The flags are implemented as "bit flags": Each flag is assigned a bit position
 in a byte, or multi-byte word, of memory. If that bit is set, the flag assigned
@@ -16,7 +16,7 @@ to that bit is interpreted as being set or active.
 
 The data structure that stores bit flags is just the standard Python `int`,
 which provides 32 bits. Bits of an integer are most easily referred to using
-the formula `2**bit_number` where `bit_number` is the 0-index bit of interest.
+the formula ``2**bit_number`` where ``bit_number`` is the 0-index bit of interest.
 """
 
 # Something with pickling of multiclassed enums was changed in 3.11 + allowing
@@ -24,6 +24,8 @@ the formula `2**bit_number` where `bit_number` is the 0-index bit of interest.
 from enum import Enum, unique
 
 import numpy as np
+
+__all__ = ["group", "pixel"]
 
 
 # fmt: off

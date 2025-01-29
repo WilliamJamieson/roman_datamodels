@@ -2,7 +2,7 @@ from types import MappingProxyType
 
 from roman_datamodels.stnode import rad
 
-__all__ = ["CalStepEntry", "L2CalStep"]
+__all__ = ["CalStepEntry", "CalStepEntryMixin", "L2CalStep"]
 
 
 class CalStepEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):

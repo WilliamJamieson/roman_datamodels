@@ -6,7 +6,9 @@ from roman_datamodels.stnode import rad
 __all__ = [
     "Wcsinfo",
     "WcsinfoApertureNameEntry",
+    "WcsinfoApertureNameEntryMixin",
     "WcsinfoVparityEntry",
+    "WcsinfoVparityEntryMixin",
 ]
 
 

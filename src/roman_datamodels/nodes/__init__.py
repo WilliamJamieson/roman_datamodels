@@ -284,7 +284,6 @@ __all__ = [
     "VisitTypeEntry",
     "Wcsinfo",
     "WcsinfoApertureNameEntry",
-    "WcsinfoMosaicProjectionEntry",
     "WcsinfoVparityEntry",
     "WfiDetector",
     "WfiImage",

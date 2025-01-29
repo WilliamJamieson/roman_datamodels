@@ -12,7 +12,7 @@ from .objects import (
     FpsWfiMode,
 )
 
-__all__ = ["FpsCommon"]
+__all__ = ["FpsCommon", "FpsCommonMixin"]
 
 _T = TypeVar("_T")
 

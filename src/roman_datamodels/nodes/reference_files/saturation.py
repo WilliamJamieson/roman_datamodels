@@ -9,7 +9,7 @@ from roman_datamodels.stnode import rad
 from .ref import RefCommonRef, RefTypeEntry
 from .ref.ref_common import _RefCommonRef
 
-__all__ = ["SaturationRef"]
+__all__ = ["SaturationRef", "SaturationRef_Meta"]
 
 
 class SaturationRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):

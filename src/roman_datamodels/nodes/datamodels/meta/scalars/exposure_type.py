@@ -1,6 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["ExposureType"]
+__all__ = [
+    "ExposureType",
+    "ExposureTypeMixin",
+]
 
 
 class ExposureTypeMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):

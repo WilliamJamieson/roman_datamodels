@@ -6,6 +6,7 @@ from roman_datamodels.stnode import rad
 __all__ = [
     "Program",
     "ProgramSubcategoryEntry",
+    "ProgramSubcategoryEntryMixin",
 ]
 
 

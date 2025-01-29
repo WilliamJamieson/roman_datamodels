@@ -6,8 +6,11 @@ from roman_datamodels.stnode import rad
 __all__ = [
     "Rcs",
     "RcsBankEntry",
+    "RcsBankEntryMixin",
     "RcsElectronicsEntry",
+    "RcsElectronicsEntryMixin",
     "RcsLedEntry",
+    "RcsLedEntryMixin",
 ]
 
 

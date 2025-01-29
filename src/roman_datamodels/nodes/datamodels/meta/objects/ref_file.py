@@ -3,7 +3,7 @@ from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
-__all__ = ["RefFile"]
+__all__ = ["RefFile", "RefFile_Crds"]
 
 _Self_Crds: TypeAlias = rad.ObjectNode[str]
 

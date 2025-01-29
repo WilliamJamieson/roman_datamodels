@@ -12,7 +12,7 @@ from .objects import (
     TvacWfiMode,
 )
 
-__all__ = ["TvacCommon"]
+__all__ = ["TvacCommon", "TvacCommonMixin"]
 
 _T = TypeVar("_T")
 

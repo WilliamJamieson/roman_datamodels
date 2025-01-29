@@ -41,9 +41,11 @@ test = [
 ]
 docs = [
     "sphinx",
-    "sphinx-automodapi",
+    # "sphinx-automodapi",
+    "sphinx-automodapi @ git+https://github.com/WilliamJamieson/sphinx-automodapi.git@autoproperty",
     "sphinx-rtd-theme",
     "sphinx-astropy",
+    "sphinx-autodoc-typehints",
 ]
 
 [project.urls]

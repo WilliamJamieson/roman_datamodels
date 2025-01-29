@@ -3,6 +3,7 @@ from roman_datamodels.stnode import rad
 __all__ = [
     "OPTICAL_ELEMENTS",
     "WfiOpticalElement",
+    "WfiOpticalElementMixin",
 ]
 
 

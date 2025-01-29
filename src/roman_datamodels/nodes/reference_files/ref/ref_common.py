@@ -8,8 +8,12 @@ from ...datamodels import InstrumentNameEntry, Telescope, WfiDetector, WfiOptica
 
 __all__ = [
     "RefCommonPedigreeEntry",
+    "RefCommonPedigreeEntryMixin",
     "RefCommonRef",
+    "RefCommonRef_Instrument",
+    "RefCommonRef_InstrumentMixin",
     "RefTypeEntry",
+    "RefTypeEntryMixin",
 ]
 
 # So that when we inherit from this we can include it's parts too
@@ -25,8 +29,8 @@ class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):
 class RefTypeEntry(RefTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible ref_type entries
-    -> this one doesn't actually exist but it is impled by each of the reftype entries
-       in the reference_files schemas
+        Note: this one doesn't actually exist but it is impled by each of the reftype entries
+              in the reference_files schemas
     """
 
     ABVEGAOFFSET = "ABVEGAOFFSET"

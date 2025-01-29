@@ -3,7 +3,7 @@ from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
-__all__ = ["TvacRefFile"]
+__all__ = ["TvacRefFile", "TvacRefFile_Crds"]
 
 
 class TvacRefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):

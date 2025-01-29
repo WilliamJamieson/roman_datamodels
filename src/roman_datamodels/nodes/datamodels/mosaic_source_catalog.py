@@ -13,7 +13,7 @@ from .meta import (
 )
 from .meta.basic import _Basic
 
-__all__ = ["MosaicSourceCatalog"]
+__all__ = ["MosaicSourceCatalog", "MosaicSourceCatalog_Meta"]
 
 
 _MosaicSourceCatalog_Meta: TypeAlias = _Basic | MosaicBasic | Photometry | Program

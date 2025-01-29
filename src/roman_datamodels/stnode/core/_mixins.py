@@ -16,7 +16,7 @@ _T = TypeVar("_T")
 class NodeKeyMixin:
     """
     Mixin to enable correct handling of node keys vs field keys
-    -> pass vs pass_ issue
+        Note: This is the ``pass`` vs ``pass_`` issue.
     """
 
     @staticmethod
@@ -53,17 +53,13 @@ class NodeKeyMixin:
 class FlushOptions(StrEnum):
     """
     Options for flushing out required fields
-        NONE     -> Do not flush out any fields,
-                    - this may result in an invalid object for asdf writing
-        REQUIRED -> Flush out only the required fields with their default values
-        ALL      -> Flush out all fields with their default values,
-                    - this fills in all the fields listed in the schema with
-                      their default values
-        EXTRA    -> Flush out all fields with their default values including
-                    extra fields that are not listed in the schema
-                    - fills in everything from ALL, then fills in fields that
-                      are mixedin to the object which have defaults but are not
-                      listed in the schema
+        - NONE: Do not flush out any fields,
+            - this may result in an invalid object for asdf writing
+        - REQUIRED: Flush out only the required fields with their default values
+        - ALL: Flush out all fields with their default values
+            - this fills in all the fields listed in the schema with their default values
+        - EXTRA: Flush out all fields with their default values including fields not listed in the schema
+            - fills in everything from ALL, then fills in fields that are not in the schema
     """
 
     NONE = auto()
@@ -86,10 +82,6 @@ class AsdfNodeMixin(NodeKeyMixin, Generic[_T], ABC):
             -> dict
             -> list
             -> base scalar
-
-        Returns
-        -------
-        The data wrapped by the node
         """
 
     @abstractmethod
@@ -103,14 +95,10 @@ class AsdfNodeMixin(NodeKeyMixin, Generic[_T], ABC):
 
         Parameters
         ----------
-        ctx : AsdfFile
+        ctx
             The ASDF context to use for the conversion
-        flush : FlushOptions
+        flush
             Options for flushing out required fields, see FlushOptions for more info
-        warn : bool
+        warn
             If `True`, warn if any required fields are missing.
-
-        Returns
-        -------
-        unwrapped version of object ready to be written to ASDF file
         """

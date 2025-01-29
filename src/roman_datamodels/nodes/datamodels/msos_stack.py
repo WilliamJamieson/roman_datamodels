@@ -8,7 +8,7 @@ from roman_datamodels.stnode import rad
 
 from .meta.common import Common, _Common
 
-__all__ = ["MsosStack"]
+__all__ = ["MsosStack", "MsosStack_Meta"]
 
 
 _MsosStack_Meta: TypeAlias = _Common | str

@@ -15,7 +15,7 @@ from .meta import (
 )
 from .meta.basic import _Basic
 
-__all__ = ["ImageSourceCatalog"]
+__all__ = ["ImageSourceCatalog", "ImageSourceCatalog_Meta"]
 
 _ImageSourceCatalog_Meta: TypeAlias = _Basic | WfiOpticalElement | Exposure | Photometry | Program | Visit
 

@@ -3,7 +3,7 @@ from typing import TypeAlias
 
 from roman_datamodels.stnode import core, rad
 
-__all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry"]
+__all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry", "MosaicWcsinfoProjectionEntryMixin"]
 
 
 class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode[str]):

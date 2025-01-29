@@ -23,7 +23,7 @@ from .meta import (
 )
 from .meta.basic import _Basic
 
-__all__ = ["WfiMosaic"]
+__all__ = ["WfiMosaic", "WfiMosaic_Meta"]
 
 
 _WfiMosaic_Meta: TypeAlias = (

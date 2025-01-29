@@ -13,7 +13,7 @@ from .meta import (
 )
 from .meta.basic import _Basic
 
-__all__ = ["MosaicSegmentationMap"]
+__all__ = ["MosaicSegmentationMap", "MosaicSegmentationMap_Meta"]
 
 _MosaicSegmentationMap_Meta: TypeAlias = _Basic | MosaicBasic | Program
 

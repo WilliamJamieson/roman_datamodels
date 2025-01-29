@@ -4,7 +4,7 @@ from types import MappingProxyType
 
 from roman_datamodels.stnode import rad
 
-__all__ = ["FpsTelescope"]
+__all__ = ["FpsTelescope", "FpsTelescopeMixin"]
 
 
 class FpsTelescopeMixin(str, rad.TaggedScalarNode[str], rad.EnumNodeMixin):

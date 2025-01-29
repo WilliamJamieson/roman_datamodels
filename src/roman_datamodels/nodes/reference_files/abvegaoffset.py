@@ -7,7 +7,7 @@ from ..datamodels import OPTICAL_ELEMENTS
 from .ref import RefCommonRef, RefTypeEntry
 from .ref.ref_common import _RefCommonRef
 
-__all__ = ["AbvegaoffsetRef"]
+__all__ = ["AbvedgaoffsetRef_Data_PatternNode", "AbvegaoffsetRef", "AbvegaoffsetRef_Data", "AbvegaoffsetRef_Meta"]
 
 _T = TypeVar("_T")
 

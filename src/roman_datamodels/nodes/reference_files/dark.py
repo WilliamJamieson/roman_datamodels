@@ -14,7 +14,7 @@ from .ref import (
 from .ref.ref_exposure_type import RefExposureTypeRef_Exposure, _RefExposureTypeRef, _RefExposureTypeRef_Exposure
 from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
-__all__ = ["DarkRef"]
+__all__ = ["DarkRef", "DarkRef_Meta", "DarkRef_Meta_Exposure"]
 
 _DarkRef_Meta_Exposure: TypeAlias = _RefExposureTypeRef_Exposure | str | int
 

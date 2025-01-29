@@ -79,6 +79,7 @@ def _add_nodes(node: type, nodes: dict[str, type], sub_nodes: dict[str, type], b
 def get_nodes(cls: type, filter_types: tuple[type, ...]) -> dict[str, type]:
     """
     Get all the nodes from the class. Starting from the base class.
+        Mapping: class_name -> class
 
     Parameters
     ----------
@@ -86,10 +87,6 @@ def get_nodes(cls: type, filter_types: tuple[type, ...]) -> dict[str, type]:
         The class to get the nodes from.
     filter_types
         The types to filter out.
-
-    Returns
-    -------
-        class_name -> class mapping
     """
 
     def _get_nodes(cls: type, base_cls: type, filter_types: tuple[type, ...]) -> dict[str, type]:
@@ -113,10 +110,6 @@ def get_all_fields(cls: type) -> set[str]:
     ----------
     cls
         The class to get the fields from.
-
-    Returns
-    -------
-        The fields of the class.
     """
 
     return {property_name for property_name in dir(cls) if isinstance(getattr_static(cls, property_name), field)}
@@ -159,10 +152,6 @@ def get_node_fields(cls: type) -> tuple[str, ...]:
     ----------
     cls
         The class to get the node fields from.
-
-    Returns
-    -------
-        The node fields of the class.
     """
     from ._registry import RDM_NODE_REGISTRY
 
@@ -188,10 +177,6 @@ def wrap_into_node(
         The value to coerce.
     signature
         A type annotation
-
-    Returns
-    -------
-        Value wrapped into the node container if T describes a node container.
     """
     from ._node import ScalarNode
 

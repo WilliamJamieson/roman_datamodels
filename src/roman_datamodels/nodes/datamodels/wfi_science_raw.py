@@ -9,7 +9,7 @@ from roman_datamodels.stnode import rad
 from .meta import Common
 from .meta.common import _Common
 
-__all__ = ["WfiScienceRaw"]
+__all__ = ["WfiScienceRaw", "WfiScienceRaw_Meta"]
 
 
 class WfiScienceRaw_Meta(rad.ImpliedNodeMixin[_Common], Common[_Common]):

@@ -4,7 +4,7 @@ from roman_datamodels.stnode import rad
 
 from ...datamodels import WfiOpticalElement
 
-__all__ = ["RefOpticalElementRef"]
+__all__ = ["RefOpticalElementRef", "RefOpticalElementRef_Instrument"]
 
 _T = TypeVar("_T")
 

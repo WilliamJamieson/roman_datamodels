@@ -3,7 +3,7 @@ from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
-__all__ = ["FpsRefFile"]
+__all__ = ["FpsRefFile", "FpsRefFile_Crds"]
 
 
 class FpsRefFile_Crds(rad.ImpliedNodeMixin[str], rad.ObjectNode[str]):

@@ -7,7 +7,7 @@ from ..datamodels import OPTICAL_ELEMENTS
 from .ref import RefCommonRef, RefTypeEntry
 from .ref.ref_common import _RefCommonRef
 
-__all__ = ["WfiImgPhotomRef"]
+__all__ = ["WfiImgPhotomRef", "WfiImgPhotomRef_Meta", "WfiImgPhotomRef_PhotTable", "WfiImgPhotomRef_PhotTable_PatternNode"]
 
 _T = TypeVar("_T")
 

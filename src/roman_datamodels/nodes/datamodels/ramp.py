@@ -12,7 +12,7 @@ from .meta import (
 )
 from .meta.common import _Common
 
-__all__ = ["Ramp"]
+__all__ = ["Ramp", "Ramp_Meta"]
 
 
 _Ramp_Meta: TypeAlias = _Common | L2CalStep

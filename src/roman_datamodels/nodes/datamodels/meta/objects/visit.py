@@ -8,9 +8,14 @@ from roman_datamodels.stnode import core, rad
 __all__ = [
     "Visit",
     "VisitEngineeringQualityEntry",
+    "VisitEngineeringQualityEntryMixin",
     "VisitPointingEngineeringSourceEntry",
+    "VisitPointingEngineeringSourceEntryMixin",
     "VisitStatusEntry",
+    "VisitStatusEntryMixin",
     "VisitTypeEntry",
+    "VisitTypeEntryMixin",
+    "Visit_Dither",
 ]
 
 

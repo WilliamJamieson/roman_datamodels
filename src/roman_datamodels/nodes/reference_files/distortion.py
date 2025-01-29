@@ -9,7 +9,7 @@ from roman_datamodels.stnode import rad
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
 from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
-__all__ = ["DistortionRef"]
+__all__ = ["DistortionRef", "DistortionRef_Meta"]
 
 
 class DistortionRef_Meta(  # type: ignore[misc]

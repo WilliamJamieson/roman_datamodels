@@ -14,7 +14,7 @@ from .meta import (
 )
 from .meta.basic import _Basic
 
-__all__ = ["SegmentationMap"]
+__all__ = ["SegmentationMap", "SegmentationMap_Meta"]
 
 
 _SegmentationMap_Meta: TypeAlias = _Basic | Program | Visit | WfiOpticalElement

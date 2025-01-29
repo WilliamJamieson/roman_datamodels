@@ -9,7 +9,7 @@ from roman_datamodels.stnode import core, rad
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
 from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
-__all__ = ["EpsfRef"]
+__all__ = ["EpsfRef", "EpsfRef_Meta"]
 
 
 class EpsfRef_Meta(  # type: ignore[misc]

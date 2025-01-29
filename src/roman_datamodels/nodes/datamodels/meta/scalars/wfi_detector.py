@@ -1,6 +1,6 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["WfiDetector"]
+__all__ = ["WfiDetector", "WfiDetectorMixin"]
 
 
 class WfiDetectorMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):

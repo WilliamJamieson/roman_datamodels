@@ -1,6 +1,6 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["TvacWfiOpticalElement"]
+__all__ = ["TvacWfiOpticalElement", "TvacWfiOpticalElementMixin"]
 
 
 class TvacWfiOpticalElementMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):

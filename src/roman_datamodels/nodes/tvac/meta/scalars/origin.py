@@ -4,7 +4,7 @@ from types import MappingProxyType
 
 from roman_datamodels.stnode import rad
 
-__all__ = ["TvacOrigin"]
+__all__ = ["TvacOrigin", "TvacOriginMixin"]
 
 
 class TvacOriginMixin(str, rad.TaggedScalarNode[str], rad.EnumNodeMixin):

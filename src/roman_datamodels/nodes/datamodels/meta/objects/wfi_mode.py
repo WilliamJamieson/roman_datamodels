@@ -5,7 +5,7 @@ from roman_datamodels.stnode import core, rad
 
 from ..scalars import WfiDetector, WfiOpticalElement
 
-__all__ = ["InstrumentNameEntry", "WfiMode"]
+__all__ = ["InstrumentNameEntry", "InstrumentNameEntryMixin", "WfiMode", "WfiModeMixin"]
 
 _T = TypeVar("_T")
 

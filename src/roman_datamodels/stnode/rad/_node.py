@@ -125,7 +125,7 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
         """
         Generator which yields the fields and values of this object.
             yields the field values in the following order:
-                1. Fields in the order defined in the schema via the `propertyOrder` keyword.
+                1. Fields in the order defined in the schema via the ``propertyOrder`` keyword.
                 2. Required fields not already yielded in alphabetical order.
                 3. Non-required fields not already yielded in alphabetical order.
                 4. Extra fields not already yielded in alphabetical order.
@@ -139,12 +139,12 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
 
     def flat_items(self, *, flush: FlushOptions = FlushOptions.NONE, warn: bool = False) -> Generator[tuple[str, _T], None, None]:
         """
-        Generator which yields the fields and values of this object, flattened to be keys `foo.bar.baz`.
+        Generator which yields the fields and values of this object, flattened to be keys ``foo.bar.baz``.
             yields the flattened field values, where it will yield until exhausting all the subfields
             following the same ordering
 
             field values in the following order at the same level:
-                1. Fields in the order defined in the schema via the `propertyOrder` keyword.
+                1. Fields in the order defined in the schema via the ``propertyOrder`` keyword.
                 2. Required fields not already yielded in alphabetical order.
                 3. Non-required fields not already yielded in alphabetical order.
                 4. Extra fields not already yielded in alphabetical order.
@@ -181,16 +181,12 @@ class ObjectNode(DNode[_T], RadNodeMixin[_T], ABC):
 
         Parameters
         ----------
-        flush : FlushOptions
+        flush
             Options for flushing out required fields, see FlushOptions for more info
-        warn : bool
+        warn
             If `True`, warn if any required fields are missing.
-        recurse : bool
+        recurse
             If we recurese the flush into subnodes
-
-        Results
-        -------
-        All required fields are flushed out with their default values.
         """
         ## This makes use of the generator method developed for table writing above
         #  however, this causes slow downs in general use cases.

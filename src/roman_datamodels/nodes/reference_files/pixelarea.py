@@ -9,7 +9,7 @@ from roman_datamodels.stnode import rad
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
 from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
-__all__ = ["PixelareaRef"]
+__all__ = ["PixelareaRef", "PixelareaRef_Meta", "PixelareaRef_Meta_Photometry"]
 
 
 class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin[float | None], rad.ObjectNode[float | None]):

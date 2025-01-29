@@ -9,7 +9,7 @@ from roman_datamodels.stnode import rad
 from .ref import RefCommonRef, RefTypeEntry
 from .ref.ref_common import _RefCommonRef
 
-__all__ = ["InverselinearityRef"]
+__all__ = ["InverselinearityRef", "InverselinearityRef_Meta"]
 
 
 class InverselinearityRef_Meta(rad.ImpliedNodeMixin[_RefCommonRef], RefCommonRef[_RefCommonRef]):

@@ -8,7 +8,7 @@ from roman_datamodels.stnode import rad
 
 from .meta.common import Common, _Common
 
-__all__ = ["RampFitOutput"]
+__all__ = ["RampFitOutput", "RampFitOutput_Meta"]
 
 
 class RampFitOutput_Meta(rad.ImpliedNodeMixin[_Common], Common[_Common]):

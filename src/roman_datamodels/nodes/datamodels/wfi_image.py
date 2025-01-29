@@ -20,7 +20,7 @@ from .meta import (
 )
 from .meta.common import _Common
 
-__all__ = ["WfiImage"]
+__all__ = ["WfiImage", "WfiImage_Meta"]
 
 
 _WfiImage_Meta: TypeAlias = (

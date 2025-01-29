@@ -6,6 +6,7 @@ from roman_datamodels.stnode import core, rad
 __all__ = [
     "Resample",
     "ResampleWeightTypeEntry",
+    "ResampleWeightTypeEntryMixin",
 ]
 
 

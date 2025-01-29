@@ -13,7 +13,7 @@ from .meta import (
 )
 from .meta.common import _Common
 
-__all__ = ["Guidewindow"]
+__all__ = ["Guidewindow", "Guidewindow_Meta"]
 
 
 _Guidewindow_Meta: TypeAlias = _Common | GuidewindowModes | Time | str | int | float

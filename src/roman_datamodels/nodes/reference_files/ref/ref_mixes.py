@@ -13,7 +13,7 @@ from ...datamodels import WfiOpticalElement
 from .ref_common import RefCommonRef, RefCommonRef_Instrument, _RefCommonRef, _RefCommonRef_Instrument
 from .ref_optical_element import RefOpticalElementRef, RefOpticalElementRef_Instrument
 
-__all__ = ["RefCommonRefOpticalElementRef"]
+__all__ = ["RefCommonRefOpticalElementRef", "RefCommonRefOpticalElementRef_Instrument"]
 
 _T = TypeVar("_T")
 

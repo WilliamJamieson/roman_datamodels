@@ -115,10 +115,6 @@ class AsdfFileMixin(DNode[DNode[_T] | _T]):
             Whether to load the tree lazily
         **kwargs
             Arguments to asdf open
-
-        Returns
-        -------
-        The opened ASDF file
         """
         from ._utils import _open_path_like
 

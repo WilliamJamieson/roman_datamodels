@@ -12,7 +12,7 @@ from .meta import (
 )
 from .meta.common import _FpsCommon
 
-__all__ = ["Fps"]
+__all__ = ["Fps", "Fps_Meta"]
 
 
 _Fps_Meta: TypeAlias = _FpsCommon | FpsGroundtest

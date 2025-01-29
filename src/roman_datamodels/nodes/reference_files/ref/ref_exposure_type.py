@@ -4,7 +4,7 @@ from roman_datamodels.stnode import rad
 
 from ...datamodels import ExposureType
 
-__all__ = ["RefExposureTypeRef"]
+__all__ = ["RefExposureTypeRef", "RefExposureTypeRef_Exposure"]
 
 _T = TypeVar("_T")
 

@@ -1,6 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["GuidewindowModes"]
+__all__ = [
+    "GuidewindowModes",
+    "GuidewindowModesMixin",
+]
 
 
 class GuidewindowModesMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):

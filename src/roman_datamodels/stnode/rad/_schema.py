@@ -34,8 +34,8 @@ class SchemaMixin(RadNodeMixin[_T], ABC):
     def schema_uri(self) -> str:
         """
         The schema_uri for this instance.
-        -> Note we cannot determine the schema_uri for an untagged node from
-           the asdf file.
+            Note: we cannot determine the schema_uri for an untagged node from
+            the asdf file.
         """
         return self.asdf_schema_uri()
 

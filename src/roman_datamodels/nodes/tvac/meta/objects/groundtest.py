@@ -11,7 +11,9 @@ from roman_datamodels.stnode import core, rad
 __all__ = [
     "TvacGroundtest",
     "TvacGroundtestGsorcSdsDqPulseEntry",
+    "TvacGroundtestGsorcSdsDqPulseEntryMixin",
     "TvacGroundtestWfiOptTargettypeEntry",
+    "TvacGroundtestWfiOptTargettypeEntryMixin",
 ]
 
 

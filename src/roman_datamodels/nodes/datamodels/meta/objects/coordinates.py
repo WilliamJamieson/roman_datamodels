@@ -5,6 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = [
     "Coordinates",
     "CoordinatesReferenceFrameEntry",
+    "CoordinatesReferenceFrameEntryMixin",
 ]
 
 

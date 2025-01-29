@@ -1,6 +1,6 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["FpsExposureType"]
+__all__ = ["FpsExposureType", "FpsExposureTypeMixin"]
 
 
 class FpsExposureTypeMixin(str, rad.SchemaScalarNode[str], rad.EnumNodeMixin):

@@ -6,6 +6,9 @@ from roman_datamodels.stnode import core, rad
 __all__ = [
     "Associations",
     "AssociationsExptypeEntry",
+    "AssociationsExptypeEntryMixin",
+    "Associations_Products",
+    "Associations_Products_Members",
 ]
 
 
