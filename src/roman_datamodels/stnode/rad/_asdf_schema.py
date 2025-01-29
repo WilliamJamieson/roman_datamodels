@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import threading
 from collections import ChainMap
 from itertools import chain
 from textwrap import indent
@@ -7,10 +8,39 @@ from typing import Any
 
 from ..core import NodeKeyMixin, get_config
 
-__all__ = ["RadSchema"]
+__all__ = ["SCHEMA_REGISTRY", "RadSchema"]
 
 
-# TODO: Create a registry for these objects
+class _SchemaRegistry:
+    """
+    Registry for schema objects
+    """
+
+    def __init__(self) -> None:
+        self._schemas: dict[str, RadSchema] = {}
+        self._lock = threading.RLock()
+
+    def _add_schema(self, uri: str) -> None:
+        """
+        Add schema to the registry
+        """
+        if uri in self._schemas:
+            raise ValueError(f"Schema {uri} already exists")
+
+        self._schemas[uri] = RadSchema.from_uri(uri)
+
+    def get_schema(self, uri: str) -> RadSchema:
+        """
+        Get schema for schema marked node
+        """
+        with self._lock:
+            if uri not in self._schemas:
+                self._add_schema(uri)
+
+            return self._schemas[uri]
+
+
+SCHEMA_REGISTRY = _SchemaRegistry()
 
 
 class RadSchema(NodeKeyMixin):
@@ -22,8 +52,8 @@ class RadSchema(NodeKeyMixin):
         return get_config().get_schema(uri)
 
     @classmethod
-    def from_class(cls, uri: str) -> RadSchema:
-        return cls(cls.get_schema(uri))
+    def from_uri(cls, uri: str) -> RadSchema:
+        return cls(get_config().get_schema(uri))
 
     @property
     def schema(self) -> dict[str, Any]:

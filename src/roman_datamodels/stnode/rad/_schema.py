@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar
 
-from ._asdf_schema import RadSchema
+from ._asdf_schema import SCHEMA_REGISTRY, RadSchema
 from ._base import RadNodeMixin
 from ._node import ListNode, ObjectNode, ScalarNode
 
@@ -44,14 +44,14 @@ class SchemaMixin(RadNodeMixin[_T], ABC):
         """
         The latest schema for this class.
         """
-        return RadSchema.from_class(cls.asdf_schema_uri())
+        return SCHEMA_REGISTRY.get_schema(cls.asdf_schema_uri())
 
     @property
     def schema(self) -> RadSchema:
         """
         The schema for this instance.
         """
-        return RadSchema.from_class(self.schema_uri)
+        return SCHEMA_REGISTRY.get_schema(self.schema_uri)
 
 
 class SchemaObjectNode(ObjectNode[_T], SchemaMixin[_T], ABC):

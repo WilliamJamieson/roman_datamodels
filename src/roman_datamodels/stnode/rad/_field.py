@@ -83,15 +83,18 @@ class _FieldRegistry:
             self._fields[cls_name].add(name)
 
     def get_local_fields(self, cls: type) -> set[str]:
-        return self._fields.get(cls.__name__, set())
+        with self._lock:
+            return self._fields.get(cls.__name__, set())
 
     def get_fields(self, cls: type) -> set[str]:
         fields = self.get_local_fields(cls)
-        for base in cls.__mro__:
-            if ExtraFieldsMixin not in base.__bases__:
-                fields |= self._fields.get(base.__name__, set())
 
-        return fields
+        with self._lock:
+            for base in cls.__mro__:
+                if ExtraFieldsMixin not in base.__bases__:
+                    fields |= self._fields.get(base.__name__, set())
+
+            return fields
 
 
 FIELD_REGISTRY = _FieldRegistry()
