@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -8,10 +7,7 @@ from ..scalars import FpsGuidewindowModes
 __all__ = ["FpsGuidestar"]
 
 
-_FpsGuidestar: TypeAlias = str | FpsGuidewindowModes | float | int
-
-
-class FpsGuidestar(rad.TaggedObjectNode[_FpsGuidestar]):
+class FpsGuidestar(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/guidestar-1.0.0",)

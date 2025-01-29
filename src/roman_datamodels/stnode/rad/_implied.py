@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from inspect import signature
-from typing import TypeVar, get_args
+from typing import get_args
 
 from ._asdf_schema import RadSchema
 from ._base import RadNodeMixin
@@ -10,8 +10,6 @@ from ._utils import camel_case_to_snake_case
 __all__ = [
     "ImpliedNodeMixin",
 ]
-
-_T = TypeVar("_T")
 
 
 class ImpliedNodeMixin(RadNodeMixin, ABC):

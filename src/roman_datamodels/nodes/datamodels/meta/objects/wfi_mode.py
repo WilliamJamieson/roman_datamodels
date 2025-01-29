@@ -1,13 +1,11 @@
 from types import MappingProxyType
-from typing import ClassVar, TypeAlias, TypeVar
+from typing import Any, ClassVar
 
 from roman_datamodels.stnode import core, rad
 
 from ..scalars import WfiDetector, WfiOpticalElement
 
 __all__ = ["InstrumentNameEntry", "InstrumentNameEntryMixin", "WfiMode", "WfiModeMixin"]
-
-_T = TypeVar("_T")
 
 
 class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
@@ -28,7 +26,7 @@ class InstrumentNameEntry(InstrumentNameEntryMixin, rad.RadEnum, metaclass=rad.N
     WFI = "WFI"
 
 
-class WfiModeMixin(core.AdditionalNodeMixin[_T]):
+class WfiModeMixin(core.AdditionalNodeMixin[Any]):
     """
     Extensions to the WfiMode class.
         Adds to indication properties
@@ -46,7 +44,7 @@ class WfiModeMixin(core.AdditionalNodeMixin[_T]):
         """
         # I would add this as an abstract property here, but for some
         # reason that I can't figure out, it nukes defining it in the sub class
-        element: WfiOpticalElement = self.optical_element  # type: ignore[assignment]
+        element: WfiOpticalElement = self.optical_element
 
         if element in self._GRATING_OPTICAL_ELEMENTS:
             return None
@@ -60,7 +58,7 @@ class WfiModeMixin(core.AdditionalNodeMixin[_T]):
         """
         # I would add this as an abstract property here, but for some
         # reason that I can't figure out, it nukes defining it in the sub class
-        element: WfiOpticalElement = self.optical_element  # type: ignore[assignment]
+        element: WfiOpticalElement = self.optical_element
 
         if element in self._GRATING_OPTICAL_ELEMENTS:
             return element
@@ -68,10 +66,7 @@ class WfiModeMixin(core.AdditionalNodeMixin[_T]):
             return None
 
 
-_WfiMode: TypeAlias = InstrumentNameEntry | WfiDetector | WfiOpticalElement
-
-
-class WfiMode(WfiModeMixin[_WfiMode], rad.TaggedObjectNode[_WfiMode]):
+class WfiMode(WfiModeMixin, rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mode-1.0.0",)

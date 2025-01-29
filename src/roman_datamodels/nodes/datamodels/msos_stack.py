@@ -1,20 +1,16 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
-from .meta.common import Common, _Common
+from .meta.common import Common
 
 __all__ = ["MsosStack", "MsosStack_Meta"]
 
 
-_MsosStack_Meta: TypeAlias = _Common | str
-
-
-class MsosStack_Meta(rad.ImpliedNodeMixin, Common[_MsosStack_Meta]):
+class MsosStack_Meta(rad.ImpliedNodeMixin, Common):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MsosStack
@@ -24,10 +20,7 @@ class MsosStack_Meta(rad.ImpliedNodeMixin, Common[_MsosStack_Meta]):
         return rad.NOSTR
 
 
-_MsosStack: TypeAlias = MsosStack_Meta | npt.NDArray[np.float64] | npt.NDArray[np.uint8]
-
-
-class MsosStack(rad.TaggedObjectNode[_MsosStack_Meta], rad.ArrayFieldMixin):
+class MsosStack(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/msos_stack-1.0.0",)

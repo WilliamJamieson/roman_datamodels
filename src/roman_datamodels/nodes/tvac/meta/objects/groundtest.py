@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -72,20 +71,7 @@ class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMix
     STRAY_LIGHT = "STRAY LIGHT"
 
 
-_TvacGroundtest: TypeAlias = (
-    TvacGroundtestWfiOptTargettypeEntry
-    | TvacGroundtestGsorcSdsDqPulseEntry
-    | core.LNode[int]
-    | npt.NDArray[np.float64]
-    | Time
-    | Quantity
-    | str
-    | bool
-    | int
-)
-
-
-class TvacGroundtest(rad.TaggedObjectNode[_TvacGroundtest]):
+class TvacGroundtest(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/groundtest-1.0.0",)

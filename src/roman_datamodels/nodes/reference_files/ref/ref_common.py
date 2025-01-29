@@ -1,5 +1,3 @@
-from typing import TypeAlias, TypeVar
-
 from astropy.time import Time
 
 from roman_datamodels.stnode import rad
@@ -15,9 +13,6 @@ __all__ = [
     "RefTypeEntry",
     "RefTypeEntryMixin",
 ]
-
-# So that when we inherit from this we can include it's parts too
-_T = TypeVar("_T")
 
 
 class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
@@ -74,9 +69,6 @@ class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, rad.RadEnum, metaclass
     SIMULATION = "SIMULATION"
 
 
-_RefCommonRef_InstrumentMixin: TypeAlias = WfiOpticalElement | None
-
-
 class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin):
     """Mixin things present in the constructors not present in the schema"""
 
@@ -89,14 +81,7 @@ class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin):
         return ("optical_element",)
 
 
-_RefCommonRef_Instrument: TypeAlias = _RefCommonRef_InstrumentMixin | InstrumentNameEntry | WfiDetector
-
-
-class RefCommonRef_Instrument(
-    RefCommonRef_InstrumentMixin,
-    rad.ImpliedNodeMixin,
-    rad.ObjectNode[_RefCommonRef_Instrument | _T],
-):
+class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefCommonRef
@@ -110,10 +95,7 @@ class RefCommonRef_Instrument(
         return WfiDetector.WFI01
 
 
-_RefCommonRef: TypeAlias = RefTypeEntry | RefCommonPedigreeEntry | RefCommonRef_Instrument[_RefCommonRef_Instrument] | Time | str
-
-
-class RefCommonRef(rad.SchemaObjectNode[_RefCommonRef | _T]):
+class RefCommonRef(rad.SchemaObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_common-1.0.0",)
@@ -149,5 +131,5 @@ class RefCommonRef(rad.SchemaObjectNode[_RefCommonRef | _T]):
         return "STSCI"
 
     @rad.field
-    def instrument(self) -> RefCommonRef_Instrument[_RefCommonRef_Instrument]:
+    def instrument(self) -> RefCommonRef_Instrument:
         return RefCommonRef_Instrument()

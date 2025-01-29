@@ -1,26 +1,16 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
-from .ref import (
-    RefCommonRef,
-    RefExposureTypeRef,
-    RefTypeEntry,
-)
-from .ref.ref_common import _RefCommonRef
-from .ref.ref_exposure_type import _RefExposureTypeRef
+from .ref import RefCommonRef, RefExposureTypeRef, RefTypeEntry
 
 __all__ = ["ReadnoiseRef", "ReadnoiseRef_Meta"]
 
 
-_ReadnoiseRef_Meta: TypeAlias = _RefCommonRef | _RefExposureTypeRef
-
-
-class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_ReadnoiseRef_Meta], RefExposureTypeRef[_RefExposureTypeRef]):
+class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ReadnoiseRef
@@ -30,10 +20,7 @@ class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_ReadnoiseRef_Meta], 
         return RefTypeEntry.READNOISE
 
 
-_Readnoiseref: TypeAlias = ReadnoiseRef_Meta | npt.NDArray[np.float32]
-
-
-class ReadnoiseRef(rad.TaggedObjectNode[_Readnoiseref], rad.ArrayFieldMixin):
+class ReadnoiseRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/readnoise-1.0.0",)

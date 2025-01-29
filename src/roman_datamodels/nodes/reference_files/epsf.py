@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,14 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import core, rad
 
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
-from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["EpsfRef", "EpsfRef_Meta"]
 
 
-class EpsfRef_Meta(  # type: ignore[misc]
-    rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
-):
+class EpsfRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):  # type: ignore[misc]
     @classmethod
     def asdf_implied_by(cls) -> type:
         return EpsfRef
@@ -44,10 +40,7 @@ class EpsfRef_Meta(  # type: ignore[misc]
         return core.LNode([float(i) for i in range(1, 10)])
 
 
-_EpsfRef: TypeAlias = EpsfRef_Meta | npt.NDArray[np.float32]
-
-
-class EpsfRef(rad.TaggedObjectNode[_EpsfRef], rad.ArrayFieldMixin):
+class EpsfRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/epsf-1.0.0",)

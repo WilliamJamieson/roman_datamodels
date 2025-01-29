@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -11,14 +10,11 @@ from .meta import (
     MosaicBasic,
     Program,
 )
-from .meta.basic import _Basic
 
 __all__ = ["MosaicSegmentationMap", "MosaicSegmentationMap_Meta"]
 
-_MosaicSegmentationMap_Meta: TypeAlias = _Basic | MosaicBasic | Program
 
-
-class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_MosaicSegmentationMap_Meta]):
+class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MosaicSegmentationMap
@@ -32,10 +28,7 @@ class MosaicSegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_MosaicSegmentation
         return Program()
 
 
-_MosaicSegmentationMap: TypeAlias = MosaicSegmentationMap_Meta | npt.NDArray[np.uint32]
-
-
-class MosaicSegmentationMap(rad.TaggedObjectNode[_MosaicSegmentationMap], rad.ArrayFieldMixin):
+class MosaicSegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_segmentation_map-1.0.0",)

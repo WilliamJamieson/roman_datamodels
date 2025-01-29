@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,12 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
-from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["PixelareaRef", "PixelareaRef_Meta", "PixelareaRef_Meta_Photometry"]
 
 
-class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode[float | None]):
+class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef_Meta
@@ -26,10 +24,7 @@ class PixelareaRef_Meta_Photometry(rad.ImpliedNodeMixin, rad.ObjectNode[float | 
         return rad.NONUM
 
 
-_PixelareaRef_Meta: TypeAlias = _RefCommonRefOpticalElementRef | PixelareaRef_Meta_Photometry
-
-
-class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_PixelareaRef_Meta]):  # type: ignore[misc]
+class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):  # type: ignore[misc]
     @classmethod
     def asdf_implied_by(cls) -> type:
         return PixelareaRef
@@ -43,10 +38,7 @@ class PixelareaRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_Pix
         return PixelareaRef_Meta_Photometry()
 
 
-_PixelareaRef: TypeAlias = PixelareaRef_Meta | npt.NDArray[np.float32]
-
-
-class PixelareaRef(rad.TaggedObjectNode[_PixelareaRef], rad.ArrayFieldMixin):
+class PixelareaRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/pixelarea-1.0.0",)

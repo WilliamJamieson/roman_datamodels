@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from astropy.time import Time
 
@@ -99,10 +98,7 @@ class VisitStatusEntry(VisitStatusEntryMixin, rad.RadEnum, metaclass=rad.NodeEnu
     UNSUCCESSFUL = "UNSUCCESSFUL"
 
 
-_Visit_Dither = core.LNode[float] | str | None
-
-
-class Visit_Dither(rad.ImpliedNodeMixin, rad.ObjectNode[_Visit_Dither]):
+class Visit_Dither(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Visit
@@ -120,19 +116,7 @@ class Visit_Dither(rad.ImpliedNodeMixin, rad.ObjectNode[_Visit_Dither]):
         return core.LNode([float(v) for v in range(1, 10)])
 
 
-_Visit: TypeAlias = (
-    Visit_Dither
-    | VisitEngineeringQualityEntry
-    | VisitPointingEngineeringSourceEntry
-    | VisitStatusEntry
-    | VisitTypeEntry
-    | Time
-    | int
-    | bool
-)
-
-
-class Visit(rad.TaggedObjectNode[_Visit]):
+class Visit(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/visit-1.0.0",)

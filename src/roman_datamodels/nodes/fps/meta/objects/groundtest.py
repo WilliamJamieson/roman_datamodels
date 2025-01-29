@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -11,10 +10,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["FpsGroundtest"]
 
 
-_FpsGroundtest: TypeAlias = npt.NDArray[np.float64] | Quantity | Time | str | bool | int
-
-
-class FpsGroundtest(rad.TaggedObjectNode[_FpsGroundtest]):
+class FpsGroundtest(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/groundtest-1.0.0",)

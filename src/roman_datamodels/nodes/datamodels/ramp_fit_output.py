@@ -1,17 +1,16 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
 
 from roman_datamodels.stnode import rad
 
-from .meta.common import Common, _Common
+from .meta.common import Common
 
 __all__ = ["RampFitOutput", "RampFitOutput_Meta"]
 
 
-class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common[_Common]):
+class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common):
     """
     The metadata for the RampFitOutput node
     -> only exists so that model_type can be correctly inferred
@@ -22,10 +21,7 @@ class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common[_Common]):
         return RampFitOutput
 
 
-_RampFitOutput: TypeAlias = RampFitOutput_Meta | npt.NDArray[np.float32]
-
-
-class RampFitOutput(rad.TaggedObjectNode[_RampFitOutput], rad.ArrayFieldMixin):
+class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ramp_fit_output-1.0.0",)

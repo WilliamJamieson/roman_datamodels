@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from textwrap import indent
-from typing import Any, TypeVar
+from typing import Any
 
 from astropy.utils.decorators import classproperty
 
@@ -12,8 +12,6 @@ __all__ = [
     "ExtraFieldsMixin",
     "RadNodeMixin",
 ]
-
-_T = TypeVar("_T")
 
 
 class RadNodeMixin(AsdfNodeMixin[Any], ABC):

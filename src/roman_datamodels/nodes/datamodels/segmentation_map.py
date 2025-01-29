@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -12,15 +11,11 @@ from .meta import (
     Visit,
     WfiOpticalElement,
 )
-from .meta.basic import _Basic
 
 __all__ = ["SegmentationMap", "SegmentationMap_Meta"]
 
 
-_SegmentationMap_Meta: TypeAlias = _Basic | Program | Visit | WfiOpticalElement
-
-
-class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_SegmentationMap_Meta]):
+class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SegmentationMap
@@ -38,10 +33,7 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic[_SegmentationMap_Meta]):
         return Visit()
 
 
-_SegmentationMap: TypeAlias = SegmentationMap_Meta | npt.NDArray[np.uint32]
-
-
-class SegmentationMap(rad.TaggedObjectNode[_SegmentationMap], rad.ArrayFieldMixin):
+class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/segmentation_map-1.0.0",)

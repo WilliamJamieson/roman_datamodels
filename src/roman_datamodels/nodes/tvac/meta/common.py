@@ -1,8 +1,8 @@
-from typing import Any, TypeAlias, TypeVar
+from typing import Any
 
 from roman_datamodels.stnode import core, rad
 
-from .basic import TvacBasic, _TvacBasic
+from .basic import TvacBasic
 from .objects import (
     TvacCalStep,
     TvacExposure,
@@ -13,8 +13,6 @@ from .objects import (
 )
 
 __all__ = ["TvacCommon", "TvacCommonMixin"]
-
-_T = TypeVar("_T")
 
 
 class TvacCommonMixin(rad.ExtraFieldsMixin):
@@ -29,10 +27,7 @@ class TvacCommonMixin(rad.ExtraFieldsMixin):
         return ("statistics",)
 
 
-_TvacCommon: TypeAlias = _TvacBasic | TvacCalStep | TvacExposure | TvacGuidestar | TvacRefFile | TvacWfiMode | TvacStatistics
-
-
-class TvacCommon(TvacCommonMixin, TvacBasic[_TvacCommon | _T]):
+class TvacCommon(TvacCommonMixin, TvacBasic):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0",)

@@ -9,7 +9,7 @@ __all__ = ["RefOpticalElementRef", "RefOpticalElementRef_Instrument"]
 _T = TypeVar("_T")
 
 
-class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin, rad.ObjectNode[WfiOpticalElement]):
+class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefOpticalElementRef
@@ -19,7 +19,7 @@ class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin, rad.ObjectNode[WfiOp
         return WfiOpticalElement.F158
 
 
-class RefOpticalElementRef(rad.SchemaObjectNode[RefOpticalElementRef_Instrument | _T]):
+class RefOpticalElementRef(rad.SchemaObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_optical_element-1.0.0",)

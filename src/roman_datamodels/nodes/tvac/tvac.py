@@ -1,24 +1,16 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 from astropy.units import DN, Quantity  # type: ignore[attr-defined]
 
 from roman_datamodels.stnode import rad
 
-from .meta import (
-    TvacCommon,
-    TvacGroundtest,
-)
-from .meta.common import _TvacCommon
+from .meta import TvacCommon, TvacGroundtest
 
 __all__ = ["Tvac", "Tvac_Meta"]
 
 
-_Tvac_Meta: TypeAlias = _TvacCommon | TvacGroundtest
-
-
-class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon[_Tvac_Meta]):
+class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Tvac
@@ -28,10 +20,7 @@ class Tvac_Meta(rad.ImpliedNodeMixin, TvacCommon[_Tvac_Meta]):
         return TvacGroundtest()
 
 
-_Tvac: TypeAlias = Tvac_Meta | Quantity
-
-
-class Tvac(rad.TaggedObjectNode[_Tvac], rad.ArrayFieldMixin):
+class Tvac(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac-1.0.0",)

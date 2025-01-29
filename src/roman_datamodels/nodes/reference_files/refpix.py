@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,12 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["RefpixRef", "RefpixRef_Meta"]
 
 
-class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return RefpixRef
@@ -22,10 +20,7 @@ class RefpixRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
         return RefTypeEntry.REFPIX
 
 
-_RefPixRef: TypeAlias = RefpixRef_Meta | npt.NDArray[np.complex128]
-
-
-class RefpixRef(rad.TaggedObjectNode[_RefPixRef], rad.ArrayFieldMixin):
+class RefpixRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/refpix-1.0.0",)

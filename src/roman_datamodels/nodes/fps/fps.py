@@ -1,24 +1,16 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 from astropy.units import DN, Quantity  # type: ignore[attr-defined]
 
 from roman_datamodels.stnode import rad
 
-from .meta import (
-    FpsCommon,
-    FpsGroundtest,
-)
-from .meta.common import _FpsCommon
+from .meta import FpsCommon, FpsGroundtest
 
 __all__ = ["Fps", "Fps_Meta"]
 
 
-_Fps_Meta: TypeAlias = _FpsCommon | FpsGroundtest
-
-
-class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon[_Fps_Meta]):
+class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Fps
@@ -28,10 +20,7 @@ class Fps_Meta(rad.ImpliedNodeMixin, FpsCommon[_Fps_Meta]):
         return FpsGroundtest()
 
 
-_Fps: TypeAlias = Fps_Meta | Quantity
-
-
-class Fps(rad.TaggedObjectNode[_Fps], rad.ArrayFieldMixin):
+class Fps(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps-1.0.0",)

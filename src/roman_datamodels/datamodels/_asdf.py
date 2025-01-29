@@ -53,7 +53,7 @@ class AsdfFileMixin(DNode[DNode[_T] | _T]):
         """
         return cls.__bases__[-1]
 
-    def construct_node(self, data: dict[str, DNode[_T] | _T]) -> TaggedObjectNode[_T]:
+    def construct_node(self, data: dict[str, DNode[_T] | _T]) -> TaggedObjectNode:
         """
         Construct a new node (matching the node for this model) from the given data
         """

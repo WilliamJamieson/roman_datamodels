@@ -1,18 +1,17 @@
 from types import MappingProxyType
-from typing import TypeAlias, TypeVar
+from typing import TypeVar
 
 from roman_datamodels.stnode import core, rad
 
 from ..datamodels import OPTICAL_ELEMENTS
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["WfiImgPhotomRef", "WfiImgPhotomRef_Meta", "WfiImgPhotomRef_PhotTable", "WfiImgPhotomRef_PhotTable_PatternNode"]
 
 _T = TypeVar("_T")
 
 
-class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
@@ -22,7 +21,7 @@ class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
         return RefTypeEntry.PHOTOM
 
 
-class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode[float | None]):
+class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
@@ -63,10 +62,7 @@ class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode[_T], rad.ImpliedNo
         return "^(F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK)$"
 
 
-_WfiImgPhotomRef: TypeAlias = WfiImgPhotomRef_Meta | WfiImgPhotomRef_PhotTable_PatternNode[WfiImgPhotomRef_PhotTable]
-
-
-class WfiImgPhotomRef(rad.TaggedObjectNode[_WfiImgPhotomRef]):
+class WfiImgPhotomRef(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/wfi_img_photom-1.0.0",)

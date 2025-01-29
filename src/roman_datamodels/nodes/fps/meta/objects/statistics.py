@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias, cast
+from typing import cast
 
 import numpy as np
 from astropy.units import DN, Quantity, s  # type: ignore[attr-defined]
@@ -8,10 +8,8 @@ from roman_datamodels.stnode import rad
 
 __all__ = ["FpsStatistics"]
 
-_FpsStatistics: TypeAlias = Quantity | None
 
-
-class FpsStatistics(rad.TaggedObjectNode[_FpsStatistics]):
+class FpsStatistics(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/statistics-1.0.0",)

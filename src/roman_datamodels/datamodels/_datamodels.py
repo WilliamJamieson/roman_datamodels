@@ -160,7 +160,7 @@ class RampModel(DataModel[Any], nodes.Ramp):
                         setattr(ramp, key, getattr(other, key))
                 else:
                     # This covers anything not in the schema
-                    ramp[key] = other[key]  # type: ignore[assignment]
+                    ramp[key] = other[key]
 
         node_update(ramp, model)
 
@@ -278,9 +278,7 @@ class MosaicModel(DataModel[Any], nodes.WfiMosaic):
                         self.meta.individual_image_meta[key] = QTable(names=subtable_cols, data=subtable_vals)  # type: ignore[no-untyped-call]
                     else:
                         # Append to existing table
-                        # Astropy has not implemented type hints for Table so MyPy will complain about this
-                        # until they do.
-                        self.meta.individual_image_meta[key].add_row(subtable_vals)  # type: ignore[no-untyped-call]
+                        self.meta.individual_image_meta[key].add_row(subtable_vals)
             else:
                 # Store Basic keyword
                 basic_cols.append(key)

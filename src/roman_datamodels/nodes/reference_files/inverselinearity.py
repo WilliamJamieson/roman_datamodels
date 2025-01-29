@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,12 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["InverselinearityRef", "InverselinearityRef_Meta"]
 
 
-class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return InverselinearityRef
@@ -22,10 +20,7 @@ class InverselinearityRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]
         return RefTypeEntry.INVERSELINEARITY
 
 
-_InverselinearityRef: TypeAlias = InverselinearityRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
-
-
-class InverselinearityRef(rad.TaggedObjectNode[_InverselinearityRef], rad.ArrayFieldMixin):
+class InverselinearityRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/inverselinearity-1.0.0",)

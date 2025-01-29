@@ -1,8 +1,8 @@
-from typing import Any, TypeAlias, TypeVar
+from typing import Any
 
 from roman_datamodels.stnode import core, rad
 
-from .basic import FpsBasic, _FpsBasic
+from .basic import FpsBasic
 from .objects import (
     FpsCalStep,
     FpsExposure,
@@ -13,8 +13,6 @@ from .objects import (
 )
 
 __all__ = ["FpsCommon", "FpsCommonMixin"]
-
-_T = TypeVar("_T")
 
 
 class FpsCommonMixin(rad.ExtraFieldsMixin):
@@ -29,10 +27,7 @@ class FpsCommonMixin(rad.ExtraFieldsMixin):
         return ("statistics",)
 
 
-_FpsCommon: TypeAlias = _FpsBasic | FpsCalStep | FpsExposure | FpsGuidestar | FpsRefFile | FpsWfiMode | FpsStatistics
-
-
-class FpsCommon(FpsCommonMixin, FpsBasic[_FpsCommon | _T]):
+class FpsCommon(FpsCommonMixin, FpsBasic):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/common-1.0.0",)

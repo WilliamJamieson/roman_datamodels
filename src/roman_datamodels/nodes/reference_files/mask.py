@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,12 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["MaskRef", "MaskRef_Meta"]
 
 
-class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MaskRef
@@ -22,10 +20,7 @@ class MaskRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
         return RefTypeEntry.MASK
 
 
-_MaskRef: TypeAlias = MaskRef_Meta | npt.NDArray[np.uint32]
-
-
-class MaskRef(rad.TaggedObjectNode[_MaskRef], rad.ArrayFieldMixin):
+class MaskRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/mask-1.0.0",)

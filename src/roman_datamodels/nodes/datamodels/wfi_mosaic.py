@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -21,29 +20,11 @@ from .meta import (
     RefFile,
     Resample,
 )
-from .meta.basic import _Basic
 
 __all__ = ["WfiMosaic", "WfiMosaic_Meta"]
 
 
-_WfiMosaic_Meta: TypeAlias = (
-    _Basic
-    | MosaicAssociations
-    | MosaicBasic
-    | L3CalStep
-    | Coordinates
-    | IndividualImageMeta
-    | Photometry
-    | Program
-    | RefFile
-    | Resample
-    | WCS
-    | MosaicWcsinfo
-    | None
-)
-
-
-class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic[_WfiMosaic_Meta]):
+class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiMosaic
@@ -93,10 +74,7 @@ class WfiMosaic_Meta(rad.ImpliedNodeMixin, Basic[_WfiMosaic_Meta]):
         return MosaicWcsinfo()
 
 
-_WfiMosaic: TypeAlias = WfiMosaic_Meta | CalLogs | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | int
-
-
-class WfiMosaic(rad.TaggedObjectNode[_WfiMosaic], rad.ArrayFieldMixin):
+class WfiMosaic(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_mosaic-1.0.0",)

@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,12 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .meta import Common
-from .meta.common import _Common
 
 __all__ = ["WfiScienceRaw", "WfiScienceRaw_Meta"]
 
 
-class WfiScienceRaw_Meta(rad.ImpliedNodeMixin, Common[_Common]):
+class WfiScienceRaw_Meta(rad.ImpliedNodeMixin, Common):
     """
     The metadata for the WfiScienceRaw node
     -> only exists so that model_type can be correctly inferred
@@ -23,10 +21,7 @@ class WfiScienceRaw_Meta(rad.ImpliedNodeMixin, Common[_Common]):
         return WfiScienceRaw
 
 
-_WfiScienceRaw: TypeAlias = WfiScienceRaw_Meta | npt.NDArray[np.uint16] | npt.NDArray[np.uint8]
-
-
-class WfiScienceRaw(rad.TaggedObjectNode[_WfiScienceRaw], rad.ArrayFieldMixin):
+class WfiScienceRaw(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_science_raw-1.0.0",)

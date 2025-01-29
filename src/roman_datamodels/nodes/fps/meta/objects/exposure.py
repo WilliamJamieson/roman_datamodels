@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 from astropy.time import Time
@@ -11,10 +10,7 @@ from ..scalars import FpsExposureType
 __all__ = ["FpsExposure"]
 
 
-_FpsExposure: TypeAlias = FpsExposureType | Time | int | float | str | bool | core.LNode[core.LNode[int]]
-
-
-class FpsExposure(rad.TaggedObjectNode[_FpsExposure]):
+class FpsExposure(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/exposure-1.0.0",)

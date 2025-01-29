@@ -27,7 +27,7 @@ class CoordinatesReferenceFrameEntry(CoordinatesReferenceFrameEntryMixin, rad.Ra
     ICRS = "ICRS"
 
 
-class Coordinates(rad.TaggedObjectNode[CoordinatesReferenceFrameEntry]):
+class Coordinates(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/coordinates-1.0.0",)

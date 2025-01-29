@@ -1,5 +1,5 @@
 from types import MappingProxyType
-from typing import TypeAlias, TypeVar, cast
+from typing import TypeVar, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -8,7 +8,6 @@ from roman_datamodels.stnode import core, rad
 
 from ..datamodels import OPTICAL_ELEMENTS
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["ApcorrRef", "ApcorrRef_Data", "ApcorrRef_Data_PatternNode", "ApcorrRef_Meta"]
 
@@ -16,7 +15,7 @@ __all__ = ["ApcorrRef", "ApcorrRef_Data", "ApcorrRef_Data_PatternNode", "ApcorrR
 _T = TypeVar("_T")
 
 
-class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -26,10 +25,7 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
         return RefTypeEntry.APCORR
 
 
-_ApcorrRef_Data: TypeAlias = npt.NDArray[np.float64] | float | None
-
-
-class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode[_ApcorrRef_Data]):
+class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ApcorrRef
@@ -85,10 +81,7 @@ class ApcorrRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
         return "^(F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK)$"
 
 
-_ApcorrRef: TypeAlias = ApcorrRef_Meta | ApcorrRef_Data_PatternNode[ApcorrRef_Data]
-
-
-class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin):
+class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0",)
@@ -105,7 +98,7 @@ class ApcorrRef(rad.TaggedObjectNode[_ApcorrRef], rad.ArrayFieldMixin):
     def primary_array_shape(self) -> tuple[int, ...] | None:
         if self._has_node("data") and len(data := self._data["data"]) > 0:
             # MyPy is getting confused here this done correctly in this case
-            return cast(tuple[int, ...], next(iter(data.values())).array_shape)  # type: ignore[union-attr]
+            return cast(tuple[int, ...], next(iter(data.values())).array_shape)
 
         return None
 

@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from astropy.table import Table
 
@@ -11,15 +10,11 @@ from .meta import (
     Photometry,
     Program,
 )
-from .meta.basic import _Basic
 
 __all__ = ["MosaicSourceCatalog", "MosaicSourceCatalog_Meta"]
 
 
-_MosaicSourceCatalog_Meta: TypeAlias = _Basic | MosaicBasic | Photometry | Program
-
-
-class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic[_MosaicSourceCatalog_Meta]):
+class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return MosaicSourceCatalog
@@ -37,10 +32,7 @@ class MosaicSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic[_MosaicSourceCatalog_
         return Program()
 
 
-_MosaicSourceCatalog: TypeAlias = MosaicSourceCatalog_Meta | Table
-
-
-class MosaicSourceCatalog(rad.TaggedObjectNode[_MosaicSourceCatalog]):
+class MosaicSourceCatalog(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_source_catalog-1.0.0",)

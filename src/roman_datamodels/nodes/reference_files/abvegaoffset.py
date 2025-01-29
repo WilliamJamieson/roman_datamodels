@@ -1,18 +1,17 @@
 from types import MappingProxyType
-from typing import TypeAlias, TypeVar
+from typing import TypeVar
 
 from roman_datamodels.stnode import core, rad
 
 from ..datamodels import OPTICAL_ELEMENTS
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["AbvedgaoffsetRef_Data_PatternNode", "AbvegaoffsetRef", "AbvegaoffsetRef_Data", "AbvegaoffsetRef_Meta"]
 
 _T = TypeVar("_T")
 
 
-class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
@@ -22,7 +21,7 @@ class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
         return RefTypeEntry.ABVEGAOFFSET
 
 
-class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode[float | None]):
+class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
@@ -46,10 +45,7 @@ class AbvedgaoffsetRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMi
         return "^(F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK)$"
 
 
-_AbvegaoffsetRef: TypeAlias = AbvegaoffsetRef_Data | AbvedgaoffsetRef_Data_PatternNode[AbvegaoffsetRef_Data]
-
-
-class AbvegaoffsetRef(rad.TaggedObjectNode[_AbvegaoffsetRef]):
+class AbvegaoffsetRef(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0",)

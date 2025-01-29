@@ -1,12 +1,11 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
 __all__ = ["FpsRefFile", "FpsRefFile_Crds"]
 
 
-class FpsRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode[str]):
+class FpsRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return FpsRefFile
@@ -20,10 +19,7 @@ class FpsRefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode[str]):
         return "roman_0815.pmap"
 
 
-_FpsRefFile: TypeAlias = FpsRefFile_Crds | str
-
-
-class FpsRefFile(rad.TaggedObjectNode[_FpsRefFile]):
+class FpsRefFile(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/ref_file-1.0.0",)

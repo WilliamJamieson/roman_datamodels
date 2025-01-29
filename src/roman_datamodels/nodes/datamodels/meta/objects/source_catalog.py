@@ -5,7 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["SourceCatalog"]
 
 
-class SourceCatalog(rad.TaggedObjectNode[str]):
+class SourceCatalog(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/source_catalog-1.0.0",)

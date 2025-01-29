@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -32,10 +31,7 @@ class SkyBackgroundMethodEntry(SkyBackgroundMethodEntryMixin, rad.RadEnum, metac
     GLOBAL = "global"
 
 
-_SkyBackground: TypeAlias = SkyBackgroundMethodEntry | float | bool | None
-
-
-class SkyBackground(rad.TaggedObjectNode[_SkyBackground]):
+class SkyBackground(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/sky_background-1.0.0",)

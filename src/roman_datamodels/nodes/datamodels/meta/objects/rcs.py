@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -78,10 +77,7 @@ class RcsLedEntry(RcsLedEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     NONE = "None"
 
 
-_Rcs: TypeAlias = RcsElectronicsEntry | RcsBankEntry | RcsLedEntry | int | bool | None
-
-
-class Rcs(rad.TaggedObjectNode[_Rcs]):
+class Rcs(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/rcs-1.0.0",)

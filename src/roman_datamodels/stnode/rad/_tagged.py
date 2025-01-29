@@ -48,7 +48,7 @@ class TagMixin(SchemaMixin, ABC):
         return self.asdf_tag_uris()[self._tag]
 
 
-class TaggedObjectNode(SchemaObjectNode[_T], TagMixin, ABC):
+class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):
     """
     Base class for all objects that are tagged in RAD.
     """
@@ -65,7 +65,7 @@ class TaggedObjectNode(SchemaObjectNode[_T], TagMixin, ABC):
         self._instance_tag = tag
 
 
-class TaggedListNode(SchemaListNode[_T], TagMixin, ABC):
+class TaggedListNode(SchemaListNode, TagMixin, ABC):
     """
     Base class for all tagged list nodes defined by RAD
         There will be one of these for any tagged object defined by RAD, which has
@@ -73,7 +73,7 @@ class TaggedListNode(SchemaListNode[_T], TagMixin, ABC):
         These will all be in the tagged_lists directory.
     """
 
-    def __init__(self, node: list[_T] | AsdfListNode | LNode[_T] | None = None, *, tag: str | None = None) -> None:
+    def __init__(self, node: list[Any] | AsdfListNode | LNode[Any] | None = None, *, tag: str | None = None) -> None:
         super().__init__(node=node)
         self._instance_tag = tag
 

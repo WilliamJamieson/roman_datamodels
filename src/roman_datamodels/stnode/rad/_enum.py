@@ -1,6 +1,5 @@
 from abc import ABC, ABCMeta, abstractmethod
 from enum import Enum, EnumType
-from typing import TypeVar
 
 from ._asdf_schema import RadSchema
 from ._schema import SchemaMixin
@@ -10,8 +9,6 @@ __all__ = [
     "NodeEnumMeta",
     "RadEnum",
 ]
-
-_T = TypeVar("_T")
 
 
 class EnumNodeMixin(ABC):

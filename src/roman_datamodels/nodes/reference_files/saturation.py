@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,12 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["SaturationRef", "SaturationRef_Meta"]
 
 
-class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SaturationRef
@@ -22,10 +20,7 @@ class SaturationRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
         return RefTypeEntry.SATURATION
 
 
-_SaturationRef: TypeAlias = SaturationRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
-
-
-class SaturationRef(rad.TaggedObjectNode[_SaturationRef], rad.ArrayFieldMixin):
+class SaturationRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/saturation-1.0.0",)

@@ -5,7 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["OutlierDetection"]
 
 
-class OutlierDetection(rad.TaggedObjectNode[str]):
+class OutlierDetection(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/outlier_detection-1.0.0",)

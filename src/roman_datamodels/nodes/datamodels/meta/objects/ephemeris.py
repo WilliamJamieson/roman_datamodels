@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -29,10 +28,7 @@ class EphemerisTypeEntry(EphemerisTypeEntryMixin, rad.RadEnum, metaclass=rad.Nod
     PREDICTED = "PREDICTED"
 
 
-_Ephemeris: TypeAlias = EphemerisTypeEntry | float | str
-
-
-class Ephemeris(rad.TaggedObjectNode[_Ephemeris]):
+class Ephemeris(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ephemeris-1.0.0",)

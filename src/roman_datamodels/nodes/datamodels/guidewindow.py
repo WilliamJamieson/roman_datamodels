@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -11,15 +10,11 @@ from .meta import (
     Common,
     GuidewindowModes,
 )
-from .meta.common import _Common
 
 __all__ = ["Guidewindow", "Guidewindow_Meta"]
 
 
-_Guidewindow_Meta: TypeAlias = _Common | GuidewindowModes | Time | str | int | float
-
-
-class Guidewindow_Meta(rad.ImpliedNodeMixin, Common[_Guidewindow_Meta]):
+class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Guidewindow
@@ -101,10 +96,7 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common[_Guidewindow_Meta]):
         return 24
 
 
-_Guidewindow: TypeAlias = Guidewindow_Meta | npt.NDArray[np.uint16]
-
-
-class Guidewindow(rad.TaggedObjectNode[_Guidewindow], rad.ArrayFieldMixin):
+class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",)

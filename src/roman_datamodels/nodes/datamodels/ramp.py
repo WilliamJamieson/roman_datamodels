@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -10,15 +9,11 @@ from .meta import (
     Common,
     L2CalStep,
 )
-from .meta.common import _Common
 
 __all__ = ["Ramp", "Ramp_Meta"]
 
 
-_Ramp_Meta: TypeAlias = _Common | L2CalStep
-
-
-class Ramp_Meta(rad.ImpliedNodeMixin, Common[_Ramp_Meta]):
+class Ramp_Meta(rad.ImpliedNodeMixin, Common):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return Ramp
@@ -28,10 +23,7 @@ class Ramp_Meta(rad.ImpliedNodeMixin, Common[_Ramp_Meta]):
         return L2CalStep()
 
 
-_Ramp: TypeAlias = Ramp_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | npt.NDArray[np.uint8] | npt.NDArray[np.uint16]
-
-
-class Ramp(rad.TaggedObjectNode[_Ramp], rad.ArrayFieldMixin):
+class Ramp(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ramp-1.0.0",)

@@ -7,7 +7,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["CalLogs"]
 
 
-class CalLogs(rad.TaggedListNode[str]):
+class CalLogs(rad.TaggedListNode):
     @classmethod
     def default(cls) -> CalLogs:
         return cls(

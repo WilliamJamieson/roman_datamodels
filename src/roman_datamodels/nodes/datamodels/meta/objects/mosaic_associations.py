@@ -5,7 +5,7 @@ from roman_datamodels.stnode import rad
 __all__ = ["MosaicAssociations"]
 
 
-class MosaicAssociations(rad.TaggedObjectNode[str]):
+class MosaicAssociations(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_associations-1.0.0",)

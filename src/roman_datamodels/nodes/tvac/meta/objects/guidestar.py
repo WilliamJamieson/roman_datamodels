@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from roman_datamodels.stnode import rad
 
@@ -8,10 +7,7 @@ from ..scalars import TvacGuidewindowModes
 __all__ = ["TvacGuidestar"]
 
 
-_TvacGuidestar: TypeAlias = TvacGuidewindowModes | str | float | int
-
-
-class TvacGuidestar(rad.TaggedObjectNode[_TvacGuidestar]):
+class TvacGuidestar(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/guidestar-1.0.0",)

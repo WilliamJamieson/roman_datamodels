@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from astropy.time import Time
 
@@ -10,10 +9,7 @@ from ..scalars import GuidewindowModes
 __all__ = ["Guidestar"]
 
 
-_Guidestar: TypeAlias = GuidewindowModes | Time | int | float | str
-
-
-class Guidestar(rad.TaggedObjectNode[_Guidestar]):
+class Guidestar(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidestar-1.0.0",)

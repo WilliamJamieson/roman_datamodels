@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,12 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRef, RefTypeEntry
-from .ref.ref_common import _RefCommonRef
 
 __all__ = ["SuperbiasRef", "SuperbiasRef_Meta"]
 
 
-class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
+class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return SuperbiasRef
@@ -22,10 +20,7 @@ class SuperbiasRef_Meta(rad.ImpliedNodeMixin, RefCommonRef[_RefCommonRef]):
         return RefTypeEntry.BIAS
 
 
-_SuperbiasRef: TypeAlias = SuperbiasRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
-
-
-class SuperbiasRef(rad.TaggedObjectNode[_SuperbiasRef], rad.ArrayFieldMixin):
+class SuperbiasRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/superbias-1.0.0",)

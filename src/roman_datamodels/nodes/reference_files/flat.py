@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,14 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
-from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["FlatRef", "FlatRef_Meta"]
 
 
-class FlatRef_Meta(  # type: ignore[misc]
-    rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
-):
+class FlatRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):  # type: ignore[misc]
     @classmethod
     def asdf_implied_by(cls) -> type:
         return FlatRef
@@ -24,10 +20,7 @@ class FlatRef_Meta(  # type: ignore[misc]
         return RefTypeEntry.FLAT
 
 
-_FlatRef: TypeAlias = FlatRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
-
-
-class FlatRef(rad.TaggedObjectNode[_FlatRef], rad.ArrayFieldMixin):
+class FlatRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/flat-1.0.0",)

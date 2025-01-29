@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -7,14 +6,11 @@ import numpy.typing as npt
 from roman_datamodels.stnode import rad
 
 from .ref import RefCommonRefOpticalElementRef, RefTypeEntry
-from .ref.ref_mixes import _RefCommonRefOpticalElementRef
 
 __all__ = ["IpcRef", "IpcRef_Meta"]
 
 
-class IpcRef_Meta(  # type: ignore[misc]
-    rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_RefCommonRefOpticalElementRef]
-):
+class IpcRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef):  # type: ignore[misc]
     @classmethod
     def asdf_implied_by(cls) -> type:
         return IpcRef
@@ -24,10 +20,7 @@ class IpcRef_Meta(  # type: ignore[misc]
         return RefTypeEntry.IPC
 
 
-_IpcRef: TypeAlias = IpcRef_Meta | npt.NDArray[np.float32]
-
-
-class IpcRef(rad.TaggedObjectNode[_IpcRef], rad.ArrayFieldMixin):
+class IpcRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ipc-1.0.0",)

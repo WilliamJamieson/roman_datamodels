@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -18,27 +17,11 @@ from .meta import (
     Statistics,
     Wcsinfo,
 )
-from .meta.common import _Common
 
 __all__ = ["WfiImage", "WfiImage_Meta"]
 
 
-_WfiImage_Meta: TypeAlias = (
-    _Common
-    | SkyBackground
-    | CalLogs
-    | L2CalStep
-    | OutlierDetection
-    | Photometry
-    | SourceCatalog
-    | Statistics
-    | WCS
-    | Wcsinfo
-    | None
-)
-
-
-class WfiImage_Meta(rad.ImpliedNodeMixin, Common[_WfiImage_Meta]):
+class WfiImage_Meta(rad.ImpliedNodeMixin, Common):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return WfiImage
@@ -80,10 +63,7 @@ class WfiImage_Meta(rad.ImpliedNodeMixin, Common[_WfiImage_Meta]):
         return Wcsinfo()
 
 
-_WfiImage: TypeAlias = WfiImage_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32] | npt.NDArray[np.uint16]
-
-
-class WfiImage(rad.TaggedObjectNode[_WfiImage], rad.ArrayFieldMixin):
+class WfiImage(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_image-1.0.0",)

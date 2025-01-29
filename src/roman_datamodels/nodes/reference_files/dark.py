@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -11,15 +10,12 @@ from .ref import (
     RefExposureTypeRef,
     RefTypeEntry,
 )
-from .ref.ref_exposure_type import RefExposureTypeRef_Exposure, _RefExposureTypeRef, _RefExposureTypeRef_Exposure
-from .ref.ref_mixes import _RefCommonRefOpticalElementRef
+from .ref.ref_exposure_type import RefExposureTypeRef_Exposure
 
 __all__ = ["DarkRef", "DarkRef_Meta", "DarkRef_Meta_Exposure"]
 
-_DarkRef_Meta_Exposure: TypeAlias = _RefExposureTypeRef_Exposure | str | int
 
-
-class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure], rad.ImpliedNodeMixin):
+class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
     """
     This class is the result of a very weird mixture similar to the ref_mixes but only
     applies to the dark schema.
@@ -49,12 +45,7 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure[_DarkRef_Meta_Exposure],
         return rad.NOINT
 
 
-_DarkRef_Meta: TypeAlias = _RefCommonRefOpticalElementRef | _RefExposureTypeRef | DarkRef_Meta_Exposure
-
-
-class DarkRef_Meta(  # type: ignore[misc]
-    rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef[_DarkRef_Meta], RefExposureTypeRef[_DarkRef_Meta]
-):
+class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):  # type: ignore[misc]
     @classmethod
     def asdf_implied_by(cls) -> type:
         return DarkRef
@@ -76,10 +67,7 @@ class DarkRef_Meta(  # type: ignore[misc]
         return DarkRef_Meta_Exposure()
 
 
-_DarkRef: TypeAlias = DarkRef_Meta | npt.NDArray[np.float32] | npt.NDArray[np.uint32]
-
-
-class DarkRef(rad.TaggedObjectNode[_DarkRef], rad.ArrayFieldMixin):
+class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0",)

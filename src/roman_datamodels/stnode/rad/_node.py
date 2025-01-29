@@ -3,7 +3,7 @@ from abc import ABC
 from collections.abc import Generator
 from enum import Enum
 from inspect import getattr_static
-from typing import Any, TypeVar
+from typing import Any
 
 from asdf import AsdfFile
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
@@ -18,10 +18,8 @@ __all__ = [
     "ScalarNode",
 ]
 
-_T = TypeVar("_T")
 
-
-class ObjectNode(DNode[_T], RadNodeMixin, ABC):
+class ObjectNode(DNode[Any], RadNodeMixin, ABC):
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
 
@@ -121,7 +119,9 @@ class ObjectNode(DNode[_T], RadNodeMixin, ABC):
         for field in sorted(data_fields):
             yield field
 
-    def node_items(self, *, flush: FlushOptions = FlushOptions.NONE, warn: bool = False) -> Generator[tuple[str, _T], None, None]:
+    def node_items(
+        self, *, flush: FlushOptions = FlushOptions.NONE, warn: bool = False
+    ) -> Generator[tuple[str, Any], None, None]:
         """
         Generator which yields the fields and values of this object.
             yields the field values in the following order:
@@ -137,7 +137,9 @@ class ObjectNode(DNode[_T], RadNodeMixin, ABC):
 
             yield field, getattr(self, field)
 
-    def flat_items(self, *, flush: FlushOptions = FlushOptions.NONE, warn: bool = False) -> Generator[tuple[str, _T], None, None]:
+    def flat_items(
+        self, *, flush: FlushOptions = FlushOptions.NONE, warn: bool = False
+    ) -> Generator[tuple[str, Any], None, None]:
         """
         Generator which yields the fields and values of this object, flattened to be keys ``foo.bar.baz``.
             yields the flattened field values, where it will yield until exhausting all the subfields
@@ -151,7 +153,7 @@ class ObjectNode(DNode[_T], RadNodeMixin, ABC):
                 5. All other non-yielded data in _data in alphabetical order
         """
 
-        def recurse(tree: Any, path: list[str | int] | None = None) -> Generator[tuple[str, _T], None, None]:
+        def recurse(tree: Any, path: list[str | int] | None = None) -> Generator[tuple[str, Any], None, None]:
             """
             Recurse through the tree to flatten it
             """
@@ -220,11 +222,11 @@ class ObjectNode(DNode[_T], RadNodeMixin, ABC):
         self.flush(flush, warn)
         return super().to_asdf_tree(ctx, flush=flush, warn=warn)
 
-    def __asdf_traverse__(self) -> dict[str, _T]:
+    def __asdf_traverse__(self) -> dict[str, Any]:
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
 
 
-class ListNode(LNode[_T], RadNodeMixin, ABC):
+class ListNode(LNode[Any], RadNodeMixin, ABC):
     """
     Base class for all list nodes
     """

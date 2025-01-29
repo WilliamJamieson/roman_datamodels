@@ -1,5 +1,4 @@
 from types import MappingProxyType
-from typing import TypeAlias
 
 from astropy.table import Table
 
@@ -13,14 +12,11 @@ from .meta import (
     Visit,
     WfiOpticalElement,
 )
-from .meta.basic import _Basic
 
 __all__ = ["ImageSourceCatalog", "ImageSourceCatalog_Meta"]
 
-_ImageSourceCatalog_Meta: TypeAlias = _Basic | WfiOpticalElement | Exposure | Photometry | Program | Visit
 
-
-class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic[_ImageSourceCatalog_Meta]):
+class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
     @classmethod
     def asdf_implied_by(cls) -> type:
         return ImageSourceCatalog
@@ -46,10 +42,7 @@ class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic[_ImageSourceCatalog_Me
         return Visit()
 
 
-_ImageSourceCatalog: TypeAlias = ImageSourceCatalog_Meta | Table
-
-
-class ImageSourceCatalog(rad.TaggedObjectNode[_ImageSourceCatalog]):
+class ImageSourceCatalog(rad.TaggedObjectNode):
     @classmethod
     def asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/image_source_catalog-1.0.0",)
