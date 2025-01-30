@@ -33,6 +33,10 @@ class SchemaMixin(RadNodeMixin, ABC):
         """
         The latest schema for this class.
         """
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if not cls.asdf_schema_uris:
+            return ""
         return cls.asdf_schema_uris[-1]
 
     @property

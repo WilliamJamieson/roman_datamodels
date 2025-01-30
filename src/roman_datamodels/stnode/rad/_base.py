@@ -24,7 +24,12 @@ class RadNodeMixin(AsdfNodeMixin[Any], ABC):
 
         @classproperty
         def docstring(cls: RadNodeMixin) -> str:
-            docstring = indent(cls.asdf_schema.docstring, "    ")
+            # This is reached by the docs build as it ignores the abstractness of the class
+            # which causes a doc failure, the cache makes this irrelevant in general
+            if (schema := cls.asdf_schema) is None:
+                return cls._custom_doc or ""  # type: ignore[unreachable]
+
+            docstring = indent(schema.docstring, "    ")
             if cls._custom_doc:
                 docstring = f"{cls._custom_doc}\n\n{docstring}"
 

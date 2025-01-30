@@ -30,7 +30,11 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
     @classmethod
     def _asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
-        return cls.asdf_schema.required
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if (schema := cls.asdf_schema) is None:
+            return set()  # type: ignore[unreachable]
+        return schema.required
 
     @classproperty
     def asdf_required(cls) -> set[str]:
@@ -40,12 +44,20 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
     @property
     def schema_required(self) -> set[str]:
         """List of required fields in the schema."""
-        return self.schema.required
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if (schema := self.schema) is None:
+            return set()  # type: ignore[unreachable]
+        return schema.required
 
     @classproperty
     def asdf_property_order(cls) -> tuple[str, ...]:
         """Order of properties in the schema."""
-        return cls.asdf_schema.property_order
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if (schema := cls.asdf_schema) is None:
+            return ()  # type: ignore[unreachable]
+        return schema.property_order
 
     def _field_generator(self, flush: FlushOptions = FlushOptions.NONE) -> Generator[str, None, None]:
         """

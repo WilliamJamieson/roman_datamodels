@@ -32,11 +32,21 @@ class TagMixin(SchemaMixin, ABC):
     @classproperty
     def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
         """Get the tags for the class."""
-        return MappingProxyType(cls._asdf_tag_uris())
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if not (uris := cls._asdf_tag_uris()):
+            return MappingProxyType({})
+
+        return MappingProxyType(uris)
 
     @classproperty
     def asdf_tag_uri(cls) -> str:
         """Get the latest tag URI for the node."""
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if not cls.asdf_tag_uris:
+            return ""
+
         return list(cls.asdf_tag_uris)[-1]
 
     # TODO: Should not be hidden, but it breaks something when doing asdf_info

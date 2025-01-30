@@ -39,12 +39,21 @@ class ImpliedNodeMixin(RadNodeMixin, ABC):
     def asdf_implied_property(cls) -> field[Any]:
         """Get the raw property object that will accept this node"""
 
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if cls.asdf_implied_by is None:
+            return None  # type: ignore[unreachable]
+
         return cast(field[Any], getattr(cls.asdf_implied_by, cls.asdf_implied_property_name))
 
     @classmethod
     def _asdf_schema(cls) -> RadSchema:
         """Get the schema for the implied node"""
-        return cls.asdf_implied_by.asdf_schema.fields[cls.asdf_implied_property_name]
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if (schema := cls.asdf_implied_by.asdf_schema) is None:
+            return RadSchema({})  # type: ignore[unreachable]
+        return schema.fields[cls.asdf_implied_property_name]
 
     # TODO: Figure out why I need to redefine this here
     @property

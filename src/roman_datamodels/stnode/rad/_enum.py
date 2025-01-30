@@ -50,6 +50,11 @@ class EnumNodeMixin(ABC):
     @classmethod
     def _asdf_schema(cls) -> RadSchema:
         """Get the schema for the enum node"""
+        # This is reached by the docs build as it ignores the abstractness of the class
+        # which causes a doc failure, the cache makes this irrelevant in general
+        if cls.asdf_container.asdf_schema is None:
+            return RadSchema({})  # type: ignore[unreachable]
+
         schema = cls.asdf_container.asdf_schema.fields[cls.asdf_property_name]
         if "anyOf" in schema.schema:
             return RadSchema(schema.schema["anyOf"][0]["enum"])
