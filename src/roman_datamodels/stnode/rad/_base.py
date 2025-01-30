@@ -44,15 +44,6 @@ class RadNodeMixin(AsdfNodeMixin[Any], ABC):
         """Get the schema for this instance."""
         return self.asdf_schema()
 
-    @classmethod
-    def fill_docs(cls) -> None:
-        """Fill in the docstrings for the class."""
-        docstring = indent(cls.asdf_schema().docstring, "    ")
-        if cls.__doc__:
-            docstring = f"{cls.__doc__}\n\n{docstring}"
-
-        cls.__doc__ = docstring
-
 
 class ArrayFieldMixin(DNode[Any], ABC):
     """

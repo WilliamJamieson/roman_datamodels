@@ -42,14 +42,6 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
         """Order of properties in the schema."""
         return cls.asdf_schema().property_order
 
-    @classmethod
-    def fill_docs(cls) -> None:
-        super().fill_docs()
-
-        # Add field docstrings
-        for name, schema in cls.asdf_schema().fields.items():
-            getattr(cls, name).__doc__ = schema.docstring
-
     def _field_generator(self, flush: FlushOptions = FlushOptions.NONE) -> Generator[str, None, None]:
         """
         Generator which yields the fields of this object.
