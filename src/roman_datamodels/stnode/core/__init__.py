@@ -1,6 +1,6 @@
 from ._config import config_context, get_config
 from ._d_node import AdditionalNodeMixin, DNode, MissingFieldError, PatternDNode
-from ._descriptors import classproperty
+from ._descriptors import classproperty, lazyproperty
 from ._field import FieldPropertyWarning, field
 from ._l_node import LNode
 from ._mixins import AsdfNodeMixin, FlushOptions, NodeKeyMixin
@@ -20,5 +20,6 @@ __all__ = [
     "config_context",
     "field",
     "get_config",
+    "lazyproperty",
     "type_checked",
 ]

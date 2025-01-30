@@ -6,6 +6,8 @@ from functools import wraps
 from threading import RLock
 from typing import Any, Generic, TypeVar, cast
 
+__all__ = ["classproperty", "lazyproperty"]
+
 _NotFound = object()
 
 _T = TypeVar("_T")
@@ -81,3 +83,39 @@ class classproperty(property, Generic[_T]):
             return orig_fget(obj.__class__)
 
         return fget
+
+
+class lazyproperty(property, Generic[_T]):
+    """
+    This has been adapted from the `astropy.utils.decorators.classproperty` class
+
+        Effectively, this should be identical except for some type hints and the
+        removal of everything except the fget and doc
+    """
+
+    def __init__(self, fget: Callable[[Any], _T], doc: str | None = None) -> None:
+        super().__init__(fget, None, None, doc)
+        # We only accept an actual function passed in not creation conventionally
+        # regular property does not distinguish between the two
+        self._key = self.fget.__name__  # type: ignore[union-attr]
+        self._lock = RLock()
+
+    def __get__(self, obj: Any | None, owner: type | None = None) -> _T:
+        try:
+            obj_dict = obj.__dict__
+            val = obj_dict.get(self._key, _NotFound)
+            if val is _NotFound:
+                with self._lock:
+                    # Check if another thread beat us to it.
+                    val = obj_dict.get(self._key, _NotFound)
+                    if val is _NotFound:
+                        # In the condition where fget is always not None, unlike
+                        # general property
+                        val = self.fget(obj)  # type: ignore[misc]
+                        obj_dict[self._key] = val
+            return cast(_T, val)
+        except AttributeError:
+            if obj is None:
+                # Ignoring this case because I don't want to overload things
+                return self  # type: ignore[return-value]
+            raise

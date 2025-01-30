@@ -6,7 +6,7 @@ from itertools import chain
 from textwrap import indent
 from typing import Any
 
-from ..core import NodeKeyMixin, get_config
+from ..core import NodeKeyMixin, get_config, lazyproperty
 
 __all__ = ["SCHEMA_REGISTRY", "RadSchema"]
 
@@ -55,12 +55,12 @@ class RadSchema(NodeKeyMixin):
     def from_uri(cls, uri: str) -> RadSchema:
         return cls(get_config().get_schema(uri))
 
-    @property
+    @lazyproperty
     def schema(self) -> dict[str, Any]:
         """Access schema, so its read-only"""
         return self._schema
 
-    @property
+    @lazyproperty
     def title(self) -> str:
         """Title of the schema"""
         if isinstance(self.schema, dict):
@@ -70,7 +70,7 @@ class RadSchema(NodeKeyMixin):
         # Fall back if schema is not a dict
         return ""  # type: ignore[unreachable]
 
-    @property
+    @lazyproperty
     def description(self) -> str:
         """Description of the schema"""
         if isinstance(self.schema, dict):
@@ -80,7 +80,7 @@ class RadSchema(NodeKeyMixin):
         # Fall back if schema is not a dict
         return ""  # type: ignore[unreachable]
 
-    @property
+    @lazyproperty
     def docstring(self) -> str:
         """Generate a docstring from the schema"""
         docstring = f"{self.title}"
@@ -179,19 +179,19 @@ class RadSchema(NodeKeyMixin):
         """
         return self._get_key(key, self.schema)
 
-    @property
+    @lazyproperty
     def required(self) -> set[str]:
         return set(self._to_field_key(key) for key in list(chain(*self.get_key("required"))))
 
-    @property
+    @lazyproperty
     def property_order(self) -> tuple[str, ...]:
         return tuple(self._to_field_key(key) for key in list(chain(*self.get_key("propertyOrder"))))
 
-    @property
+    @lazyproperty
     def fields(self) -> dict[str, RadSchema]:
         return {self._to_field_key(key): RadSchema(value) for key, value in ChainMap(*self.get_key("properties")).items()}
 
-    @property
+    @lazyproperty
     def archive_catalog(self) -> dict[str, RadSchema]:
         """Pull the archive_catalog data from the schema"""
         archive_catalog = {}
@@ -202,7 +202,7 @@ class RadSchema(NodeKeyMixin):
 
         return archive_catalog
 
-    @property
+    @lazyproperty
     def sdf(self) -> dict[str, RadSchema]:
         """Pull the sdf data schema from the schema"""
         sdf = {}
