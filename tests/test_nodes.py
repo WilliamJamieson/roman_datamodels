@@ -11,7 +11,6 @@ import yaml
 from astropy import units as u
 from astropy.table import Table
 from astropy.time import Time
-from astropy.utils.decorators import classproperty
 from gwcs import WCS
 from rad import resources
 
@@ -213,10 +212,7 @@ def get_properties(schema):
     return set()
 
 
-_OBJECT_NODES = rad.get_nodes(rad.ObjectNode, (rad.ObjectNode, rad.SchemaObjectNode, rad.TaggedObjectNode))
-
-
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_fields_in_schema(node_cls):
     """
     Check that every property of the class in the schema
@@ -232,24 +228,28 @@ def test_fields_in_schema(node_cls):
     assert fields == set(rad.get_node_fields(node_cls))
 
 
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_fields(node_cls):
     """
     Check that the fields property returns the correct fields
     """
+    from roman_datamodels.nodes.reference_files.ref.ref_mixes import RefCommonRefOpticalElementRef_Instrument
 
-    properties = set(rad.get_node_fields(node_cls)) | set(node_cls._extra_fields())
-    instance = node_cls()
-    assert instance._fields is None
-    assert properties == set(instance.fields)
-    assert properties == set(instance._fields)
+    fields = set(rad.get_node_fields(node_cls)) | set(node_cls.extra_fields)
 
-    for field in properties:
+    # get_node_fields has an issue with handling the mixing of two node classes
+    # that have overlapping fields. Where in one that field is extra and in the
+    # other it is defined. This is the only case that this happens
+    if node_cls is RefCommonRefOpticalElementRef_Instrument:
+        fields = fields | {"optical_element"}
+    assert fields == set(node_cls.fields)
+
+    for field in fields:
         assert hasattr(node_cls, field)
-        assert isinstance(getattr(node_cls, field), property)
+        assert isinstance(getattr(node_cls, field), rad.field)
 
 
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_required_fields_default_tag(node_cls):
     """
     Check if the required fields are correct for the default tag
@@ -458,17 +458,17 @@ def get_testing_default_values(node_cls, property_name) -> tuple:
 
 
 @pytest.mark.usefixtures("use_testing_shape")
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_wrap_into_node_setting(node_cls):
     """
     Check that things get coerced to the right value during setting
     """
 
-    properties = rad.get_node_fields(node_cls) + node_cls._extra_fields()
+    fields = rad.get_node_fields(node_cls) + node_cls.extra_fields
 
-    for property_name in properties:
-        stored_name = "pass" if property_name == "pass_" else property_name
-        default_value, compare_value, instance = get_testing_default_values(node_cls, property_name)
+    for field_name in fields:
+        stored_name = "pass" if field_name == "pass_" else field_name
+        default_value, compare_value, instance = get_testing_default_values(node_cls, field_name)
 
         # These only ones we care about are the nodes
         if not isinstance(default_value, core.DNode | core.LNode | rad.SchemaScalarNode):
@@ -478,7 +478,7 @@ def test_wrap_into_node_setting(node_cls):
 
         # Set the value and show it now exists in _data
         assert stored_name not in instance._data
-        setattr(instance, property_name, value)
+        setattr(instance, field_name, value)
         assert stored_name in instance._data
 
         # Check the value is coerced into the correct type for storage
@@ -489,18 +489,18 @@ def test_wrap_into_node_setting(node_cls):
         assert isinstance(compare_value, type(instance._data[stored_name]))
 
         # Double check that using the getattr method gets the right thing
-        assert isinstance(getattr(instance, property_name), type(compare_value))
-        assert isinstance(compare_value, type(getattr(instance, property_name)))
+        assert isinstance(getattr(instance, field_name), type(compare_value))
+        assert isinstance(compare_value, type(getattr(instance, field_name)))
 
 
 @pytest.mark.usefixtures("use_testing_shape")
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_coerce_getting(node_cls):
     """
     Check that things get coerced to the right value when getting
     """
 
-    properties = rad.get_node_fields(node_cls) + node_cls._extra_fields()
+    properties = rad.get_node_fields(node_cls) + node_cls.extra_fields
 
     for property_name in properties:
         stored_name = "pass" if property_name == "pass_" else property_name
@@ -529,7 +529,7 @@ def test_coerce_getting(node_cls):
         assert isinstance(compare_value, type(getattr(instance, property_name)))
 
 
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_flush_none(node_cls):
     """
     Check that the `flush` method works with `FlushOptions.NONE`
@@ -542,7 +542,7 @@ def test_flush_none(node_cls):
     assert instance._data == {}  # Nothing should have changed
 
 
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_flush_required(node_cls):
     """
     Check that the `flush` method works with `FlushOptions.REQUIRED`
@@ -567,7 +567,7 @@ def test_flush_required(node_cls):
     assert keys == set(required)
 
 
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_flush_all(node_cls):
     """
     Check that the `flush` method works with `FlushOptions.ALL`
@@ -598,11 +598,13 @@ def test_flush_all(node_cls):
 
 
 @pytest.mark.usefixtures("use_testing_shape")
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_flush_extra(node_cls):
     """
     Check that the `flush` method works with `FlushOptions.EXTRA`
     """
+    from roman_datamodels.nodes.reference_files.ref.ref_mixes import RefCommonRefOpticalElementRef_Instrument
+
     instance = node_cls()
     assert instance._data == {}
 
@@ -615,7 +617,14 @@ def test_flush_extra(node_cls):
         keys.add("pass_")
         keys.remove("pass")
 
-    assert keys == set(rad.get_node_fields(node_cls)) | set(node_cls._extra_fields())
+    truth = set(rad.get_node_fields(node_cls)) | set(node_cls.extra_fields)
+    # with another node that has that same field as an extra field. The utility
+    # function fails here, but that utility function is not used in anything but
+    # testing.
+    if node_cls is RefCommonRefOpticalElementRef_Instrument:
+        truth = truth | {"optical_element"}
+
+    assert keys == truth
 
 
 @pytest.mark.usefixtures("use_testing_shape")
@@ -651,7 +660,7 @@ def test_fps_common_mixin():
     assert "statistics" in instance._data
     assert isinstance(instance.statistics, nodes.FpsStatistics)
 
-    assert type(instance)._extra_fields() == ("statistics",)
+    assert type(instance).extra_fields == ("statistics",)
 
 
 @pytest.mark.usefixtures("use_testing_shape")
@@ -666,7 +675,7 @@ def test_tvac_common_mixin():
     assert "statistics" in instance._data
     assert isinstance(instance.statistics, nodes.TvacStatistics)
 
-    assert type(instance)._extra_fields() == ("statistics",)
+    assert type(instance).extra_fields == ("statistics",)
 
 
 @pytest.mark.usefixtures("use_testing_shape")
@@ -683,7 +692,7 @@ def test_ref_common_ref_instrument_mixin():
     assert isinstance(instance.optical_element, nodes.WfiOpticalElement)
     assert instance.optical_element == "F158"
 
-    assert type(instance)._extra_fields() == ("optical_element",)
+    assert type(instance).extra_fields == ("optical_element",)
 
 
 @pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.all_nodes.values())
@@ -784,7 +793,7 @@ def test_reftype_node():
         assert entry.value in enum_names, f"Extra ref_type entry: {entry}"
 
 
-@pytest.mark.parametrize("node_cls", _OBJECT_NODES.values())
+@pytest.mark.parametrize("node_cls", rad.RDM_NODE_REGISTRY.object_nodes.values())
 def test_enum_exists(node_cls):
     """
     Test that properties that have an enum listed in the schema have an enum
@@ -833,8 +842,7 @@ def test_node_docstring(node_cls):
     from rad schemas if necessary
     """
     # Check that we have injected a classproperty for `__doc__`
-    assert isinstance(getattr_static(node_cls, "__doc__"), classproperty)
-    assert getattr_static(node_cls, "__doc__")._lazy is True  # It should be lazy
+    assert isinstance(getattr_static(node_cls, "__doc__"), core.classproperty)
     assert getattr_static(node_cls, "__doc__")._cache == {}  # It should not have a cache yet
 
     # Now actually get the docstring

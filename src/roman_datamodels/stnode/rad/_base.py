@@ -2,14 +2,11 @@ from abc import ABC, abstractmethod
 from textwrap import indent
 from typing import Any
 
-from astropy.utils.decorators import classproperty
-
-from ..core import AdditionalNodeMixin, AsdfNodeMixin, DNode, get_config
+from ..core import AsdfNodeMixin, DNode, classproperty, get_config
 from ._asdf_schema import RadSchema
 
 __all__ = [
     "ArrayFieldMixin",
-    "ExtraFieldsMixin",
     "RadNodeMixin",
 ]
 
@@ -25,7 +22,7 @@ class RadNodeMixin(AsdfNodeMixin[Any], ABC):
         super().__init_subclass__(**kwargs)
         cls._custom_doc = cls.__doc__
 
-        @classproperty(lazy=True)  # type: ignore[no-untyped-call, call-arg, operator]
+        @classproperty
         def docstring(cls: RadNodeMixin) -> str:
             docstring = indent(cls.asdf_schema().docstring, "    ")
             if cls._custom_doc:
@@ -33,7 +30,9 @@ class RadNodeMixin(AsdfNodeMixin[Any], ABC):
 
             return docstring
 
-        cls.__doc__ = docstring
+        # MyPy expects this to be a str | None, but now we have the descriptor
+        # that will handle the string output
+        cls.__doc__ = docstring  # type: ignore[assignment]
 
     @classmethod
     @abstractmethod
@@ -127,9 +126,3 @@ class ArrayFieldMixin(DNode[Any], ABC):
             return shape
 
         return self.default_array_shape
-
-
-class ExtraFieldsMixin(AdditionalNodeMixin[Any], ABC):
-    """
-    Mixin for objects that have extra fields
-    """

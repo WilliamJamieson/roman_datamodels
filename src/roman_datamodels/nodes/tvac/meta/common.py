@@ -22,10 +22,6 @@ class TvacCommonMixin(rad.ExtraFieldsMixin):
     def statistics(self) -> TvacStatistics:
         return TvacStatistics()
 
-    @classmethod
-    def _extra_fields(self) -> tuple[str]:
-        return ("statistics",)
-
 
 class TvacCommon(TvacCommonMixin, TvacBasic):
     @classmethod

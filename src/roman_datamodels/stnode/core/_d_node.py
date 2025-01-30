@@ -14,6 +14,8 @@ from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from asdf.tags.core import ndarray
 from astropy.time import Time
 
+from ._descriptors import classproperty
+from ._field import field
 from ._mixins import AsdfNodeMixin, FlushOptions
 
 if TYPE_CHECKING:
@@ -39,8 +41,6 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
     Base class describing all "object" (dict-like) data nodes for STNode classes.
     """
 
-    _fields: tuple[str, ...] | None = None
-    _schema_fields: tuple[str, ...] | None = None
     _field_signatures: dict[str, type] | None = None
 
     def _pre_initialize_node(self, init: dict[str, _T] | AsdfDictNode | DNode[_T] | AsdfFile | None = None, **kwargs: Any) -> Any:
@@ -85,34 +85,47 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         # see python/mypy#11501
         return Annotated[cls, item_type]  # type: ignore[return-value]
 
-    @classmethod
-    def _extra_fields(self) -> tuple[str, ...]:
-        """List of extra fields that are not in the schema."""
-        return tuple()
-
-    @property
-    def schema_fields(self) -> tuple[str, ...]:
+    @classproperty
+    def node_fields(cls) -> tuple[str, ...]:
         """
-        Get the keys of the node as defined by the schema
-            Note this only works on instances
-            (not sure why I can't get it to work on the class)
+        The fields defined directly on the node.
         """
-        from ..rad import FIELD_REGISTRY
+        return tuple(name for name in cls.__dict__ if isinstance(getattr_static(cls, name), field))
 
-        if self._schema_fields is None:
-            self._schema_fields = tuple(FIELD_REGISTRY.get_fields(type(self)))
-
-        return self._schema_fields
-
-    @property
-    def fields(self) -> tuple[str, ...]:
+    @classproperty
+    def defined_fields(cls) -> tuple[str, ...]:
         """
-        Get the keys of all the fields defined in for the object
+        All the regular fields defined on this object.
         """
-        if self._fields is None:
-            self._fields = self.schema_fields + self._extra_fields()
+        from ..rad import ExtraFieldsMixin
 
-        return self._fields
+        fields = cls.node_fields
+        for base in cls.__bases__:  # type: ignore[attr-defined]
+            if issubclass(base, DNode) and ExtraFieldsMixin not in base.__bases__:
+                fields += base.defined_fields
+
+        return fields
+
+    @classproperty
+    def extra_fields(cls) -> tuple[str, ...]:
+        """
+        Get a the extra fields for the node.
+        """
+        from ..rad import ExtraFieldsMixin
+
+        fields = cls.node_fields if ExtraFieldsMixin in cls.__bases__ else ()  # type: ignore[operator]
+        for base in cls.__bases__:  # type: ignore[attr-defined]
+            if issubclass(base, DNode) and ExtraFieldsMixin in base.__bases__:
+                fields += base.extra_fields
+
+        return fields
+
+    @classproperty
+    def fields(cls) -> tuple[str, ...]:
+        """
+        Get all the fields for this node (extra and defined)
+        """
+        return cls.defined_fields + cls.extra_fields
 
     def field_signature(self, key: str) -> type:
         """

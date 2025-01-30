@@ -10,9 +10,9 @@ from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 
 from ..core import DNode, FlushOptions, LNode, get_config
 from ._base import RadNodeMixin
-from ._field import FIELD_REGISTRY
 
 __all__ = [
+    "ExtraFieldsMixin",
     "ListNode",
     "ObjectNode",
     "ScalarNode",
@@ -23,7 +23,8 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
 
-        for name in FIELD_REGISTRY.get_local_fields(cls):
+        # Inject the schema into the fields
+        for name in cls.node_fields:
             getattr_static(cls, name)._schema = cls.asdf_schema
 
     @classmethod
@@ -60,7 +61,7 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
                 5. All other non-yielded data in _data in alphabetical order
         """
         required_fields = self.schema_required
-        all_fields = self.schema_fields
+        all_fields = self.defined_fields
         extra_fields = self.fields
 
         data_fields = set(self._data.keys())
@@ -100,24 +101,24 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
                 raise ValueError(f"Field {field} has already been visited!")
 
         # 1) Return fields in the order defined by `propertyOrder`
-        for field in self.asdf_property_order():
-            yield from handle_field(field)
+        for field_ in self.asdf_property_order():
+            yield from handle_field(field_)
 
         # 2) Return required fields not already yielded in alphabetical order
-        for field in sorted(required_fields - visited_fields):
-            yield from handle_field(field)
+        for field_ in sorted(required_fields - visited_fields):
+            yield from handle_field(field_)
 
         # 3) Return non-required fields not already yielded in alphabetical order
-        for field in sorted(set(self.schema_fields) - visited_fields):
-            yield from handle_field(field)
+        for field_ in sorted(set(self.defined_fields) - visited_fields):
+            yield from handle_field(field_)
 
         # 4) Return extra fields not already yielded in alphabetical order
-        for field in sorted(set(self.fields) - visited_fields):
-            yield from handle_field(field)
+        for field_ in sorted(set(self.fields) - visited_fields):
+            yield from handle_field(field_)
 
         # 5) Return all other non-yielded data in _data in alphabetical order
-        for field in sorted(data_fields):
-            yield field
+        for field_ in sorted(data_fields):
+            yield field_
 
     def node_items(
         self, *, flush: FlushOptions = FlushOptions.NONE, warn: bool = False
@@ -131,11 +132,11 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
                 4. Extra fields not already yielded in alphabetical order.
                 5. All other non-yielded data in _data in alphabetical order
         """
-        for field in self._field_generator(flush):
-            if not self._has_node(field) and warn:
-                warnings.warn(f"Filling in missing required field '{field}' with default value.", UserWarning, stacklevel=2)
+        for field_ in self._field_generator(flush):
+            if not self._has_node(field_) and warn:
+                warnings.warn(f"Filling in missing required field '{field_}' with default value.", UserWarning, stacklevel=2)
 
-            yield field, getattr(self, field)
+            yield field_, getattr(self, field_)
 
     def flat_items(
         self, *, flush: FlushOptions = FlushOptions.NONE, warn: bool = False
@@ -202,18 +203,18 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
             case FlushOptions.REQUIRED:
                 fields = tuple(self.schema_required)
             case FlushOptions.ALL:
-                fields = self.schema_fields
+                fields = self.defined_fields
             case FlushOptions.EXTRA:
                 fields = self.fields
             case _:
                 raise ValueError(f"Invalid flush option: {flush}")
 
-        for field in fields:
-            if not self._has_node(field) and warn:
-                warnings.warn(f"Filling in missing required field '{field}' with default value.", UserWarning, stacklevel=2)
+        for field_ in fields:
+            if not self._has_node(field_) and warn:
+                warnings.warn(f"Filling in missing required field '{field_}' with default value.", UserWarning, stacklevel=2)
 
             # access the field to trigger its default value
-            field_value = getattr(self, field)
+            field_value = getattr(self, field_)
             if recurse and isinstance(field_value, ObjectNode):
                 field_value.flush(flush=flush, warn=warn, recurse=recurse)
 
@@ -224,6 +225,12 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
 
     def __asdf_traverse__(self) -> dict[str, Any]:
         return self.to_asdf_tree(ctx=get_config().asdf_ctx, flush=FlushOptions.REQUIRED, warn=False)
+
+
+class ExtraFieldsMixin(ObjectNode, ABC):
+    """
+    Mixin for objects that have extra fields
+    """
 
 
 class ListNode(LNode[Any], RadNodeMixin, ABC):

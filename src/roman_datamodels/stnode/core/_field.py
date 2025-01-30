@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-import threading
 import warnings
 from collections.abc import Callable
 from functools import wraps
 from textwrap import indent
-from typing import Any, Generic, TypeVar, cast, overload
+from typing import TYPE_CHECKING, Any, Generic, TypeVar, cast, overload
 
-from ..core import DNode, type_checked
-from ._asdf_schema import RadSchema
-from ._base import ExtraFieldsMixin
+from ._typing import type_checked
 
-__all__ = ["FIELD_REGISTRY", "FieldPropertyWarning", "field"]
+if TYPE_CHECKING:
+    from ..rad._asdf_schema import RadSchema
+    from ._d_node import DNode
+
+    _D = TypeVar("_D", bound=DNode[Any])
+
+__all__ = ["FieldPropertyWarning", "field"]
 
 _T = TypeVar("_T")
-_D = TypeVar("_D", bound=DNode[Any])
 
 
 class FieldPropertyWarning(UserWarning):
@@ -41,7 +43,7 @@ def _default(function: Callable[[_D], _T]) -> Callable[[_D], _T]:
         """
         Raises a warning if the tag does not match the latest one
         """
-        from ._tagged import TaggedObjectNode
+        from ..rad._tagged import TaggedObjectNode
 
         if isinstance(self, TaggedObjectNode) and self._tag != self.asdf_tag_uri():
             msg = (
@@ -55,49 +57,6 @@ def _default(function: Callable[[_D], _T]) -> Callable[[_D], _T]:
         return type_checked(function)(self)
 
     return wrapper
-
-
-class _FieldRegistry:
-    """
-    Registry of all the active fields in the nodes
-    """
-
-    def __init__(self) -> None:
-        self._fields: dict[str, set[str]] = {}
-        self._lock = threading.RLock()
-
-    def add_field(self, field: Callable[[_D], _T]) -> None:
-        """
-        Add a field to the registry
-        """
-        with self._lock:
-            name = field.__name__
-            cls_name = field.__qualname__.split(".")[0]
-
-            if cls_name not in self._fields:
-                self._fields[cls_name] = set()
-
-            if name in self._fields[cls_name]:
-                raise ValueError(f"Field {name} already exists on {cls_name}")
-
-            self._fields[cls_name].add(name)
-
-    def get_local_fields(self, cls: type) -> set[str]:
-        with self._lock:
-            return self._fields.get(cls.__name__, set())
-
-    def get_fields(self, cls: type) -> set[str]:
-        fields = self.get_local_fields(cls)
-
-        with self._lock:
-            for base in cls.__mro__:
-                if ExtraFieldsMixin not in base.__bases__:
-                    fields |= self._fields.get(base.__name__, set())
-
-            return fields
-
-
-FIELD_REGISTRY = _FieldRegistry()
 
 
 class field(property, Generic[_T]):
@@ -116,7 +75,6 @@ class field(property, Generic[_T]):
         doc: str | None = None,
     ) -> None:
         self.default = _default(fget)
-        FIELD_REGISTRY.add_field(self.default)
 
         super().__init__(None, fset, fdel, None)
 

@@ -6,9 +6,8 @@ from typing import TYPE_CHECKING, Any, TypeVar, get_args
 if TYPE_CHECKING:
     from ._node import ScalarNode
 
-from ..core import DNode, LNode, PatternDNode
-from ._base import ExtraFieldsMixin
-from ._field import field
+from ..core import DNode, LNode, PatternDNode, field
+from ._node import ExtraFieldsMixin
 
 _T = TypeVar("_T")
 

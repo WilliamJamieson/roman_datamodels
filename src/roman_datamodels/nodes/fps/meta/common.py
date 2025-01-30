@@ -22,10 +22,6 @@ class FpsCommonMixin(rad.ExtraFieldsMixin):
     def statistics(self) -> FpsStatistics:
         return FpsStatistics()
 
-    @classmethod
-    def _extra_fields(self) -> tuple[str]:
-        return ("statistics",)
-
 
 class FpsCommon(FpsCommonMixin, FpsBasic):
     @classmethod

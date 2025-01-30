@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, TypeVar
 
 from ._base import ArrayFieldMixin, RadNodeMixin
 from ._implied import ImpliedNodeMixin
-from ._node import ListNode, ObjectNode, ScalarNode
+from ._node import ExtraFieldsMixin, ListNode, ObjectNode, ScalarNode
 from ._schema import SchemaListNode, SchemaMixin, SchemaObjectNode, SchemaScalarNode
 from ._tagged import TaggedListNode, TaggedObjectNode, TaggedScalarNode, TagMixin
 from ._utils import get_all_fields, get_nodes
@@ -66,7 +66,15 @@ class _RdmNodeRegistry:
         """
         if self._object_nodes is None:
             self._import_nodes()
-            self._object_nodes = MappingProxyType({**get_nodes(ObjectNode, (ObjectNode, SchemaObjectNode, TaggedObjectNode))})
+            self._object_nodes = MappingProxyType(
+                {
+                    key: value
+                    for key, value in get_nodes(
+                        ObjectNode, (ObjectNode, SchemaObjectNode, TaggedObjectNode, ExtraFieldsMixin)
+                    ).items()
+                    if ExtraFieldsMixin not in value.__bases__
+                }
+            )
         return self._object_nodes
 
     @property

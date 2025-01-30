@@ -76,10 +76,6 @@ class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin):
     def optical_element(self) -> WfiOpticalElement:
         return WfiOpticalElement.F158
 
-    @classmethod
-    def _extra_fields(self) -> tuple[str]:
-        return ("optical_element",)
-
 
 class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
