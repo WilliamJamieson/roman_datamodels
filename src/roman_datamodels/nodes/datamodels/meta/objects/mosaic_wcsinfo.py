@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from roman_datamodels.stnode import core, rad
 
 __all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry", "MosaicWcsinfoProjectionEntryMixin"]
@@ -7,11 +5,11 @@ __all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry", "MosaicWcsinfoProjec
 
 class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return MosaicWcsinfo
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "projection"
 
 
@@ -25,16 +23,14 @@ class MosaicWcsinfoProjectionEntry(MosaicWcsinfoProjectionEntryMixin, rad.RadEnu
 
 class MosaicWcsinfo(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_wcsinfo-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/mosaic_wcsinfo-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/mosaic_wcsinfo-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/mosaic_wcsinfo-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/mosaic_wcsinfo-1.0.0"
+        }
 
     @rad.field
     def ra_ref(self) -> float:

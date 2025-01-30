@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from roman_datamodels.stnode import core, rad
 
 __all__ = [
@@ -13,11 +11,11 @@ __all__ = [
 
 class AssociationsExptypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return Associations_Products_Members
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "exptype"
 
 
@@ -33,7 +31,7 @@ class AssociationsExptypeEntry(AssociationsExptypeEntryMixin, rad.RadEnum, metac
 
 class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return Associations_Products
 
     @rad.field
@@ -51,7 +49,7 @@ class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return Associations
 
     @rad.field
@@ -65,16 +63,14 @@ class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/associations-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/associations-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",
+        }
 
     @property
     def primary_array_shape(self) -> tuple[int] | None:

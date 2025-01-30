@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from roman_datamodels.stnode import core, rad
 
 __all__ = [
@@ -11,11 +9,11 @@ __all__ = [
 
 class ResampleWeightTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return Resample
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "weight_type"
 
 
@@ -30,16 +28,14 @@ class ResampleWeightTypeEntry(ResampleWeightTypeEntryMixin, rad.RadEnum, metacla
 
 class Resample(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/resample-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/resample-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/resample-1.0.0",
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/resample-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/resample-1.0.0",
+        }
 
     @rad.field
     def good_bits(self) -> str:

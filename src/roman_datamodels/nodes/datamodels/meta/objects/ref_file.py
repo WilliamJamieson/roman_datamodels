@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from roman_datamodels.stnode import rad
 
 __all__ = ["RefFile", "RefFile_Crds"]
@@ -7,7 +5,7 @@ __all__ = ["RefFile", "RefFile_Crds"]
 
 class RefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return RefFile
 
     @rad.field
@@ -21,14 +19,14 @@ class RefFile_Crds(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class RefFile(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/ref_file-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {"asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/ref_file-1.0.0"}
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/ref_file-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/ref_file-1.0.0"
+        }
 
     @rad.field
     def crds(self) -> RefFile_Crds:

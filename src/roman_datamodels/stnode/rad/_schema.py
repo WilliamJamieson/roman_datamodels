@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from ..core import classproperty
 from ._asdf_schema import SCHEMA_REGISTRY, RadSchema
 from ._base import RadNodeMixin
 from ._node import ListNode, ObjectNode, ScalarNode
@@ -17,15 +18,22 @@ class SchemaMixin(RadNodeMixin, ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_schema_uris(cls) -> tuple[str, ...]:
+    def _asdf_schema_uris(cls) -> tuple[str, ...]:
         """URI of the schema that defines this node."""
 
-    @classmethod
+    @classproperty
+    def asdf_schema_uris(cls) -> tuple[str, ...]:
+        """
+        The URIs of the schemas for this class.
+        """
+        return cls._asdf_schema_uris()
+
+    @classproperty
     def asdf_schema_uri(cls) -> str:
         """
         The latest schema for this class.
         """
-        return cls.asdf_schema_uris()[-1]
+        return cls.asdf_schema_uris[-1]
 
     @property
     def schema_uri(self) -> str:
@@ -34,14 +42,14 @@ class SchemaMixin(RadNodeMixin, ABC):
             Note: we cannot determine the schema_uri for an untagged node from
             the asdf file.
         """
-        return self.asdf_schema_uri()
+        return self.asdf_schema_uri
 
     @classmethod
-    def asdf_schema(cls) -> RadSchema:
+    def _asdf_schema(cls) -> RadSchema:
         """
         The latest schema for this class.
         """
-        return SCHEMA_REGISTRY.get_schema(cls.asdf_schema_uri())
+        return SCHEMA_REGISTRY.get_schema(cls.asdf_schema_uri)
 
     @property
     def schema(self) -> RadSchema:

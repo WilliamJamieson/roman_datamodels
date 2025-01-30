@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from astropy.time import Time
 
 from roman_datamodels.stnode import rad
@@ -11,16 +9,14 @@ __all__ = ["Guidestar"]
 
 class Guidestar(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidestar-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/guidestar-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/guidestar-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/guidestar-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/guidestar-1.0.0"
+        }
 
     @rad.field
     def guide_window_id(self) -> str:

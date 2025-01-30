@@ -62,7 +62,7 @@ def test_node_type_matches_model(model):
     """
     model = model()
     node = model.node_type()
-    schema = node.asdf_schema()
+    schema = node.asdf_schema
     name = schema.schema["datamodel_name"]
 
     assert type(model).__name__ == name
@@ -71,7 +71,7 @@ def test_node_type_matches_model(model):
 @pytest.mark.filterwarnings("ignore:ERFA function.*")
 @pytest.mark.parametrize("model", stnode.RDM_NODE_REGISTRY.datamodels.values())
 def test_model_schemas(model):
-    asdf.schema.load_schema(model.asdf_schema_uri())
+    asdf.schema.load_schema(model.asdf_schema_uri)
 
 
 @pytest.mark.parametrize("node, model", stnode.RDM_NODE_REGISTRY.node_datamodel_mapping.items())

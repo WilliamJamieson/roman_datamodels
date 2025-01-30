@@ -48,13 +48,13 @@ def test_node_exists_for_schema(schema_file):
     assert uri in rad.RDM_NODE_REGISTRY.schema_registry
 
     # check the class's asdf_schema_uri matches the uri
-    assert rad.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uri() == uri
+    assert rad.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uri == uri
 
     # check the class name against the uri
     assert rad.class_name_from_uri(uri) == rad.RDM_NODE_REGISTRY.schema_registry[uri].__name__
 
     # check all the schema uris listed by the node are in the schema files
-    for schema_uri in rad.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uris():
+    for schema_uri in rad.RDM_NODE_REGISTRY.schema_registry[uri].asdf_schema_uris:
         assert schema_uri in SCHEMA_DICT
 
 
@@ -81,17 +81,17 @@ def test_node_exists_for_manifest_tag(tag_uri, schema_uri):
     assert tag_uri in rad.RDM_NODE_REGISTRY.tagged_registry
 
     # check the class's asdf_tag matches the tag uri
-    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag_uri() == tag_uri
+    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag_uri == tag_uri
 
     # check the class's asdf_schema_uri matches the schema uri
-    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uri() == schema_uri
+    assert rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uri == schema_uri
 
     # check the class name against the tag uri
     assert rad.class_name_from_uri(tag_uri) == rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].__name__
 
     # check that the listed schema uri is listed by the type
-    for tag_schema_uri in rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag_uris().values():
-        assert tag_schema_uri in rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uris()
+    for tag_schema_uri in rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_tag_uris.values():
+        assert tag_schema_uri in rad.RDM_NODE_REGISTRY.tagged_registry[tag_uri].asdf_schema_uris
 
 
 def parse_orphan_name(name):
@@ -117,13 +117,13 @@ def test_implied_node(node_cls):
     containing_name, property_name = parse_orphan_name(node_cls.__name__)
 
     containing_cls = get_containing_cls(containing_name)
-    assert node_cls.asdf_implied_by() is containing_cls
-    assert node_cls.asdf_implied_property_name() == property_name
+    assert node_cls.asdf_implied_by is containing_cls
+    assert node_cls.asdf_implied_property_name == property_name
 
     # Check that the property exists on the containing class
     assert hasattr(containing_cls, property_name), f"Property {property_name} not found on {containing_name}"
     cls_field = getattr(containing_cls, property_name)
-    assert node_cls.asdf_implied_property() is cls_field
+    assert node_cls.asdf_implied_property is cls_field
 
     # Check that the property's return type matches the orphan node
     annotation = signature(cls_field.default).return_annotation
@@ -135,10 +135,10 @@ def test_implied_node(node_cls):
             # Special case when we have an argument to the base to describe its contents for MyPy
             assert base is node_cls
 
-    schema = node_cls.asdf_schema().schema
+    schema = node_cls.asdf_schema.schema
 
     # These have meta so that `model_type` can be inferred
-    if node_cls.asdf_implied_by() in (nodes.RampFitOutput, nodes.WfiScienceRaw):
+    if node_cls.asdf_implied_by in (nodes.RampFitOutput, nodes.WfiScienceRaw):
         return
 
     # Check that the orphan node's schema matches the schema of the property
@@ -174,7 +174,7 @@ def test_node_requires_properties(node_cls):
     Check that every property listed in `asdf_required` in the node class
     """
 
-    for property_name in node_cls.asdf_required():
+    for property_name in node_cls.asdf_required:
         property_name = "pass_" if property_name == "pass" else property_name
 
         assert hasattr(node_cls, property_name), f"Property {property_name} not found on {node_cls}"
@@ -217,7 +217,7 @@ def test_fields_in_schema(node_cls):
     """
     Check that every property of the class in the schema
     """
-    fields = set(node_cls.asdf_schema().fields)
+    fields = set(node_cls.asdf_schema.fields)
     # RadSchema cannot properly traverse to nodes that are mixed classes of other
     # implied nodes, this is the only example in RAD, it cannot traverse into the second
     # object
@@ -256,10 +256,10 @@ def test_required_fields_default_tag(node_cls):
     """
     # Check that the tag is the required tag
     if issubclass(node_cls, rad.TaggedObjectNode):
-        assert node_cls.asdf_tag_uri() == node_cls()._tag
+        assert node_cls.asdf_tag_uri == node_cls()._tag
 
     # Check the required fields for the default tag match
-    assert node_cls.asdf_required() == node_cls().schema_required
+    assert node_cls.asdf_required == node_cls().schema_required
 
 
 def find_property_schema(schema, property_name):
@@ -551,7 +551,7 @@ def test_flush_required(node_cls):
     instance = node_cls()
     assert instance._data == {}
     assert isinstance(instance, rad.ObjectNode)
-    required = instance.asdf_required()
+    required = instance.asdf_required
 
     context = pytest.warns(UserWarning) if required else nullcontext()
 
@@ -721,7 +721,7 @@ def test_asdf_schema(node_cls):
     else:
         instance = node_cls()
 
-    schema = instance.asdf_schema()
+    schema = instance.asdf_schema
     _ = schema.required
     _ = schema.fields
     _ = schema.archive_catalog
@@ -740,13 +740,13 @@ def test_enum_node(node_cls):
     # Get the enums listed in the schema
     # These are the ones defined explicitly by their own schema file
     if issubclass(node_cls, rad.SchemaScalarNode):
-        schema = node_cls.asdf_schema().schema
+        schema = node_cls.asdf_schema.schema
         assert "enum" in schema
         schema_enum_list = schema["enum"]
 
     # These are the ones defined by a field in some schema
     else:
-        schema_enum_list = node_cls.asdf_schema().schema
+        schema_enum_list = node_cls.asdf_schema.schema
 
     # Check that all the enums listed are in the class
     for entry_name in schema_enum_list:
@@ -775,7 +775,7 @@ def test_reftype_node():
     # never be used outside testing
     enum_names = ["N/A"]
     for entry in types:
-        entry_schema = entry.asdf_schema().fields["meta"].schema
+        entry_schema = entry.asdf_schema.fields["meta"].schema
         assert "allOf" in entry_schema
         entry_schema = entry_schema["allOf"]
         for schema in entry_schema:
@@ -813,10 +813,10 @@ def test_enum_exists(node_cls):
         if field in ("input_units", "output_units"):
             continue
 
-        field_schema = node_cls.asdf_schema().fields[field].schema
+        field_schema = node_cls.asdf_schema.fields[field].schema
 
         if "$ref" in field_schema:
-            field_schema = node_cls.asdf_schema().get_schema(field_schema["$ref"])
+            field_schema = node_cls.asdf_schema.get_schema(field_schema["$ref"])
 
         if "enum" in field_schema:
             field_cls = getattr(node_cls, field)
@@ -880,4 +880,4 @@ def test_node_field_docstring(node_cls):
             # This is a special case where everything gets a bit weird
             continue
 
-        assert field_object._docstring == indent(node_cls.asdf_schema().fields[field].docstring, "    ")
+        assert field_object._docstring == indent(node_cls.asdf_schema.fields[field].docstring, "    ")

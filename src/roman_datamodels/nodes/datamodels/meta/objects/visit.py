@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from astropy.time import Time
 
 from roman_datamodels.stnode import core, rad
@@ -20,11 +18,11 @@ __all__ = [
 
 class VisitEngineeringQualityEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return Visit
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "engineering_quality"
 
 
@@ -39,11 +37,11 @@ class VisitEngineeringQualityEntry(VisitEngineeringQualityEntryMixin, rad.RadEnu
 
 class VisitPointingEngineeringSourceEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return Visit
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "pointing_engineering_source"
 
 
@@ -58,11 +56,11 @@ class VisitPointingEngineeringSourceEntry(VisitPointingEngineeringSourceEntryMix
 
 class VisitTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return Visit
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "type"
 
 
@@ -80,11 +78,11 @@ class VisitTypeEntry(VisitTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMet
 
 class VisitStatusEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return Visit
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "status"
 
 
@@ -100,7 +98,7 @@ class VisitStatusEntry(VisitStatusEntryMixin, rad.RadEnum, metaclass=rad.NodeEnu
 
 class Visit_Dither(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return Visit
 
     @rad.field
@@ -118,16 +116,14 @@ class Visit_Dither(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class Visit(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/visit-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/visit-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/visit-1.0.0",
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/visit-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/visit-1.0.0",
+        }
 
     @rad.field
     def dither(self) -> Visit_Dither:

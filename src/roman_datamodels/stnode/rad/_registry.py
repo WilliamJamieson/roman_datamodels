@@ -196,7 +196,7 @@ class _RdmNodeRegistry:
             registry = {}
             for node in self.all_nodes.values():
                 if issubclass(node, SchemaMixin) and not node.__name__.endswith("Mixin"):
-                    for uri in node.asdf_schema_uris():
+                    for uri in node.asdf_schema_uris:
                         registry[uri] = node
 
             self._schema_registry = MappingProxyType(registry)
@@ -217,7 +217,7 @@ class _RdmNodeRegistry:
             registry = {}
             for node in self.all_nodes.values():
                 if issubclass(node, TagMixin) and not node.__name__.endswith("Mixin"):
-                    for uri in node.asdf_tag_uris():
+                    for uri in node.asdf_tag_uris:
                         registry[uri] = node
 
             self._tagged_registry = MappingProxyType(registry)

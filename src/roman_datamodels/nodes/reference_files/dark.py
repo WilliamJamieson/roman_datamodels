@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 import numpy as np
 import numpy.typing as npt
 
@@ -22,19 +20,19 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
     """
 
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return DarkRef_Meta
 
     @classmethod
-    def asdf_required(cls) -> set[str]:
+    def _asdf_required(cls) -> set[str]:
         return {
-            *super().asdf_required(),
-            *RefExposureTypeRef_Exposure.asdf_required(),
+            *super()._asdf_required(),
+            *RefExposureTypeRef_Exposure._asdf_required(),
         }
 
     @property
     def schema_required(self) -> set[str]:
-        return self.asdf_required()
+        return self.asdf_required
 
     @rad.field
     def ma_table_name(self) -> str:
@@ -47,15 +45,15 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
 
 class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExposureTypeRef):  # type: ignore[misc]
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return DarkRef
 
     @classmethod
-    def asdf_required(cls) -> set[str]:
+    def _asdf_required(cls) -> set[str]:
         return {
-            *super().asdf_required(),
-            *RefCommonRefOpticalElementRef.asdf_required(),
-            *RefExposureTypeRef.asdf_required(),
+            *super()._asdf_required(),
+            *RefCommonRefOpticalElementRef._asdf_required(),
+            *RefExposureTypeRef._asdf_required(),
         }
 
     @rad.field
@@ -69,16 +67,14 @@ class DarkRef_Meta(rad.ImpliedNodeMixin, RefCommonRefOpticalElementRef, RefExpos
 
 class DarkRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/reference_files/dark-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/reference_files/dark-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/dark-1.0.0"
+        }
 
     @property
     def default_array_shape(self) -> tuple[int, int, int]:

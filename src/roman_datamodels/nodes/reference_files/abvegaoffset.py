@@ -1,4 +1,3 @@
-from types import MappingProxyType
 from typing import TypeVar
 
 from roman_datamodels.stnode import core, rad
@@ -13,7 +12,7 @@ _T = TypeVar("_T")
 
 class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
     @rad.field
@@ -23,7 +22,7 @@ class AbvegaoffsetRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
     @rad.field
@@ -33,10 +32,10 @@ class AbvegaoffsetRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class AbvedgaoffsetRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return AbvegaoffsetRef
 
-    @classmethod
+    @core.classproperty
     def asdf_implied_property_name(cls) -> str:
         return "data"
 
@@ -47,16 +46,14 @@ class AbvedgaoffsetRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMi
 
 class AbvegaoffsetRef(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/reference_files/abvegaoffset-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/reference_files/abvegaoffset-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/abvegaoffset-1.0.0"
+        }
 
     @rad.field
     def meta(self) -> AbvegaoffsetRef_Meta:

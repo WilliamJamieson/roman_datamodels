@@ -8,7 +8,7 @@ __all__ = [
 
 class GuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow_modes-1.0.0",)
 
 

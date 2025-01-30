@@ -15,29 +15,29 @@ __all__ = ["RefCommonRefOpticalElementRef", "RefCommonRefOpticalElementRef_Instr
 
 class RefCommonRefOpticalElementRef_Instrument(RefCommonRef_Instrument, RefOpticalElementRef_Instrument, rad.ImpliedNodeMixin):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return RefCommonRefOpticalElementRef
 
     @classmethod
-    def asdf_required(cls) -> set[str]:
+    def _asdf_required(cls) -> set[str]:
         return {
-            *super().asdf_required(),
-            *RefCommonRef_Instrument.asdf_required(),
-            *RefOpticalElementRef_Instrument.asdf_required(),
+            *super()._asdf_required(),
+            *RefCommonRef_Instrument._asdf_required(),
+            *RefOpticalElementRef_Instrument._asdf_required(),
         }
 
     @property
     def schema_required(self) -> set[str]:
-        return self.asdf_required()
+        return self.asdf_required
 
 
 class RefCommonRefOpticalElementRef(RefCommonRef, RefOpticalElementRef):
     @classmethod
-    def asdf_required(cls) -> set[str]:
+    def _asdf_required(cls) -> set[str]:
         return {
-            *super().asdf_required(),
-            *RefCommonRef.asdf_required(),
-            *RefOpticalElementRef.asdf_required(),
+            *super()._asdf_required(),
+            *RefCommonRef._asdf_required(),
+            *RefOpticalElementRef._asdf_required(),
         }
 
     @rad.field

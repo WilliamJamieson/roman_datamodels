@@ -1,4 +1,3 @@
-from types import MappingProxyType
 from typing import cast
 
 import numpy as np
@@ -11,16 +10,14 @@ __all__ = ["FpsStatistics"]
 
 class FpsStatistics(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/statistics-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/fps/statistics-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/fps/statistics-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/fps/statistics-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/fps/statistics-1.0.0"
+        }
 
     @rad.field
     def mean_counts_per_sec(self) -> Quantity | None:

@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from roman_datamodels.stnode import rad
 
 from ....datamodels import CalStepEntry
@@ -9,16 +7,14 @@ __all__ = ["TvacCalStep"]
 
 class TvacCalStep(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/cal_step-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/tvac/cal_step-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/tvac/cal_step-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/tvac/cal_step-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/tvac/cal_step-1.0.0"
+        }
 
     @rad.field
     def assign_wcs(self) -> CalStepEntry:

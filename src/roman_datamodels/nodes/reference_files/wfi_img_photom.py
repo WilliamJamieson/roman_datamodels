@@ -1,4 +1,3 @@
-from types import MappingProxyType
 from typing import TypeVar
 
 from roman_datamodels.stnode import core, rad
@@ -13,7 +12,7 @@ _T = TypeVar("_T")
 
 class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
 
     @rad.field
@@ -23,7 +22,7 @@ class WfiImgPhotomRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
 
     @classmethod
@@ -50,10 +49,10 @@ class WfiImgPhotomRef_PhotTable(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return WfiImgPhotomRef
 
-    @classmethod
+    @core.classproperty
     def asdf_implied_property_name(cls) -> str:
         return "phot_table"
 
@@ -64,16 +63,14 @@ class WfiImgPhotomRef_PhotTable_PatternNode(core.PatternDNode[_T], rad.ImpliedNo
 
 class WfiImgPhotomRef(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/wfi_img_photom-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/reference_files/wfi_img_photom-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/wfi_img_photom-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/reference_files/wfi_img_photom-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/wfi_img_photom-1.0.0"
+        }
 
     @rad.field
     def meta(self) -> WfiImgPhotomRef_Meta:

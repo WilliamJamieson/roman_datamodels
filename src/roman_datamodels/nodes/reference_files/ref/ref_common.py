@@ -17,7 +17,7 @@ __all__ = [
 
 class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_schema(cls) -> rad.RadSchema:
+    def _asdf_schema(cls) -> rad.RadSchema:
         return rad.RadSchema({})
 
 
@@ -50,11 +50,11 @@ class RefTypeEntry(RefTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
 
 class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return RefCommonRef
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "pedigree"
 
 
@@ -79,7 +79,7 @@ class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin):
 
 class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return RefCommonRef
 
     @rad.field
@@ -93,7 +93,7 @@ class RefCommonRef_Instrument(RefCommonRef_InstrumentMixin, rad.ImpliedNodeMixin
 
 class RefCommonRef(rad.SchemaObjectNode):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_common-1.0.0",)
 
     @rad.field

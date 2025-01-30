@@ -6,7 +6,7 @@ from asdf import AsdfFile
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from astropy.time import Time
 
-from ..core import DNode, FlushOptions, LNode
+from ..core import DNode, FlushOptions, LNode, classproperty
 from ._schema import SchemaListNode, SchemaMixin, SchemaObjectNode, SchemaScalarNode
 
 __all__ = [
@@ -26,26 +26,31 @@ class TagMixin(SchemaMixin, ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+    def _asdf_tag_uris(cls) -> dict[str, str]:
         """Tag of the node."""
 
-    @classmethod
+    @classproperty
+    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
+        """Get the tags for the class."""
+        return MappingProxyType(cls._asdf_tag_uris())
+
+    @classproperty
     def asdf_tag_uri(cls) -> str:
         """Get the latest tag URI for the node."""
-        return list(cls.asdf_tag_uris())[-1]
+        return list(cls.asdf_tag_uris)[-1]
 
     # TODO: Should not be hidden, but it breaks something when doing asdf_info
     @property
     def _tag(self) -> str:
         """Get the tag URI for the instance."""
         if self._instance_tag is None:
-            self._instance_tag = self.asdf_tag_uri()
+            self._instance_tag = self.asdf_tag_uri
         return self._instance_tag
 
     @property
     def schema_uri(self) -> str:
         """Get the schema URI for the instance."""
-        return self.asdf_tag_uris()[self._tag]
+        return self.asdf_tag_uris[self._tag]
 
 
 class TaggedObjectNode(SchemaObjectNode, TagMixin, ABC):
@@ -93,6 +98,6 @@ class TaggedScalarNode(SchemaScalarNode, TagMixin, ABC):
         # -> others maybe needed in the future
         if isinstance(tree, Time):
             converter = ctx.extension_manager.get_converter_for_type(Time)
-            return converter.to_yaml_tree(tree, self.asdf_tag_uris(), ctx)
+            return converter.to_yaml_tree(tree, self.asdf_tag_uris, ctx)
 
         return tree

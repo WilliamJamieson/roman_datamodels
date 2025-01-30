@@ -22,7 +22,7 @@ __all__ = ["Common"]
 
 class Common(Basic):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/common-1.0.0",)
 
     @rad.field

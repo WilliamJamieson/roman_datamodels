@@ -8,7 +8,7 @@ from typing import Any
 from asdf import AsdfFile
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 
-from ..core import DNode, FlushOptions, LNode, get_config
+from ..core import DNode, FlushOptions, LNode, classproperty, get_config
 from ._base import RadNodeMixin
 
 __all__ = [
@@ -25,22 +25,27 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
 
         # Inject the schema into the fields
         for name in cls.node_fields:
-            getattr_static(cls, name)._schema = cls.asdf_schema
+            getattr_static(cls, name)._schema = lambda: cls.asdf_schema
 
     @classmethod
+    def _asdf_required(cls) -> set[str]:
+        """List of required fields in this node."""
+        return cls.asdf_schema.required
+
+    @classproperty
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
-        return cls.asdf_schema().required
+        return cls._asdf_required()
 
     @property
     def schema_required(self) -> set[str]:
         """List of required fields in the schema."""
         return self.schema.required
 
-    @classmethod
+    @classproperty
     def asdf_property_order(cls) -> tuple[str, ...]:
         """Order of properties in the schema."""
-        return cls.asdf_schema().property_order
+        return cls.asdf_schema.property_order
 
     def _field_generator(self, flush: FlushOptions = FlushOptions.NONE) -> Generator[str, None, None]:
         """
@@ -93,7 +98,7 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
                 raise ValueError(f"Field {field} has already been visited!")
 
         # 1) Return fields in the order defined by `propertyOrder`
-        for field_ in self.asdf_property_order():
+        for field_ in self.asdf_property_order:
             yield from handle_field(field_)
 
         # 2) Return required fields not already yielded in alphabetical order

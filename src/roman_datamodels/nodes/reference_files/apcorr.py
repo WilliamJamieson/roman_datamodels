@@ -1,4 +1,3 @@
-from types import MappingProxyType
 from typing import TypeVar, cast
 
 import numpy as np
@@ -17,7 +16,7 @@ _T = TypeVar("_T")
 
 class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return ApcorrRef
 
     @rad.field
@@ -27,7 +26,7 @@ class ApcorrRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return ApcorrRef
 
     @property
@@ -69,10 +68,10 @@ class ApcorrRef_Data(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class ApcorrRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return ApcorrRef
 
-    @classmethod
+    @core.classproperty
     def asdf_implied_property_name(cls) -> str:
         return "data"
 
@@ -83,16 +82,14 @@ class ApcorrRef_Data_PatternNode(core.PatternDNode[_T], rad.ImpliedNodeMixin):
 
 class ApcorrRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/reference_files/apcorr-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/reference_files/apcorr-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/apcorr-1.0.0"
+        }
 
     @property
     def primary_array_shape(self) -> tuple[int, ...] | None:

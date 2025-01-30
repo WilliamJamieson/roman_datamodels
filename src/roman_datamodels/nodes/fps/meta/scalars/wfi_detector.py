@@ -5,7 +5,7 @@ __all__ = ["FpsWfiDetector", "FpsWfiDetectorMixin"]
 
 class FpsWfiDetectorMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_detector-1.0.0",)
 
 

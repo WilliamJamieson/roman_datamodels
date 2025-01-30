@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 import numpy as np
 import numpy.typing as npt
 from astropy.time import Time
@@ -18,11 +16,11 @@ __all__ = [
 
 class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return TvacGroundtest
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "gsorc_sds_dq_pulse"
 
 
@@ -37,11 +35,11 @@ class TvacGroundtestGsorcSdsDqPulseEntry(TvacGroundtestGsorcSdsDqPulseEntryMixin
 
 class TvacGroundtestWfiOptTargettypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(cls) -> type:
+    def _asdf_container(cls) -> type:
         return TvacGroundtest
 
     @classmethod
-    def asdf_property_name(cls) -> str:
+    def _asdf_property_name(cls) -> str:
         return "wfi_opt_targettype"
 
 
@@ -73,16 +71,14 @@ class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMix
 
 class TvacGroundtest(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/groundtest-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/tvac/groundtest-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/tvac/groundtest-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/tvac/groundtest-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/tvac/groundtest-1.0.0"
+        }
 
     @rad.field
     def test_name(self) -> str:

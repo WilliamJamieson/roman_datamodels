@@ -10,11 +10,30 @@ def test_abstract_SchemaScalarNode():
 
     class ExampleSchemaScalarNode(rad.SchemaScalarNode):
         @classmethod
-        def asdf_schema_uris(cls):
+        def _asdf_schema_uris(cls):
             return "test"
 
     # Show no type error when correct methods are implemented
     _ = ExampleSchemaScalarNode()
+
+
+def test_abstract_classproperty():
+    """
+    Test that the abstract classproperty and its defined class
+    method are not evaluated until asked to do so.
+    """
+
+    class ExampleNode(rad.SchemaScalarNode):
+        @classmethod
+        def _asdf_schema_uris(cls):
+            raise ValueError("This should not be called")
+
+    with pytest.raises(ValueError, match="This should not be called"):
+        _ = ExampleNode.asdf_schema_uris
+
+    instance = ExampleNode()
+    with pytest.raises(ValueError, match="This should not be called"):
+        _ = instance.asdf_schema_uris
 
 
 def test_abstract_TaggedScalarNode():
@@ -24,7 +43,7 @@ def test_abstract_TaggedScalarNode():
 
     class ExampleTaggedScalarNodeSchema(rad.TaggedScalarNode):
         @classmethod
-        def asdf_schema_uris(cls):
+        def _asdf_schema_uris(cls):
             return ("test",)
 
     with pytest.raises(TypeError):
@@ -32,7 +51,7 @@ def test_abstract_TaggedScalarNode():
 
     class ExampleTaggedScalarNode(ExampleTaggedScalarNodeSchema):
         @classmethod
-        def asdf_tag_uris(cls):
+        def _asdf_tag_uris(cls):
             return {"test": "test"}
 
     # Show no type error when correct methods are implemented
@@ -46,7 +65,7 @@ def test_abstract_ObjectNode():
 
     class ExampleObjectNode(rad.ObjectNode):
         @classmethod
-        def asdf_schema(cls):
+        def _asdf_schema(cls):
             return {"test": "test"}
 
     # Show no type error when correct methods are implemented
@@ -60,7 +79,7 @@ def test_abstract_SchemaObjectNode():
 
     class ExampleSchemaObjectNodeRequired(rad.SchemaObjectNode):
         @classmethod
-        def asdf_schema_uris(cls):
+        def _asdf_schema_uris(cls):
             return ("test",)
 
     # Show no type error when correct methods are implemented
@@ -74,7 +93,7 @@ def test_abstract_TaggedObjectNode():
 
     class ExampleTaggedObjectNodeSchema(rad.TaggedObjectNode):
         @classmethod
-        def asdf_schema_uris(cls):
+        def _asdf_schema_uris(cls):
             return ("test",)
 
     # Test that TaggedObjectNode needs more than a tag
@@ -83,7 +102,7 @@ def test_abstract_TaggedObjectNode():
 
     class ExampleTaggedObjectNodeTag(ExampleTaggedObjectNodeSchema):
         @classmethod
-        def asdf_tag_uris(cls):
+        def _asdf_tag_uris(cls):
             return {"test": "test"}
 
     # Show no type error when correct methods are implemented

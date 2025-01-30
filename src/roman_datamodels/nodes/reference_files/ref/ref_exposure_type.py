@@ -7,7 +7,7 @@ __all__ = ["RefExposureTypeRef", "RefExposureTypeRef_Exposure"]
 
 class RefExposureTypeRef_Exposure(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return RefExposureTypeRef
 
     @rad.field
@@ -21,7 +21,7 @@ class RefExposureTypeRef_Exposure(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class RefExposureTypeRef(rad.SchemaObjectNode):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_exposure_type-1.0.0",)
 
     @rad.field

@@ -25,7 +25,7 @@ class TvacCommonMixin(rad.ExtraFieldsMixin):
 
 class TvacCommon(TvacCommonMixin, TvacBasic):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/common-1.0.0",)
 
     @rad.field

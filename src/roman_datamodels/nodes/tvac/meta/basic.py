@@ -16,7 +16,7 @@ __all__ = ["TvacBasic"]
 
 class TvacBasic(rad.SchemaObjectNode):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/basic-1.0.0",)
 
     @rad.field
@@ -38,7 +38,7 @@ class TvacBasic(rad.SchemaObjectNode):
         from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
         if isinstance(self, rad.ImpliedNodeMixin):
-            return TvacModelType(RDM_NODE_REGISTRY.node_datamodel_mapping[self.asdf_implied_by()].__name__)
+            return TvacModelType(RDM_NODE_REGISTRY.node_datamodel_mapping[self.asdf_implied_by].__name__)
         else:
             return TvacModelType.default()
 

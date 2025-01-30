@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 import numpy as np
 from astropy.time import Time
 
@@ -12,16 +10,14 @@ __all__ = ["TvacExposure"]
 
 class TvacExposure(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/tvac/exposure-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/tvac/exposure-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure-1.0.0"
+        }
 
     @rad.field
     def type(self) -> TvacExposureType:

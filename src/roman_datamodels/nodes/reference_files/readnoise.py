@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 import numpy as np
 import numpy.typing as npt
 
@@ -12,7 +10,7 @@ __all__ = ["ReadnoiseRef", "ReadnoiseRef_Meta"]
 
 class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return ReadnoiseRef
 
     @rad.field
@@ -22,16 +20,14 @@ class ReadnoiseRef_Meta(rad.ImpliedNodeMixin, RefCommonRef, RefExposureTypeRef):
 
 class ReadnoiseRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def asdf_schema_uris(self) -> tuple[str]:
+    def _asdf_schema_uris(self) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/readnoise-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/reference_files/readnoise-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/readnoise-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/reference_files/readnoise-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/readnoise-1.0.0"
+        }
 
     @property
     def default_array_shape(self) -> tuple[int, int]:

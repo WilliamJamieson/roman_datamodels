@@ -18,7 +18,7 @@ __all__ = ["Basic"]
 
 class Basic(rad.SchemaObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/basic-1.0.0",)
 
     @rad.field
@@ -48,7 +48,7 @@ class Basic(rad.SchemaObjectNode):
         from roman_datamodels.stnode import RDM_NODE_REGISTRY
 
         if isinstance(self, rad.ImpliedNodeMixin):
-            return ModelType(RDM_NODE_REGISTRY.node_datamodel_mapping[self.asdf_implied_by()].__name__)
+            return ModelType(RDM_NODE_REGISTRY.node_datamodel_mapping[self.asdf_implied_by].__name__)
         else:
             return ModelType.default()
 

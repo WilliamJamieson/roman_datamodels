@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 import numpy as np
 import numpy.typing as npt
 from astropy.time import Time
@@ -16,7 +14,7 @@ __all__ = ["Guidewindow", "Guidewindow_Meta"]
 
 class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return Guidewindow
 
     @rad.field
@@ -98,16 +96,14 @@ class Guidewindow_Meta(rad.ImpliedNodeMixin, Common):
 
 class Guidewindow(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/guidewindow-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/guidewindow-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/guidewindow-1.0.0",
+        }
 
     @property
     def primary_array_name(self) -> str:

@@ -1,5 +1,3 @@
-from types import MappingProxyType
-
 from roman_datamodels.stnode import rad
 
 __all__ = [
@@ -11,11 +9,11 @@ __all__ = [
 
 class CoordinatesReferenceFrameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def asdf_container(self) -> type:
+    def _asdf_container(self) -> type:
         return Coordinates
 
     @classmethod
-    def asdf_property_name(self) -> str:
+    def _asdf_property_name(cls) -> str:
         return "reference_frame"
 
 
@@ -29,16 +27,14 @@ class CoordinatesReferenceFrameEntry(CoordinatesReferenceFrameEntryMixin, rad.Ra
 
 class Coordinates(rad.TaggedObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/coordinates-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {
-                "asdf://stsci.edu/datamodels/roman/tags/coordinates-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/coordinates-1.0.0"
-            }
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/coordinates-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/coordinates-1.0.0"
+        }
 
     @rad.field
     def reference_frame(self) -> CoordinatesReferenceFrameEntry:

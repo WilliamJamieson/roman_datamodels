@@ -11,7 +11,7 @@ _T = TypeVar("_T")
 
 class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin, rad.ObjectNode):
     @classmethod
-    def asdf_implied_by(cls) -> type:
+    def _asdf_implied_by(cls) -> type:
         return RefOpticalElementRef
 
     @rad.field
@@ -21,7 +21,7 @@ class RefOpticalElementRef_Instrument(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class RefOpticalElementRef(rad.SchemaObjectNode):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/ref_optical_element-1.0.0",)
 
     @rad.field

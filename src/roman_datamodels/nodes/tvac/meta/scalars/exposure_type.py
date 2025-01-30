@@ -5,7 +5,7 @@ __all__ = ["TvacExposureType", "TvacExposureTypeMixin"]
 
 class TvacExposureTypeMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/exposure_type-1.0.0",)
 
 

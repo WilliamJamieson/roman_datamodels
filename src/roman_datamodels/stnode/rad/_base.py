@@ -24,7 +24,7 @@ class RadNodeMixin(AsdfNodeMixin[Any], ABC):
 
         @classproperty
         def docstring(cls: RadNodeMixin) -> str:
-            docstring = indent(cls.asdf_schema().docstring, "    ")
+            docstring = indent(cls.asdf_schema.docstring, "    ")
             if cls._custom_doc:
                 docstring = f"{cls._custom_doc}\n\n{docstring}"
 
@@ -36,13 +36,18 @@ class RadNodeMixin(AsdfNodeMixin[Any], ABC):
 
     @classmethod
     @abstractmethod
-    def asdf_schema(cls) -> RadSchema:
+    def _asdf_schema(cls) -> RadSchema:
         """Get the schema in rad for this class."""
+
+    @classproperty
+    def asdf_schema(cls) -> RadSchema:
+        """Get the schema for this class."""
+        return cls._asdf_schema()
 
     @property
     def schema(self) -> RadSchema:
         """Get the schema for this instance."""
-        return self.asdf_schema()
+        return self.asdf_schema
 
 
 class ArrayFieldMixin(DNode[Any], ABC):
@@ -52,8 +57,13 @@ class ArrayFieldMixin(DNode[Any], ABC):
 
     @classmethod
     @abstractmethod
+    def _asdf_required(cls) -> set[str]:
+        """Class defined method to get required fields."""
+
+    @classproperty
     def asdf_required(cls) -> set[str]:
         """List of required fields in this node."""
+        return cls._asdf_required()
 
     @property
     @abstractmethod

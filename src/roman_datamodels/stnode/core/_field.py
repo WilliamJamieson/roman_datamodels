@@ -45,9 +45,9 @@ def _default(function: Callable[[_D], _T]) -> Callable[[_D], _T]:
         """
         from ..rad._tagged import TaggedObjectNode
 
-        if isinstance(self, TaggedObjectNode) and self._tag != self.asdf_tag_uri():
+        if isinstance(self, TaggedObjectNode) and self._tag != self.asdf_tag_uri:
             msg = (
-                f"Node is not on the latest tag: {self._tag} != {self.asdf_tag_uri()} "
+                f"Node is not on the latest tag: {self._tag} != {self.asdf_tag_uri} "
                 "and a default value is being created.\n"
                 "This may result in a value that is inconsistent with the tag used, "
                 "indeed this field may not even be present in the tag's schema!"

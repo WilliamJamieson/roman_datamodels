@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from types import MappingProxyType
-
 from roman_datamodels.stnode import rad
 
 __all__ = ["CalLogs"]
@@ -18,11 +16,11 @@ class CalLogs(rad.TaggedListNode):
         )
 
     @classmethod
-    def asdf_schema_uris(cls) -> tuple[str]:
+    def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/cal_logs-1.0.0",)
 
     @classmethod
-    def asdf_tag_uris(cls) -> MappingProxyType[str, str]:
-        return MappingProxyType(
-            {"asdf://stsci.edu/datamodels/roman/tags/cal_logs-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/cal_logs-1.0.0"}
-        )
+    def _asdf_tag_uris(cls) -> dict[str, str]:
+        return {
+            "asdf://stsci.edu/datamodels/roman/tags/cal_logs-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/cal_logs-1.0.0"
+        }

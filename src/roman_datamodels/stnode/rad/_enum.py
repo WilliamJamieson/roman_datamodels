@@ -1,6 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 from enum import Enum, EnumType
 
+from ..core import classproperty
 from ._asdf_schema import RadSchema
 from ._schema import SchemaMixin
 
@@ -22,22 +23,34 @@ class EnumNodeMixin(ABC):
 
     @classmethod
     @abstractmethod
+    def _asdf_container(cls) -> type[SchemaMixin]:
+        """
+        The subclass definition for the asdf container
+        """
+
+    @classproperty
     def asdf_container(cls) -> type[SchemaMixin]:
-        """
-        A class which has a property that evaluates to the enum
-        """
+        """Get the class that contains the enum"""
+        return cls._asdf_container()
 
     @classmethod
     @abstractmethod
+    def _asdf_property_name(cls) -> str:
+        """
+        The subclass definition for the asdf property name
+        """
+
+    @classproperty
     def asdf_property_name(cls) -> str:
         """
         The name of the property that contains the enum
         """
+        return cls._asdf_property_name()
 
     @classmethod
-    def asdf_schema(cls) -> RadSchema:
+    def _asdf_schema(cls) -> RadSchema:
         """Get the schema for the enum node"""
-        schema = cls.asdf_container().asdf_schema().fields[cls.asdf_property_name()]
+        schema = cls.asdf_container.asdf_schema.fields[cls.asdf_property_name]
         if "anyOf" in schema.schema:
             return RadSchema(schema.schema["anyOf"][0]["enum"])
 
@@ -47,6 +60,9 @@ class EnumNodeMixin(ABC):
 class RadEnum(Enum):
     def __repr__(self) -> str:
         return repr(self.value)
+
+    def __str__(self) -> str:
+        return str(self.value)
 
 
 class NodeEnumMeta(ABCMeta, EnumType):
