@@ -42,13 +42,13 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
         return cls._asdf_required()
 
     @property
-    def schema_required(self) -> set[str]:
+    def schema_required(self) -> tuple[str, ...]:
         """List of required fields in the schema."""
         # This is reached by the docs build as it ignores the abstractness of the class
         # which causes a doc failure, the cache makes this irrelevant in general
         if (schema := self.schema) is None:
-            return set()  # type: ignore[unreachable]
-        return schema.required
+            return ()  # type: ignore[unreachable]
+        return tuple(schema.required)
 
     @classproperty
     def asdf_property_order(cls) -> tuple[str, ...]:
@@ -69,30 +69,10 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
                 4. Extra fields not already yielded in alphabetical order.
                 5. All other non-yielded data in _data in alphabetical order
         """
-        required_fields = self.schema_required
-        all_fields = self.defined_fields
-        extra_fields = self.fields
+        flush_fields = FlushOptions.get_fields(self, flush)
 
         data_fields = set(self._data.keys())
         visited_fields = set()
-
-        def handle_missing_field(field: str) -> Generator[str, None, None]:
-            """
-            Determine if we need to yield a missing field
-            """
-            match flush:
-                case FlushOptions.REQUIRED:
-                    if field in required_fields:
-                        yield field
-                case FlushOptions.ALL:
-                    if field in all_fields:
-                        yield field
-                case FlushOptions.EXTRA:
-                    if field in extra_fields:
-                        yield field
-                case _:
-                    if flush is not FlushOptions.NONE:
-                        raise ValueError(f"Invalid flush option: {flush}")
 
         def handle_field(field: str) -> Generator[str, None, None]:
             """
@@ -100,12 +80,10 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
             """
             if field not in visited_fields:
                 visited_fields.add(field)
-                if field in data_fields:
-                    data_fields.remove(field)
+                if self._to_schema_key(field) in data_fields or field in flush_fields:
+                    data_fields.remove(self._to_schema_key(field))
 
                     yield field
-                else:
-                    yield from handle_missing_field(field)
             else:
                 raise ValueError(f"Field {field} has already been visited!")
 
@@ -114,7 +92,7 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
             yield from handle_field(field_)
 
         # 2) Return required fields not already yielded in alphabetical order
-        for field_ in sorted(required_fields - visited_fields):
+        for field_ in sorted(set(self.schema_required) - visited_fields):
             yield from handle_field(field_)
 
         # 3) Return non-required fields not already yielded in alphabetical order
@@ -200,25 +178,7 @@ class ObjectNode(DNode[Any], RadNodeMixin, ABC):
         recurse
             If we recurese the flush into subnodes
         """
-        ## This makes use of the generator method developed for table writing above
-        #  however, this causes slow downs in general use cases.
-        # for _, field_value in self.node_items(flush=flush, warn=warn):
-        #     if recurse and isinstance(field_value, ObjectNode):
-        #         field_value.flush(flush=flush, warn=warn, recurse=recurse)
-
-        match flush:
-            case FlushOptions.NONE:
-                return
-            case FlushOptions.REQUIRED:
-                fields = tuple(self.schema_required)
-            case FlushOptions.ALL:
-                fields = self.defined_fields
-            case FlushOptions.EXTRA:
-                fields = self.fields
-            case _:
-                raise ValueError(f"Invalid flush option: {flush}")
-
-        for field_ in fields:
+        for field_ in FlushOptions.get_fields(self, flush):
             if not self._has_node(field_) and warn:
                 warnings.warn(f"Filling in missing required field '{field_}' with default value.", UserWarning, stacklevel=2)
 

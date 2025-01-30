@@ -27,8 +27,8 @@ class RefCommonRefOpticalElementRef_Instrument(RefCommonRef_Instrument, RefOptic
         }
 
     @property
-    def schema_required(self) -> set[str]:
-        return self.asdf_required
+    def schema_required(self) -> tuple[str, ...]:
+        return tuple(self.asdf_required)
 
 
 class RefCommonRefOpticalElementRef(RefCommonRef, RefOpticalElementRef):

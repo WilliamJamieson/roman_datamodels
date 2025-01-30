@@ -1,8 +1,13 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import StrEnum, auto
-from typing import Any, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from asdf import AsdfFile
+
+if TYPE_CHECKING:
+    from ._d_node import DNode
 
 __all__ = [
     "AsdfNodeMixin",
@@ -67,6 +72,23 @@ class FlushOptions(StrEnum):
     ALL = auto()
     EXTRA = auto()
 
+    @classmethod
+    def get_fields(cls, node: DNode[_T], flush: FlushOptions) -> tuple[str, ...]:
+        """
+        Get the fields to flush out on the node based on the flush option.
+        """
+        match flush:
+            case cls.NONE:
+                return ()
+            case cls.REQUIRED:
+                return node.schema_required
+            case cls.ALL:
+                return node.defined_fields
+            case cls.EXTRA:
+                return node.fields
+            case _:
+                raise ValueError(f"Invalid flush option: {flush}")
+
 
 class AsdfNodeMixin(NodeKeyMixin, Generic[_T], ABC):
     """Mixin so that Nodes can have an asdf context."""
@@ -102,3 +124,36 @@ class AsdfNodeMixin(NodeKeyMixin, Generic[_T], ABC):
         warn
             If `True`, warn if any required fields are missing.
         """
+
+    # @property
+    # @abstractmethod
+    # def schema_required(self) -> tuple[str, ...]:
+    #     """Get the fields required fields in the schema."""
+
+    # @classmethod
+    # @abstractmethod
+    # def _defined_fields(cls) -> tuple[str, ...]:
+    #     """
+    #     Get the fields that are defined in the schema.
+    #     """
+
+    # @classproperty
+    # def defined_fields(cls) -> tuple[str, ...]:
+    #     """
+    #     Get the fields that are defined in the schema.
+    #     """
+    #     return cls._defined_fields()
+
+    # @classmethod
+    # @abstractmethod
+    # def _fields(cls) -> tuple[str, ...]:
+    #     """
+    #     Get all the fields that are defined for the object (including any extra fields).
+    #     """
+
+    # @classproperty
+    # def fields(cls) -> tuple[str, ...]:
+    #     """
+    #     Get all the fields that are defined for the object (including any extra fields).
+    #     """
+    #     return cls._fields()

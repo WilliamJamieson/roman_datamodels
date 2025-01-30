@@ -31,8 +31,8 @@ class DarkRef_Meta_Exposure(RefExposureTypeRef_Exposure, rad.ImpliedNodeMixin):
         }
 
     @property
-    def schema_required(self) -> set[str]:
-        return self.asdf_required
+    def schema_required(self) -> tuple[str, ...]:
+        return tuple(self.asdf_required)
 
     @rad.field
     def ma_table_name(self) -> str:

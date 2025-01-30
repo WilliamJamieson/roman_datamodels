@@ -72,7 +72,7 @@ class ArrayFieldMixin(DNode[Any], ABC):
 
     @property
     @abstractmethod
-    def schema_required(self) -> set[str]:
+    def schema_required(self) -> tuple[str, ...]:
         """List of required fields in the schema."""
 
     @property

@@ -259,7 +259,7 @@ def test_required_fields_default_tag(node_cls):
         assert node_cls.asdf_tag_uri == node_cls()._tag
 
     # Check the required fields for the default tag match
-    assert node_cls.asdf_required == node_cls().schema_required
+    assert node_cls.asdf_required == set(node_cls().schema_required)
 
 
 def find_property_schema(schema, property_name):

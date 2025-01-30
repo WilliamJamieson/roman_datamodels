@@ -85,6 +85,11 @@ class DNode(AsdfNodeMixin[_T], MutableMapping[str, _T]):
         # see python/mypy#11501
         return Annotated[cls, item_type]  # type: ignore[return-value]
 
+    @property
+    def schema_required(self) -> tuple[str, ...]:
+        """Get the required fields in the schema."""
+        return ()
+
     @classproperty
     def node_fields(cls) -> tuple[str, ...]:
         """
