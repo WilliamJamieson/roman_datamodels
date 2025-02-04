@@ -11,10 +11,6 @@ __all__ = ["FpsWfiMode"]
 
 class FpsWfiMode(rad.TaggedObjectNode):
     @classmethod
-    def _asdf_schema_uris(self) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_mode-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/fps/wfi_mode-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_mode-1.0.0"

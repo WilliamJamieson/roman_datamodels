@@ -7,10 +7,6 @@ __all__ = ["TvacCalibrationSoftwareVersion"]
 
 class TvacCalibrationSoftwareVersion(str, rad.TaggedScalarNode):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/calibration_software_version-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/tvac/calibration_software_version-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/tvac/tagged_scalars/calibration_software_version-1.0.0"

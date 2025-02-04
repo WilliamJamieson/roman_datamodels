@@ -23,10 +23,6 @@ class MosaicWcsinfoProjectionEntry(MosaicWcsinfoProjectionEntryMixin, rad.RadEnu
 
 class MosaicWcsinfo(rad.TaggedObjectNode):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/mosaic_wcsinfo-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/mosaic_wcsinfo-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/mosaic_wcsinfo-1.0.0"

@@ -7,10 +7,6 @@ __all__ = ["L3CalStep"]
 
 class L3CalStep(rad.TaggedObjectNode):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/l3_cal_step-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/l3_cal_step-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/l3_cal_step-1.0.0"

@@ -21,10 +21,6 @@ class WfiScienceRaw_Meta(rad.ImpliedNodeMixin, Common):
 
 class WfiScienceRaw(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_science_raw-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/wfi_science_raw-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/wfi_science_raw-1.0.0"

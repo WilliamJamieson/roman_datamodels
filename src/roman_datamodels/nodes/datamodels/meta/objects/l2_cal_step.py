@@ -26,10 +26,6 @@ class CalStepEntry(CalStepEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
 
 class L2CalStep(rad.TaggedObjectNode):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/l2_cal_step-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/l2_cal_step-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/l2_cal_step-1.0.0"

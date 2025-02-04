@@ -25,6 +25,12 @@ class TagMixin(SchemaMixin, ABC):
     _instance_tag: str | None = None
 
     @classmethod
+    def _asdf_schema_uris(cls) -> tuple[str, ...]:
+        """URIs for the schemas that defines this node."""
+
+        return tuple(uri for uri in cls.asdf_tag_uris.values())
+
+    @classmethod
     @abstractmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         """Tag of the node."""

@@ -33,10 +33,6 @@ class SegmentationMap_Meta(rad.ImpliedNodeMixin, Basic):
 
 class SegmentationMap(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/segmentation_map-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/segmentation_map-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/segmentation_map-1.0.0"

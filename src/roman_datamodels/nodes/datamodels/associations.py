@@ -63,10 +63,6 @@ class Associations_Products(rad.ImpliedNodeMixin, rad.ObjectNode):
 
 class Associations(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/associations-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/associations-1.0.0",

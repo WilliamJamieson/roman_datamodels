@@ -20,10 +20,6 @@ class GainRef_Meta(rad.ImpliedNodeMixin, RefCommonRef):
 
 class GainRef(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def _asdf_schema_uris(self) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/reference_files/gain-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/reference_files/gain-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/reference_files/gain-1.0.0"

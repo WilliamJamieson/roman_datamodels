@@ -42,10 +42,6 @@ class ImageSourceCatalog_Meta(rad.ImpliedNodeMixin, Basic):
 
 class ImageSourceCatalog(rad.TaggedObjectNode):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/image_source_catalog-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/image_source_catalog-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/image_source_catalog-1.0.0"

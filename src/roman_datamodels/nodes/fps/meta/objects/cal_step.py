@@ -7,10 +7,6 @@ __all__ = ["FpsCalStep"]
 
 class FpsCalStep(rad.TaggedObjectNode):
     @classmethod
-    def _asdf_schema_uris(self) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/cal_step-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/fps/cal_step-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/fps/cal_step-1.0.0"

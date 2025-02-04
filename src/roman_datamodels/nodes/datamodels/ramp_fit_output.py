@@ -21,10 +21,6 @@ class RampFitOutput_Meta(rad.ImpliedNodeMixin, Common):
 
 class RampFitOutput(rad.TaggedObjectNode, rad.ArrayFieldMixin):
     @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/ramp_fit_output-1.0.0",)
-
-    @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
             "asdf://stsci.edu/datamodels/roman/tags/ramp_fit_output-1.0.0": "asdf://stsci.edu/datamodels/roman/schemas/ramp_fit_output-1.0.0"
