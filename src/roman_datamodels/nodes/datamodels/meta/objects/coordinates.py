@@ -1,13 +1,15 @@
 from roman_datamodels.stnode import rad
 
-__all__ = [
-    "Coordinates",
-    "CoordinatesReferenceFrameEntry",
-    "CoordinatesReferenceFrameEntryMixin",
-]
+__all__ = ["Coordinates", "CoordinatesReferenceFrameEntry"]
 
 
-class CoordinatesReferenceFrameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class CoordinatesReferenceFrameEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible reference_frame entries
+    """
+
+    ICRS = "ICRS"
+
     @classmethod
     def _asdf_container(self) -> type:
         return Coordinates
@@ -15,14 +17,6 @@ class CoordinatesReferenceFrameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode
     @classmethod
     def _asdf_property_name(cls) -> str:
         return "reference_frame"
-
-
-class CoordinatesReferenceFrameEntry(CoordinatesReferenceFrameEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible reference_frame entries
-    """
-
-    ICRS = "ICRS"
 
 
 class Coordinates(rad.TaggedObjectNode):

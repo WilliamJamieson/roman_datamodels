@@ -1,17 +1,17 @@
 from roman_datamodels.stnode import rad
 
-__all__ = [
-    "Rcs",
-    "RcsBankEntry",
-    "RcsBankEntryMixin",
-    "RcsElectronicsEntry",
-    "RcsElectronicsEntryMixin",
-    "RcsLedEntry",
-    "RcsLedEntryMixin",
-]
+__all__ = ["Rcs", "RcsBankEntry", "RcsElectronicsEntry", "RcsLedEntry"]
 
 
-class RcsElectronicsEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class RcsElectronicsEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible electronics in rcs
+    """
+
+    A = "A"
+    B = "B"
+    NONE = "None"
+
     @classmethod
     def _asdf_container(cls) -> type:
         return Rcs
@@ -21,17 +21,15 @@ class RcsElectronicsEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
         return "electronics"
 
 
-class RcsElectronicsEntry(RcsElectronicsEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class RcsBankEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
-    Enum for the possible electronics in rcs
+    Enum for the possible banks in rcs
     """
 
-    A = "A"
-    B = "B"
+    ONE = "1"
+    TWO = "2"
     NONE = "None"
 
-
-class RcsBankEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def _asdf_container(cls) -> type:
         return Rcs
@@ -41,27 +39,7 @@ class RcsBankEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
         return "bank"
 
 
-class RcsBankEntry(RcsBankEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible banks in rcs
-    """
-
-    ONE = "1"
-    TWO = "2"
-    NONE = "None"
-
-
-class RcsLedEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return Rcs
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "led"
-
-
-class RcsLedEntry(RcsLedEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class RcsLedEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible leds in rcs
     """
@@ -73,6 +51,14 @@ class RcsLedEntry(RcsLedEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     FIVE = "5"
     SIX = "6"
     NONE = "None"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return Rcs
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "led"
 
 
 class Rcs(rad.TaggedObjectNode):

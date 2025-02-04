@@ -1,23 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = [
-    "SkyBackground",
-    "SkyBackgroundMethodEntry",
-    "SkyBackgroundMethodEntryMixin",
-]
+__all__ = ["SkyBackground", "SkyBackgroundMethodEntry"]
 
 
-class SkyBackgroundMethodEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return SkyBackground
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "method"
-
-
-class SkyBackgroundMethodEntry(SkyBackgroundMethodEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class SkyBackgroundMethodEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for method in sky_background
     """
@@ -27,6 +13,14 @@ class SkyBackgroundMethodEntry(SkyBackgroundMethodEntryMixin, rad.RadEnum, metac
     GLOBAL_MATCH = "global+match"
     MATCH = "match"
     GLOBAL = "global"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return SkyBackground
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "method"
 
 
 class SkyBackground(rad.TaggedObjectNode):

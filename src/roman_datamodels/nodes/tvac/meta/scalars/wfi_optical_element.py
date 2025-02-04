@@ -1,15 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["TvacWfiOpticalElement", "TvacWfiOpticalElementMixin"]
+__all__ = ["TvacWfiOpticalElement"]
 
 
-class TvacWfiOpticalElementMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
-    @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_optical_element-1.0.0",)
-
-
-class TvacWfiOpticalElement(TvacWfiOpticalElementMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class TvacWfiOpticalElement(rad.SchemaStrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     F062 = "F062"
     F087 = "F087"
     F106 = "F106"
@@ -21,3 +15,7 @@ class TvacWfiOpticalElement(TvacWfiOpticalElementMixin, rad.RadEnum, metaclass=r
     GRISM = "GRISM"
     PRISM = "PRISM"
     DARK = "DARK"
+
+    @classmethod
+    def _asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/wfi_optical_element-1.0.0",)

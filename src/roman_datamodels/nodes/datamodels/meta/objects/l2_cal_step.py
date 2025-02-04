@@ -1,19 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["CalStepEntry", "CalStepEntryMixin", "L2CalStep"]
+__all__ = ["CalStepEntry", "L2CalStep"]
 
 
-class CalStepEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return L2CalStep
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "assign_wcs"
-
-
-class CalStepEntry(CalStepEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class CalStepEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible CalStep entries
     """
@@ -22,6 +12,14 @@ class CalStepEntry(CalStepEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     COMPLETE = "COMPLETE"
     SKIPPED = "SKIPPED"
     INCOMPLETE = "INCOMPLETE"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return L2CalStep
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "assign_wcs"
 
 
 class L2CalStep(rad.TaggedObjectNode):

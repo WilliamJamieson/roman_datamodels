@@ -1,9 +1,15 @@
 from roman_datamodels.stnode import core, rad
 
-__all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry", "MosaicWcsinfoProjectionEntryMixin"]
+__all__ = ["MosaicWcsinfo", "MosaicWcsinfoProjectionEntry"]
 
 
-class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class MosaicWcsinfoProjectionEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible entries for projection in wcsinfo
+    """
+
+    TAN = "TAN"
+
     @classmethod
     def _asdf_container(cls) -> type:
         return MosaicWcsinfo
@@ -11,14 +17,6 @@ class MosaicWcsinfoProjectionEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def _asdf_property_name(cls) -> str:
         return "projection"
-
-
-class MosaicWcsinfoProjectionEntry(MosaicWcsinfoProjectionEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible entries for projection in wcsinfo
-    """
-
-    TAN = "TAN"
 
 
 class MosaicWcsinfo(rad.TaggedObjectNode):

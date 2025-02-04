@@ -3,23 +3,12 @@ from roman_datamodels.stnode import core, rad
 __all__ = [
     "Associations",
     "AssociationsExptypeEntry",
-    "AssociationsExptypeEntryMixin",
     "Associations_Products",
     "Associations_Products_Members",
 ]
 
 
-class AssociationsExptypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return Associations_Products_Members
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "exptype"
-
-
-class AssociationsExptypeEntry(AssociationsExptypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class AssociationsExptypeEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for exptype in associations
     """
@@ -27,6 +16,14 @@ class AssociationsExptypeEntry(AssociationsExptypeEntryMixin, rad.RadEnum, metac
     SCIENCE = "SCIENCE"
     CALIBRATION = "CALIBRATION"
     ENGINEERING = "ENGINEERING"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return Associations_Products_Members
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "exptype"
 
 
 class Associations_Products_Members(rad.ImpliedNodeMixin, rad.ObjectNode):

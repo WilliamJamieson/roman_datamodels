@@ -1,13 +1,16 @@
 from roman_datamodels.stnode import rad
 
-__all__ = [
-    "Ephemeris",
-    "EphemerisTypeEntry",
-    "EphemerisTypeEntryMixin",
-]
+__all__ = ["Ephemeris", "EphemerisTypeEntry"]
 
 
-class EphemerisTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class EphemerisTypeEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible entries for type in ephemeris
+    """
+
+    DEFINITIVE = "DEFINITIVE"
+    PREDICTED = "PREDICTED"
+
     @classmethod
     def _asdf_container(cls) -> type:
         return Ephemeris
@@ -15,15 +18,6 @@ class EphemerisTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def _asdf_property_name(cls) -> str:
         return "type"
-
-
-class EphemerisTypeEntry(EphemerisTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible entries for type in ephemeris
-    """
-
-    DEFINITIVE = "DEFINITIVE"
-    PREDICTED = "PREDICTED"
 
 
 class Ephemeris(rad.TaggedObjectNode):

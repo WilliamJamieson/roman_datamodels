@@ -11,6 +11,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, TypeVar
 
 from ._base import ArrayFieldMixin, RadNodeMixin
+from ._enum import IntNodeMixin, SchemaStrNodeMixin, StrNodeMixin, TaggedStrNodeMixin
 from ._implied import ImpliedNodeMixin
 from ._node import ExtraFieldsMixin, ListNode, ObjectNode, ScalarNode
 from ._schema import SchemaListNode, SchemaMixin, SchemaObjectNode, SchemaScalarNode
@@ -107,7 +108,22 @@ class _RdmNodeRegistry:
         """
         if self._scalar_nodes is None:
             self._import_nodes()
-            self._scalar_nodes = MappingProxyType({**get_nodes(ScalarNode, (ScalarNode, SchemaScalarNode, TaggedScalarNode))})
+            self._scalar_nodes = MappingProxyType(
+                {
+                    **get_nodes(
+                        ScalarNode,
+                        (
+                            ScalarNode,
+                            SchemaScalarNode,
+                            TaggedScalarNode,
+                            IntNodeMixin,
+                            SchemaStrNodeMixin,
+                            StrNodeMixin,
+                            TaggedStrNodeMixin,
+                        ),
+                    )
+                }
+            )
         return self._scalar_nodes
 
     @property

@@ -5,16 +5,17 @@ from astropy.units import A, K, Quantity, V, cm, ms, nm  # type: ignore[attr-def
 
 from roman_datamodels.stnode import core, rad
 
-__all__ = [
-    "TvacGroundtest",
-    "TvacGroundtestGsorcSdsDqPulseEntry",
-    "TvacGroundtestGsorcSdsDqPulseEntryMixin",
-    "TvacGroundtestWfiOptTargettypeEntry",
-    "TvacGroundtestWfiOptTargettypeEntryMixin",
-]
+__all__ = ["TvacGroundtest", "TvacGroundtestGsorcSdsDqPulseEntry", "TvacGroundtestWfiOptTargettypeEntry"]
 
 
-class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class TvacGroundtestGsorcSdsDqPulseEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible values of the GSORC SDS DQ Pulse
+    """
+
+    PULSE = "pulse"
+    CW = "cw"
+
     @classmethod
     def _asdf_container(cls) -> type:
         return TvacGroundtest
@@ -24,26 +25,7 @@ class TvacGroundtestGsorcSdsDqPulseEntryMixin(str, rad.EnumNodeMixin, rad.Scalar
         return "gsorc_sds_dq_pulse"
 
 
-class TvacGroundtestGsorcSdsDqPulseEntry(TvacGroundtestGsorcSdsDqPulseEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible values of the GSORC SDS DQ Pulse
-    """
-
-    PULSE = "pulse"
-    CW = "cw"
-
-
-class TvacGroundtestWfiOptTargettypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return TvacGroundtest
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "wfi_opt_targettype"
-
-
-class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class TvacGroundtestWfiOptTargettypeEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible values of the WFI Optical Target Type
     """
@@ -67,6 +49,14 @@ class TvacGroundtestWfiOptTargettypeEntry(TvacGroundtestWfiOptTargettypeEntryMix
     PHARET_FF_W146 = "PHARET-FF-W146"
     POINT_SOURCE_GW = "POINT-SOURCE-GW"
     STRAY_LIGHT = "STRAY LIGHT"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return TvacGroundtest
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "wfi_opt_targettype"
 
 
 class TvacGroundtest(rad.TaggedObjectNode):

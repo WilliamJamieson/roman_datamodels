@@ -1,23 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = [
-    "Program",
-    "ProgramSubcategoryEntry",
-    "ProgramSubcategoryEntryMixin",
-]
+__all__ = ["Program", "ProgramSubcategoryEntry"]
 
 
-class ProgramSubcategoryEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return Program
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "subcategory"
-
-
-class ProgramSubcategoryEntry(ProgramSubcategoryEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class ProgramSubcategoryEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible program subcategories
     """
@@ -33,6 +19,14 @@ class ProgramSubcategoryEntry(ProgramSubcategoryEntryMixin, rad.RadEnum, metacla
     WFI = "WFI"
     WFSC = "WFSC"
     NONE = "None"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return Program
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "subcategory"
 
 
 class Program(rad.TaggedObjectNode):

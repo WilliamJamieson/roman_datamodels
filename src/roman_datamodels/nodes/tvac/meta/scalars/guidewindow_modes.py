@@ -1,15 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["TvacGuidewindowModes", "TvacGuidewindowModesMixin"]
+__all__ = ["TvacGuidewindowModes"]
 
 
-class TvacGuidewindowModesMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
-    @classmethod
-    def _asdf_schema_uris(cls) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/guidewindow_modes-1.0.0",)
-
-
-class TvacGuidewindowModes(TvacGuidewindowModesMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class TvacGuidewindowModes(rad.SchemaStrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     WIM_ACQ = "WIM-ACQ"
     WIM_TRACK = "WIM-TRACK"
     WSM_ACQ_1 = "WSM-ACQ-1"
@@ -17,3 +11,7 @@ class TvacGuidewindowModes(TvacGuidewindowModesMixin, rad.RadEnum, metaclass=rad
     WSM_TRACK = "WSM-TRACK"
     DEFOCUSED_MODERATE = "DEFOCUSED-MODERATE"
     DEFOCUSED_LARGE = "DEFOCUSED-LARGE"
+
+    @classmethod
+    def _asdf_schema_uris(cls) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/tvac/guidewindow_modes-1.0.0",)

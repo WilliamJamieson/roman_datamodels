@@ -6,22 +6,14 @@ from ...datamodels import InstrumentNameEntry, Telescope, WfiDetector, WfiOptica
 
 __all__ = [
     "RefCommonPedigreeEntry",
-    "RefCommonPedigreeEntryMixin",
     "RefCommonRef",
     "RefCommonRef_Instrument",
     "RefCommonRef_InstrumentMixin",
     "RefTypeEntry",
-    "RefTypeEntryMixin",
 ]
 
 
-class RefTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_schema(cls) -> rad.RadSchema:
-        return rad.RadSchema({})
-
-
-class RefTypeEntry(RefTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class RefTypeEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible ref_type entries
         Note: this one doesn't actually exist but it is impled by each of the reftype entries
@@ -47,18 +39,12 @@ class RefTypeEntry(RefTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     PHOTOM = "PHOTOM"  # for wfi_img_photom
     NA = "N/A"  # for a default value in ref_common
 
-
-class RefCommonPedigreeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
-    def _asdf_container(cls) -> type:
-        return RefCommonRef
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "pedigree"
+    def _asdf_schema(cls) -> rad.RadSchema:
+        return rad.RadSchema({})
 
 
-class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class RefCommonPedigreeEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for pedigree in ref_common
     """
@@ -67,6 +53,14 @@ class RefCommonPedigreeEntry(RefCommonPedigreeEntryMixin, rad.RadEnum, metaclass
     MODEL = "MODEL"
     DUMMY = "DUMMY"
     SIMULATION = "SIMULATION"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return RefCommonRef
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "pedigree"
 
 
 class RefCommonRef_InstrumentMixin(rad.ExtraFieldsMixin):

@@ -4,10 +4,16 @@ from roman_datamodels.stnode import core, rad
 
 from ..scalars import WfiDetector, WfiOpticalElement
 
-__all__ = ["InstrumentNameEntry", "InstrumentNameEntryMixin", "WfiMode", "WfiModeMixin"]
+__all__ = ["InstrumentNameEntry", "WfiMode", "WfiModeMixin"]
 
 
-class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class InstrumentNameEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible entries for instrument name in schemas
+    """
+
+    WFI = "WFI"
+
     @classmethod
     def _asdf_container(cls) -> type:
         return WfiMode
@@ -15,14 +21,6 @@ class InstrumentNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def _asdf_property_name(cls) -> str:
         return "name"
-
-
-class InstrumentNameEntry(InstrumentNameEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible entries for instrument name in schemas
-    """
-
-    WFI = "WFI"
 
 
 class WfiModeMixin(core.AdditionalNodeMixin[Any]):

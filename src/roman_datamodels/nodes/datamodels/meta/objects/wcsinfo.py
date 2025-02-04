@@ -1,25 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = [
-    "Wcsinfo",
-    "WcsinfoApertureNameEntry",
-    "WcsinfoApertureNameEntryMixin",
-    "WcsinfoVparityEntry",
-    "WcsinfoVparityEntryMixin",
-]
+__all__ = ["Wcsinfo", "WcsinfoApertureNameEntry", "WcsinfoVparityEntry"]
 
 
-class WcsinfoApertureNameEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return Wcsinfo
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "aperture_name"
-
-
-class WcsinfoApertureNameEntry(WcsinfoApertureNameEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class WcsinfoApertureNameEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for aperture_name in wcsinfo
     """
@@ -64,8 +48,23 @@ class WcsinfoApertureNameEntry(WcsinfoApertureNameEntryMixin, rad.RadEnum, metac
     BORESIGHT = "BORESIGHT"
     CGI_CEN = "CGI_CEN"
 
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return Wcsinfo
 
-class WcsinfoVparityEntryMixin(int, rad.EnumNodeMixin, rad.ScalarNode):
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "aperture_name"
+
+
+class WcsinfoVparityEntry(rad.IntNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible entries for vparity in wcsinfo
+    """
+
+    REVERSED = -1
+    NORMAL = 1
+
     @classmethod
     def _asdf_container(cls) -> type:
         return Wcsinfo
@@ -73,15 +72,6 @@ class WcsinfoVparityEntryMixin(int, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def _asdf_property_name(cls) -> str:
         return "vparity"
-
-
-class WcsinfoVparityEntry(WcsinfoVparityEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible entries for vparity in wcsinfo
-    """
-
-    REVERSED = -1
-    NORMAL = 1
 
 
 class Wcsinfo(rad.TaggedObjectNode):

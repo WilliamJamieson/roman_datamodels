@@ -1,15 +1,9 @@
 from roman_datamodels.stnode import rad
 
-__all__ = ["FpsWfiDetector", "FpsWfiDetectorMixin"]
+__all__ = ["FpsWfiDetector"]
 
 
-class FpsWfiDetectorMixin(str, rad.SchemaScalarNode, rad.EnumNodeMixin):
-    @classmethod
-    def _asdf_schema_uris(self) -> tuple[str]:
-        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_detector-1.0.0",)
-
-
-class FpsWfiDetector(FpsWfiDetectorMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class FpsWfiDetector(rad.SchemaStrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     WFI01 = "WFI01"
     WFI02 = "WFI02"
     WFI03 = "WFI03"
@@ -28,3 +22,7 @@ class FpsWfiDetector(FpsWfiDetectorMixin, rad.RadEnum, metaclass=rad.NodeEnumMet
     WFI16 = "WFI16"
     WFI17 = "WFI17"
     WFI18 = "WFI18"
+
+    @classmethod
+    def _asdf_schema_uris(self) -> tuple[str]:
+        return ("asdf://stsci.edu/datamodels/roman/schemas/fps/wfi_detector-1.0.0",)

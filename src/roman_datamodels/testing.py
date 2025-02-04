@@ -48,8 +48,12 @@ def assert_node_equal(node1, node2):
         for value1, value2 in zip(node1, node2, strict=True):
             _assert_value_equal(value1, value2)
     elif isinstance(node1, SchemaScalarNode):
-        value1 = node1.__class__.__bases__[0](node1)
-        value2 = node2.__class__.__bases__[0](node2)
+        if node1.__class__.__bases__[0] is SchemaScalarNode:
+            value1 = node1.__class__.__bases__[1](node1)
+            value2 = node2.__class__.__bases__[1](node2)
+        else:
+            value1 = node1.__class__.__bases__[0](node1)
+            value2 = node2.__class__.__bases__[0](node2)
 
         assert value1 == value2
     else:
@@ -99,8 +103,12 @@ def assert_node_is_copy(node1, node2, deepcopy=False):
         for value1, value2 in zip(node1, node2, strict=True):
             _assert_value_is_copy(value1, value2, deepcopy=deepcopy)
     elif isinstance(node1, SchemaScalarNode):
-        value1 = node1.__class__.__bases__[0](node1)
-        value2 = node2.__class__.__bases__[0](node2)
+        if node1.__class__.__bases__[0] is SchemaScalarNode:
+            value1 = node1.__class__.__bases__[1](node1)
+            value2 = node2.__class__.__bases__[1](node2)
+        else:
+            value1 = node1.__class__.__bases__[0](node1)
+            value2 = node2.__class__.__bases__[0](node2)
 
         assert value1 is not value2
     else:

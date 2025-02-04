@@ -5,18 +5,21 @@ from roman_datamodels.stnode import core, rad
 __all__ = [
     "Visit",
     "VisitEngineeringQualityEntry",
-    "VisitEngineeringQualityEntryMixin",
     "VisitPointingEngineeringSourceEntry",
-    "VisitPointingEngineeringSourceEntryMixin",
     "VisitStatusEntry",
-    "VisitStatusEntryMixin",
     "VisitTypeEntry",
-    "VisitTypeEntryMixin",
     "Visit_Dither",
 ]
 
 
-class VisitEngineeringQualityEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
+class VisitEngineeringQualityEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+    """
+    Enum for the possible entries for quality in visit engineering
+    """
+
+    OK = "OK"
+    SUSPECT = "SUSPECT"
+
     @classmethod
     def _asdf_container(cls) -> type:
         return Visit
@@ -26,16 +29,14 @@ class VisitEngineeringQualityEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
         return "engineering_quality"
 
 
-class VisitEngineeringQualityEntry(VisitEngineeringQualityEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class VisitPointingEngineeringSourceEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
-    Enum for the possible entries for quality in visit engineering
+    Enum for the possible entries for source in visit pointing engineering
     """
 
-    OK = "OK"
-    SUSPECT = "SUSPECT"
+    CALCULATED = "CALCULATED"
+    PLANNED = "PLANNED"
 
-
-class VisitPointingEngineeringSourceEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def _asdf_container(cls) -> type:
         return Visit
@@ -45,26 +46,7 @@ class VisitPointingEngineeringSourceEntryMixin(str, rad.EnumNodeMixin, rad.Scala
         return "pointing_engineering_source"
 
 
-class VisitPointingEngineeringSourceEntry(VisitPointingEngineeringSourceEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
-    """
-    Enum for the possible entries for source in visit pointing engineering
-    """
-
-    CALCULATED = "CALCULATED"
-    PLANNED = "PLANNED"
-
-
-class VisitTypeEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
-    @classmethod
-    def _asdf_container(cls) -> type:
-        return Visit
-
-    @classmethod
-    def _asdf_property_name(cls) -> str:
-        return "type"
-
-
-class VisitTypeEntry(VisitTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class VisitTypeEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for type in visit
     """
@@ -75,18 +57,16 @@ class VisitTypeEntry(VisitTypeEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMet
     PRIME_TARGETED_FIXED = "PRIME_TARGETED_FIXED"
     PRIME_UNTARGETED = "PRIME_UNTARGETED"
 
-
-class VisitStatusEntryMixin(str, rad.EnumNodeMixin, rad.ScalarNode):
     @classmethod
     def _asdf_container(cls) -> type:
         return Visit
 
     @classmethod
     def _asdf_property_name(cls) -> str:
-        return "status"
+        return "type"
 
 
-class VisitStatusEntry(VisitStatusEntryMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+class VisitStatusEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
     """
     Enum for the possible entries for status in visit
     """
@@ -94,6 +74,14 @@ class VisitStatusEntry(VisitStatusEntryMixin, rad.RadEnum, metaclass=rad.NodeEnu
     DATALOSS = "DATALOSS"
     SUCCESSFUL = "SUCCESSFUL"
     UNSUCCESSFUL = "UNSUCCESSFUL"
+
+    @classmethod
+    def _asdf_container(cls) -> type:
+        return Visit
+
+    @classmethod
+    def _asdf_property_name(cls) -> str:
+        return "status"
 
 
 class Visit_Dither(rad.ImpliedNodeMixin, rad.ObjectNode):

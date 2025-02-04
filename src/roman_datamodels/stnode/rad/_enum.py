@@ -3,12 +3,18 @@ from enum import Enum, EnumType
 
 from ..core import classproperty
 from ._asdf_schema import RadSchema
-from ._schema import SchemaMixin
+from ._node import ScalarNode
+from ._schema import SchemaMixin, SchemaScalarNode
+from ._tagged import TaggedScalarNode
 
 __all__ = [
     "EnumNodeMixin",
+    "IntNodeMixin",
     "NodeEnumMeta",
     "RadEnum",
+    "SchemaStrNodeMixin",
+    "StrNodeMixin",
+    "TaggedStrNodeMixin",
 ]
 
 
@@ -79,4 +85,28 @@ class NodeEnumMeta(ABCMeta, EnumType):
     makes it so that the enum classes cannot be ABC classes due to a metaclass
     conflict. This metaclass resolves that conflict by inheriting from both
     enabling the use of the enum
+    """
+
+
+class StrNodeMixin(str, EnumNodeMixin, ScalarNode, ABC):
+    """
+    String EnumNode mixin
+    """
+
+
+class SchemaStrNodeMixin(str, SchemaScalarNode, EnumNodeMixin, ABC):
+    """
+    String EnumNode mixin for schema nodes
+    """
+
+
+class TaggedStrNodeMixin(str, TaggedScalarNode, EnumNodeMixin, ABC):
+    """
+    String EnumNode mixin for tagged nodes
+    """
+
+
+class IntNodeMixin(int, EnumNodeMixin, ScalarNode, ABC):
+    """
+    Integer EnumNode mixin
     """

@@ -2,7 +2,7 @@ from ..core._field import field
 from ._asdf_schema import RadSchema
 from ._base import ArrayFieldMixin, RadNodeMixin
 from ._default import NOFN, NOINT, NONUM, NOSTR, Wcs
-from ._enum import EnumNodeMixin, NodeEnumMeta, RadEnum
+from ._enum import EnumNodeMixin, IntNodeMixin, NodeEnumMeta, RadEnum, SchemaStrNodeMixin, StrNodeMixin, TaggedStrNodeMixin
 from ._implied import ImpliedNodeMixin
 from ._node import ExtraFieldsMixin, ListNode, ObjectNode, ScalarNode
 from ._registry import RDM_NODE_REGISTRY
@@ -27,6 +27,7 @@ __all__ = [
     "EnumNodeMixin",
     "ExtraFieldsMixin",
     "ImpliedNodeMixin",
+    "IntNodeMixin",
     "ListNode",
     "NodeEnumMeta",
     "ObjectNode",
@@ -38,10 +39,13 @@ __all__ = [
     "SchemaMixin",
     "SchemaObjectNode",
     "SchemaScalarNode",
+    "SchemaStrNodeMixin",
+    "StrNodeMixin",
     "TagMixin",
     "TaggedListNode",
     "TaggedObjectNode",
     "TaggedScalarNode",
+    "TaggedStrNodeMixin",
     "Wcs",
     "camel_case_to_snake_case",
     "class_name_from_uri",
