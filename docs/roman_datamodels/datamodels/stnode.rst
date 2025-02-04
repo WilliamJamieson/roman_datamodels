@@ -301,6 +301,321 @@ Similarly to the schema nodes, these are
 
 All of which are simply mixes of the `~roman_datamodels.stnode.TagMixin` with the appropriate base.
 
+To create a new sachema one simply needs to define the ``_asdf_tag_uris`` methnod on your class
+followed by using the `~roman_datamodels.stnode.field` descriptor as a decorator to add your fields.
+The ``_asdf_tag_uris`` must return a dictionary with full ``tag_uri`` as keys with entries being the
+full ``schema_uri`` for the schema file. These should match up with a manifest entry in the ``rad``
+schemas. For example:
+
+.. code:: python
+
+    class MyTaggedNode(core.TaggedObjectNode):
+
+        @classmethod
+        def _asdf_tag_uris(cls) -> dict[str, str]:
+            return {
+                "tag://stsci.edu/datamodels/roman/tags/my_tag": "asdf://stsci.edu/datamodels/roman/schemas/path_to_my_schema_uri"
+            }
+
+        @rad.field
+        def my_field(self) -> int:
+            return 42
+
+.. warning::
+
+    The dictionary should be ordered so that the latest tag will be the last entry in the dictionary.
+    This works because Python 3+ does preserve the dictionary ordering. This ordering is important because
+    it is what is used to determine the default tag that will be used when creating an instance. This
+    tag is then used to fill in all the schema information.
+
+Additional Node Types
+#####################
+
+In addition to the schema and tagged nodes, there are a few other node types that are used to introduce
+further behavior to the nodes. These are:
+
+    - `~roman_datamodels.stnode.ImpliedNodeMixin`: Signals the presence of a schema defined object
+      which does not have its own dedicated scehma.
+    - `~roman_datamodels.stnode.ExtraFieldsMixin`: Adds the ability to add extra fields to a node object
+      that are not currently defined in the ``rad`` schemas.
+    - `~roman_datamodels.stnode.EnumNodeMixin`: Forms the base class for scalar nodes which are defined
+       in the ``rad`` schemas with an enumerated list of possible values, (e.g. has an ``enum:`` keyword).
+    - `~roman_datamodels.stnode.ArrayFieldMixin`: Adds the ability to control the default size and shape
+      for numpy array fields in a node object.
+
+Implied Nodes
+^^^^^^^^^^^^^
+
+The "implied nodes" are those nodes defined in the `~roman_datamodels.nodes` module which do not have
+have a corresponding schema file in the ``rad`` schemas, but which are defined as an object by those
+schemas. There are two circumstances in which this can occur:
+
+    1. Under some property key, instead of a basic type or calling to another schema the ``rad`` schema
+       instead defines a ``type: object`` that is nested under that key. In order to properly define
+       defaults for these "sub" (implied) objects, a node object must be defined for them. In this case,
+       one inherits first from `~roman_datamodels.stnode.ImpliedNodeMixin` followed by `~roman_datamodels.stnode.ObjectNode`.
+    2. Under some property key, an ``allOf:`` combiner is used to define the data under that key.
+       In this case, we are effectively defining a subclass inheriting from all the objects listed in
+       that combiner. Again this requires an implied object to properly handlie the data. Note that
+       this is an especially common case for the ``meta`` keyword in the ``rad`` schemas. In this case,
+       one first inherits from `~roman_datamodels.stnode.ImpliedNodeMixin` followed by the appropriate
+       nodes that are combined together by the ``allOf:`` combiner.
+
+.. note::
+
+    It is important to always have the `~roman_datamodels.stnode.ImpliedNodeMixin` as the first class
+    in the inheritance list when defining an implied node object. This is so that `~roman_datamodels.stnode.ImpliedNodeMixin`
+    can properly hook into the node object without its methods being overridden by the other classes.
+
+
+When one creates an `~roman_datamodels.stnode.ImpliedNodeMixin` based object, one must define the ``_asdf_implied_by``
+classmethod on the class. This method should return the ``type`` (not string name) for the object that implies the
+object in question. Moreover, the name of the object should end with ``_<name of field>`` where the name of the field
+is the keyword which is implying the object in question. For example:
+
+.. code:: python
+
+    class MyImpliedNode_Foo(core.ImpliedNodeMixin, core.ObjectNode):
+
+        @classmethod
+        def _asdf_implied_by(cls) -> type:
+            return MyObjectNode
+
+        @rad.field
+        def my_field(self) -> int:
+            return 42
+
+    class MyObjectNode(core.ObjectNode):
+
+        @rad.field
+        def foo(self) -> MyImpliedNode_Foo:
+            return MyImpliedNode_Foo()
+
+Is how one would define an implied node object for the ``foo`` field in the ``MyObjectNode`` object.
+
+.. note::
+
+    This case represents the first case for an implied node object being used. If an all of combiner
+    were used then ``core.Object`` node would be replaced by the appropriate node objects being combined.
+    Observe that in that all of combiner we do not need an extra node class if a ``type: object`` definition
+    is used to define one of the elements of the combiner. In this case, the fields listed under that
+    will be added as fields to the implied node object.
+
+.. note::
+
+    If one needs to deviate from the naming scheme for the implied node object, then one can write their
+    own ``asdf_implied_property_name`` classproperty on the implied node object which returns a string
+    with the name of the property that implies the object. This will override the standard behavior of
+    parsing the class name to determine the implied property name.
+
+
+Extra Fields
+^^^^^^^^^^^^
+
+Historically, there have been cases where items acting like fields have been introduced into a node object
+in `~roman_datamodels.nodes` which is not detailed in the ``rad`` schemas. This can be for a variety of
+reasons, such as trying additional data functionality before making a formal schema change. To handle this
+
+A node must be defined as a subclass of the `~roman_datamodels.stnode.ExtraFieldsMixin` and contain only
+the fields that are not defined in the ``rad`` schemas. Then the main object needs to inherit from this object
+in addition to its normal base class. For example:
+
+.. code:: python
+
+    class MyExtraFields(rad.ExtraFieldsMixin):
+
+        @rad.field
+        def my_extra_field(self) -> int:
+            return 42
+
+    class MyObjectNode(MyExtraFields, core.ObjectNode):
+
+        @rad.field
+        def my_field(self) -> int:
+            return 42
+
+Is how one can introduce the ``my_extra_field`` field into the ``MyObjectNode``
+without it formally needing to be defined in the ``rad`` schema.
+
+Enumerated Fields
+^^^^^^^^^^^^^^^^^
+
+In many cases, the ``rad`` schemas will enumerate the possible values for a given field
+using the ``enum:`` keyword followed by a list. While not strictly necessary, it is very
+nice to have a listing of the exact set of possible values which are statically defined
+in an immutable way. To handle this, the `~roman_datamodels.stnode.EnumNodeMixin` is used.
+
+Note that these enumerated fields have fallen into four catigories so far:
+
+    1. A string value absent of any specifically defined tag or schema. In this
+       case the `~roman_datamodels.stnode.StrNodeMixin` is used as part of the enum definition.
+       In this case two classmethods need to be defined:
+
+       - ``._asdf_container`` returning the type of node which contains the enum field.
+       - ``._asdf_property_name`` returning the name of the field in the container node
+         corresponding to the enumerated field.
+
+    2. A string value defined within a standalone schema. In this case the
+       `~roman_datamodels.stnode.SchemaStrNodeMixin` is used as part of the enum definition.
+       This simply needs to define the required methods as if it was a `~roman_datamodels.stnode.SchemaScalarNode`.
+
+    3. A string value defined within a standalone tagged schema. In this case the
+       `~roman_datamodels.stnode.TaggedStrNodeMixin` is used as part of the enum definition.
+       This simply needs to define the required methods as if it was a `~roman_datamodels.stnode.TaggedScalarNode`.
+
+    4. An integer value absent of any specifically defined tag or schema. In this
+       case the `~roman_datamodels.stnode.IntNodeMixin` is used as part of the enum definition.
+       This needs to define the same methods as the `~roman_datamodels.stnode.StrNodeMixin`.
+
+.. note::
+
+    This list is subject to future expansion, but all the basic patterns are in place here.
+    If one needs some other type like a tagged integer or something, then following one of
+    the above is sufficient to define the new type in `~roman_datamodels.stnode`.
+
+These are then combined with the `~roman_datamodels.stnode.RadEnum` class to create the
+final enumerated node object. For example:
+
+.. code:: python
+
+    class MyEnumEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+        VALUE1 = "VALUE1"
+        VALUE2 = "VALUE2"
+
+        @classmethod
+        def _asdf_container(cls) -> type:
+            return MyObjectNode
+
+        @classmethod
+        def _asdf_property_name(cls) -> str:
+            return "my_enum_field"
+
+    class MyObjectNode(core.ObjectNode):
+
+        @rad.field
+        def my_enum_field(self) -> MyEnumEntry:
+            return MyEnumEntry.VALUE1
+
+
+Is how one defines an enumerated field in the ``MyObjectNode`` object. Similarly,
+if we want to define an enumerated scalar which is defined in a schema file:
+
+.. code:: python
+
+    class MyEnumNode(rad.SchemaStrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
+        VALUE1 = "VALUE1"
+        VALUE2 = "VALUE2"
+
+        @classmethod
+        def _asdf_schema_uris(cls) -> tuple[str, ...]:
+            return ("asdf://stsci.edu/datamodels/roman/schemas/path_to_my_schema_uri",)
+
+is an example of how to do this. Note that if it were tagged a similar pattern would be followed.
+
+.. note::
+
+    Notice that ``metaclass=rad.NodeEnumMeta`` is added to the class inheritance definition.
+    This is to solve the issue with having multiple metaclasses, one from `abc.ABC` and the
+    other from `enum.Enum`. This is a common issue when two a class inherits from classes with
+    deferent metaclasses. The `~roman_datamodels.stnode.NodeEnumMeta` metaclass is a metaclass
+    which mixes both the `abc.ABCMeta` and ``enum.EnumMeta`` metaclasses together and then is used
+    to override the metaclass during the enum creation.
+
+.. note::
+
+    The `~roman_datamodels.stnode.RadEnum` class is a subclass of `enum.Enum` which modifies the
+    ``str`` and ``repr`` behavior so that the value of the enum is returned rather than
+    ``<enum name>.<enum value>`` in these cases. This is so that the enum truly plays like
+    a `str` or `int` in the code base for things like table creation.
+
+
+Array Fields
+^^^^^^^^^^^^
+
+In many cases a node object will have a field which is a numpy array. In this case we often
+want to be able to control the default shape of the array. This is because under "normal"
+circumstances Roman has quite large array shapes, but these can be relatively resource intensive.
+This is especially for testing and development where one might want to use smaller arrays so that
+a large number of cases can be run faster with less memory. Moreover, for a given node object
+the shapes of all the different array fields are generally linked to each other meaning a mechanism
+so that these fields can understand this link is needed.
+
+The `~roman_datamodels.stnode.ArrayFieldMixin` is used to handle this. Its usage simply requires it
+to be mixed into the inheritance for a given node object. When introduced this class requires the user
+to define two properties, each returning a tuple which both have the same number of elements.
+
+    1. ``default_array_shape``: This is the shape of the array that we expect "normal" data to have.
+    2. ``testing_array_shape``: This is a smaller shape that we can use for testing and development.
+
+The ``.array_shape`` property can then be accessed inside a given field in order to get the shape
+of the field given the circumstances of the object, i.e. if testing is going on. For example:
+
+.. code:: python
+
+    class MyArrayNode(core.ObjectNode, core.ArrayFieldMixin):
+        @property
+        def default_array_shape(self) -> tuple[int, ...]:
+            return (2048, 2048)
+
+        @property
+        def testing_array_shape(self) -> tuple[int, ...]:
+            return (512, 512)
+
+        @rad.field
+        def my_array_field(self) -> npt.NDArray[np.float64]:
+            return np.zeros(self.array_shape, dtype=np.float64)
+
+
+Is how one would define a node object with an array field that needs its shape controlled.
+
+.. note::
+
+    The number of dimensions for the shape tuples should correspond to the largest number of dimensions
+    among the fields in the node object. This way we only need a single tuple.
+
+To signal that the testing shape should be used, the global datamodels configuration object provides
+a context manager to return the testing shape. That is:
+
+.. code:: python
+
+    with core.get_config().enable_test_array_shape():
+        # Code that needs the testing shape
+
+
+.. warning::
+
+    Once a field is initialize via the lazy fields under this context, its shape will be fixed
+    and not return to the other shapes. Moreover, it may also cause other fields to conform with
+    its shape even after the context manager exits. Thus it is best to perform all the testing
+    operations for a given instance under this context manager before releasing the context manager
+
+    In ``roman_datamodels`` the ``use_testing_shape`` fixture can be decorated onto a test function.
+    It will automatically run the test function under this context manager.
+
+
+If one wants to manually fix the default array shape to something other than the built in values
+for a given node, then ``_array_shape=<shape>`` can be passed to the node object initializer. This
+will set the default array shape to the given shape as a reference for all of the fields in that
+instance. This cannot be overridden by the testing shape context manager, and in general is fixed
+for that given instance.
+
+.. note::
+
+    The datamodels all have a required ``primary_array_name`` property which denotes the field
+    that represents the primary array for the given node object. While not strictly required, it
+    is normally used to "guess" the ``.array_shape`` value for an instance if that primary array
+    has been set. This means that by default the `~roman_datamodels.stnode.ArrayFieldMixin` makes
+    the assumption that the primary array has the largest number of dimensions among the fields.
+
+    This is not always strictly true, but it holds for most node objects. If this is not the case,
+    then one needs to override the ``_largest_array_shape_`` property with logic to generate the
+    a shape for the array with the largest number of dimensions.
+
+    Also observe that in most node objects with arrays involved, the "primary array" is the field
+    with name "data". If this is not the case, then the user should override the ``primary_array_name``
+    property with one which returns a string marking out the field that is the primary array.
+
+
 Currently, these two objects are implemented so that they follow the
 dictionary or list interface; meaning that, they can be accessed via the ``[]``
 operator (``node["keyword"]`` or ``node[0]``). However, for the case of the
@@ -323,95 +638,76 @@ objects "look" like they are nice Python derived types.
     be a pass through to the `asdf.AsdfFile.info` method.
 
 
-Dynamic Node Construction
-*************************
+Data Models
+-----------
 
-A specialized "node" class, that is a node class with a specific name which maps
-to a corresponding schema name, will be created and registered by
-`~roman_datamodels.stnode` when the module is first imported. The schemas which
-get this treatment are the "tagged" schemas defined within the ``datamodels-*``
-manifest in the RAD package. Any "un-tagged" schemas in RAD will not have a
-corresponding stnode object. Instead, the information they contain will be
-stored in a `~roman_datamodels.stnode.DNode` or `~roman_datamodels.stnode.LNode`
-object, depending on the schema in question.
+The "data model" objects are all a mix between a given `~roman_datamodels.nodes`
+and `~roman_datamodels.datamodels.DataModel`. This has not always been the case.
 
-.. note::
+Historically, this was not the case. Instead the node objects were wrapped by the
+`~roman_datamodels.datamodels.DataModel` object with pass-throughs including ``__getattr__``
+and ``__getitem__`` directly into the node. This was done so that the node objects
+would be the objects that would be directly interacting with ASDF serialization.
+This was done in part because they used to be dynamically generated from the ``rad``
+schemas.
 
-    The creation of stnode "node" types might occur when a user opens an ASDF
-    file containing Roman data, as ASDF will load stnode as part of its
-    de-serialization process. However, due to how Python imports work this
-    should only happen once.
-
-The specific stnode objects will be subclasses of the
-`~roman_datamodels.stnode.TaggedObjectNode` or
-`~roman_datamodels.stnode.TaggedListNode` classes. These classes are extensions
-of the `~roman_datamodels.stnode.DNode` and `~roman_datamodels.stnode.LNode`
-classes which have extensions to handle looking up the schema information.
-In particular, they will track the ``tag`` information
-contained within the manifest from RAD.
-
-These "tagged-nodes" are then turned into specific stnode objects via the
-factories in `roman_datamodels.stnode._factories`. The way these factories work
-is they process the ``tag`` value and strip out the unique name for the schema,
-which gets turned into a name for the type that the factory will create.
+However, now that the node objects are explicitly defined in the code base with
+"field" system, it makes much more sense for the data models to inherit from the node
+rather than wrapping it. This allows for the static analysis tools to make use of the
+all the static information in the node objects when woring with data models instead
+without the need of writing custom pass-throughs for each field in the data model object
+corresponding with it.
 
 .. note::
 
-    If special methods are needed for a specific stnode object, then one needs
-    to add class to `roman_datamodels.stnode._mixins` with the appropriate
-    methods/properties under the name ``<expected-class-name>Mixin``. The
-    factories will automatically pick up these mixins and mix them into the
-    stnode object correctly when it is created.
-
-These factories are looped over and invoked by the
-`roman_datamodels.stnode._stnode` module which will be imported whenever
-`roman_datamodels.stnode` is imported which will generate the stnode objects and
-register them during that import. Note that this module is imported as part of
-the `roman_datamodels.datamodels` module.
-
-
-Scalar Nodes
-************
-
-In addition to the objects described above, there are the "scalar node"
-objects, which are created from multiple inheritance of
-`~roman_datamodels.stnode.TaggedScalarNode` and a scalar type. These objects are
-used to represent the schemas under the ``tagged_scalars`` directory in RAD.
-Those schemas are used to decorate a few common scalar ``meta`` fields with
-additional information for the archive and sdp. Due to how the ``meta`` keyword
-is assembled (via multiple combiners), ASDF has a hard time traversing the
-schemas to look for this information. Thus, these scalar nodes are tagged so that
-ASDF has a hook to find them without trying a recursive search of the schema
-files. If this issue is resolved in the future, or the metadata under ``meta``
-is reorganized, then scalar node concept can be removed from the codebase.
-
-.. note::
-    The scalar nodes determine the type they mix together with
-    `~roman_datamodels.stnode.TaggedScalarNode` via, the ``SCALAR_TYPE``
-    constant dictionary defined in `roman_datamodels.stnode._factories`. This
-    dictionary keys off the ``type`` keyword that all schemas have to define. If
-    a new type needs to be added, then one needs to add a new entry to this
-    dictionary.
-
+    Despite the inheritance, the strict ASDF handling is still done by the
+    node objects only. This means that using a regular ``asdf.open`` call on a data model
+    file will result in one getting a dictionary with key ``"roman"`` pointing at a
+    node object NOT a data model object. The `~roman_datamodels.datamodels.open` function
+    will directly return the correct datamodel object.
 
 ASDF
 ----
 
-The stnode objects are designed to be serializable to and from ASDF files. As
-noted above, the stnode objects wrapped by the
-`~roman_datamodels.datamodels.DataModel` are the actual objects which are
-serialized to ASDF not the `~roman_datamodels.datamodels.DataModel` object
-itself.
+The node objects are designed to be fully serializable to and from ASDF files. This
+includes preserving any data which is added to the node instance that is not specifically
+defined for it. Serialization however, is complicated by the fact that the node object's
+defined data may not be filled in due to their lazy nature. This means that a given
+node instance needs to "flush" itself out as part of ASDF serialization. By this we
+mean generate the default values for fields that are not already filled in.
+
+This is controlled via the `.flush` method on the node object. Which by default
+will flush out only the "required" fields for the node object. By required, we mean
+the fields indicated by the ``required:`` keyword in the ``rad`` schemas. This is
+accomplished by the node looking up its own schema(s) and then combining all the ``required:``
+field listings together. The node then loops over these fields, creating the default
+value for every field that is not already filled in.
+
+.. note::
+
+    In the process of serializatiion, the node object will be storing default values
+    for each of the fields it fills in. Meaning that those fields will now exist in
+    the instance which was serialized.
+
+    This is simply to limit the recreation of the same field on the same instance
+    using the default value every time the instance is re-seralized. This recreation
+    can be expensive for large arrays.
+
+.. note::
+
+    The serialization process by default does not include the "optional" fields in
+    the schema if they have not been previously filled in on the instance, nor
+    does it include an of the "extra" fields that maybe defined on the instance.
+
+    By default serialization will only include what fields it minimally needs to
+    in order to create a valid ASDF file.
+
+Extension
+*********
 
 ``roman_datamodels`` provides a custom ASDF extension so that ASDF can handle
 the stnode objects. This extension does not include the schemas used to build
 the stnode objects, as the schemas are already included in extension provided by
-the RAD package. The ASDF extension itself is defined in the
-`roman_datamodels.stnode._converters` module. As part of this module, the
-serialization and de-serialization logic is defined in the "converters" for each
-of the three "tagged" object base classes. The extension is then integrated into
-ASDF by the `roman_datamodels.stnode._integration` module, as this module allows
-the ASDF extension to be registered with ASDF without having to always import
-``roman_datamodels`` whether or not it is used for a particular case. This is
-a recommendation from ASDF so that the extension will have minimal impact on the
-general ASDF performance for a given user.
+the RAD package. The ASDF extension itself is defined in the `roman_datamodels.io`
+module. This exitension is then registered with the ASDF library so that ASDF can
+deserialize the stnode objects.
