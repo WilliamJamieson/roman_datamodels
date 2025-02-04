@@ -2,6 +2,15 @@
 Developer API
 *************
 
+.. automodapi:: roman_datamodels.datamodels
+    :include-all-objects:
+
+.. automodapi:: roman_datamodels.nodes
+    :include-all-objects:
+
+.. automodapi:: roman_datamodels.stnode
+    :include-all-objects:
+
 .. automodapi:: roman_datamodels.dqflags
 
 ..

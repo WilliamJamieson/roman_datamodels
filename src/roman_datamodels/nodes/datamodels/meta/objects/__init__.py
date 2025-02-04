@@ -1,70 +1,25 @@
-from .coordinates import Coordinates, CoordinatesReferenceFrameEntry
-from .ephemeris import Ephemeris, EphemerisTypeEntry
-from .exposure import Exposure
-from .guidestar import Guidestar
-from .individual_image_meta import IndividualImageMeta
-from .l2_cal_step import CalStepEntry, L2CalStep
-from .l3_cal_step import L3CalStep
-from .mosaic_associations import MosaicAssociations
-from .mosaic_basic import MosaicBasic
-from .mosaic_wcsinfo import MosaicWcsinfo, MosaicWcsinfoProjectionEntry
-from .observation import Observation
-from .outlier_detection import OutlierDetection
-from .photometry import Photometry
-from .pointing import Pointing
-from .program import Program, ProgramSubcategoryEntry
-from .rcs import Rcs, RcsBankEntry, RcsElectronicsEntry, RcsLedEntry
-from .ref_file import RefFile
-from .resample import Resample, ResampleWeightTypeEntry
-from .sky_background import SkyBackground, SkyBackgroundMethodEntry
-from .source_catalog import SourceCatalog
-from .statistics import Statistics
-from .velocity_aberration import VelocityAberration
-from .visit import Visit, VisitEngineeringQualityEntry, VisitPointingEngineeringSourceEntry, VisitStatusEntry, VisitTypeEntry
-from .wcsinfo import Wcsinfo, WcsinfoApertureNameEntry, WcsinfoVparityEntry
-from .wfi_mode import InstrumentNameEntry, WfiMode
-
-__all__ = [
-    "CalStepEntry",
-    "Coordinates",
-    "CoordinatesReferenceFrameEntry",
-    "Ephemeris",
-    "EphemerisTypeEntry",
-    "Exposure",
-    "Guidestar",
-    "IndividualImageMeta",
-    "InstrumentNameEntry",
-    "L2CalStep",
-    "L3CalStep",
-    "MosaicAssociations",
-    "MosaicBasic",
-    "MosaicWcsinfo",
-    "MosaicWcsinfoProjectionEntry",
-    "Observation",
-    "OutlierDetection",
-    "Photometry",
-    "Pointing",
-    "Program",
-    "ProgramSubcategoryEntry",
-    "Rcs",
-    "RcsBankEntry",
-    "RcsElectronicsEntry",
-    "RcsLedEntry",
-    "RefFile",
-    "Resample",
-    "ResampleWeightTypeEntry",
-    "SkyBackground",
-    "SkyBackgroundMethodEntry",
-    "SourceCatalog",
-    "Statistics",
-    "VelocityAberration",
-    "Visit",
-    "VisitEngineeringQualityEntry",
-    "VisitPointingEngineeringSourceEntry",
-    "VisitStatusEntry",
-    "VisitTypeEntry",
-    "Wcsinfo",
-    "WcsinfoApertureNameEntry",
-    "WcsinfoVparityEntry",
-    "WfiMode",
-]
+from .coordinates import *  # noqa: F403
+from .ephemeris import *  # noqa: F403
+from .exposure import *  # noqa: F403
+from .guidestar import *  # noqa: F403
+from .individual_image_meta import *  # noqa: F403
+from .l2_cal_step import *  # noqa: F403
+from .l3_cal_step import *  # noqa: F403
+from .mosaic_associations import *  # noqa: F403
+from .mosaic_basic import *  # noqa: F403
+from .mosaic_wcsinfo import *  # noqa: F403
+from .observation import *  # noqa: F403
+from .outlier_detection import *  # noqa: F403
+from .photometry import *  # noqa: F403
+from .pointing import *  # noqa: F403
+from .program import *  # noqa: F403
+from .rcs import *  # noqa: F403
+from .ref_file import *  # noqa: F403
+from .resample import *  # noqa: F403
+from .sky_background import *  # noqa: F403
+from .source_catalog import *  # noqa: F403
+from .statistics import *  # noqa: F403
+from .velocity_aberration import *  # noqa: F403
+from .visit import *  # noqa: F403
+from .wcsinfo import *  # noqa: F403
+from .wfi_mode import *  # noqa: F403

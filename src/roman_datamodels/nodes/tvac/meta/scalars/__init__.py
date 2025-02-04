@@ -1,27 +1,12 @@
-from .calibration_software_version import TvacCalibrationSoftwareVersion
-from .exposure_type import TvacExposureType
-from .file_date import TvacFileDate
-from .filename import TvacFilename
-from .guidewindow_modes import TvacGuidewindowModes
-from .model_type import TvacModelType
-from .origin import TvacOrigin
-from .prd_software_version import TvacPrdSoftwareVersion
-from .sdf_software_version import TvacSdfSoftwareVersion
-from .telescope import TvacTelescope
-from .wfi_detector import TvacWfiDetector
-from .wfi_optical_element import TvacWfiOpticalElement
-
-__all__ = [
-    "TvacCalibrationSoftwareVersion",
-    "TvacExposureType",
-    "TvacFileDate",
-    "TvacFilename",
-    "TvacGuidewindowModes",
-    "TvacModelType",
-    "TvacOrigin",
-    "TvacPrdSoftwareVersion",
-    "TvacSdfSoftwareVersion",
-    "TvacTelescope",
-    "TvacWfiDetector",
-    "TvacWfiOpticalElement",
-]
+from .calibration_software_version import *  # noqa: F403
+from .exposure_type import *  # noqa: F403
+from .file_date import *  # noqa: F403
+from .filename import *  # noqa: F403
+from .guidewindow_modes import *  # noqa: F403
+from .model_type import *  # noqa: F403
+from .origin import *  # noqa: F403
+from .prd_software_version import *  # noqa: F403
+from .sdf_software_version import *  # noqa: F403
+from .telescope import *  # noqa: F403
+from .wfi_detector import *  # noqa: F403
+from .wfi_optical_element import *  # noqa: F403

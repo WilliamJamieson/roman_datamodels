@@ -1,32 +1,14 @@
-from .calibration_software_name import CalibrationSoftwareName
-from .calibration_software_version import CalibrationSoftwareVersion
-from .exposure_type import ExposureType
-from .file_date import FileDate
-from .filename import Filename
-from .guidewindow_modes import GuidewindowModes
-from .model_type import ModelType
-from .origin import Origin
-from .prd_version import PrdVersion
-from .product_type import ProductType
-from .sdf_software_version import SdfSoftwareVersion
-from .telescope import Telescope
-from .wfi_detector import WfiDetector
-from .wfi_optical_element import OPTICAL_ELEMENTS, WfiOpticalElement
-
-__all__ = [
-    "OPTICAL_ELEMENTS",
-    "CalibrationSoftwareName",
-    "CalibrationSoftwareVersion",
-    "ExposureType",
-    "FileDate",
-    "Filename",
-    "GuidewindowModes",
-    "ModelType",
-    "Origin",
-    "PrdVersion",
-    "ProductType",
-    "SdfSoftwareVersion",
-    "Telescope",
-    "WfiDetector",
-    "WfiOpticalElement",
-]
+from .calibration_software_name import *  # noqa: F403
+from .calibration_software_version import *  # noqa: F403
+from .exposure_type import *  # noqa: F403
+from .file_date import *  # noqa: F403
+from .filename import *  # noqa: F403
+from .guidewindow_modes import *  # noqa: F403
+from .model_type import *  # noqa: F403
+from .origin import *  # noqa: F403
+from .prd_version import *  # noqa: F403
+from .product_type import *  # noqa: F403
+from .sdf_software_version import *  # noqa: F403
+from .telescope import *  # noqa: F403
+from .wfi_detector import *  # noqa: F403
+from .wfi_optical_element import *  # noqa: F403

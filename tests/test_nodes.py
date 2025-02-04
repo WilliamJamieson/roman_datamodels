@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 from enum import Enum
 from importlib import resources as importlib_resources
-from inspect import getattr_static, signature
+from inspect import getattr_static, isclass, signature
 from textwrap import indent
 from typing import get_args
 
@@ -765,11 +765,15 @@ def test_reftype_node():
     Test that the reftype node has entries for each of the RefFiles
     """
     from roman_datamodels.nodes import reference_files
-    from roman_datamodels.nodes.reference_files import ref
 
     # Get the entry types from the registry
     types = [value for key, value in rad.RDM_NODE_REGISTRY.tagged_registry.items() if "reference_files" in key]
-    assert len(types) == len(reference_files.__all__) - len(ref.__all__)
+
+    # Get the tagged types from the reference files
+    reference_files_types = [
+        value for value in reference_files.__dict__.values() if isclass(value) and issubclass(value, rad.TaggedObjectNode)
+    ]
+    assert len(types) == len(reference_files_types)
 
     # This is a fill in value for the `ref_common` which will
     # never be used outside testing

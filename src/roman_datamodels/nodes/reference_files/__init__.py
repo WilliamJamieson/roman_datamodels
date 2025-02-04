@@ -1,51 +1,18 @@
-from .abvegaoffset import AbvegaoffsetRef
-from .apcorr import ApcorrRef
-from .dark import DarkRef
-from .distortion import DistortionRef
-from .epsf import EpsfRef
-from .flat import FlatRef
-from .gain import GainRef
-from .inverselinearity import InverselinearityRef
-from .ipc import IpcRef
-from .linearity import LinearityRef
-from .mask import MaskRef
-from .pixelarea import PixelareaRef
-from .readnoise import ReadnoiseRef
-from .ref import (
-    RefCommonPedigreeEntry,
-    RefCommonRef,
-    RefCommonRefOpticalElementRef,
-    RefExposureTypeRef,
-    RefOpticalElementRef,
-    RefTypeEntry,
-)
-from .refpix import RefpixRef
-from .saturation import SaturationRef
-from .superbias import SuperbiasRef
-from .wfi_img_photom import WfiImgPhotomRef
-
-__all__ = [
-    "AbvegaoffsetRef",
-    "ApcorrRef",
-    "DarkRef",
-    "DistortionRef",
-    "EpsfRef",
-    "FlatRef",
-    "GainRef",
-    "InverselinearityRef",
-    "IpcRef",
-    "LinearityRef",
-    "MaskRef",
-    "PixelareaRef",
-    "ReadnoiseRef",
-    "RefCommonPedigreeEntry",
-    "RefCommonRef",
-    "RefCommonRefOpticalElementRef",
-    "RefExposureTypeRef",
-    "RefOpticalElementRef",
-    "RefTypeEntry",
-    "RefpixRef",
-    "SaturationRef",
-    "SuperbiasRef",
-    "WfiImgPhotomRef",
-]
+from .abvegaoffset import *  # noqa: F403
+from .apcorr import *  # noqa: F403
+from .dark import *  # noqa: F403
+from .distortion import *  # noqa: F403
+from .epsf import *  # noqa: F403
+from .flat import *  # noqa: F403
+from .gain import *  # noqa: F403
+from .inverselinearity import *  # noqa: F403
+from .ipc import *  # noqa: F403
+from .linearity import *  # noqa: F403
+from .mask import *  # noqa: F403
+from .pixelarea import *  # noqa: F403
+from .readnoise import *  # noqa: F403
+from .ref import *  # noqa: F403
+from .refpix import *  # noqa: F403
+from .saturation import *  # noqa: F403
+from .superbias import *  # noqa: F403
+from .wfi_img_photom import *  # noqa: F403

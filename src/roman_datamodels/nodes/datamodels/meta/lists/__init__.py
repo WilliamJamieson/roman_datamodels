@@ -1,3 +1,1 @@
-from .cal_logs import CalLogs
-
-__all__ = ["CalLogs"]
+from .cal_logs import *  # noqa: F403

@@ -1,27 +1,12 @@
-from .calibration_software_version import FpsCalibrationSoftwareVersion
-from .exposure_type import FpsExposureType
-from .file_date import FpsFileDate
-from .filename import FpsFilename
-from .guidewindow_modes import FpsGuidewindowModes
-from .model_type import FpsModelType
-from .origin import FpsOrigin
-from .prd_software_version import FpsPrdSoftwareVersion
-from .sdf_software_version import FpsSdfSoftwareVersion
-from .telescope import FpsTelescope
-from .wfi_detector import FpsWfiDetector
-from .wfi_optical_element import FpsWfiOpticalElement
-
-__all__ = [
-    "FpsCalibrationSoftwareVersion",
-    "FpsExposureType",
-    "FpsFileDate",
-    "FpsFilename",
-    "FpsGuidewindowModes",
-    "FpsModelType",
-    "FpsOrigin",
-    "FpsPrdSoftwareVersion",
-    "FpsSdfSoftwareVersion",
-    "FpsTelescope",
-    "FpsWfiDetector",
-    "FpsWfiOpticalElement",
-]
+from .calibration_software_version import *  # noqa: F403
+from .exposure_type import *  # noqa: F403
+from .file_date import *  # noqa: F403
+from .filename import *  # noqa: F403
+from .guidewindow_modes import *  # noqa: F403
+from .model_type import *  # noqa: F403
+from .origin import *  # noqa: F403
+from .prd_software_version import *  # noqa: F403
+from .sdf_software_version import *  # noqa: F403
+from .telescope import *  # noqa: F403
+from .wfi_detector import *  # noqa: F403
+from .wfi_optical_element import *  # noqa: F403
