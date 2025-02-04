@@ -5,7 +5,7 @@ The ASDF Converters to handle the serialization/deseialization of the STNode cla
 from __future__ import annotations
 
 from enum import Enum
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any
 
 from asdf import AsdfFile, get_config
 from asdf.extension import Converter, ManifestExtension
@@ -16,8 +16,6 @@ if TYPE_CHECKING:
     from roman_datamodels.stnode.rad import TagMixin
 
 __all__ = ["NODE_EXTENSIONS"]
-
-_T = TypeVar("_T")
 
 
 class _NodeConverter(Converter):
@@ -40,7 +38,9 @@ class _NodeConverter(Converter):
         return obj._tag
 
     def to_yaml_tree(self, obj: TagMixin, tag: str, ctx: AsdfFile) -> dict[str, Any] | list[Any] | Any:
-        return obj.to_asdf_tree(ctx)
+        from roman_datamodels.stnode.core import get_config
+
+        return obj.to_asdf_tree(ctx, flush=get_config().flush_option)
 
     def from_yaml_tree(self, node: dict[str, Any] | Any, tag: str, ctx: AsdfFile) -> TagMixin:
         node_cls = RDM_NODE_REGISTRY.tagged_registry[tag]

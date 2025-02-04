@@ -8,6 +8,8 @@ import asdf
 import yaml
 from asdf import config as _asdf_config
 
+from ._mixins import FlushOptions
+
 __all__ = ["config_context", "get_config"]
 
 
@@ -21,6 +23,7 @@ class _StNodeConfig:
         self._use_test_array_shape = False
         self._asdf_ctx: asdf.AsdfFile | None = None
         self._asdf_config: _asdf_config.AsdfConfig | None = None
+        self._flush_option = FlushOptions.REQUIRED
 
     @property
     def typeguard_enabled(self) -> bool:
@@ -49,6 +52,21 @@ class _StNodeConfig:
         self._use_test_array_shape = True
         yield
         self._use_test_array_shape = False
+
+    @property
+    def flush_option(self) -> FlushOptions:
+        """The default serialization flush option"""
+
+        return self._flush_option
+
+    @contextmanager
+    def set_flush_option(self, flush_option: FlushOptions) -> Generator[None, None, None]:
+        """
+        Context manager to temporarily set the flush option.
+        """
+        self._flush_option = flush_option
+        yield
+        self._flush_option = FlushOptions.REQUIRED
 
     @property
     def asdf_ctx(self) -> asdf.AsdfFile:

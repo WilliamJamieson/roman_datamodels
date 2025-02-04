@@ -124,36 +124,3 @@ class AsdfNodeMixin(NodeKeyMixin, Generic[_T], ABC):
         warn
             If `True`, warn if any required fields are missing.
         """
-
-    # @property
-    # @abstractmethod
-    # def schema_required(self) -> tuple[str, ...]:
-    #     """Get the fields required fields in the schema."""
-
-    # @classmethod
-    # @abstractmethod
-    # def _defined_fields(cls) -> tuple[str, ...]:
-    #     """
-    #     Get the fields that are defined in the schema.
-    #     """
-
-    # @classproperty
-    # def defined_fields(cls) -> tuple[str, ...]:
-    #     """
-    #     Get the fields that are defined in the schema.
-    #     """
-    #     return cls._defined_fields()
-
-    # @classmethod
-    # @abstractmethod
-    # def _fields(cls) -> tuple[str, ...]:
-    #     """
-    #     Get all the fields that are defined for the object (including any extra fields).
-    #     """
-
-    # @classproperty
-    # def fields(cls) -> tuple[str, ...]:
-    #     """
-    #     Get all the fields that are defined for the object (including any extra fields).
-    #     """
-    #     return cls._fields()

@@ -528,6 +528,16 @@ is an example of how to do this. Note that if it were tagged a similar pattern w
     ``<enum name>.<enum value>`` in these cases. This is so that the enum truly plays like
     a `str` or `int` in the code base for things like table creation.
 
+.. warning::
+
+    Due to the automatic wrapping into the correct node object, passing a value that is not
+    in the enum will raise an error from that enum. This is because the enum only allows
+    for values it has defined. So in effect enum values will be validated during the
+    setting process.
+
+    This is a trade off against the removal of any "automatic validation" in ``roman_datamodels``
+    so that the values for an enumerated field can be explicitly laid out in the code base.
+
 
 Array Fields
 ^^^^^^^^^^^^
@@ -701,6 +711,54 @@ value for every field that is not already filled in.
 
     By default serialization will only include what fields it minimally needs to
     in order to create a valid ASDF file.
+
+.. warning::
+
+    Passing a node to an ``asdf.AsdfFile`` object and then calling validate on that
+    file will cause the node to flush out all its required fields. Indeed, calling
+    the ``.validate`` method on a data model object will cause the same phenomenon.
+
+Including More Fields
+*********************
+
+It is possible it influence the flushing process for ASDF. This however does require
+using `~roman_datamodels.stnode.get_config` to get the global node configuration object.
+
+This object has the context manager `.set_flush_option` which can be used to set the
+flushing used. The options are listed in `~roman_datamodels.stnode.FlushOptions`:
+
+    - ``FlushOptions.REQUIRED`` (or just ``"required"``): This is the default behavior
+      which flushes only the required fields as stated in the ``rad`` schema(s).
+    - ``FlushOptions.ALL`` (or just ``"all"``): This will flush all the fields
+      in the schema meaning that all the required and optional fields defined in the
+      ``rad`` schema(s) will be filled in.
+    - ``FlushOptions.EXTRA`` (or just ``"extra"``): This will flush all the fields
+      defined on the node object, including those that are not defined in the ``rad``
+      schema(s).
+    - ``FlushOptions.NONE`` (or just ``"none"``): This will not flush anything during
+      serialization. This means that the node object will be serialized as is, so if
+      the instance is not filled in with a required field, then the ASDF serialization
+      will throw a validation error.
+
+For example:
+
+.. code:: python
+
+    instance = MyObjectNode()
+    with core.get_config().set_flush_option(core.FlushOptions.ALL):
+        af = asdf.AsdfFile()
+        af.tree["roman"] = instance
+        af.write_to("test.asdf")
+
+Will flush out all the fields including those that are not required.
+
+.. note::
+
+    The context manager is needed due to the fact that this sort of serialization
+    option cannot be passed through to the ASDF converter during the serialization
+    process. Thus the converter needs to be able to look up the value from somewhere
+    during the serialization process, if we wish to have optional levels of serialization.
+    behavior.
 
 Extension
 *********
