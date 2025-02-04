@@ -1,10 +1,10 @@
-from typing import Any, ClassVar
+from typing import ClassVar
 
-from roman_datamodels.stnode import core, rad
+from roman_datamodels.stnode import rad
 
 from ..scalars import WfiDetector, WfiOpticalElement
 
-__all__ = ["InstrumentNameEntry", "WfiMode", "WfiModeMixin"]
+__all__ = ["InstrumentNameEntry", "WfiMode"]
 
 
 class InstrumentNameEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumMeta):
@@ -23,47 +23,12 @@ class InstrumentNameEntry(rad.StrNodeMixin, rad.RadEnum, metaclass=rad.NodeEnumM
         return "name"
 
 
-class WfiModeMixin(core.AdditionalNodeMixin[Any]):
-    """
-    Extensions to the WfiMode class.
-        Adds to indication properties
-    """
-
+class WfiMode(rad.TaggedObjectNode):
     # Every optical element is a grating or a filter
     #   There are less gratings than filters so its easier to list out the
     #   gratings.
-    _GRATING_OPTICAL_ELEMENTS: ClassVar = {"GRISM", "PRISM"}
+    _GRATING_OPTICAL_ELEMENTS: ClassVar[tuple[str, ...]] = WfiOpticalElement.gratings()
 
-    @property
-    def filter(self) -> WfiOpticalElement | None:
-        """
-        Returns the filter if it is one, otherwise None
-        """
-        # I would add this as an abstract property here, but for some
-        # reason that I can't figure out, it nukes defining it in the sub class
-        element: WfiOpticalElement = self.optical_element
-
-        if element in self._GRATING_OPTICAL_ELEMENTS:
-            return None
-        else:
-            return element
-
-    @property
-    def grating(self) -> WfiOpticalElement | None:
-        """
-        Returns the grating if it is one, otherwise None
-        """
-        # I would add this as an abstract property here, but for some
-        # reason that I can't figure out, it nukes defining it in the sub class
-        element: WfiOpticalElement = self.optical_element
-
-        if element in self._GRATING_OPTICAL_ELEMENTS:
-            return element
-        else:
-            return None
-
-
-class WfiMode(WfiModeMixin, rad.TaggedObjectNode):
     @classmethod
     def _asdf_tag_uris(cls) -> dict[str, str]:
         return {
@@ -81,3 +46,23 @@ class WfiMode(WfiModeMixin, rad.TaggedObjectNode):
     @rad.field
     def optical_element(self) -> WfiOpticalElement:
         return WfiOpticalElement.F158
+
+    @property
+    def filter(self) -> WfiOpticalElement | None:
+        """
+        Returns the filter if it is one, otherwise None
+        """
+        if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
+            return None
+
+        return self.optical_element
+
+    @property
+    def grating(self) -> WfiOpticalElement | None:
+        """
+        Returns the grating if it is one, otherwise None
+        """
+        if self.optical_element in self._GRATING_OPTICAL_ELEMENTS:
+            return self.optical_element
+
+        return None

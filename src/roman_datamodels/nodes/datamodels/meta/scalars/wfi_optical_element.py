@@ -20,5 +20,9 @@ class WfiOpticalElement(rad.SchemaStrNodeMixin, rad.RadEnum, metaclass=rad.NodeE
     def _asdf_schema_uris(cls) -> tuple[str]:
         return ("asdf://stsci.edu/datamodels/roman/schemas/wfi_optical_element-1.0.0",)
 
+    @classmethod
+    def gratings(cls) -> tuple[str, ...]:
+        return cls.GRISM, cls.PRISM
+
 
 OPTICAL_ELEMENTS = tuple(str(entry.value) for entry in WfiOpticalElement)

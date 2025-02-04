@@ -22,7 +22,6 @@ if TYPE_CHECKING:
     from ..rad import TagMixin
 
 __all__ = [
-    "AdditionalNodeMixin",
     "DNode",
     "MissingFieldError",
     "PatternDNode",
@@ -415,9 +414,3 @@ class PatternDNode(DNode[_T], ABC):
             return True
 
         return super()._check_key(key)
-
-
-class AdditionalNodeMixin(DNode[_T], ABC):
-    """
-    Base class for all mixin classes.
-    """
