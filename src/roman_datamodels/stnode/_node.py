@@ -9,6 +9,7 @@ from collections.abc import MutableMapping, MutableSequence
 import numpy as np
 from asdf.lazy_nodes import AsdfDictNode, AsdfListNode
 from asdf.tags.core import ndarray
+from asdf.treeutil import walk_and_modify
 from astropy.time import Time
 from semantic_version import Version
 
@@ -132,6 +133,7 @@ class DNode(MutableMapping):
         if key[0] != "_":
             # Wrap things in the tagged scalar classes if necessary
             value = self._handle_scalar(key, value, self._data.get(key))
+            value = self._wrap_value(key, value)
 
             # Finally set the value
             self._data[key] = self._assign_parent(key, value)
@@ -253,6 +255,20 @@ class DNode(MutableMapping):
 
         return instance
 
+    def _to_asdf_tree(self):
+        from ._tagged import TaggedListNode, TaggedObjectNode
+
+        def callback(node):
+            if isinstance(node, DNode) and not isinstance(node, TaggedObjectNode):
+                return node._to_asdf_tree()
+
+            if isinstance(node, LNode) and not isinstance(node, TaggedListNode):
+                return node._to_asdf_tree()
+
+            return node
+
+        return walk_and_modify(self._data, callback)
+
 
 class TaggedScalarDNode(DNode):
     """Legacy class for nodes that have tagged scalars"""
@@ -340,3 +356,15 @@ class LNode(MutableSequence):
         instance.data = self.data.copy()
         instance._read_tag = self._read_tag
         return instance
+
+    def _to_asdf_tree(self):
+        from ._tagged import TaggedListNode, TaggedObjectNode
+
+        data = list(self)
+        for i, value in enumerate(data):
+            if isinstance(value, DNode) and not isinstance(value, TaggedObjectNode):
+                data[i] = value._to_asdf_tree()
+            elif isinstance(value, LNode) and not isinstance(value, TaggedListNode):
+                data[i] = value._to_asdf_tree()
+
+        return data

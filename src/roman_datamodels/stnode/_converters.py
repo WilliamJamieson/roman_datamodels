@@ -70,7 +70,7 @@ class TaggedObjectNodeConverter(_RomanConverter):
         return list(OBJECT_NODE_CLASSES_BY_PATTERN.values())
 
     def to_yaml_tree(self, obj, tag, ctx):
-        return dict(obj._data)
+        return obj._to_asdf_tree()
 
 
 class TaggedListNodeConverter(_RomanConverter):
@@ -87,7 +87,7 @@ class TaggedListNodeConverter(_RomanConverter):
         return list(LIST_NODE_CLASSES_BY_PATTERN.values())
 
     def to_yaml_tree(self, obj, tag, ctx):
-        return list(obj)
+        return obj._to_asdf_tree()
 
 
 class TaggedScalarNodeConverter(_RomanConverter):

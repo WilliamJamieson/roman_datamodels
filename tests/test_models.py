@@ -916,7 +916,7 @@ def test_create_from_model_dict():
     """
     model = datamodels.ImageModel.create_from_model({"meta": {"observation": {"visit": 42}}})
     assert isinstance(model, datamodels.ImageModel)
-    assert isinstance(model.meta.observation, stnode.Observation)
+    assert isinstance(model.meta.observation, stnode.DNode)
     assert model.meta.observation.visit == 42
 
 
@@ -939,11 +939,13 @@ def test_create_from_model_old_tags():
 
     converted = datamodels.ImageModel.create_from_model(old_model)
     assert converted.tag == new_model_tag
-    assert converted.meta.observation.tag == new_observation_tag
+    # Ensure that the observation is not still a tagged node
+    assert not isinstance(converted.meta.observation, stnode.Observation)
+    assert isinstance(converted.meta.observation, stnode.DNode)
 
 
 @pytest.mark.parametrize("old_tag, new_tag", _INTERNAL_TAG_REMOVAL_MAP.items())
-def test_internal_tag_removal(old_tag, new_tag, tmp_path):
+def test_internal_tag_removal(old_tag, new_tag, tmp_path, request):
     """
     Test that old internal tags are replaced with new tags
     during create_from_model.
@@ -952,37 +954,10 @@ def test_internal_tag_removal(old_tag, new_tag, tmp_path):
     model_cls = datamodels.MODEL_REGISTRY[stnode._registry.NODE_CLASSES_BY_TAG[old_tag]]
     assert model_cls is datamodels.MODEL_REGISTRY[stnode._registry.NODE_CLASSES_BY_TAG[new_tag]]
 
-    old_model = model_cls.create_fake_data()
-    flat_data = deepcopy({key.split("roman.")[-1]: value for key, value in old_model.to_flat_dict(convert_times=False).items()})
+    old_model = model_cls.create_fake_data(tag=old_tag)
+    assert old_model._instance._read_tag == old_tag
 
-    collapse_keys = {}
-    for key in flat_data:
-        final = key.split(".")[-1]
-        try:
-            int(final)
-        except ValueError:
-            continue
-
-        if (prefix := ".".join(key.split(".")[:-1])) not in collapse_keys:
-            collapse_keys[prefix] = []
-
-        collapse_keys[prefix].append(key)
-
-    for prefix, keys in collapse_keys.items():
-        flat_data[prefix] = [flat_data.pop(key) for key in sorted(keys)]
-
-    old_model._instance._read_tag = old_tag
-    for key, value in flat_data.items():
-        item = old_model._instance
-
-        *path, last = key.split(".")
-        for p in path:
-            item = getattr(item, p)
-
-        setattr(item, last, value)
-
-    if "meta" in old_model._instance and "basic" in old_model._instance.meta:
-        old_model._instance.meta.basic._read_tag = "asdf://stsci.edu/datamodels/roman/tags/mosaic_basic-1.2.0"
+    old_model = model_cls(old_model)
 
     old_path = tmp_path / "old.asdf"
     old_model.save(old_path)
@@ -990,6 +965,14 @@ def test_internal_tag_removal(old_tag, new_tag, tmp_path):
     new_path = tmp_path / "new.asdf"
     with pytest.warns(datamodels.RadConversionWarning, match=r".*Converting.*"), datamodels.open(old_path) as model:
         assert model._read_tag == new_tag
+
+        if model_cls is datamodels.MsosStackModel:
+            request.applymarker(
+                pytest.mark.xfail(
+                    reason="MsosStackModel has a non-optional array without a default that has been added between versions"
+                )
+            )
+
         model.validate()
 
         for key, cls in stnode._registry.SCALAR_NODE_CLASSES_BY_KEY.items():

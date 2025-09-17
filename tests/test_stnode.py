@@ -51,10 +51,16 @@ def test_no_wrapping_of_scalars(scalar_key, scalar_type):
 
 
 @pytest.mark.parametrize("node_class", stnode.NODE_CLASSES)
-def test_copy(node_class):
+def test_copy(node_class, request):
     """Demonstrate nodes can copy themselves, but don't always deepcopy."""
     node = node_class.create_fake_data()
     node_copy = node.copy()
+
+    if node_class is stnode.MosaicBasic:
+        # See issue https://github.com/spacetelescope/rad/issues/694
+        request.applymarker(
+            pytest.mark.xfail(reason="mosaic basic has a product_type not derived from the same schema as product_type")
+        )
 
     # Assert the copy is shallow:
     assert_node_is_copy(node, node_copy, deepcopy=False)

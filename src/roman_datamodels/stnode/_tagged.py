@@ -60,17 +60,22 @@ class TaggedObjectNode(DNode):
             OBJECT_NODE_CLASSES_BY_PATTERN[cls._pattern] = cls
 
     @classmethod
-    def create_minimal(cls, defaults=None, builder=None):
+    def create_minimal(cls, defaults=None, builder=None, *, tag: str | None = None):
+        tag = cls._default_tag if tag is None else tag
         builder = builder or Builder()
-        return cls(builder.build(_get_schema_from_tag(cls._default_tag), defaults))
+
+        new = cls(builder.build(_get_schema_from_tag(tag), defaults))
+        new._read_tag = tag
+
+        return new
 
     @classmethod
-    def create_fake_data(cls, defaults=None, shape=None, builder=None):
-        return cls.create_minimal(defaults, builder or FakeDataBuilder(shape))
+    def create_fake_data(cls, defaults=None, shape=None, builder=None, *, tag: str | None = None):
+        return cls.create_minimal(defaults, builder or FakeDataBuilder(shape), tag=tag)
 
     @classmethod
-    def create_from_node(cls, node, builder=None):
-        return cls.create_minimal(node, builder or NodeBuilder())
+    def create_from_node(cls, node, builder=None, *, tag: str | None = None):
+        return cls.create_minimal(node, builder or NodeBuilder(), tag=tag)
 
     @property
     def _tag(self):
