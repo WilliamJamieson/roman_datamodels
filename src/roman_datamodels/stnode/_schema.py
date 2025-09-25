@@ -2,10 +2,14 @@
 Code for relating nodes and schema.
 """
 
+from __future__ import annotations
+
 import copy
 import enum
 import functools
 from collections.abc import Mapping, Sequence
+from threading import Lock
+from typing import TYPE_CHECKING
 
 import asdf
 
@@ -14,7 +18,8 @@ from ._registry import (
     SCHEMA_URIS_BY_TAG,
 )
 
-__all__ = []
+if TYPE_CHECKING:
+    from typing import ClassVar
 
 
 NOSTR = "?"
@@ -23,7 +28,7 @@ NOBOOL = False
 
 
 @functools.cache
-def _get_schema_from_tag(tag):
+def get_schema_from_tag(tag):
     """
     Look up and load ASDF's schema corresponding to the tag_uri.
 
@@ -37,7 +42,20 @@ def _get_schema_from_tag(tag):
     return asdf.schema.load_schema(schema_uri, resolve_references=True)
 
 
-class _MissingKeywordType:
+class _SentinelMeta(type):
+    _instances: ClassVar[dict[type[object], object]] = {}
+    _lock = Lock()
+
+    def __call__(cls, *args, **kwargs) -> object:
+        with cls._lock:
+            if cls not in cls._instances:
+                instance = super().__call__(*args, **kwargs)
+                cls._instances[cls] = instance
+
+            return cls._instances[cls]
+
+
+class _MissingKeywordType(metaclass=_SentinelMeta):
     """Special value to indicate a keyword was not found in a schema"""
 
     def __bool__(self):
@@ -144,17 +162,17 @@ def _get_required(schema):
     return required
 
 
-class _NoValueType:
+class _NoValueType(metaclass=_SentinelMeta):
     """Special value to indicate a builder built nothing"""
 
     def __bool__(self):
         return False
 
 
-_NO_VALUE = _NoValueType()
+NO_VALUE = _NoValueType()
 
 
-class SchemaType(enum.Enum):
+class _SchemaType(enum.Enum):
     """
     Enumeration of possible types defined by a schema
 
@@ -203,38 +221,38 @@ class Builder:
 
     def get_type(self, schema):
         if _has_keyword(schema, "tag"):
-            return SchemaType.TAGGED
+            return _SchemaType.TAGGED
         if defined_type := _get_keyword(schema, "type"):
             defined_type = defined_type.upper()
-            if hasattr(SchemaType, defined_type):
-                return getattr(SchemaType, defined_type)
+            if hasattr(_SchemaType, defined_type):
+                return getattr(_SchemaType, defined_type)
         if any(_has_keyword(schema, k) for k in _OBJECT_KEYWORDS):
-            return SchemaType.OBJECT
+            return _SchemaType.OBJECT
         if any(_has_keyword(schema, k) for k in _ARRAY_KEYWORDS):
-            return SchemaType.ARRAY
+            return _SchemaType.ARRAY
         if any(_has_keyword(schema, k) for k in _STRING_KEYWORDS):
-            return SchemaType.STRING
+            return _SchemaType.STRING
         # assume anything numeric is a number not an integer
         if any(_has_keyword(schema, k) for k in _NUMERIC_KEYWORDS):
-            return SchemaType.NUMBER
-        return SchemaType.UNKNOWN
+            return _SchemaType.NUMBER
+        return _SchemaType.UNKNOWN
 
     def from_enum(self, schema):
         if enum := _get_keyword(schema, "enum"):
             if len(enum) == 1:
                 return enum[0]
-        return _NO_VALUE
+        return NO_VALUE
 
     def from_unknown(self, schema, defaults):
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return copy.deepcopy(defaults)
         # even an unknown type can have an enum
-        if (enum := self.from_enum(schema)) is not _NO_VALUE:
+        if (enum := self.from_enum(schema)) is not NO_VALUE:
             return enum
         return defaults
 
     def from_object(self, schema, defaults):
-        if defaults is _NO_VALUE:
+        if defaults is NO_VALUE:
             defaults = {}
         obj = {}
         required = _get_required(schema)
@@ -243,9 +261,9 @@ class Builder:
         for name, subschema in _get_properties(schema):
             if name not in required:
                 continue
-            if (subdefaults := defaults.get(name, _NO_VALUE)) is not _NO_VALUE:
+            if (subdefaults := defaults.get(name, NO_VALUE)) is not NO_VALUE:
                 pass
-            if (value := self.build_node(subschema, subdefaults)) is _NO_VALUE:
+            if (value := self.build_node(subschema, subdefaults)) is NO_VALUE:
                 continue
             if name in obj and isinstance(value, dict):
                 # blend the 2 dictionaries
@@ -255,7 +273,7 @@ class Builder:
         return obj
 
     def from_array(self, schema, defaults):
-        if defaults is _NO_VALUE:
+        if defaults is NO_VALUE:
             defaults = []
         arr = []
 
@@ -273,42 +291,42 @@ class Builder:
         if items_keyword is _MISSING_KEYWORD:
             return arr
         if isinstance(items_keyword, dict):
-            item = self.build_node(items_keyword, _NO_VALUE)
-            if item is _NO_VALUE:
+            item = self.build_node(items_keyword, NO_VALUE)
+            if item is NO_VALUE:
                 return arr
             for _ in range(min_items - len(arr)):
                 arr.append(copy.deepcopy(item))
             return arr
 
         for subitem in items_keyword[len(arr) : min_items]:
-            arr.append(self.build_node(subitem, _NO_VALUE))
+            arr.append(self.build_node(subitem, NO_VALUE))
         return arr
 
     def from_string(self, schema, defaults):
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return defaults
-        if (enum := self.from_enum(schema)) is not _NO_VALUE:
+        if (enum := self.from_enum(schema)) is not NO_VALUE:
             return enum
         return defaults
 
     def from_integer(self, schema, defaults):
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return defaults
-        if (enum := self.from_enum(schema)) is not _NO_VALUE:
+        if (enum := self.from_enum(schema)) is not NO_VALUE:
             return enum
         return defaults
 
     def from_number(self, schema, defaults):
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return defaults
-        if (enum := self.from_enum(schema)) is not _NO_VALUE:
+        if (enum := self.from_enum(schema)) is not NO_VALUE:
             return enum
         return defaults
 
     def from_boolean(self, schema, defaults):
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return defaults
-        if (enum := self.from_enum(schema)) is not _NO_VALUE:
+        if (enum := self.from_enum(schema)) is not NO_VALUE:
             return enum
         return defaults
 
@@ -319,34 +337,34 @@ class Builder:
         tag = _get_keyword(schema, "tag")
         if property_class := NODE_CLASSES_BY_TAG.get(tag):
             return property_class._create_minimal(defaults, builder=self, tag=tag)
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return copy.deepcopy(defaults)
-        return _NO_VALUE
+        return NO_VALUE
 
     def build_node(self, schema, defaults):
         match self.get_type(schema):
-            case SchemaType.UNKNOWN:
+            case _SchemaType.UNKNOWN:
                 return self.from_unknown(schema, defaults)
-            case SchemaType.OBJECT:
+            case _SchemaType.OBJECT:
                 return self.from_object(schema, defaults)
-            case SchemaType.ARRAY:
+            case _SchemaType.ARRAY:
                 return self.from_array(schema, defaults)
-            case SchemaType.STRING:
+            case _SchemaType.STRING:
                 return self.from_string(schema, defaults)
-            case SchemaType.INTEGER:
+            case _SchemaType.INTEGER:
                 return self.from_integer(schema, defaults)
-            case SchemaType.NUMBER:
+            case _SchemaType.NUMBER:
                 return self.from_number(schema, defaults)
-            case SchemaType.BOOLEAN:
+            case _SchemaType.BOOLEAN:
                 return self.from_boolean(schema, defaults)
-            case SchemaType.NULL:
+            case _SchemaType.NULL:
                 return self.from_null(schema, defaults)
-            case SchemaType.TAGGED:
+            case _SchemaType.TAGGED:
                 return self.from_tagged(schema, defaults)
 
-    def build(self, schema, defaults=_NO_VALUE):
+    def build(self, schema, defaults=NO_VALUE):
         if defaults is None:
-            defaults = _NO_VALUE
+            defaults = NO_VALUE
         return self.build_node(schema, defaults)
 
 
@@ -372,10 +390,10 @@ class FakeDataBuilder(Builder):
     def from_enum(self, schema):
         if enum := _get_keyword(schema, "enum"):
             return enum[0]
-        return _NO_VALUE
+        return NO_VALUE
 
     def from_string(self, schema, defaults):
-        if (value := super().from_string(schema, defaults)) is not _NO_VALUE:
+        if (value := super().from_string(schema, defaults)) is not NO_VALUE:
             return value
         if pattern := _get_keyword(schema, "pattern"):
             if "WFI_IMAGE|" in pattern:
@@ -384,25 +402,25 @@ class FakeDataBuilder(Builder):
         return NOSTR
 
     def from_unknown(self, schema, defaults):
-        if (value := super().from_unknown(schema, defaults)) is not _NO_VALUE:
+        if (value := super().from_unknown(schema, defaults)) is not NO_VALUE:
             return value
         if "ndim" in schema:
             # FIXME guidewindow is missing a tag for an array
             return self.from_tagged(schema, defaults)
-        return _NO_VALUE
+        return NO_VALUE
 
     def from_integer(self, schema, defaults):
-        if (value := super().from_integer(schema, defaults)) is not _NO_VALUE:
+        if (value := super().from_integer(schema, defaults)) is not NO_VALUE:
             return value
         return int(NONUM)
 
     def from_number(self, schema, defaults):
-        if (value := super().from_number(schema, defaults)) is not _NO_VALUE:
+        if (value := super().from_number(schema, defaults)) is not NO_VALUE:
             return value
         return float(NONUM)
 
     def from_boolean(self, schema, defaults):
-        if (value := super().from_boolean(schema, defaults)) is not _NO_VALUE:
+        if (value := super().from_boolean(schema, defaults)) is not NO_VALUE:
             return value
         return NOBOOL
 
@@ -421,11 +439,11 @@ class FakeDataBuilder(Builder):
             if _get_keyword(schema, "ndim"):
                 tag = "tag:stsci.edu:asdf/core/ndarray-1.*"
             else:
-                return _NO_VALUE
+                return NO_VALUE
         if property_class := NODE_CLASSES_BY_TAG.get(tag):
             # Pass control to the class for create_fake_data overrides
             return property_class._create_fake_data(defaults, builder=self, tag=tag)
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return copy.deepcopy(defaults)
         if tag == "tag:stsci.edu:asdf/time/time-1.*":
             return self.make_time(schema, defaults)
@@ -437,7 +455,7 @@ class FakeDataBuilder(Builder):
             return self.make_table(schema, defaults)
         if tag == "tag:stsci.edu:asdf/unit/quantity-1.*":
             return self.make_quantity(schema, defaults)
-        return _NO_VALUE
+        return NO_VALUE
 
     def make_time(self, schema, defaults):
         from astropy.time import Time
@@ -516,7 +534,7 @@ class NodeBuilder(Builder):
         return self._copy_default(defaults)
 
     def from_object(self, schema, defaults):
-        if defaults is _NO_VALUE:
+        if defaults is NO_VALUE:
             return defaults
 
         if not isinstance(defaults, Mapping):
@@ -531,7 +549,7 @@ class NodeBuilder(Builder):
         return obj
 
     def from_array(self, schema, defaults):
-        if defaults is _NO_VALUE:
+        if defaults is NO_VALUE:
             return defaults
 
         if not isinstance(defaults, Sequence) or isinstance(defaults, str):
@@ -582,6 +600,6 @@ class NodeBuilder(Builder):
                 # will result in a ValueError. Don't let this stop the conversion
                 # and instead let the copy below return the defaults.
                 pass
-        if defaults is not _NO_VALUE:
+        if defaults is not NO_VALUE:
             return copy.deepcopy(defaults)
-        return _NO_VALUE
+        return NO_VALUE

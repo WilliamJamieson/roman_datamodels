@@ -12,7 +12,7 @@ from ._registry import (
     OBJECT_NODE_CLASSES_BY_PATTERN,
     SCALAR_NODE_CLASSES_BY_PATTERN,
 )
-from ._stnode import _MANIFESTS
+from ._stnode import MANIFESTS
 
 __all__ = [
     "NODE_EXTENSIONS",
@@ -115,5 +115,5 @@ class TaggedScalarNodeConverter(_RomanConverter):
 
 # Create the ASDF extension for the STNode classes.
 NODE_EXTENSIONS = {
-    manifest["id"]: ManifestExtension.from_uri(manifest["id"], converters=NODE_CONVERTERS.values()) for manifest in _MANIFESTS
+    manifest["id"]: ManifestExtension.from_uri(manifest["id"], converters=NODE_CONVERTERS.values()) for manifest in MANIFESTS
 }

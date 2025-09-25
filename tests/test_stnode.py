@@ -12,7 +12,7 @@ from .conftest import MANIFESTS
 
 @pytest.mark.parametrize("tag_def", [tag_def for manifest in MANIFESTS for tag_def in manifest["tags"]])
 def test_tag_has_node_class(tag_def):
-    class_name = stnode._factories.class_name_from_tag_uri(tag_def["tag_uri"])
+    class_name = stnode._factories._class_name_from_tag_uri(tag_def["tag_uri"])
     node_class = getattr(stnode, class_name)
 
     assert asdf.util.uri_match(node_class._pattern, tag_def["tag_uri"])

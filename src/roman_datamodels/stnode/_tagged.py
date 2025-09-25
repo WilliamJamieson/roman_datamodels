@@ -16,7 +16,7 @@ from ._registry import (
     SCALAR_NODE_CLASSES_BY_KEY,
     SCALAR_NODE_CLASSES_BY_PATTERN,
 )
-from ._schema import _NO_VALUE, Builder, FakeDataBuilder, NodeBuilder, _get_schema_from_tag
+from ._schema import NO_VALUE, Builder, FakeDataBuilder, NodeBuilder, get_schema_from_tag
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, MutableMapping
@@ -77,7 +77,7 @@ class _TaggedNodeMixin:
         cls, defaults: Mapping[str, Any] | None = None, builder: Builder | None = None, *, tag: str | None = None
     ) -> Self:
         builder = builder or Builder()
-        new = cls(builder.build(_get_schema_from_tag(tag or cls._default_tag), defaults))
+        new = cls(builder.build(get_schema_from_tag(tag or cls._default_tag), defaults))
 
         if tag:
             new._read_tag = tag
@@ -175,7 +175,7 @@ class _TaggedNodeMixin:
 
     def get_schema(self):
         """Retrieve the schema associated with this tag"""
-        return _get_schema_from_tag(self.tag)
+        return get_schema_from_tag(self.tag)
 
 
 class TaggedObjectNode(DNode, _TaggedNodeMixin):
@@ -246,8 +246,8 @@ class TaggedScalarNode(_TaggedNodeMixin):
     @classmethod
     def _create_minimal(cls, defaults=None, builder=None, *, tag: str | None = None):
         builder = builder or Builder()
-        value = builder.build(_get_schema_from_tag(tag or cls._default_tag), defaults)
-        if value is _NO_VALUE:
+        value = builder.build(get_schema_from_tag(tag or cls._default_tag), defaults)
+        if value is NO_VALUE:
             return value
 
         new = cls(value)

@@ -807,11 +807,11 @@ def test_create_tag(tag, node_class):
     """Test that we can create a node for every registered tag"""
 
     node = node_class.create_minimal(tag=tag)
-    if node is not stnode._tagged._NO_VALUE:
+    if node is not stnode._tagged.NO_VALUE:
         assert node._read_tag == tag
 
     node = node_class.create_fake_data(tag=tag)
-    if node is not stnode._tagged._NO_VALUE:
+    if node is not stnode._tagged.NO_VALUE:
         assert node._read_tag == tag
 
 

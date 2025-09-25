@@ -36,7 +36,7 @@ _STATIC_MANIFESTS = [yaml.safe_load(path.read_bytes()) for path in _STATIC_MANIF
 _DATAMODEL_MANIFEST_PATHS = sorted([path for path in _MANIFEST_DIR.glob("*datamodels-*.yaml")], reverse=True)
 _DATAMODEL_MANIFESTS = [yaml.safe_load(path.read_bytes()) for path in _DATAMODEL_MANIFEST_PATHS]
 # Notice that the static manifests are first so that we defer to them
-_MANIFESTS = _STATIC_MANIFESTS + _DATAMODEL_MANIFESTS
+MANIFESTS = _STATIC_MANIFESTS + _DATAMODEL_MANIFESTS
 
 # Last internal tagged manifest URI
 _LAST_INTERNAL_TAGGED_MANIFEST = "asdf://stsci.edu/datamodels/roman/manifests/datamodels-1.4.0"
@@ -58,7 +58,7 @@ def _factory(pattern, latest_manifest, tag_def):
 # Main dynamic class creation loop
 #   Reads each tag entry from the manifest and creates a class for it
 _generated = {}
-for manifest in _MANIFESTS:
+for manifest in MANIFESTS:
     manifest_uri = manifest["id"]
     for tag_def in manifest["tags"]:
         SCHEMA_URIS_BY_TAG[tag_def["tag_uri"]] = tag_def["schema_uri"]
