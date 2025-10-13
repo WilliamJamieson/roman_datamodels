@@ -12,7 +12,7 @@ from .conftest import MANIFESTS
 
 @pytest.mark.parametrize("tag_def", [tag_def for manifest in MANIFESTS for tag_def in manifest["tags"]])
 def test_tag_has_node_class(tag_def):
-    class_name = stnode._factories.class_name_from_tag_uri(tag_def["tag_uri"])
+    class_name = stnode._factories._class_name_from_tag_uri(tag_def["tag_uri"])
     node_class = getattr(stnode, class_name)
 
     assert asdf.util.uri_match(node_class._pattern, tag_def["tag_uri"])
@@ -229,4 +229,4 @@ def test_get_latest_schema(object_node, object_node_default_uri, object_node_uri
         latest_uri, schema = stnode.get_latest_schema(uri)
         assert latest_uri == object_node_default_uri
 
-        assert stnode._schema._get_schema_from_tag(object_node._default_tag) == schema
+        assert stnode._schema.get_schema_from_tag(object_node._default_tag) == schema

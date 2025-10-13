@@ -29,7 +29,7 @@ _NODE_TYPE_BY_PATTERN = {
 }
 
 
-def class_name_from_tag_uri(tag_uri: str) -> str:
+def _class_name_from_tag_uri(tag_uri: str) -> str:
     """
     Construct the class name for the STNode class from the tag_uri
 
@@ -50,7 +50,7 @@ def class_name_from_tag_uri(tag_uri: str) -> str:
     return class_name
 
 
-def docstring_from_tag(tag_def: dict[str, Any]) -> str:
+def _docstring_from_tag(tag_def: dict[str, Any]) -> str:
     """
     Read the docstring (if it exists) from the RAD manifest and generate a docstring
         for the dynamically generated class.
@@ -69,7 +69,7 @@ def docstring_from_tag(tag_def: dict[str, Any]) -> str:
     return docstring + f"Class generated from tag '{tag_def['tag_uri']}'"
 
 
-def scalar_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) -> type[TaggedScalarNode]:
+def _scalar_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) -> type[TaggedScalarNode]:
     """
     Factory to create a TaggedScalarNode class from a tag
 
@@ -88,7 +88,7 @@ def scalar_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) 
     -------
     A dynamically generated TaggedScalarNode subclass
     """
-    class_name = class_name_from_tag_uri(pattern)
+    class_name = _class_name_from_tag_uri(pattern)
 
     # TaggedScalarNode subclasses are really subclasses of the type of the scalar,
     #   with the TaggedScalarNode as a mixin.  This is because the TaggedScalarNode
@@ -115,12 +115,12 @@ def scalar_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) 
             "_latest_manifest": latest_manifest,
             "_default_tag": tag_def["tag_uri"],
             "__module__": "roman_datamodels.stnode",
-            "__doc__": docstring_from_tag(tag_def),
+            "__doc__": _docstring_from_tag(tag_def),
         },
     )
 
 
-def node_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) -> type[TaggedObjectNode | TaggedListNode]:
+def _node_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) -> type[TaggedObjectNode | TaggedListNode]:
     """
     Factory to create a TaggedObjectNode or TaggedListNode class from a tag
 
@@ -139,7 +139,7 @@ def node_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) ->
     -------
     A dynamically generated TaggedObjectNode or TaggedListNode subclass
     """
-    class_name = class_name_from_tag_uri(pattern)
+    class_name = _class_name_from_tag_uri(pattern)
 
     base_class_type = _NODE_TYPE_BY_PATTERN.get(pattern, TaggedObjectNode)
 
@@ -160,7 +160,7 @@ def node_factory(pattern: str, latest_manifest: str, tag_def: dict[str, Any]) ->
             "_latest_manifest": latest_manifest,
             "_default_tag": tag_def["tag_uri"],
             "__module__": "roman_datamodels.stnode",
-            "__doc__": docstring_from_tag(tag_def),
+            "__doc__": _docstring_from_tag(tag_def),
             "__slots__": (),
         },
     )
@@ -190,6 +190,6 @@ def stnode_factory(
     # TaggedScalarNodes are a special case because they are not a subclass of a
     #   _node class, but rather a subclass of the type of the scalar.
     if "tagged_scalar" in tag_def["schema_uri"]:
-        return scalar_factory(pattern, latest_manifest, tag_def)
+        return _scalar_factory(pattern, latest_manifest, tag_def)
     else:
-        return node_factory(pattern, latest_manifest, tag_def)
+        return _node_factory(pattern, latest_manifest, tag_def)

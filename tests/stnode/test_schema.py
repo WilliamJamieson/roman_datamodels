@@ -6,29 +6,29 @@ from astropy.time import Time
 from astropy.units import Quantity
 
 from roman_datamodels.stnode import Observation, SkyBackground
-from roman_datamodels.stnode._schema import _NO_VALUE, Builder, FakeDataBuilder, NodeBuilder, SchemaType, _NoValueType
+from roman_datamodels.stnode._schema import NO_VALUE, Builder, FakeDataBuilder, NodeBuilder, _NoValueType, _SchemaType
 
 
 @pytest.mark.parametrize(
     "schema, type_",
     (
         # explicit cases
-        ({}, SchemaType.UNKNOWN),
-        ({"type": "object"}, SchemaType.OBJECT),
-        ({"type": "array"}, SchemaType.ARRAY),
-        ({"type": "string"}, SchemaType.STRING),
-        ({"type": "integer"}, SchemaType.INTEGER),
-        ({"type": "number"}, SchemaType.NUMBER),
-        ({"type": "boolean"}, SchemaType.BOOLEAN),
-        ({"type": "null"}, SchemaType.NULL),
-        ({"tag": ""}, SchemaType.TAGGED),
+        ({}, _SchemaType.UNKNOWN),
+        ({"type": "object"}, _SchemaType.OBJECT),
+        ({"type": "array"}, _SchemaType.ARRAY),
+        ({"type": "string"}, _SchemaType.STRING),
+        ({"type": "integer"}, _SchemaType.INTEGER),
+        ({"type": "number"}, _SchemaType.NUMBER),
+        ({"type": "boolean"}, _SchemaType.BOOLEAN),
+        ({"type": "null"}, _SchemaType.NULL),
+        ({"tag": ""}, _SchemaType.TAGGED),
         # fuzzy cases
-        ({"properties": {}}, SchemaType.OBJECT),
-        ({"items": []}, SchemaType.ARRAY),
-        ({"minItems": 0}, SchemaType.ARRAY),
-        ({"maxItems": 42}, SchemaType.ARRAY),
-        ({"pattern": ""}, SchemaType.STRING),
-        ({"minimum": 0}, SchemaType.NUMBER),
+        ({"properties": {}}, _SchemaType.OBJECT),
+        ({"items": []}, _SchemaType.ARRAY),
+        ({"minItems": 0}, _SchemaType.ARRAY),
+        ({"maxItems": 42}, _SchemaType.ARRAY),
+        ({"pattern": ""}, _SchemaType.STRING),
+        ({"minimum": 0}, _SchemaType.NUMBER),
     ),
 )
 def test_type(schema, type_):
@@ -38,14 +38,14 @@ def test_type(schema, type_):
 @pytest.mark.parametrize(
     "schema, defaults, expected",
     (
-        ({}, None, _NO_VALUE),
+        ({}, None, NO_VALUE),
         ({"enum": [0]}, None, 0),
         ({"type": "string", "enum": ["a"]}, None, "a"),
         ({"type": "integer", "enum": [0]}, None, 0),
         ({"type": "number", "enum": [3.14]}, None, 3.14),
         ({"type": "boolean", "enum": [False]}, None, False),
         ({"type": "null"}, None, None),
-        ({"enum": [0, 1]}, None, _NO_VALUE),
+        ({"enum": [0, 1]}, None, NO_VALUE),
         ({"properties": {"a": {"enum": [0]}}}, None, {}),
         ({"properties": {"a": {"enum": [0]}}, "required": ["a"]}, None, {"a": 0}),
         ({"properties": {"a": {"type": "string"}}, "required": ["a"]}, None, {}),
