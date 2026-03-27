@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import abc
 import copy
+from re import match
 from typing import TYPE_CHECKING, Generic, TypeVar
 
 from astropy.time import Time
@@ -69,6 +70,12 @@ class _TaggedNodeMixin(TagPatternNodeMixin, NodeMixin):
     _latest_manifest_uri: ClassVar[str]
     _default_tag: ClassVar[str]
 
+    def set_current_tag(self, tag: str):
+        if match(self._tag_pattern.replace("*", ".*"), tag) is None:
+            raise ValueError(f"Tag {tag} does not match the tag pattern {self._tag_pattern}")
+
+        self._current_tag = tag
+
     @classmethod
     def _create_minimal(
         cls, defaults: Mapping[str, Any] | None = None, builder: Builder | None = None, *, tag: str | None = None
@@ -77,7 +84,7 @@ class _TaggedNodeMixin(TagPatternNodeMixin, NodeMixin):
         new = cls(builder.build(get_schema_from_tag(tag or cls._default_tag), defaults))
 
         if tag:
-            new._read_tag = tag
+            new._current_tag = tag
 
         return new
 
@@ -161,10 +168,10 @@ class _TaggedNodeMixin(TagPatternNodeMixin, NodeMixin):
 
     @property
     def _tag(self):
-        if self._read_tag is None:
+        if self._current_tag is None:
             return self._default_tag
 
-        return self._read_tag
+        return self._current_tag
 
     @property
     def tag(self):
@@ -266,14 +273,14 @@ class TaggedScalarNode(_TaggedNodeMixin):
 
         new = cls(value)
         if tag:
-            new._read_tag = tag
+            new._current_tag = tag
 
         return new
 
     @property
     def _tag(self):
         # _tag is required by asdf to allow __asdf_traverse__
-        return getattr(self, "_read_tag", self._default_tag)
+        return getattr(self, "_current_tag", self._default_tag)
 
     def copy(self):
         return copy.copy(self)
