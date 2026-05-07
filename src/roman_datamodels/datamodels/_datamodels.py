@@ -1,9 +1,10 @@
 """
-This module provides all the specific datamodels used by the Roman pipeline.
-    These models are what will be read and written by the pipeline to ASDF files.
-    Note that we require each model to specify a tag_pattern that corresponds to
-    the ASDF tag pattern for the top-level STNode type that the datamodel wraps.
-    This tag pattern is derived from the schema manifest defined by RAD.
+This model contains all the pipeline DataModels (except for the source catalog models,
+    which are defined in _catalog.py).
+These are the DataModels that are used as inputs and outputs to the various steps
+    of the pipeline. They are also the DataModels that are most commonly used by
+    users of the library, and so they have some additional methods and properties
+    that are not shared by all DataModels.
 """
 
 from __future__ import annotations
@@ -19,28 +20,37 @@ from astropy.modeling import models
 from ._core import DataModel, PipelineStep
 from ._utils import node_update
 
-# NOTE: this module does not have the typical `__all__`` present like most of the other
-#    modules in `roman_datamodels``. The presence of the `__all__` variable causes is
-#    entirely to control what is imported by the wildcard `*` import. This style of
-#    import is used by `spiinx-automodapi` to determine what to document within a given
-#    module. However, in this module's case we would have to list every single datamodel
-#    in the `__all__` which would become tedious and error-prone. Therefore, we simply
-#    omit the `__all__` variable and carefully control what we make publicly available
-#    in the module's namespace via the use of `_` prefixes on private classes and avoiding
-#    the import of items from other modules directly into this module's namespace and instead
-#    importing them as the namespace from that module (e.g. `from astropy import time` and
-#    using `time.Time` instead of `from astropy.time import Time` and using `Time` directly).
-#    this prevents `spinx-automodapi` from documenting these items which can cause documentation
-#    warnings and bloat.
+__all__ = (
+    "FpsModel",
+    "GuidewindowModel",
+    "ImageModel",
+    "L1DetectorGuidewindowModel",
+    "L1FaceGuidewindowModel",
+    "MosaicModel",
+    "MosaicSegmentationMapModel",
+    "MsosStackModel",
+    "MultibandSegmentationMapModel",
+    "RampFitOutputModel",
+    "RampModel",
+    "ScienceRawModel",
+    "SegmentationMapModel",
+    "TvacModel",
+    "WfiWcsModel",
+)
 
 # Define logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 
-class MosaicModel(PipelineStep, DataModel):
+class FpsModel(DataModel):
     __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-*"
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/fps-*"
+
+
+class GuidewindowModel(PipelineStep, DataModel):
+    __slots__ = ()
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/guidewindow-*"
 
 
 class ImageModel(PipelineStep, DataModel):
@@ -48,63 +58,39 @@ class ImageModel(PipelineStep, DataModel):
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_image-*"
 
 
-class ScienceRawModel(PipelineStep, DataModel):
+class L1DetectorGuidewindowModel(PipelineStep, DataModel):
     __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_science_raw-*"
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/l1_detector_guidewindow-*"
 
-    @classmethod
-    def from_tvac_raw(cls, model):
-        """Convert TVAC/FPS into ScienceRawModel
 
-        romancal supports processing a selection of files which use an outdated
-        schema. It supports these with a bespoke method that converts the files
-        to the new format when they are read in dq_init. This conversion does
-        not do a detailed mapping between all of the new and old metadata, but
-        instead opportunistically looks for fields with common names and
-        assigns them. Other metadata with non-matching names is simply copied
-        in place. This allows processing to proceed and preserves the original
-        metadata, but the resulting files have duplicates of many entries.
+class L1FaceGuidewindowModel(PipelineStep, DataModel):
+    __slots__ = ()
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/l1_face_guidewindow-*"
 
-        Parameters
-        ----------
-        model : ScienceRawModel, TvacModel, FpsModel
-          Model to convert from.
 
-        Returns
-        -------
-        science_raw_model : ScienceRawModel
-            The ScienceRawModel built from the input model.
-            If the input was a ScienceRawModel, that model is simply returned.
+class MosaicModel(PipelineStep, DataModel):
+    __slots__ = ()
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-*"
 
-        """
-        ALLOWED_MODELS = (FpsModel, ScienceRawModel, TvacModel)
 
-        if isinstance(model, cls):
-            return model
-        if not isinstance(model, ALLOWED_MODELS):
-            raise ValueError(f"Input must be one of {ALLOWED_MODELS}")
-
-        # Create base raw node with dummy values (for validation)
-        if isinstance(model, (FpsModel | TvacModel)):
-            raw_model = cls.create_fake_data()
-        else:
-            raw_model = cls.create_minimal()
-
-        node_update(raw_model._instance, model, extras=("meta.statistics",), extras_key="tvac", ignore=("meta.model_type",))
-
-        # check for exposure data_problem
-        if isinstance(raw_model.meta.exposure.data_problem, bool):
-            if raw_model.meta.exposure.data_problem:
-                raw_model.meta.exposure.data_problem = "True"
-            else:
-                raw_model.meta.exposure.data_problem = None
-
-        return raw_model
+class MosaicSegmentationMapModel(PipelineStep, DataModel):
+    __slots__ = ()
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/mosaic_segmentation_map-*"
 
 
 class MsosStackModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/msos_stack-*"
+
+
+class MultibandSegmentationMapModel(PipelineStep, DataModel):
+    __slots__ = ()
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_segmentation_map-*"
+
+
+class RampFitOutputModel(PipelineStep, DataModel):
+    __slots__ = ()
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/ramp_fit_output-*"
 
 
 class RampModel(PipelineStep, DataModel):
@@ -174,49 +160,68 @@ class RampModel(PipelineStep, DataModel):
         return ramp_model
 
 
-class RampFitOutputModel(PipelineStep, DataModel):
+class ScienceRawModel(PipelineStep, DataModel):
     __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/ramp_fit_output-*"
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_science_raw-*"
 
+    @classmethod
+    def from_tvac_raw(cls, model):
+        """Convert TVAC/FPS into ScienceRawModel
 
-class L1FaceGuidewindowModel(PipelineStep, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/l1_face_guidewindow-*"
+        romancal supports processing a selection of files which use an outdated
+        schema. It supports these with a bespoke method that converts the files
+        to the new format when they are read in dq_init. This conversion does
+        not do a detailed mapping between all of the new and old metadata, but
+        instead opportunistically looks for fields with common names and
+        assigns them. Other metadata with non-matching names is simply copied
+        in place. This allows processing to proceed and preserves the original
+        metadata, but the resulting files have duplicates of many entries.
 
+        Parameters
+        ----------
+        model : ScienceRawModel, TvacModel, FpsModel
+          Model to convert from.
 
-class GuidewindowModel(PipelineStep, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/guidewindow-*"
+        Returns
+        -------
+        science_raw_model : ScienceRawModel
+            The ScienceRawModel built from the input model.
+            If the input was a ScienceRawModel, that model is simply returned.
 
+        """
+        ALLOWED_MODELS = (FpsModel, ScienceRawModel, TvacModel)
 
-class L1DetectorGuidewindowModel(PipelineStep, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/l1_detector_guidewindow-*"
+        if isinstance(model, cls):
+            return model
+        if not isinstance(model, ALLOWED_MODELS):
+            raise ValueError(f"Input must be one of {ALLOWED_MODELS}")
 
+        # Create base raw node with dummy values (for validation)
+        if isinstance(model, (FpsModel | TvacModel)):
+            raw_model = cls.create_fake_data()
+        else:
+            raw_model = cls.create_minimal()
 
-class FpsModel(DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/fps-*"
+        node_update(raw_model._instance, model, extras=("meta.statistics",), extras_key="tvac", ignore=("meta.model_type",))
 
+        # check for exposure data_problem
+        if isinstance(raw_model.meta.exposure.data_problem, bool):
+            if raw_model.meta.exposure.data_problem:
+                raw_model.meta.exposure.data_problem = "True"
+            else:
+                raw_model.meta.exposure.data_problem = None
 
-class TvacModel(DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/tvac-*"
-
-
-class MosaicSegmentationMapModel(PipelineStep, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/mosaic_segmentation_map-*"
-
-
-class MultibandSegmentationMapModel(PipelineStep, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_segmentation_map-*"
+        return raw_model
 
 
 class SegmentationMapModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/segmentation_map-*"
+
+
+class TvacModel(DataModel):
+    __slots__ = ()
+    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/tvac-*"
 
 
 class WfiWcsModel(PipelineStep, DataModel):
