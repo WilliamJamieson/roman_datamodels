@@ -10,14 +10,14 @@ This provides the abstract base class ``Datamodel`` for all the specific datamod
 
 from __future__ import annotations
 
-import abc
 import copy
 import datetime
 import functools
 import sys
-from collections.abc import Mapping
+from abc import ABC
+from collections.abc import Mapping, MutableMapping
 from pathlib import Path, PurePath
-from typing import Any, ClassVar, Self
+from typing import TYPE_CHECKING, Any, ClassVar, Self
 
 import asdf
 import numpy as np
@@ -28,7 +28,7 @@ from astropy.time import Time
 
 from roman_datamodels._stnode import DNode, TaggedObjectNode, get_default_tag, get_schema_uri
 
-__all__ = ("DataModel",)
+__all__ = ("DataModel", "PipelineStep")
 
 
 def _set_default_asdf(func):
@@ -49,7 +49,7 @@ def _set_default_asdf(func):
     return wrapper
 
 
-class DataModel(abc.ABC):
+class DataModel(ABC):
     """Base class for all top level datamodels"""
 
     crds_observatory: ClassVar[str] = "roman"
@@ -472,3 +472,174 @@ class DataModel(abc.ABC):
     @_set_default_asdf
     def schema_info(self, *args, **kwargs):
         return self._asdf.schema_info(*args, **kwargs)
+
+
+if TYPE_CHECKING:
+    _DataModel = DataModel
+else:
+    _DataModel = object
+
+
+class PipelineStep(_DataModel):
+    """
+    Mixin class for DataModels that are to be used as part of a pipeline step.
+
+    Notes
+    -----
+        - Pipeline steps are all expected to have a ``model.meta.model_type``
+            attribute which is set to the string name of the DataModel class in
+            question. This class ensures this is set correctly as part of the
+            __init__ for the DataModel.
+        - Pipeline steps all have certain ``model.meta`` attributes which are
+            expected to be set in certain ways, but it may not be clear from the
+            schemas what the specific values for them are when creating a new
+            model. These are set by ``_creator_defaults`` which is then used to
+            update any defaults provided to the constructors. The defaults provided
+            are:
+                * calibration_software_name: "RomanCAL"
+                * file_date: current time
+                # TODO: Should we modify the origin schema in RAD to make this the first option?
+                * origin: "STSCI/SOC"
+    """
+
+    __slots__ = ()
+
+    def __init__(self, init=None, **kwargs):
+        from roman_datamodels._stnode import TaggedStrNode
+
+        super().__init__(init, **kwargs)
+
+        if init is not None:
+            current_model_type = self.get("meta", {}).get("model_type", None)
+            # This is only necessary if we wish to support creating and writing
+            #   RAD datamodels-1.4.0 and below
+            match current_model_type:
+                case TaggedStrNode():
+                    self.meta.model_type = type(current_model_type).from_tag(
+                        tag=current_model_type.tag,
+                        node=type(self).__name__,
+                    )
+
+                case None:
+                    self.meta.model_type = type(self).__name__
+
+                case _:
+                    self.meta.model_type = type(current_model_type)(type(self).__name__)
+
+    @classmethod
+    def _creator_defaults(
+        cls, defaults: MutableMapping[str, Any] | None = None, *, time: Time | None = None
+    ) -> MutableMapping[str, Any]:
+        """
+        The default values for the create constructors, `create_minimal` and `create_fake_data`.
+
+        Parameters
+        ----------
+        defaults : None or dict
+            If provided, defaults will be used in place of schema
+        time: default time value
+
+
+        Returns
+        -------
+        dict
+            The default values to use when creating a new model. This will include
+            some values that we want to always set to a specific value.
+        """
+
+        # TODO: Can this be simplified to using the | operator on dictionaries carefully?
+        def merge_dicts(dict1: MutableMapping[str, Any], dict2: MutableMapping[str, Any]) -> MutableMapping[str, Any]:
+            for key in dict2:
+                if key in dict1:
+                    dict1_is_mapping = isinstance(dict1[key], MutableMapping)
+                    dict2_is_mapping = isinstance(dict2[key], MutableMapping)
+
+                    if dict1_is_mapping and dict2_is_mapping:
+                        dict1[key] = merge_dicts(dict1[key], dict2[key])
+
+                    elif dict1_is_mapping ^ dict2_is_mapping:
+                        raise ValueError("Cannot merge mapping with non-mapping")
+
+                else:
+                    dict1[key] = dict2[key]
+
+            return dict1
+
+        return merge_dicts(
+            # deepcopy to avoid modifying input
+            {} if defaults is None else copy.deepcopy(dict(defaults)),
+            {
+                "meta": {
+                    "calibration_software_name": "RomanCAL",
+                    "file_date": time or Time.now(),
+                    "origin": "STSCI/SOC",
+                }
+            },
+        )
+
+    @classmethod
+    def create_minimal(cls, defaults=None, *, tag=None):
+        """
+        Class method that constructs an "minimal" model.
+
+        The "minimal" model will contain schema-required attributes
+        where a default value can be determined:
+
+            * node class defining a default value
+            * defined in the schema (for example single item enums)
+            * empty container classes (for example a "meta" dict)
+            * required items with a corresponding provided default
+
+        Parameters
+        ----------
+        defaults : None or dict
+            If provided, defaults will be used in place of schema
+            defined values for required attributes.
+
+        Returns
+        -------
+        DataModel
+            "Empty" model with optional defaults. This will often
+            be incomplete (invalid) as not all required attributes
+            can be guessed.
+        """
+        return super().create_minimal(defaults=cls._creator_defaults(defaults), tag=tag)
+
+    @classmethod
+    def create_fake_data(cls, defaults=None, shape=None, *, tag=None):
+        """
+        Class method that constructs a model filled with fake data.
+
+        Similar to `DataModel.create_minimal` this only creates
+        required attributes.
+
+        Fake arrays will have a number of dimensions matching
+        the schema requirements. If shape is provided only the
+        dimensions matching the schema requirements will be used.
+        For example if a 3 dimensional shape is provided but a fake
+        array only requires 2 dimensions only the first 2 values
+        from shape will be used.
+
+        Parameters
+        ----------
+        defaults : None or dict
+            If provided, defaults will be used in place of schema
+            defined or fake values for required attributes.
+
+        shape : None or tuple of int
+            When provided use this shape to determine the
+            shape used to construct fake arrays.
+
+        Returns
+        -------
+        DataModel
+            A valid model with fake data.
+        """
+        return super().create_fake_data(
+            defaults=cls._creator_defaults(
+                defaults,
+                time=Time("2020-01-01T00:00:00.0", format="isot", scale="utc"),
+            ),
+            shape=shape,
+            tag=tag,
+        )

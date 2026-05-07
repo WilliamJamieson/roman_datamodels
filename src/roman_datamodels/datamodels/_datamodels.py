@@ -13,7 +13,6 @@ import itertools
 import logging
 import pathlib
 import re
-from collections import abc
 from typing import TYPE_CHECKING, ClassVar
 
 import astropy.table.meta
@@ -21,7 +20,7 @@ import numpy as np
 from astropy import time as _time
 from astropy.modeling import models
 
-from ._core import DataModel
+from ._core import DataModel, PipelineStep
 from ._utils import node_update, temporary_update_filedate, temporary_update_filename
 
 if TYPE_CHECKING:
@@ -191,157 +190,17 @@ class _ParquetMixin:
         pq.write_table(table, filepath, compression=None)
 
 
-class _RomanDataModel(_DataModel):
-    __slots__ = ()
-
-    def __init__(self, init=None, **kwargs):
-        from roman_datamodels._stnode import TaggedStrNode
-
-        super().__init__(init, **kwargs)
-
-        if init is not None:
-            current_model_type = self.get("meta", {}).get("model_type", None)
-            # This is only necessary if we wish to support creating and writing
-            #   RAD datamodels-1.4.0 and below
-            match current_model_type:
-                case TaggedStrNode():
-                    self.meta.model_type = type(current_model_type).from_tag(
-                        tag=current_model_type.tag,
-                        node=type(self).__name__,
-                    )
-
-                case None:
-                    self.meta.model_type = type(self).__name__
-
-                case _:
-                    self.meta.model_type = type(current_model_type)(type(self).__name__)
-
-    @classmethod
-    def _creator_defaults(
-        cls, defaults: abc.MutableMapping[str, Any] | None = None, *, time: _time.Time | None = None
-    ) -> abc.MutableMapping[str, Any]:
-        """
-        The default values for the create constructors, `create_minimal` and `create_fake_data`.
-
-        Parameters
-        ----------
-        defaults : None or dict
-            If provided, defaults will be used in place of schema
-        time: default time value
-
-
-        Returns
-        -------
-        dict
-            The default values to use when creating a new model. This will include
-            some values that we want to always set to a specific value.
-        """
-
-        def merge_dicts(dict1: abc.MutableMapping[str, Any], dict2: abc.MutableMapping[str, Any]) -> abc.MutableMapping[str, Any]:
-            for key in dict2:
-                if key in dict1:
-                    dict1_is_mapping = isinstance(dict1[key], abc.MutableMapping)
-                    dict2_is_mapping = isinstance(dict2[key], abc.MutableMapping)
-
-                    if dict1_is_mapping and dict2_is_mapping:
-                        dict1[key] = merge_dicts(dict1[key], dict2[key])
-
-                    elif dict1_is_mapping ^ dict2_is_mapping:
-                        raise ValueError("Cannot merge mapping with non-mapping")
-
-                else:
-                    dict1[key] = dict2[key]
-
-            return dict1
-
-        return merge_dicts(
-            # deepcopy to avoid modifying input
-            {} if defaults is None else copy.deepcopy(dict(defaults)),
-            {
-                "meta": {
-                    "calibration_software_name": "RomanCAL",
-                    "file_date": time or _time.Time.now(),
-                    "origin": "STSCI/SOC",
-                }
-            },
-        )
-
-    @classmethod
-    def create_minimal(cls, defaults=None, *, tag=None):
-        """
-        Class method that constructs an "minimal" model.
-
-        The "minimal" model will contain schema-required attributes
-        where a default value can be determined:
-
-            * node class defining a default value
-            * defined in the schema (for example single item enums)
-            * empty container classes (for example a "meta" dict)
-            * required items with a corresponding provided default
-
-        Parameters
-        ----------
-        defaults : None or dict
-            If provided, defaults will be used in place of schema
-            defined values for required attributes.
-
-        Returns
-        -------
-        DataModel
-            "Empty" model with optional defaults. This will often
-            be incomplete (invalid) as not all required attributes
-            can be guessed.
-        """
-        return super().create_minimal(defaults=cls._creator_defaults(defaults), tag=tag)
-
-    @classmethod
-    def create_fake_data(cls, defaults=None, shape=None, *, tag=None):
-        """
-        Class method that constructs a model filled with fake data.
-
-        Similar to `DataModel.create_minimal` this only creates
-        required attributes.
-
-        Fake arrays will have a number of dimensions matching
-        the schema requirements. If shape is provided only the
-        dimensions matching the schema requirements will be used.
-        For example if a 3 dimensional shape is provided but a fake
-        array only requires 2 dimensions only the first 2 values
-        from shape will be used.
-
-        Parameters
-        ----------
-        defaults : None or dict
-            If provided, defaults will be used in place of schema
-            defined or fake values for required attributes.
-
-        shape : None or tuple of int
-            When provided use this shape to determine the
-            shape used to construct fake arrays.
-
-        Returns
-        -------
-        DataModel
-            A valid model with fake data.
-        """
-        return super().create_fake_data(
-            defaults=cls._creator_defaults(defaults, time=_time.Time("2020-01-01T00:00:00.0", format="isot", scale="utc")),
-            shape=shape,
-            tag=tag,
-        )
-
-
-class MosaicModel(_RomanDataModel, DataModel):
+class MosaicModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_mosaic-*"
 
 
-class ImageModel(_RomanDataModel, DataModel):
+class ImageModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_image-*"
 
 
-class ScienceRawModel(_RomanDataModel, DataModel):
+class ScienceRawModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_science_raw-*"
 
@@ -395,12 +254,12 @@ class ScienceRawModel(_RomanDataModel, DataModel):
         return raw_model
 
 
-class MsosStackModel(_RomanDataModel, DataModel):
+class MsosStackModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/msos_stack-*"
 
 
-class RampModel(_RomanDataModel, DataModel):
+class RampModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/ramp-*"
 
@@ -467,22 +326,22 @@ class RampModel(_RomanDataModel, DataModel):
         return ramp_model
 
 
-class RampFitOutputModel(_RomanDataModel, DataModel):
+class RampFitOutputModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/ramp_fit_output-*"
 
 
-class L1FaceGuidewindowModel(_RomanDataModel, DataModel):
+class L1FaceGuidewindowModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/l1_face_guidewindow-*"
 
 
-class GuidewindowModel(_RomanDataModel, DataModel):
+class GuidewindowModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/guidewindow-*"
 
 
-class L1DetectorGuidewindowModel(_RomanDataModel, DataModel):
+class L1DetectorGuidewindowModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/l1_detector_guidewindow-*"
 
@@ -648,47 +507,47 @@ class TvacModel(DataModel):
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/tvac-*"
 
 
-class MosaicSourceCatalogModel(_RomanDataModel, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class MosaicSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/mosaic_source_catalog-*"
 
 
-class MultibandSourceCatalogModel(_RomanDataModel, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class MultibandSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_source_catalog-*"
 
 
-class ForcedImageSourceCatalogModel(_RomanDataModel, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class ForcedImageSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/forced_image_source_catalog-*"
 
 
-class ForcedMosaicSourceCatalogModel(_RomanDataModel, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class ForcedMosaicSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/forced_mosaic_source_catalog-*"
 
 
-class MosaicSegmentationMapModel(_RomanDataModel, DataModel):
+class MosaicSegmentationMapModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/mosaic_segmentation_map-*"
 
 
-class MultibandSegmentationMapModel(_RomanDataModel, DataModel):
+class MultibandSegmentationMapModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_segmentation_map-*"
 
 
-class ImageSourceCatalogModel(_RomanDataModel, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class ImageSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/image_source_catalog-*"
 
 
-class SegmentationMapModel(_RomanDataModel, DataModel):
+class SegmentationMapModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/segmentation_map-*"
 
 
-class WfiWcsModel(_RomanDataModel, DataModel):
+class WfiWcsModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/wfi_wcs-*"
 
