@@ -1,6 +1,7 @@
 from ._catalog import *  # noqa: F403
 from ._core import *  # noqa: F403
 from ._datamodels import *  # noqa: F403
+from ._reference_files import *  # noqa: F403
 
 # rename rdm_open to open to match the current roman_datamodels API
 from ._utils import FilenameMismatchWarning  # noqa: F401
