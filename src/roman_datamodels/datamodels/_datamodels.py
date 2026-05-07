@@ -11,25 +11,14 @@ from __future__ import annotations
 import copy
 import itertools
 import logging
-import pathlib
 import re
-from typing import TYPE_CHECKING, ClassVar
+from typing import ClassVar
 
-import astropy.table.meta
 import numpy as np
-from astropy import time as _time
 from astropy.modeling import models
 
-from ._core import DataModel, PipelineStep
-from ._utils import node_update, temporary_update_filedate, temporary_update_filename
-
-if TYPE_CHECKING:
-    from typing import Any
-
-    _DataModel = DataModel
-else:
-    _DataModel = object
-
+from ._core import DataModel, ParquetSupport, PipelineStep
+from ._utils import node_update
 
 # NOTE: this module does not have the typical `__all__`` present like most of the other
 #    modules in `roman_datamodels``. The presence of the `__all__` variable causes is
@@ -45,14 +34,12 @@ else:
 #    this prevents `spinx-automodapi` from documenting these items which can cause documentation
 #    warnings and bloat.
 
-DTYPE_MAP: dict[str, Any] = {}
-
 # Define logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 
-class _SourceCatalogMixin:
+class _SourceCatalogMixin(PipelineStep, ParquetSupport):
     __slots__ = ()
 
     def create_empty_catalog(self, aperture_radii=None, filters=None):
@@ -120,74 +107,6 @@ class _SourceCatalogMixin:
                         definition["properties"]["data"]["properties"]["datatype"]["enum"][0]
                     ),
                 }
-
-
-class _ParquetMixin:
-    """Gives SourceCatalogModels the ability to save to parquet files."""
-
-    __slots__ = ()
-
-    def to_parquet(self, filepath):
-        """
-        Save catalog in parquet format.
-
-        Defers import of parquet to minimize import overhead for all other models.
-        """
-        from roman_datamodels._stnode import DNode
-
-        # parquet does not provide validation so validate first with asdf
-        self.validate()
-
-        global DTYPE_MAP
-        import pyarrow as pa
-        import pyarrow.parquet as pq
-
-        if not DTYPE_MAP:
-            DTYPE_MAP.update(
-                {
-                    "bool": pa.bool_(),
-                    "uint8": pa.uint8(),
-                    "uint16": pa.uint16(),
-                    "uint32": pa.uint32(),
-                    "uint64": pa.uint64(),
-                    "int8": pa.int8(),
-                    "int16": pa.int16(),
-                    "int32": pa.int32(),
-                    "int64": pa.int64(),
-                    "float16": pa.float16(),
-                    "float32": pa.float32(),
-                    "float64": pa.float64(),
-                }
-            )
-
-        with temporary_update_filename(self, pathlib.Path(filepath).name), temporary_update_filedate(self, _time.Time.now()):
-            # Construct flat metadata dict
-            flat_meta = self.to_flat_dict()
-        # select only meta items
-        flat_meta = {k: str(v) for (k, v) in flat_meta.items() if k.startswith("roman.meta")}
-        # Extract table metadata
-        source_cat = self.source_catalog
-        scmeta = source_cat.meta
-        # Wrap it as a DNode so it can be flattened
-        dn_scmeta = DNode(scmeta)
-        flat_scmeta = dn_scmeta.to_flat_dict(recursive=True)
-        # Add prefix to flattened keys to indicate table metadata
-        flat_scmeta = {"source_catalog." + k: str(v) for (k, v) in flat_scmeta.items()}
-        # merge the two meta dicts
-        flat_meta.update(flat_scmeta)
-        # Turn numpy structured array into list of arrays
-        keys = list(source_cat.columns.keys())
-        arrs = [np.array(source_cat[key]) for key in keys]
-        units = [str(source_cat[key].unit) for key in keys]
-        dtypes = [DTYPE_MAP[np.array(source_cat[key]).dtype.name] for key in keys]
-        fields = [
-            pa.field(key, type=dtype, metadata={"unit": unit}) for (key, dtype, unit) in zip(keys, dtypes, units, strict=False)
-        ]
-        extra_astropy_metadata = astropy.table.meta.get_yaml_from_table(source_cat)
-        flat_meta["table_meta_yaml"] = "\n".join(extra_astropy_metadata)
-        schema = pa.schema(fields, metadata=flat_meta)
-        table = pa.Table.from_arrays(arrs, schema=schema)
-        pq.write_table(table, filepath, compression=None)
 
 
 class MosaicModel(PipelineStep, DataModel):
@@ -507,22 +426,22 @@ class TvacModel(DataModel):
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/tvac-*"
 
 
-class MosaicSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class MosaicSourceCatalogModel(_SourceCatalogMixin, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/mosaic_source_catalog-*"
 
 
-class MultibandSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class MultibandSourceCatalogModel(_SourceCatalogMixin, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_source_catalog-*"
 
 
-class ForcedImageSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class ForcedImageSourceCatalogModel(_SourceCatalogMixin, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/forced_image_source_catalog-*"
 
 
-class ForcedMosaicSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class ForcedMosaicSourceCatalogModel(_SourceCatalogMixin, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/forced_mosaic_source_catalog-*"
 
@@ -537,7 +456,7 @@ class MultibandSegmentationMapModel(PipelineStep, DataModel):
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_segmentation_map-*"
 
 
-class ImageSourceCatalogModel(PipelineStep, DataModel, _ParquetMixin, _SourceCatalogMixin):
+class ImageSourceCatalogModel(_SourceCatalogMixin, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/image_source_catalog-*"
 

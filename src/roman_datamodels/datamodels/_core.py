@@ -17,6 +17,7 @@ import sys
 from abc import ABC
 from collections.abc import Mapping, MutableMapping
 from pathlib import Path, PurePath
+from types import MappingProxyType
 from typing import TYPE_CHECKING, Any, ClassVar, Self
 
 import asdf
@@ -24,11 +25,17 @@ import numpy as np
 from asdf.exceptions import ValidationError
 from asdf.tags.core.ndarray import NDArrayType
 from asdf.util import uri_match
+from astropy.table.meta import get_yaml_from_table
 from astropy.time import Time
 
 from roman_datamodels._stnode import DNode, TaggedObjectNode, get_default_tag, get_schema_uri
 
-__all__ = ("DataModel", "PipelineStep")
+from ._utils import temporary_update_filedate, temporary_update_filename
+
+if TYPE_CHECKING:
+    from pyarrow import DataType
+
+__all__ = ("DataModel", "ParquetSupport", "PipelineStep")
 
 
 def _set_default_asdf(func):
@@ -643,3 +650,100 @@ class PipelineStep(_DataModel):
             shape=shape,
             tag=tag,
         )
+
+
+class ParquetSupport(_DataModel):
+    """
+    Mixin class for DataModels to enable writing to parquet files
+
+    .. note::
+        Only models with a source_catalog attribute are intended to support parquet.
+        This can be mixed in with those models to provide parquet support.
+    """
+
+    __slots__ = ()
+    # Mapping from the string name of a numpy dtype to the corresponding pyarrow type
+    _dtype_map: ClassVar[MappingProxyType[str, DataType]]
+
+    @classmethod
+    def dtype_map(cls) -> MappingProxyType[str, DataType]:
+        """
+        Defer the construction of the dtype_map until it is actually needed. This
+            is an entirely static method so it does not matter if we are thread
+            safe or not, as we will always end up with the same dtype_map, it
+            only may result in this being calculated more than once in a
+            multithreaded context if we hit a particularly bad race condition.
+        """
+        import pyarrow as pa
+
+        if not hasattr(cls, "_dtype_map"):
+            cls._dtype_map = MappingProxyType(
+                {
+                    "bool": pa.bool_(),
+                    "uint8": pa.uint8(),
+                    "uint16": pa.uint16(),
+                    "uint32": pa.uint32(),
+                    "uint64": pa.uint64(),
+                    "int8": pa.int8(),
+                    "int16": pa.int16(),
+                    "int32": pa.int32(),
+                    "int64": pa.int64(),
+                    "float16": pa.float16(),
+                    "float32": pa.float32(),
+                    "float64": pa.float64(),
+                }
+            )
+
+        return cls._dtype_map
+
+    def to_parquet(self, filepath):
+        """
+        Save catalog in parquet format.
+
+        Defers import of parquet to minimize import overhead for all other models.
+        """
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+
+        # parquet does not provide validation so validate first with asdf
+        self.validate()
+
+        with temporary_update_filename(self, Path(filepath).name), temporary_update_filedate(self, Time.now()):
+            # Construct flat metadata dict
+            flat_meta = self.to_flat_dict()
+
+        # select only meta items
+        flat_meta = {k: str(v) for (k, v) in flat_meta.items() if k.startswith("roman.meta")}
+
+        # Extract table metadata
+        source_cat = self.source_catalog
+        scmeta = source_cat.meta
+
+        # Wrap it as a DNode so it can be flattened
+        dn_scmeta = DNode(scmeta)
+        flat_scmeta = dn_scmeta.to_flat_dict(recursive=True)
+
+        # Add prefix to flattened keys to indicate table metadata
+        flat_scmeta = {"source_catalog." + k: str(v) for (k, v) in flat_scmeta.items()}
+
+        # merge the two meta dicts
+        flat_meta.update(flat_scmeta)
+
+        # Turn numpy structured array into list of arrays
+        keys = list(source_cat.columns.keys())
+        arrs = [np.array(source_cat[key]) for key in keys]
+        units = [str(source_cat[key].unit) for key in keys]
+        dtypes = [self.dtype_map()[np.array(source_cat[key]).dtype.name] for key in keys]
+        fields = [
+            pa.field(key, type=dtype, metadata={"unit": unit}) for (key, dtype, unit) in zip(keys, dtypes, units, strict=False)
+        ]
+
+        # Turn the source catalog metadata into a yaml string and then attach it
+        #   to the metadata for the parquet file.
+        extra_astropy_metadata = get_yaml_from_table(source_cat)
+        flat_meta["table_meta_yaml"] = "\n".join(extra_astropy_metadata)
+
+        # Write the table to parquet
+        schema = pa.schema(fields, metadata=flat_meta)
+        table = pa.Table.from_arrays(arrs, schema=schema)
+        pq.write_table(table, filepath, compression=None)

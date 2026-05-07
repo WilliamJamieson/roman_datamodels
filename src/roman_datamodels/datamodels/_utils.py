@@ -18,10 +18,10 @@ from astropy import time
 
 from roman_datamodels._stnode import TaggedObjectNode, TaggedScalarNode
 
-from ._core import DataModel
-
 if TYPE_CHECKING:
     from roman_datamodels._stnode import DNode, LNode
+
+    from ._core import DataModel
 
 
 __all__ = ["FilenameMismatchWarning", "node_update", "rdm_open", "temporary_update_filedate", "temporary_update_filename"]
@@ -306,7 +306,7 @@ def rdm_open(init, memmap=False, **kwargs):
     -------
     `DataModel`
     """
-    from roman_datamodels import Manager
+    from roman_datamodels import DataModel, Manager
 
     if isinstance(init, str | Path):
         if Path(init).suffix.lower() == ".json":
