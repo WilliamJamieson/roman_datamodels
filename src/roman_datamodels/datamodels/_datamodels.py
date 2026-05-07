@@ -11,13 +11,12 @@ from __future__ import annotations
 import copy
 import itertools
 import logging
-import re
 from typing import ClassVar
 
 import numpy as np
 from astropy.modeling import models
 
-from ._core import DataModel, ParquetSupport, PipelineStep
+from ._core import DataModel, PipelineStep
 from ._utils import node_update
 
 # NOTE: this module does not have the typical `__all__`` present like most of the other
@@ -37,76 +36,6 @@ from ._utils import node_update
 # Define logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
-
-
-class _SourceCatalogMixin(PipelineStep, ParquetSupport):
-    __slots__ = ()
-
-    def create_empty_catalog(self, aperture_radii=None, filters=None):
-        """
-        Create an empty but valid source catalog table
-
-        Parameters
-        ----------
-        aperture_radii: list of int (optional)
-            Aperture radii in tenths of an arcsecond.
-
-        filters: list of str (optional)
-            List of filters (for example: "f184")
-
-        Returns
-        -------
-        Table
-        """
-        from roman_datamodels._stnode._schema import FakeDataBuilder
-
-        if aperture_radii:
-            aperture_radii = [f"{i:02}" for i in aperture_radii]
-
-        return FakeDataBuilder.make_empty_catalog(self._instance.get_schema(), aperture_radii=aperture_radii, filters=filters)
-
-    def get_column_definition(self, name):
-        """
-        Get the definition of a named column in the catalog table.
-
-        This function parses the "definitions" part of the catalog
-        schema and returns the parsed content.
-
-        Parameters
-        ----------
-        name: str
-            Column name, may contain aperture radisu or filter/band or prefixed
-            with ``forced_``.
-
-        Returns
-        -------
-        dict or None
-            Dictionary containing unit, description, and datatype information
-            or None if the name does not match any definition.
-        """
-        from asdf.tags.core.ndarray import asdf_datatype_to_numpy_dtype
-
-        from roman_datamodels._stnode import get_keyword
-
-        if name.startswith("forced_"):
-            _, name = name.split("forced_", maxsplit=1)
-
-        definitions = get_keyword(self._instance.get_schema()["properties"]["source_catalog"], "definitions")
-        for def_name, definition in definitions.items():
-            if "~radius~" in def_name:
-                def_name = def_name.replace("~radius~", r"[0-9]{2}")
-            if "_~band~" in def_name:
-                def_name = def_name.replace("_~band~", r"(_f[0-9]{3}|)")
-            if "~band~" in def_name:
-                def_name = def_name.replace("~band~", r"(f[0-9]{3}|)")
-            if re.match(f"^{def_name}$", name):
-                return {
-                    "unit": definition["unit"],
-                    "description": definition["description"],
-                    "datatype": asdf_datatype_to_numpy_dtype(
-                        definition["properties"]["data"]["properties"]["datatype"]["enum"][0]
-                    ),
-                }
 
 
 class MosaicModel(PipelineStep, DataModel):
@@ -426,26 +355,6 @@ class TvacModel(DataModel):
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/tvac-*"
 
 
-class MosaicSourceCatalogModel(_SourceCatalogMixin, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/mosaic_source_catalog-*"
-
-
-class MultibandSourceCatalogModel(_SourceCatalogMixin, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_source_catalog-*"
-
-
-class ForcedImageSourceCatalogModel(_SourceCatalogMixin, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/forced_image_source_catalog-*"
-
-
-class ForcedMosaicSourceCatalogModel(_SourceCatalogMixin, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/forced_mosaic_source_catalog-*"
-
-
 class MosaicSegmentationMapModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/mosaic_segmentation_map-*"
@@ -454,11 +363,6 @@ class MosaicSegmentationMapModel(PipelineStep, DataModel):
 class MultibandSegmentationMapModel(PipelineStep, DataModel):
     __slots__ = ()
     tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/multiband_segmentation_map-*"
-
-
-class ImageSourceCatalogModel(_SourceCatalogMixin, DataModel):
-    __slots__ = ()
-    tag_pattern: ClassVar[str] = "asdf://stsci.edu/datamodels/roman/tags/image_source_catalog-*"
 
 
 class SegmentationMapModel(PipelineStep, DataModel):
