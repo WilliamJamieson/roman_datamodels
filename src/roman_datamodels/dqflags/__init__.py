@@ -25,9 +25,21 @@ import numpy as np
 __all__ = ["group", "pixel"]
 
 
+class _DQFlag(Enum):
+    @property
+    def bit_value(self):
+        value = int(self.value)
+        if value == 0:
+            return None
+        if value & (value - 1):
+            msg = f"{self.name} does not have a single bit value"
+            raise ValueError(msg)
+        return value.bit_length() - 1
+
+
 # fmt: off
 @unique
-class pixel(np.uint32, Enum):
+class pixel(np.uint32, _DQFlag):
     """Pixel-specific data quality flags"""
 
     GOOD             = 0
@@ -97,7 +109,7 @@ class pixel(np.uint32, Enum):
 
 
 @unique
-class group(np.uint8, Enum):
+class group(np.uint8, _DQFlag):
     """Group-specific data quality flags
         Once groups are combined, these flags are equivalent to the pixel-specific flags.
     """
