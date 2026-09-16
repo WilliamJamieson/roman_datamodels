@@ -1,0 +1,114 @@
+name:
+  pixel
+
+description: |
+  Pixel-specific data quality flags
+
+dtype:
+  uint32
+
+flags:
+    GW_AFFECTED_DATA:
+      bit: 4
+      description: |
+        Data affected by the GW read window
+    PERSISTENCE:
+      bit: 5
+      description: |
+        High persistence (was RESERVED_2)
+    OUTLIER:
+      bit: 7
+      description: |
+        Flagged by outlier detection (was RESERVED_4)
+    UNRELIABLE_ERROR:
+      bit: 8
+      description: |
+        Uncertainty exceeds quoted error
+    NON_SCIENCE:
+      bit: 9
+      description: |
+        Pixel not on science portion of detector
+    DEAD:
+      bit: 10
+      description: |
+        Dead pixel
+    HOT:
+      bit: 11
+      description: |
+        Hot pixel
+    WARM:
+      bit: 12
+      description: |
+        Warm pixel
+    LOW_QE:
+      bit: 13
+      description: |
+        Low quantum efficiency
+    TELEGRAPH:
+      bit: 15
+      description: |
+        Telegraph pixel
+    NONLINEAR:
+      bit: 16
+      description: |
+        Pixel highly nonlinear
+    BAD_REF_PIXEL:
+      bit: 17
+      description: |
+        Reference pixel cannot be used
+    NO_FLAT_FIELD:
+      bit: 18
+      description: |
+        Flat field cannot be measured
+    NO_GAIN_VALUE:
+      bit: 19
+      description: |
+        Gain cannot be measured
+    NO_LIN_CORR:
+      bit: 20
+      description: |
+        Linearity correction not available
+    NO_SAT_CHECK:
+      bit: 21
+      description: |
+        Saturation check not available
+    UNRELIABLE_BIAS:
+      bit: 22
+      description: |
+        Bias variance large
+    UNRELIABLE_DARK:
+      bit: 23
+      description: |
+        Dark variance large
+    UNRELIABLE_SLOPE:
+      bit: 24
+      description: |
+        Slope variance large (i.e., noisy pixel)
+    UNRELIABLE_FLAT:
+      bit: 25
+      description: |
+        Flat variance large
+    RESERVED_5:
+      bit: 26
+      description: |
+        Reserved
+    RESERVED_6:
+      bit: 27
+      description: |
+        Reserved
+    UNRELIABLE_RESET:
+      bit: 28
+      description: |
+        Sensitive to reset anomaly
+    RESERVED_7:
+      bit: 29
+      description: |
+        Reserved
+    OTHER_BAD_PIXEL:
+      bit: 30
+      description: |
+        A catch-all flag
+    REFERENCE_PIXEL:
+      bit: 31
+      description: |
+        Pixel is a reference pixel

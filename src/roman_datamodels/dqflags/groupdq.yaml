@@ -1,0 +1,16 @@
+name:
+  group
+
+description: |
+  Group-specific data quality flags
+
+  Once groups are combined, these flags are equivalent to the pixel-specific flags.
+
+dtype:
+  uint8
+
+flags:
+  WFI18_TRANSIENT:
+    bit: 7
+    description: |
+      Affected by the WFI18 transient anomaly
