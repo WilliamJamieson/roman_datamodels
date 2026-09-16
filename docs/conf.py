@@ -17,6 +17,7 @@ import os
 import sys
 import tomllib
 import warnings
+from enum import Enum
 from pathlib import Path
 
 warnings.filterwarnings("ignore", message=r"astropy\.samp was deprecated.*")
@@ -209,6 +210,33 @@ def documented_members(modname, qualname, members):
     return [name for name in members if not inherited_from_numpy(name) and not inherited_astropy_time_info(name)]
 
 
+def enum_flags(modname, qualname):
+    """Describe the members of a flag enum, for the autosummary class template.
+
+    Autodoc ignores ``__doc__`` on enum members, which is the only place the
+    ``dqflags`` descriptions live since those enums have no source to analyze.
+    """
+    obj = importlib.import_module(modname)
+    for part in qualname.split("."):
+        obj = getattr(obj, part)
+    if not isinstance(obj, type) or not issubclass(obj, Enum):
+        return []
+
+    flags = []
+    for name, member in obj.__members__.items():
+        doc = member.__doc__ if member.__doc__ != obj.__doc__ else ""
+        bit = getattr(member, "bit_value", None)
+        flags.append(
+            {
+                "name": name,
+                "bit": "\\-\\-" if bit is None else bit,
+                "value": int(member.value),
+                "description": doc.strip().splitlines()[0] if doc else "",
+            }
+        )
+    return flags
+
+
 def node_class(modname, name):
     """Describe the node class backing a datamodel, for the autosummary class template."""
     node = getattr(getattr(importlib.import_module(modname), name), "_node_type", None)
@@ -229,6 +257,7 @@ autosummary_context = {
     "documented_members": documented_members,
     "datamodel_category": datamodel_category,
     "node_class": node_class,
+    "enum_flags": enum_flags,
 }
 
 # Class documentation should contain *both* the class docstring and
@@ -540,6 +569,7 @@ nitpick_ignore = [
     ("py:class", "roman_datamodels.datamodels._datamodels._ParquetMixin"),
     ("py:class", "roman_datamodels.datamodels._datamodels._RomanDataModel"),
     ("py:class", "roman_datamodels.datamodels._datamodels._SourceCatalogMixin"),
+    ("py:class", "roman_datamodels.dqflags._DQFlag"),
     # DataModel.search wraps asdf.AsdfFile.search verbatim (via functools.wraps);
     # its docstring types are asdf's, not fully qualified and not real objects.
     ("py:class", "NotSet"),

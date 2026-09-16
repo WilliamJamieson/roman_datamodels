@@ -36,6 +36,7 @@ __all__ = ["group", "pixel"]
 class _DQFlag(Enum):
     @property
     def bit_value(self):
+        """The bit value corresponding to this flag"""
         value = int(self.value)
         if value == 0:
             return None
