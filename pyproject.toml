@@ -53,6 +53,9 @@ version_scheme = "release-branch-semver"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"roman_datamodels.dqflags" = ["*.yaml"]
+
 [tool.pytest]
 minversion = "9"
 doctest_plus = "true"
